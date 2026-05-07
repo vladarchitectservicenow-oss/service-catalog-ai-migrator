@@ -1,0 +1,101 @@
+---
+title: "Technical Specification — AI Migration for {{ instance_url }}"
+date: "{{ generated_at }}"
+version: "1.0"
+---
+
+# Technical Specification
+
+## 1. Introduction
+
+This document defines the technical architecture for migrating the ServiceNow service catalog
+at **{{ instance_url }}** to an AI-agent-driven system.
+
+## 2. Current Architecture
+
+### 2.1 Workflow Overview
+
+```mermaid
+{{ current_architecture_diagram }}
+```
+
+### 2.2 Catalog Item Summary
+
+| Item | Category | Active | Requests | Approval Required |
+|------|----------|--------|----------|-------------------|
+{% for item in catalog_items %}
+| {{ item.name }} | {{ item.category or "N/A" }} | {{ "Yes" if item.active else "No" }} | {{ item.request_count }} | {{ "Yes" if item.approval_required else "No" }} |
+{% endfor %}
+
+## 3. Target Architecture
+
+### 3.1 Agent Topology
+
+```mermaid
+{{ target_architecture_diagram }}
+```
+
+### 3.2 Agent Roles
+
+| Agent Type | Responsibility | Tools |
+|-----------|---------------|-------|
+| Orchestrator | Request intake, triage, routing | Catalog API, NLP inference |
+| Approval Agent | Policy-based approval decisions | Policy engine, CMDB lookup |
+| Provisioning Agent | Automated fulfillment | REST APIs, scripts |
+| Notification Agent | Status updates, alerts | Email, Slack, Teams |
+| Escalation Agent | Human handoff for exceptions | Ticketing system |
+
+## 4. Workflow-by-Workflow Analysis
+
+{% for wf in workflow_analyses %}
+### 4.{{ loop.index }} {{ wf.workflow_name }} ({{ wf.workflow_sys_id }})
+
+| Attribute | Value |
+|-----------|-------|
+| Health Score | {{ "%.1f"|format(wf.health_score) }} |
+| Automation Readiness | {{ wf.automation_readiness }} |
+| Activities | {{ wf.activity_count }} |
+| Manual Steps | {{ wf.manual_step_count }} |
+| Approvals | {{ wf.approval_count }} |
+| Timers | {{ wf.timer_count }} |
+| Complexity | {{ "%.1f"|format(wf.complexity_score) }} |
+
+{% if wf.recommended_agents %}
+**Recommended Agent Types:** {{ wf.recommended_agents|join(", ") }}
+{% endif %}
+
+{% if wf.specific_steps_to_automate %}
+**Steps to Automate:**
+{% for step in wf.specific_steps_to_automate %}
+- {{ step }}
+{% endfor %}
+{% endif %}
+
+{% endfor %}
+
+## 5. Integration Inventory
+
+| Integration | Endpoint | Method | Active |
+|-------------|----------|--------|--------|
+{% for integ in integrations %}
+| {{ integ.name }} | {{ integ.endpoint }} | {{ integ.http_method }} | {{ "Yes" if integ.active else "No" }} |
+{% endfor %}
+
+## 6. Technical Constraints
+
+1. **API Rate Limits** — ServiceNow REST API enforces per-session rate limits; agents must implement backoff.
+2. **Authentication** — OAuth 2.0 token rotation required; agent credentials must be stored in a secure vault.
+3. **Latency** — Agent decision latency must remain under 5 seconds for synchronous operations.
+4. **Idempotency** — All agent actions must be idempotent to allow safe retries.
+5. **Audit Trail** — Every agent decision must be logged with rationale.
+
+## 7. Performance Requirements (SLA Targets)
+
+| Metric | Target | Measurement |
+|--------|--------|-------------|
+| Request Intake | < 2s | Time from user submission to orchestrator acknowledgment |
+| Approval Decision (auto) | < 5s | Time from approval trigger to decision |
+| Provisioning (auto) | < 30s | Time from approval to fulfillment completion |
+| Escalation Handoff | < 30s | Time from escalation trigger to human assignment |
+| End-to-End (simple) | < 5 min | Total time for simple, auto-approved requests |
+| Agent Availability | 99.9% | Uptime of agent runtime |

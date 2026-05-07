@@ -1,0 +1,126 @@
+{
+  "risks": [
+    {
+      "id": "R01",
+      "category": "technical",
+      "description": "API rate limits restrict agent throughput during peak load",
+      "likelihood": 3,
+      "impact": 4,
+      "risk_score": 12,
+      "mitigation": "Implement request batching, caching, and exponential backoff. Negotiate higher rate limits with ServiceNow.",
+      "detection": "Monitor API response headers for rate-limit counters. Alert at 80% threshold.",
+      "owner": "Integration Architect"
+    },
+    {
+      "id": "R02",
+      "category": "security",
+      "description": "Authentication token expiration causes agent failures",
+      "likelihood": 3,
+      "impact": 4,
+      "risk_score": 12,
+      "mitigation": "Implement OAuth2 with automated refresh. Store tokens in secure vault. Proactive refresh 5 minutes before expiry.",
+      "detection": "Health check endpoint monitors token validity. Alert on auth failures.",
+      "owner": "Security Officer"
+    },
+    {
+      "id": "R03",
+      "category": "technical",
+      "description": "Agent hallucination produces incorrect fulfillment actions",
+      "likelihood": 2,
+      "impact": 5,
+      "risk_score": 10,
+      "mitigation": "Constrained agent outputs with structured schemas. Human-in-the-loop for all provisioning decisions. Guardrails on action parameters.",
+      "detection": "Diff agent output against expected schema. Anomaly detection on actions.",
+      "owner": "AI/ML Engineer"
+    },
+    {
+      "id": "R04",
+      "category": "operational",
+      "description": "SLA degradation during migration due to parallel-run overhead",
+      "likelihood": 3,
+      "impact": 3,
+      "risk_score": 9,
+      "mitigation": "Staged rollout with 2-week parallel run windows. Automated SLA monitoring with auto-rollback triggers.",
+      "detection": "Real-time SLA dashboard. Alert if SLA drops below 5% of baseline.",
+      "owner": "Service Manager"
+    },
+    {
+      "id": "R05",
+      "category": "organizational",
+      "description": "User resistance and low adoption of agent-driven catalog",
+      "likelihood": 4,
+      "impact": 3,
+      "risk_score": 12,
+      "mitigation": "Early engagement with champions. Demonstrate Quick Wins. Comprehensive training program before full rollout. Maintain portal access as fallback.",
+      "detection": "User satisfaction surveys. Adoption metrics (agent vs portal usage).",
+      "owner": "Change Manager"
+    },
+    {
+      "id": "R06",
+      "category": "organizational",
+      "description": "Skill gaps — team lacks AI/agent operations expertise",
+      "likelihood": 3,
+      "impact": 3,
+      "risk_score": 9,
+      "mitigation": "Hire or contract AI ops specialist. Training program for existing admins. Vendor support agreement for first 6 months.",
+      "detection": "Incident response time metrics. Knowledge check assessments.",
+      "owner": "Engineering Manager"
+    },
+    {
+      "id": "R07",
+      "category": "data",
+      "description": "Incomplete or stale catalog items cause incorrect agent behavior",
+      "likelihood": 3,
+      "impact": 4,
+      "risk_score": 12,
+      "mitigation": "Pre-migration catalog audit and cleanup. Automated validation rules. Agent confirms item validity before action.",
+      "detection": "Catalog health dashboard. Item staleness alerts (> 90 days without update).",
+      "owner": "ServiceNow Admin"
+    },
+    {
+      "id": "R08",
+      "category": "security",
+      "description": "Audit trail gaps — agent decisions not fully logged",
+      "likelihood": 2,
+      "impact": 5,
+      "risk_score": 10,
+      "mitigation": "Structured logging of every agent decision with rationale. Immutable audit log. Regular compliance audits.",
+      "detection": "Automated audit log completeness checks. Gap alerts.",
+      "owner": "Security Officer"
+    },
+    {
+      "id": "R09",
+      "category": "technical",
+      "description": "LLM inference latency exceeds SLA thresholds under load",
+      "likelihood": 3,
+      "impact": 3,
+      "risk_score": 9,
+      "mitigation": "Deploy LLM with autoscaling. Cache common responses. Circuit breaker for non-critical decisions. Local fallback model.",
+      "detection": "Latency percentiles (p50, p95, p99) dashboard. Alert on p95 > 5s.",
+      "owner": "Platform Engineer"
+    },
+    {
+      "id": "R10",
+      "category": "operational",
+      "description": "Integration failures cascade across agent fleet",
+      "likelihood": 2,
+      "impact": 4,
+      "risk_score": 8,
+      "mitigation": "Circuit breakers per integration. Bulkhead pattern — isolate agent groups. Graceful degradation (queue requests, retry later).",
+      "detection": "Integration health endpoint polling. Dependency graph alerting.",
+      "owner": "SRE Lead"
+    },
+    {
+      "id": "R11",
+      "category": "data",
+      "description": "Data migration errors when syncing catalog state to agent context store",
+      "likelihood": 4,
+      "impact": 2,
+      "risk_score": 8,
+      "mitigation": "Incremental sync with checksum validation. Dry-run before cutover. Reconciliation reports.",
+      "detection": "Data integrity checks. Row-count comparisons between source and target.",
+      "owner": "Data Engineer"
+    }
+  ],
+  "summary": "Identified 11 risks: 0 high (score ≥ 15), 11 medium (6-14), 0 low (< 6). Top category: technical."
+}

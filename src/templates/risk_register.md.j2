@@ -1,0 +1,61 @@
+---
+title: "Risk Register — AI Migration for {{ instance_url }}"
+date: "{{ generated_at }}"
+risk_count: {{ risks|length }}
+---
+
+# Risk Register
+
+## Summary
+
+{{ summary }}
+
+## Risk Matrix
+
+| ID | Category | Description | L | I | Score | Mitigation | Detection | Owner |
+|----|----------|-------------|---|---|-------|------------|-----------|-------|
+{% for risk in risks %}
+| {{ risk.id }} | {{ risk.category }} | {{ risk.description }} | {{ risk.likelihood }} | {{ risk.impact }} | {{ risk.risk_score }} | {{ risk.mitigation }} | {{ risk.detection }} | {{ risk.owner }} |
+{% endfor %}
+
+## Risk Heat Map
+
+```
+Impact
+  5 |     |     |  M  |  H  |  H  |
+  4 |     |  L  |  M  |  H  |  H  |
+  3 |     |  L  |  M  |  M  |  H  |
+  2 |  L  |  L  |  L  |  M  |  M  |
+  1 |  L  |  L  |  L  |  L  |  L  |
+    +-----+-----+-----+-----+-----+
+      1     2     3     4     5   Likelihood
+
+L = Low (1-5)   M = Medium (6-12)   H = High (15-25)
+```
+
+## Risk Distribution by Category
+
+| Category | Count | Avg Score |
+|----------|-------|-----------|
+{% for cat in category_summary %}
+| {{ cat.category }} | {{ cat.count }} | {{ "%.1f"|format(cat.avg_score) }} |
+{% endfor %}
+
+## Top Risks requiring immediate attention
+
+{% for risk in top_risks %}
+### {{ risk.id }}: {{ risk.description }}
+
+- **Score:** {{ risk.risk_score }} (Likelihood: {{ risk.likelihood }}, Impact: {{ risk.impact }})
+- **Category:** {{ risk.category }}
+- **Mitigation:** {{ risk.mitigation }}
+- **Detection:** {{ risk.detection }}
+- **Owner:** {{ risk.owner }}
+
+{% endfor %}
+
+## Monitoring & Review
+
+- Risk register reviewed weekly during migration phases.
+- New risks added as discovered; resolved risks marked closed.
+- Escalation to steering committee for any risk scoring ≥ 15.

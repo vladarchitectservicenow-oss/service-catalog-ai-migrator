@@ -1,0 +1,74 @@
+---
+title: "Migration Roadmap — {{ instance_url }}"
+date: "{{ generated_at }}"
+total_duration_weeks: {{ total_duration_weeks }}
+---
+
+# Migration Roadmap
+
+## Overview
+
+**Instance:** {{ instance_url }}  
+**Total Duration:** {{ total_duration_weeks }} weeks  
+**Strategy:** {{ parallel_run_strategy }}  
+
+## Phase Timeline
+
+```mermaid
+gantt
+    title AI Migration Roadmap
+    dateFormat  YYYY-MM-DD
+{% for phase in phases %}
+    section {{ phase.name }}
+    {{ phase.name | replace(" ", "_") }} :{{ phase.name | replace(" ", "_") }}, {{ phase.start_offset }}w, {{ phase.duration_weeks }}w
+{% endfor %}
+```
+
+## Detailed Phases
+
+{% for phase in phases %}
+### Phase {{ loop.index0 }}: {{ phase.name }}
+
+| Attribute | Value |
+|-----------|-------|
+| Duration | {{ phase.duration_weeks }} weeks |
+| Start Offset | Week {{ phase.start_offset }} |
+
+**Description:** {{ phase.description }}
+
+{% if phase.workflows_included %}
+**Workflows Included:**
+{% for wf in phase.workflows_included %}
+- {{ wf }}
+{% endfor %}
+{% endif %}
+
+{% if phase.success_criteria %}
+**Success Criteria:**
+{% for criterion in phase.success_criteria %}
+- [ ] {{ criterion }}
+{% endfor %}
+{% endif %}
+
+{% if phase.rollback_plan %}
+**Rollback Plan:** {{ phase.rollback_plan }}
+{% endif %}
+
+{% endfor %}
+
+## Summary
+
+| Phase | Duration | Workflows | Key Deliverable |
+|-------|----------|-----------|-----------------|
+{% for phase in phases %}
+| {{ phase.name }} | {{ phase.duration_weeks }}w | {{ phase.workflows_included|length }} | {{ phase.key_deliverable }} |
+{% endfor %}
+
+## Go/No-Go Gates
+
+| Gate | After Phase | Criteria |
+|------|-------------|----------|
+| G1 | Foundation | API connectivity verified, monitoring dashboard live |
+| G2 | Quick Wins | ≥ 2 workflows migrated, no SLA regressions |
+| G3 | Core Migration | ≥ 70% of medium-readiness workflows migrated |
+| G4 | Advanced | All high-complexity workflows stable in parallel run |

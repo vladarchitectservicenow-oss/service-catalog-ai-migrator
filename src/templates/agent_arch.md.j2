@@ -1,0 +1,85 @@
+---
+title: "Agent Architecture — {{ workflow_name }}"
+workflow_sys_id: "{{ workflow_sys_id }}"
+date: "{{ generated_at }}"
+---
+
+# Agent Architecture: {{ workflow_name }}
+
+## 1. Workflow Summary
+
+| Attribute | Value |
+|-----------|-------|
+| Workflow | {{ workflow_name }} |
+| Sys ID | {{ workflow_sys_id }} |
+| Health Score | {{ "%.1f"|format(health_score) }} |
+| Readiness | {{ automation_readiness }} |
+| Complexity | {{ "%.1f"|format(complexity_score) }} |
+
+## 2. Agent Topology
+
+```mermaid
+{{ topology }}
+```
+
+## 3. Agent Definitions
+
+{% for agent in agents %}
+### 3.{{ loop.index }} {{ agent.name }}
+
+| Attribute | Value |
+|-----------|-------|
+| Role | {{ agent.role }} |
+| Description | {{ agent.description }} |
+| Fallback | {{ agent.fallback_behavior }} |
+
+{% if agent.tools %}
+**Tools:**
+{% for tool in agent.tools %}
+- `{{ tool }}`
+{% endfor %}
+{% endif %}
+
+{% if agent.triggers %}
+**Triggers:**
+{% for trigger in agent.triggers %}
+- {{ trigger }}
+{% endfor %}
+{% endif %}
+
+{% if agent.human_in_the_loop %}
+**Human-in-the-Loop Checkpoints:**
+{% for checkpoint in agent.human_in_the_loop %}
+- {{ checkpoint }}
+{% endfor %}
+{% endif %}
+
+{% endfor %}
+
+## 4. Communication Pattern
+
+**Pattern:** {{ communication_pattern }}
+
+{% if communication_pattern == "sync" %}
+Agents communicate synchronously through the orchestrator. Each agent processes its task and
+returns control to the orchestrator before the next agent is invoked.
+{% else %}
+Agents communicate asynchronously via a message bus. The orchestrator publishes events, and
+specialist agents subscribe and respond independently.
+{% endif %}
+
+## 5. Estimated Complexity
+
+**Level:** {{ estimated_complexity }}/5
+
+| Complexity | Agents | Integration Points | Human Touchpoints |
+|-----------|--------|-------------------|-------------------|
+| {{ estimated_complexity }} | {{ agents|length }} | {{ integration_count }} | {{ human_touchpoints }} |
+
+## 6. Success Criteria
+
+1. All automated steps execute without manual intervention.
+2. Human touchpoints fire only at designated checkpoints.
+3. Audit trail captures every agent decision.
+4. Fallback to human escalation functions within 30 seconds.
+5. Agent throughput meets or exceeds current manual throughput.

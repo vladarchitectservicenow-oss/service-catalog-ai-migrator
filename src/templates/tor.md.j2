@@ -1,0 +1,99 @@
+---
+title: "Terms of Reference — AI Migration for {{ instance_url }}"
+date: "{{ generated_at }}"
+version: "1.0"
+status: "Draft"
+---
+
+# Terms of Reference
+
+## 1. Project Overview
+
+**Project Name:** AI-Powered Service Catalog Migration  
+**Instance:** {{ instance_url }}  
+**Date:** {{ generated_at }}  
+
+This Terms of Reference defines the scope, objectives, and governance for migrating
+the ServiceNow service catalog at **{{ instance_url }}** to an AI-agent-driven architecture.
+
+## 2. Current State Summary
+
+| Metric | Value |
+|--------|-------|
+| Catalog Items | {{ total_items }} |
+| Active Workflows | {{ total_workflows }} |
+| Script Includes | {{ total_scripts }} |
+| Business Rules | {{ total_business_rules }} |
+| REST Integrations | {{ total_integrations }} |
+| Total Request History Records | {{ total_history }} |
+
+{% if bottlenecks %}
+### Key Bottlenecks Identified
+
+| Workflow | Type | Severity | Affected Requests |
+|----------|------|----------|-------------------|
+{% for b in bottlenecks %}
+| {{ b.workflow_name }} | {{ b.bottleneck_type }} | {{ b.severity }} | {{ b.affected_requests }} |
+{% endfor %}
+{% endif %}
+
+## 3. Project Objectives
+
+1. **Automate repetitive tasks** — Replace manual approval chains and provisioning steps with AI agents.
+2. **Reduce SLA breaches** — Proactive monitoring and agent-driven fulfillment.
+3. **Improve user experience** — Natural-language interaction with service catalog agents.
+4. **Maintain compliance** — Full audit trail retention throughout migration.
+5. **Enable scalability** — Agent architecture that scales with demand.
+
+## 4. Target State Vision
+
+- **AI Orchestrator Agents** manage end-to-end request fulfillment.
+- **Approval Agents** handle routine approvals using policy-based decisioning.
+- **Provisioning Agents** execute fulfillment tasks via API integrations.
+- **Notification Agents** keep users informed at every step.
+- **Escalation Agents** route exceptions to human operators when confidence is low.
+
+## 5. Stakeholders
+
+| Role | Responsibility |
+|------|---------------|
+| Executive Sponsor | Strategic oversight and funding approval |
+| ServiceNow Admin | Instance access and technical configuration |
+| Integration Architect | API design and connectivity |
+| Security Officer | Access control and audit compliance |
+| Change Manager | CAB approvals and rollout coordination |
+| End Users | Service requestors and approvers |
+
+## 6. Success Metrics
+
+| Metric | Baseline | Target |
+|--------|----------|--------|
+| SLA Compliance Rate | {% if avg_sla_compliance is not none %}{{ "%.1f"|format(avg_sla_compliance) }}%{% else %}TBD{% endif %} | ≥ 95% |
+| Manual Steps per Request | {{ total_manual_steps }} | ≤ 2 |
+| Average Fulfillment Time | {% if avg_fulfillment_hours is not none %}{{ "%.1f"|format(avg_fulfillment_hours) }} hrs{% else %}TBD{% endif %} | ≤ 2 hrs |
+| Agent Automation Rate | 0% | ≥ 80% |
+| User Satisfaction | TBD | ≥ 4.5/5 |
+
+## 7. Key Assumptions
+
+1. ServiceNow instance remains accessible throughout the migration.
+2. API rate limits are sufficient for agent-driven operations.
+3. Existing integrations remain stable and well-documented.
+4. Staff are available for training and parallel-run oversight.
+5. LLM inference latency is within acceptable thresholds (< 5s per decision).
+
+## 8. Constraints
+
+- No disruption to production catalog items during migration.
+- All agent decisions must be auditable.
+- Human-in-the-loop for high-impact actions (P1 items, security changes).
+- On-premises data must not leave approved environments.
+
+## 9. Deliverables
+
+1. Agent Architecture Designs (per workflow)
+2. Migration Roadmap with phased rollout plan
+3. Risk Register with mitigations
+4. Technical Specification
+5. Training Plan for all user roles
+6. Production-ready Agent Deployment

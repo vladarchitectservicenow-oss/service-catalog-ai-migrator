@@ -1,0 +1,18 @@
+servicenow:
+  instance_url: "https://your-instance.service-now.com"
+  username: "admin"
+  password: ""
+
+llm:
+  provider: "openai"
+  api_key: ""
+  model: "gpt-4o"
+
+output:
+  dir: "./output"
+  formats: ["markdown"]
+
+discovery:
+  max_catalog_items: 500
+  history_days: 365
+  include_inactive: false
