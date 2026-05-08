@@ -1,126 +1,118 @@
 # LinkedIn Posts — ServiceNow AI Migration Architect
 
-## Post 1 (Russian) — Announcement
+## Post 1 — Product Launch (main LinkedIn post)
 
-🚀 Мы построили инструмент, который за 5 минут делает то, на что у архитектора уходит 2 недели.
+I built a tool that connects to your ServiceNow instance and generates a complete AI agent migration blueprint in 5 minutes.
 
-ServiceNow AI Migration Architect — Python-приложение, которое:
-• Подключается к вашему инстансу ServiceNow
-• Автоматически анализирует ВСЕ catalog items, workflow, скрипты и историю запросов
-• Генерирует полный пакет документов для миграции на AI-агентов
+Verified on a real PDI (dev362840, May 2026):
+→ 197 catalog items · 6 workflows · 11 REST integrations
+→ 4,765 script includes · 5,654 business rules
+→ Full analysis pipeline in seconds
 
-Проверено на реальном PDI: **197 catalog items, 6 workflows, 11 интеграций, 4,765 script includes, 5,654 business rules** — полный анализ за секунды.
+Here's what it produces:
 
-Что на выходе:
-✅ Executive Summary для CTO (на русском)
-✅ Terms of Reference (ТЗ)
-✅ Техническая спецификация с архитектурными диаграммами
-✅ Анализ каждого workflow (health score 0-100, readiness)
-✅ Топология AI-агентов под каждый процесс
-✅ Поэтапный план миграции (5 фаз, ~20 недель)
-✅ Реестр рисков (12 рисков, 6 категорий, L×I scoring)
-✅ План обучения по ролям
+📄 Executive Summary (CTO-ready)
+📋 Terms of Reference — scope, objectives, success metrics
+⚙️ Technical Specification — current → target architecture with Mermaid diagrams
+🤖 AI Agent Topology per workflow — orchestrator, approval, provisioning, notification, escalation agents
+🗺️ 5-Phase Roadmap — Foundation → Quick Wins → Core → Advanced → Optimization
+⚠️ Risk Register — 12 risks, L×I scoring, mitigations (API rate limits, auth expiry, hallucination, audit trail gaps…)
+🎓 Role-Based Training Plan — end users, approvers, admins
 
-Почему это важно сейчас:
-ServiceNow Australia release — AI Agent Studio уже в продакшене. Enterprise-компании получают 40-55% deflection rate и ROI 5-8 месяцев. Главный вопрос — «с чего начать?». Наш инструмент отвечает на него за минуты, а не недели.
+Why this matters now:
+ServiceNow Australia release ships AI Agent Studio in production. Enterprise numbers are real — 40–55% deflection rate, 5–8 month ROI. The bottleneck isn't the technology. It's the analysis: "which workflows are ready? which scripts will break? what's the safe migration sequence?"
 
-**88 passing tests.** Open source (AGPL-3.0). Commercial licensing available.
+This tool answers all of it automatically.
 
-Интересно потестировать на своем инстансе? 👇
+Built with Python 3.11+, async httpx, Pydantic v2, Jinja2, Typer + Rich.
+88/88 tests passing ✅
+AGPL-3.0 — commercial licensing available.
 
-#ServiceNow #AIAgents #EnterpriseAutomation #DigitalTransformation #ServiceCatalog
+The tool doesn't replace the architect. It eliminates the grunt work so the architect can focus on decisions that matter.
+
+Repo: github.com/vladarchitectservicenow-oss/service-catalog-ai-migrator
+
+#ServiceNow #AIAgents #EnterpriseArchitecture #Automation #Python #DigitalTransformation
 
 ---
 
-## Post 2 (English) — Technical deep-dive + real metrics
+## Post 2 — Technical Deep-Dive (2-3 days later)
 
-I built a tool that connects to your ServiceNow instance and generates a complete AI agent migration blueprint.
+Here's exactly what happens when you run `sn-ai-migrator generate` against a real ServiceNow instance:
 
-**Verified on a real PDI (May 8, 2026):** 197 catalog items, 6 workflows, 11 REST integrations, 4,765 script includes, 5,654 business rules — full analysis pipeline in seconds.
+Phase 1 — Discovery (parallel async httpx crawlers):
+sc_cat_item → all 197 catalog items with variables
+wf_workflow → 6 workflow definitions + full activity trees
+sys_script_include → 4,765 script includes audited
+sys_script → 5,654 business rules analyzed
+sys_rest_message → 11 active integrations mapped
+sc_req_item → historical request stats with SLA data
 
-Here's what happens under the hood:
+Phase 2 — Analysis (4 engines):
+Workflow Health Scorer — 0-100 per workflow (complexity, manual steps, approvals, timers)
+Script Auditor — finds GlideRecord patterns needing REST refactoring
+Bottleneck Finder — ranks workflows by pain (SLA breaches × volume × manual steps)
+Integration Mapper — categorizes all external connections with risk scores
 
-**Phase 1 — Discovery (parallel async httpx crawlers):**
-• sc_cat_item → all catalog items with variables
-• wf_workflow → workflow definitions + activity trees
-• sys_script_include → script includes audit (4,765 found)
-• sys_script → business rules analysis (5,654 found)
-• sys_rest_message → integration mapping (11 active integrations)
-• sc_req_item → historical request stats (SLA breaches, fulfillment time)
+Phase 3 — Generation:
+AI agent topologies per workflow with Mermaid.js diagrams
+5-phase roadmap: Foundation (2w) → Quick Wins (4w) → Core (8w) → Advanced (6w) → Continuous Optimization
+Risk register: 12 risks, L×I matrix, heat map, actionable mitigations
+Role-based training: end users, approvers, administrators
 
-**Phase 2 — Analysis (4 engines):**
-• Workflow Health — 0-100 score per workflow (complexity, manual steps, approvals, timers, SLA)
-• Script Auditor — finds GlideRecord patterns needing REST refactoring
-• Bottleneck Finder — ranks by pain (SLA breaches × volume × manual steps)
-• Integration Mapper — categorizes Azure AD, Slack, Jira, Okta, AWS, SAP, Datadog + Firebase, Yahoo Finance
+The discovery layer alone would take an architect 2-3 days. The analysis — another week. The document generation — another week.
 
-**Phase 3 — Generation (Jinja2 + analysis):**
-• AI agent topologies per workflow (Mermaid diagrams)
-• 5-phase roadmap: Foundation → Quick Wins → Core → Advanced → Optimization
-• Risk register: 12 risks, L×I scoring, detailed mitigations
-• Role-based training: end users, approvers, admins
+This tool does it in 5 minutes. On real instance data. With 88 passing tests.
 
-Built with Python 3.11+, httpx, Pydantic v2, Typer, Rich, Jinja2.
-**88/88 tests passing.** AGPL-3.0. Commercial licensing available.
-
-All ServiceNow terminology verified against official Australia release docs (ServiceNowDocs repo). No hallucinations.
+All ServiceNow terminology verified against official Australia release docs (ServiceNowDocs repository). No AI-generated feature names. No hallucinations.
 
 #ServiceNow #AI #Automation #Python #EnterpriseArchitecture
 
 ---
 
-## Post 3 (Russian) — Реальные цифры и контекст
+## Post 3 — The Business Case (1 week later)
 
-Факты из практики (май 2026):
+ServiceNow spent $10B+ on AI M&A in 18 months. Moveworks for $3B. Armis for $7.75B. They're not betting on AI — they're all-in.
 
-• Протестировано на реальном ServiceNow PDI: **197 catalog items, 6 workflows, 11 интеграций**
-• ServiceNow Australia release: AI Agent Studio, Now Assist skills, Generative AI Controller
-• Enterprise кейсы: deflection rate 40-55%, ROI 5-8 месяцев, MTTR с часов до минут
-• Platform agentic workflows: classify tasks, generate resolution plans, investigate problems, analyze trends
+The Australia release ships AI Agent Studio in production. Enterprise customers are hitting 40-55% deflection rates with 5-8 month ROI. The technology works.
 
-Главные инсайты из community:
-«Не автоматизируйте сломанный процесс — сначала оптимизируйте»
-«Начинайте с топ-20 catalog items — это 80% объема»
-«Чистите Knowledge Base минимум 3 месяца перед AI-запуском»
-«Оставьте Service Catalog как fallback — пользователи не простят, если чат медленнее формы»
+But here's what nobody talks about: the analysis bottleneck.
 
-Мы встроили все эти принципы в наш инструмент. Он не просто генерирует документы — он подсвечивает проблемные workflow ДО миграции.
+Every ServiceNow instance has years of accumulated workflows, scripts, catalog items, and integrations. Before you can deploy a single AI agent, you need to answer:
 
-**88 тестов, всё зелёное.**
+— Which of my 197 catalog items are AI-ready?
+— Which scripts will break when an agent calls them?
+— What's the safe migration sequence?
+— Which integrations are stable enough for autonomous orchestration?
 
-#ServiceNow #AITransformation #EnterpriseIT #Automation
+This analysis takes architects 2-4 weeks. Per instance.
+
+I built a tool that does it in 5 minutes.
+
+It connects to your ServiceNow instance, discovers everything, analyzes workflow health, scripts, bottlenecks, and integrations — then generates a complete AI agent migration blueprint.
+
+Open source. AGPL-3.0. 88 tests. Real PDI-verified metrics.
+
+github.com/vladarchitectservicenow-oss/service-catalog-ai-migrator
+
+#ServiceNow #AI #DigitalTransformation #ROI #EnterpriseIT
 
 ---
 
-## Post 4 (English) — The architect's perspective
+## Post 4 — Lessons Learned (2 weeks later)
 
-As an enterprise architect, I've seen the pattern repeat:
+Building an AI migration tool for ServiceNow taught me a few things:
 
-Company buys ServiceNow → builds 500 catalog items → years of custom scripts → now wants AI agents
+1. Official documentation matters. ServiceNow has a dedicated repo (ServiceNowDocs) with LLM-optimized docs. The actual product names are "AI Agent Studio" (not "Agent Studio"), "Generative AI Controller" (not "GenAI Controller"), "Now Assist skills" (not "Skill Kit"). Getting terminology right is the difference between credibility and looking like you made it up.
 
-The question is never "should we?" — it's "where do we start?"
+2. Real data beats demos. I tested against a real PDI with 197 catalog items, 6 workflows, 11 integrations, and thousands of scripts. The tool found actual bottlenecks — not theoretical ones. Demo data doesn't teach you anything.
 
-Enter ServiceNow AI Migration Architect:
+3. AGPL-3.0 is the right license for AI tools. If someone uses your code to build a SaaS product, they must open-source their changes. It protects your IP while still letting the community learn from your work.
 
-```
-$ sn-ai-migrator generate
-```
+4. The gap isn't AI capability — it's analysis. ServiceNow's AI platform is production-ready. The hard part is knowing where to apply it. That's what this tool solves.
 
-1 command. 5 minutes. Complete migration blueprint.
+Open to feedback, contributors, and commercial licensing inquiries.
 
-Output:
-📄 Executive Summary (CTO-ready)
-📄 Technical Specification with architecture diagrams
-📄 Per-workflow AI agent topology (orchestrator, approval, provisioning agents)
-📄 5-phase roadmap with success criteria and rollback plans
-📄 Risk Register (12 risks, L×I scored, with mitigations)
-📄 Training Plan by role (end users, approvers, admins)
+github.com/vladarchitectservicenow-oss/service-catalog-ai-migrator
 
-**Verified on a real ServiceNow PDI with 197 items, 6 workflows, 11 integrations, 4,765 scripts.**
-
-The tool doesn't replace the architect — it eliminates the grunt work so the architect can focus on decisions that matter.
-
-Open source (AGPL-3.0). Commercial licensing available.
-88/88 tests passing.
-
-#EnterpriseArchitecture #ServiceNow #AI #DigitalTransformation
+#ServiceNow #OpenSource #AI #SoftwareEngineering #LessonsLearned

@@ -1,173 +1,173 @@
 # IP Protection Guide — ServiceNow AI Migration Architect
 
-## Как защитить свой код: юридические и технические меры
+## How to Protect Your Code: Legal and Technical Measures
 
-Ты выложил проект в open-source на GitHub и хочешь заявить о себе в LinkedIn. Вопрос: как сделать так, чтобы разработчик не взял твой код бесплатно для своего клиента, и чтобы компания не скопировала код, чуть подправила и сделала вид, что это их продукт?
+You've open-sourced your project on GitHub and want to announce it on LinkedIn. The question: how do you prevent a developer from using your code for free for their client, or a company from copying it, tweaking a few lines, and passing it off as their own product?
 
-Ответ — комбинация юридической защиты (лицензия) и технических мер (доказательство авторства, необратимые артефакты).
+The answer is a combination of legal protection (license) and technical measures (proof of authorship, immutable artifacts).
 
 ---
 
-## 1. Юридическая защита — почему AGPL-3.0
+## 1. Legal Protection — Why AGPL-3.0
 
-### Что такое AGPL-3.0
+### What is AGPL-3.0
 
-**GNU Affero General Public License v3.0** — самая сильная из copyleft-лицензий. Это «ядерное оружие» open-source защиты. Ключевые отличия от MIT/Apache/GPL:
+**GNU Affero General Public License v3.0** is the strongest copyleft license. Call it the "nuclear option" of open-source protection. Key differences from MIT/Apache/GPL:
 
-| Ситуация | MIT | GPL-3.0 | AGPL-3.0 |
+| Scenario | MIT | GPL-3.0 | AGPL-3.0 |
 |---|---|---|---|
-| Кто-то форкает и использует внутри компании | ✅ Можно | ✅ Можно | ✅ Можно |
-| Кто-то форкает, меняет 2 строчки и продаёт как свой SaaS | ✅ Можно | ❌ Нельзя | ❌ Нельзя |
-| Кто-то делает SaaS на основе твоего кода (пользователи через веб) | ✅ Можно | ✅ Можно (лазейка!) | ❌ Нельзя |
-| Кто-то делает форк — ОБЯЗАН открыть исходники под той же лицензией | Нет | Да (при распространении) | Да (при любом использовании через сеть) |
+| Someone forks and uses internally | ✅ Allowed | ✅ Allowed | ✅ Allowed |
+| Someone forks, changes 2 lines, sells as their SaaS | ✅ Allowed | ❌ Not allowed | ❌ Not allowed |
+| Someone builds a SaaS on your code (users via web) | ✅ Allowed | ✅ Allowed (loophole!) | ❌ Not allowed |
+| Someone forks — MUST open-source under same license | No | Yes (on distribution) | Yes (on ANY network use) |
 
-### Почему AGPL, а не просто GPL
+### Why AGPL, Not Just GPL
 
-GPL-3.0 требует открывать исходники только при **распространении** (дистрибуции). Если компания берёт твой код, запускает на своём сервере и продаёт как SaaS — пользователи взаимодействуют через веб, код не распространяется. Это «GPL loophole».
+GPL-3.0 only requires source disclosure upon **distribution**. If a company takes your code, runs it on their server, and sells it as SaaS — users interact via web, code is never distributed. This is the "GPL loophole."
 
-**AGPL-3.0 закрывает эту лазейку**: если кто-то использует твой код для предоставления услуг через сеть (SaaS, веб-сервис), он обязан предоставить исходный код всем пользователям этого сервиса. Это делает невозможным коммерческое использование твоего кода «втихую».
+**AGPL-3.0 closes this loophole**: if someone uses your code to provide services over a network (SaaS, web service), they MUST provide the source code to all users of that service. This makes covert commercial use impossible.
 
-### Что конкретно запрещает твоя лицензия
+### What Your License Specifically Prohibits
 
-Текст в README и LICENSE говорит чётко:
+The README and LICENSE state clearly:
 
-- ❌ Запрещено использовать в коммерческих продуктах и SaaS без paid-лицензии
-- ❌ Запрещено продавать, распространять как часть проприетарного софта
-- ⚠️ Любые производные работы обязаны быть открыты под той же AGPL-3.0
-- ⚠️ Коммерческое использование требует отдельной paid-лицензии от тебя
+- ❌ Prohibited from use in commercial products and SaaS without a paid license
+- ❌ Prohibited from selling or distributing as part of proprietary software
+- ⚠️ All derivative works MUST be open-sourced under AGPL-3.0
+- ⚠️ Commercial use requires a separate paid license from you
 
-### Иерархия защиты
+### Protection Hierarchy
 
-1. **AGPL-3.0** = базовая защита. Сам факт копирования и коммерческого использования без paid-лицензии = нарушение.
-2. **Упоминание коммерческой лицензии в README** = явное уведомление. Компания не может сказать «мы не знали».
-3. **Copyright notice в каждом файле** = доказательство авторства.
-4. **Отсутствие CLA (Contributor License Agreement)** = никто не может перелицензировать проект без тебя.
-
----
-
-## 2. Технические меры — необратимые доказательства авторства
-
-Юридическая защита работает, только если ты можешь доказать, что код твой и был написан до того, как «они» его скопировали.
-
-### GitHub как доказательство
-
-- **Коммиты с timestamp** — доказательство времени создания
-- **GitHub history immutable** — историю коммитов нельзя подделать задним числом
-- **LICENSE файл в корне репозитория** — с первого коммита
-
-### Усиление: распределённый timestamping
-
-GitHub лежит на частном сервере. Теоретически можно оспорить. Дополнительные меры:
-
-1. **Зафиксировать хеш репозитория в блокчейне** (например, через https://opentimestamps.org) — децентрализованное доказательство, что код существовал на конкретную дату. Бесплатно и необратимо.
-
-2. **ArXiv / Zenodo** — можно загрузить описание архитектуры на Zenodo (CERN) с DOI. Это даёт научный timestamp и независимого третьего свидетеля.
-
-3. **Copyright registration** — в США можно зарегистрировать копирайт через copyright.gov ($45-65). Необязательно, но даёт право на statutory damages (до $150k) без доказательства реального ущерба.
-
-### Водяные знаки в коде (технический след)
-
-Не стоит делать очевидные «пасхалки», но можно внедрить уникальные паттерны, которые сложно случайно воспроизвести:
-
-- Уникальные названия переменных/классов в утилитах
-- Специфическая структура JSON-схем
-- Уникальные ID в тестовых фикстурах
-
-Если кто-то скопирует код «подчистую» — эти паттерны останутся и будут доказательством в diff-сравнении.
+1. **AGPL-3.0** = baseline protection. Copying + commercial use without paid license = violation.
+2. **Commercial license mention in README** = explicit notice. A company cannot claim "we didn't know."
+3. **Copyright notice in every file** = proof of authorship.
+4. **No CLA (Contributor License Agreement)** = nobody can relicense the project without you.
 
 ---
 
-## 3. Что делать, если код украли
+## 2. Technical Measures — Irreversible Proof of Authorship
 
-### Сценарий 1: Разработчик использовал твой код для клиента без paid-лицензии
+Legal protection only works if you can prove the code is yours and was written before "they" copied it.
 
-**Шаги:**
-1. Собрать доказательства: ссылка на репозиторий, даты коммитов, сравнение кода (diff)
-2. Отправить formal notice на email нарушителя с требованием:
-   - Прекратить использование (cease & desist)
-   - Приобрести коммерческую лицензию задним числом
-3. При игнорировании — DMCA takedown через GitHub, жалоба работодателю/клиенту
-4. Юридическое письмо от адвоката с требованием компенсации
+### GitHub as Evidence
 
-### Сценарий 2: Компания скопировала, подправила, выдала за свой продукт
+- **Timestamped commits** — proof of creation time
+- **Immutable Git history** — cannot be forged retroactively
+- **LICENSE file in repo root** — from commit #1
 
-**Шаги:**
-1. Зафиксировать доказательства (скриншоты продукта, Wayback Machine)
-2. Провести forensic code analysis — найти уникальные паттерны из твоего кода в их продукте
-3. Отправить formal legal notice через адвоката:
-   - Нарушение AGPL-3.0 (не открыли исходники)
-   - Нарушение копирайта (не указали авторство)
-   - Требование компенсации и прекращения использования
-4. Если компания крупная — привлечь внимание сообщества (Twitter/LinkedIn — «эта компания украла open-source код»)
-5. Параллельно — DMCA takedown их репозиториев
+### Strengthening: Distributed Timestamping
 
-### Сценарий 3: Форк сделали без указания авторства, но соблюдают AGPL
+GitHub runs on a private server. Theoretically contestable. Additional measures:
 
-**Это нормально.** AGPL разрешает форки при условии:
-- Та же лицензия (AGPL-3.0)
-- Сохранение copyright notice
-- Открытый исходный код
+1. **Anchor the repo hash in a blockchain** (e.g., via https://opentimestamps.org) — decentralized proof the code existed on a specific date. Free and immutable.
 
-Но если они продают это как SaaS — обязаны купить paid-лицензию у тебя.
+2. **Zenodo (CERN)** — upload your architecture description to Zenodo with a DOI. This provides a scientific timestamp and an independent third-party witness.
+
+3. **Copyright registration** — in the US, register via copyright.gov ($45-65). Optional, but grants statutory damages (up to $150k) without proving actual harm.
+
+### Watermarks in Code (Technical Fingerprint)
+
+Don't plant obvious "easter eggs," but embed unique patterns that are hard to accidentally reproduce:
+
+- Unique variable/class names in utility modules
+- Specific JSON schema structures
+- Unique IDs in test fixtures
+
+If someone copies your code wholesale — these patterns remain and serve as evidence in a diff comparison.
 
 ---
 
-## 4. Что НЕ защищает
+## 3. What to Do If Your Code Is Stolen
 
-Честный ответ — чего лицензия не покрывает:
+### Scenario 1: A developer used your code for a client without a paid license
 
-- **Идею.** Кто-то может написать аналог с нуля, вдохновившись твоим подходом. Это legal.
-- **Название.** Если не зарегистрирован trademark.
-- **Дизайн/архитектуру.** Патенты на софт — долго, дорого и не всегда работают.
-- **Мелкие fork'и.** Если кто-то сделал форк и использует внутри компании — AGPL это разрешает (внутреннее использование). Но если компания продаёт SaaS на его основе — обязана купить paid-лицензию.
+**Steps:**
+1. Gather evidence: repo link, commit dates, code diff comparison
+2. Send a formal notice to the violator's email demanding:
+   - Cease and desist
+   - Purchase a commercial license retroactively
+3. If ignored — DMCA takedown via GitHub, complaint to their employer/client
+4. Legal letter from an attorney demanding compensation
+
+### Scenario 2: A company copied it, tweaked it, and claims it as their product
+
+**Steps:**
+1. Preserve evidence (product screenshots, Wayback Machine snapshots)
+2. Perform forensic code analysis — find unique patterns from your code in their product
+3. Send a formal legal notice via attorney:
+   - AGPL-3.0 violation (did not open-source)
+   - Copyright violation (did not credit authorship)
+   - Demand compensation and cessation of use
+4. If the company is large — rally community attention (Twitter/LinkedIn — "this company stole open-source code")
+5. In parallel — DMCA takedown their repositories
+
+### Scenario 3: A fork was made without attribution but complies with AGPL
+
+**This is acceptable.** AGPL permits forks provided:
+- Same license (AGPL-3.0)
+- Copyright notice preserved
+- Source code remains open
+
+But if they sell it as SaaS — they must buy a paid license from you.
 
 ---
 
-## 5. Практический чеклист — что уже сделано и что добавить
+## 4. What Is NOT Protected
 
-### ✅ Сделано
-- AGPL-3.0 LICENSE файл в корне
-- Упоминание лицензии и условий в README
-- Указание, что коммерческое использование требует paid-лицензии
+Honest answer — what the license does NOT cover:
 
-### 🔧 Добавить в код
-- Copyright notice в начало каждого .py файла:
-  ```
-  # Copyright (c) 2026 [Твоё имя]. All rights reserved.
+- **The idea.** Someone can build an analog from scratch, inspired by your approach. This is legal.
+- **The name.** Unless you register a trademark.
+- **Design/architecture.** Software patents are slow, expensive, and don't always hold.
+- **Small internal forks.** If someone forks and uses it internally — AGPL allows this (internal use). But if the company sells SaaS based on it — must buy a paid license.
+
+---
+
+## 5. Practical Checklist — What's Done and What to Add
+
+### ✅ Done
+- AGPL-3.0 LICENSE file in root
+- License terms mentioned in README
+- Commercial use requires paid license stated
+
+### 🔧 Add to Code
+- Copyright notice at the top of every .py file:
+  ```python
+  # Copyright (c) 2026 [Your Name]. All rights reserved.
   # Licensed under GNU AGPL-3.0. Commercial use requires a paid license.
   # See LICENSE file for details.
   ```
-- `__init__.py` должен содержать версию и копирайт
+- `__init__.py` should contain version and copyright
 
-### 🔧 Технические меры
-- Зафиксировать хеш репозитория через OpenTimestamps
-- Загрузить описание на Zenodo (получить DOI)
-- Настроить GitHub branch protection rules (чтобы никто не мог переписать историю)
+### 🔧 Technical Measures
+- Anchor repo hash via OpenTimestamps
+- Upload description to Zenodo (get a DOI)
+- Set up GitHub branch protection rules (prevent history rewriting)
 
-### 🔧 Для LinkedIn
-- В посте указать: «Open source (AGPL-3.0) — commercial licensing available»
-- Это даёт сигнал серьёзным компаниям: код можно использовать легально через paid-лицензию
-- Мелкие нарушители отсеиваются условиями AGPL
+### 🔧 For LinkedIn
+- In your post: "Open source (AGPL-3.0) — commercial licensing available"
+- This signals to serious companies: the code can be used legally via a paid license
+- Small-time violators are deterred by AGPL terms
 
 ---
 
 ## 6. FAQ
 
-**Q: Если я сам контрибьютор в свой проект — не теряю ли я права?**
-A: Нет. Ты единственный copyright holder (если не принимал PR от других). Ты можешь перелицензировать когда угодно.
+**Q: If I'm the sole contributor to my project — do I lose any rights?**
+A: No. You are the sole copyright holder (if you haven't accepted PRs from others). You can relicense at any time.
 
-**Q: Стоит ли принимать чужие PR?**
-A: Осторожно. Если принимаешь — добавь CLA (Contributor License Agreement), который передаёт тебе права на код. Иначе каждый контрибьютор становится совладельцем копирайта и может заблокировать перелицензирование.
+**Q: Should I accept outside PRs?**
+A: Carefully. If you do — add a CLA (Contributor License Agreement) that transfers rights to you. Otherwise, every contributor becomes a co-owner of the copyright and can block relicensing.
 
-**Q: Может ли ServiceNow сама скопировать мой код?**
-A: Может, НО:
-- Обязана соблюсти AGPL — открыть исходники всех производных
-- Не может сделать проприетарный продукт на его основе без paid-лицензии от тебя
-- Крупные компании paranoid насчёт open-source compliance — им проще купить paid-лицензию или не трогать
+**Q: Can ServiceNow itself copy my code?**
+A: They could, BUT:
+- Must comply with AGPL — open-source all derivatives
+- Cannot build a proprietary product on it without a paid license from you
+- Large companies are paranoid about open-source compliance — it's easier for them to buy a paid license or stay away
 
-**Q: Что делать, если клиент говорит «я сам допилю форк»?**
-A: Ответ: «Вы можете, но тогда вы обязаны открыть исходники под AGPL-3.0. И ваш форк не будет получать обновления от меня без paid-лицензии. Коммерческая лицензия стоит $X и включает поддержку и апдейты.»
+**Q: What if a client says "I'll just finish the fork myself"?**
+A: Response: "You can, but then you must open-source under AGPL-3.0. And your fork won't receive updates from me without a paid license. A commercial license costs $X and includes support and updates."
 
 ---
 
-*Документ подготовлен на основе вопросов защиты интеллектуальной собственности для open-source проектов. AGPL-3.0 текст: https://www.gnu.org/licenses/agpl-3.0.html*
+*This guide was prepared based on intellectual property protection questions for open-source projects. AGPL-3.0 text: https://www.gnu.org/licenses/agpl-3.0.html*
