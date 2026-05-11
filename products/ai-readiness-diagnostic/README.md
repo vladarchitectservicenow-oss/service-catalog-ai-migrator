@@ -1,5 +1,12 @@
 # AI Readiness Diagnostic
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![ServiceNow](https://img.shields.io/badge/ServiceNow-Zurich%2B-blue)](https://www.servicenow.com)
+[![Status](https://img.shields.io/badge/Status-Active%20Development-green)]()
+[![Scoped App](https://img.shields.io/badge/Scoped%20App-x__snc__ard-orange)]()
+[![Deployed](https://img.shields.io/badge/Deployed-dev362840.service--now.com-brightgreen)]()
+
+
 > **Tagline:** Otto won't fix broken processes. Diagnose your process debt before AI adoption fails.
 
 ## Elevator Pitch
