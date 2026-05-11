@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_app>
+    <name>FlowGuard</name>
+    <scope>x_flowguard</scope>
+    <version>1.0.0</version>
+    <description>Flow Designer Safe Migration — validate, diff, deploy, rollback flows across environments</description>
+    <vendor>vladarchitectservicenow-oss</vendor>
+    <vendor_prefix>x_flowguard</vendor_prefix>
+    <active>true</active>
+    <category>DevOps</category>
+    <runtime>global</runtime>
+    <tracking_code>FLOWGUARD2026</tracking_code>
+</sys_app>

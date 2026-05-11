@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_script action="UPDATE">
+    <active>true</active>
+    <collection>x_flowguard_migration_log</collection>
+    <condition><![CDATA[current.status.changes() && current.status == 'success']]></condition>
+    <description>Trigger event on successful migration</description>
+    <name>Migration Complete Event</name>
+    <order>100</order>
+    <script><![CDATA[// After Update: fire event on migration success
+gs.eventQueue('x_flowguard.migration.complete', current, 
+    current.getValue('migration_id'), 
+    current.getValue('requested_by'));
+]]></script>
+    <when>after</when>
+</sys_script>

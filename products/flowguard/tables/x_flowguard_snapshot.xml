@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element label="FlowGuard Snapshot" max_length="40" name="x_flowguard_snapshot" type="collection">
+        <element label="Migration ID" max_length="64" name="migration_id" type="string" mandatory="true" read_only="true"/>
+        <element label="Flow" name="flow_id" type="reference" reference="sys_hub_flow" mandatory="true"/>
+        <element label="Flow Name" max_length="160" name="flow_name" type="string" read_only="true"/>
+        <element label="Flow Model" max_length="4000" name="flow_model" type="string"/>
+        <element label="Flow Version" max_length="20" name="flow_version" type="string" read_only="true"/>
+        <element label="Snapshot Type" max_length="40" name="snapshot_type" type="choice" mandatory="true" choice="1" default="pre_migration">
+            <choice>
+                <element label="Pre-Migration" value="pre_migration"/>
+            </choice>
+        </element>
+    </element>
+</database>

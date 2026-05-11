@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_script action="INSERT">
+    <active>true</active>
+    <collection>x_flowguard_snapshot</collection>
+    <condition/>
+    <description>Auto-set created timestamp on snapshot creation</description>
+    <name>Set Snapshot Timestamp</name>
+    <order>100</order>
+    <script><![CDATA[// Before Insert: auto-set timestamp
+if (!current.sys_created_on) {
+    current.sys_created_on = new GlideDateTime();
+}
+]]></script>
+    <when>before</when>
+</sys_script>
