@@ -1,0 +1,37 @@
+{
+  "instance": "https://dev362840.service-now.com",
+  "total": 2,
+  "compatible": 2,
+  "incompatible": 0,
+  "warning": 0,
+  "scripts": [
+    {
+      "sys_id": "s1",
+      "name": "Active Rule",
+      "table": "incident::business_rule",
+      "script": "gs.getUserID();",
+      "status": "COMPATIBLE",
+      "reasons": [],
+      "suggested_action": "No action needed"
+    },
+    {
+      "sys_id": "u1_script_true",
+      "name": "Policy 1 [script_true]",
+      "table": "problem::ui_policy",
+      "script": "gs.getUserName();",
+      "status": "COMPATIBLE",
+      "reasons": [],
+      "suggested_action": "No action needed"
+    }
+  ],
+  "phase_info": {
+    "glide.guarded.script.phase": "2",
+    "properties": [
+      {
+        "name": "glide.guarded.script.phase",
+        "value": "2"
+      }
+    ]
+  },
+  "timestamp": "2026-05-17T00:44:34.986418"
+}
