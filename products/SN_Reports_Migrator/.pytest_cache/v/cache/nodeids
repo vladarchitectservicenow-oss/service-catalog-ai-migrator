@@ -1,0 +1,13 @@
+[
+  "tests/test_migrator.py::test_batch_migrate",
+  "tests/test_migrator.py::test_export_import_round_trip",
+  "tests/test_migrator.py::test_migrate_report",
+  "tests/test_migrator.py::test_migrate_report_preserves_schedule",
+  "tests/test_migrator.py::test_transform_aggregation",
+  "tests/test_migrator.py::test_transform_filter_conditions",
+  "tests/test_migrator.py::test_transform_filter_empty",
+  "tests/test_migrator.py::test_transform_group_by",
+  "tests/test_migrator.py::test_transform_order_by",
+  "tests/test_migrator.py::test_unknown_type_fallback",
+  "tests/test_migrator.py::test_validate_migration_and_batch"
+]
