@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Vladimir Kapustin
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Terms of Reference generator — produces a project charter / TOR document."""
 
 from datetime import datetime, timezone

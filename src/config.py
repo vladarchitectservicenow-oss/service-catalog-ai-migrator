@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Vladimir Kapustin
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Configuration loader from config.yaml with Pydantic validation."""
 
 from pathlib import Path

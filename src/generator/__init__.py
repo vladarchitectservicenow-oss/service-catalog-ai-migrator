@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Vladimir Kapustin
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Document generators — TOR, specs, agent architecture, roadmap, risks, training."""
 
 from src.generator.tor_generator import TorGenerator

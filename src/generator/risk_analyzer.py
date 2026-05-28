@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Vladimir Kapustin
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Risk Register generator — identifies and scores migration risks."""
 
 from datetime import datetime, timezone

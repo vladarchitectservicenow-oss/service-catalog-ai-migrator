@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Vladimir Kapustin
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Migration Roadmap builder — phased rollout plan with prioritization."""
 
 from datetime import datetime, timezone

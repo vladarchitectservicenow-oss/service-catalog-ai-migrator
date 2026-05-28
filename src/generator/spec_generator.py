@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Vladimir Kapustin
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Technical Specification generator — current vs target architecture with Mermaid diagrams."""
 
 from datetime import datetime, timezone

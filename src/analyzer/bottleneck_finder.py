@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Vladimir Kapustin
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Bottleneck Finder — identifies performance bottlenecks in workflows.
 
 Analyzes request history (SLA breaches, fulfillment timings, manual tasks,

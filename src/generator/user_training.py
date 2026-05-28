@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Vladimir Kapustin
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Training Plan generator — role-based curriculum for AI catalog adoption."""
 
 from datetime import datetime, timezone

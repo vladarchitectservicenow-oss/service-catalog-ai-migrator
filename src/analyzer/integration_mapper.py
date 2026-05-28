@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Vladimir Kapustin
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Integration Mapper — discovers and categorizes all external system integrations.
 
 Scans REST integrations, script includes, and business rules in a DiscoveryResult

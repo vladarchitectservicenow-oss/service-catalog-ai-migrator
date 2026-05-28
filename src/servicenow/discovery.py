@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Vladimir Kapustin
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Discovery engine orchestrating parallel fetches against a ServiceNow instance."""
 
 from __future__ import annotations

@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Vladimir Kapustin
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Async fetchers for each ServiceNow table in the discovery process.
 
 Each function fetches data from one logical domain (catalog items,
