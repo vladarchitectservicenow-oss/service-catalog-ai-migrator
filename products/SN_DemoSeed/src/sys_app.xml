@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-06-19 05:00:00">
+  <sys_app action="INSERT_OR_UPDATE">
+    <name>DemoSeed</name>
+    <scope>x_demoseed</scope>
+    <version>1.0.0</version>
+    <description>Generate realistic synthetic data for Performance Analytics dashboards. One-click demo mode populates PA indicators with believable records. Includes data wiper, refresh scheduler, snapshot manager, and AI-enhanced description generation.</description>
+    <active>true</active>
+    <application display_value="DemoSeed">x_demoseed</application>
+    <sys_id>d3m0533d000000000000000000000001</sys_id>
+  </sys_app>
+
+  <!-- Plugin Dependency: Generative AI Controller -->
+  <sys_scope_plugin action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <plugin_id>com.snc.generative_ai</plugin_id>
+    <scope>x_demoseed</scope>
+    <sys_class_name>sys_scope_plugin</sys_class_name>
+    <sys_id>demoseed_plugin_genai</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_plugin>
+
+  <!-- User Roles -->
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>DemoSeed Administrator — full access to all features</description>
+    <name>x_demoseed.admin</name>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_id>demoseed_role_admin</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_user_role>
+
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>DemoSeed User — read and execute access</description>
+    <name>x_demoseed.user</name>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_id>demoseed_role_user</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_user_role>
+
+  <!-- System Properties -->
+  <sys_properties action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>Enable AI-powered description generation (requires Generative AI Controller plugin)</description>
+    <name>x_demoseed.ai_enabled</name>
+    <type>boolean</type>
+    <value>false</value>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_id>demoseed_prop_ai_enabled</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_properties>
+
+  <sys_properties action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>Allow DemoSeed to run on production instances (DANGER: generates synthetic data on prod)</description>
+    <name>x_demoseed.override_prod</name>
+    <type>boolean</type>
+    <value>false</value>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_id>demoseed_prop_override_prod</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_properties>
+
+  <!-- Cross-Scope Privileges -->
+  <!-- PA Dashboard tables (read) -->
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>sys_pa_dashboards</target_name>
+    <target_scope>global</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>demoseed_csp_pa_dashboards</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>pa_indicators</target_name>
+    <target_scope>global</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>demoseed_csp_pa_indicators</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>pa_breakdowns</target_name>
+    <target_scope>global</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>demoseed_csp_pa_breakdowns</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>pa_indicator_sources</target_name>
+    <target_scope>global</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>demoseed_csp_pa_indicator_sources</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_privilege>
+
+  <!-- Reference tables (read) -->
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>sys_choice</target_name>
+    <target_scope>global</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>demoseed_csp_sys_choice</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>sys_dictionary</target_name>
+    <target_scope>global</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>demoseed_csp_sys_dictionary</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>sys_user_group</target_name>
+    <target_scope>global</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>demoseed_csp_sys_user_group</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>sc_cat_item</target_name>
+    <target_scope>global</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>demoseed_csp_sc_cat_item</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>sys_user</target_name>
+    <target_scope>global</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>demoseed_csp_sys_user</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_privilege>
+
+  <!-- Incident table (create, read, update) -->
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>create</operation>
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>incident</target_name>
+    <target_scope>global</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>demoseed_csp_incident_create</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>incident</target_name>
+    <target_scope>global</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>demoseed_csp_incident_read</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>update</operation>
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>incident</target_name>
+    <target_scope>global</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>demoseed_csp_incident_update</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_privilege>
+
+  <!-- Script Include Definitions -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_demoseed.DemoSeedCore</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Core engine: Dashboard Scanner, Data Generator, Distribution Profiles, Data Wiper</description>
+    <name>DemoSeedCore</name>
+    <script_name>1_core_engine.js</script_name>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_id>demoseed_si_core</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_script_include>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_demoseed.DemoSeedHelper</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Support services: Refresh Scheduler, Snapshot Manager, AI Description Generator, Field Mapper</description>
+    <name>DemoSeedHelper</name>
+    <script_name>2_support_services.js</script_name>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_id>demoseed_si_helper</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_script_include>
+
+  <!-- REST Endpoint Definitions -->
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>/api/x_demoseed/v1</base_uri>
+    <description>DemoSeed REST API — synthetic data generation and management</description>
+    <name>DemoSeed API</name>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_id>demoseed_ws_def</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <description>Execute DemoSeed actions: generate, wipe, refresh, snapshots, field mappings, AI features</description>
+    <name>Execute</name>
+    <operation_uri>/execute</operation_uri>
+    <produces>application/json</produces>
+    <relative_path>/execute</relative_path>
+    <requires_authentication>true</requires_authentication>
+    <requires_snc_internal_role>false</requires_snc_internal_role>
+    <script>post_execute.js</script>
+    <web_service_definition display_value="DemoSeed API">demoseed_ws_def</web_service_definition>
+    <web_service_verb>POST</web_service_verb>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_id>demoseed_ws_op_execute</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <description>Query DemoSeed status: batch info, wipe preview, snapshots, profiles, manifest, field suggestions</description>
+    <name>Status</name>
+    <operation_uri>/status</operation_uri>
+    <produces>application/json</produces>
+    <relative_path>/status</relative_path>
+    <requires_authentication>true</requires_authentication>
+    <requires_snc_internal_role>false</requires_snc_internal_role>
+    <script>get_status.js</script>
+    <web_service_definition display_value="DemoSeed API">demoseed_ws_def</web_service_definition>
+    <web_service_verb>GET</web_service_verb>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_id>demoseed_ws_op_status</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_ws_operation>
+
+  <!-- Table Module References -->
+  <sys_scope_table_access action="INSERT_OR_UPDATE">
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>x_demoseed_config</target_name>
+    <target_scope>x_demoseed</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_table_access</sys_class_name>
+    <sys_id>demoseed_sta_config</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_table_access>
+
+  <sys_scope_table_access action="INSERT_OR_UPDATE">
+    <source_scope>x_demoseed</source_scope>
+    <source_status>allowed</source_status>
+    <target_name>x_demoseed_audit</target_name>
+    <target_scope>x_demoseed</target_scope>
+    <target_type>sys_db_object</target_type>
+    <sys_class_name>sys_scope_table_access</sys_class_name>
+    <sys_id>demoseed_sta_audit</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_scope_table_access>
+
+</unload>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-06-19 05:00:00">
+  <!-- ACLs for x_demoseed_config table -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Read access to DemoSeed configuration</description>
+    <name>x_demoseed_config</name>
+    <operation display_value="read">read</operation>
+    <script>
+      answer = gs.hasRole('admin') || gs.hasRole('x_demoseed.admin') || gs.hasRole('x_demoseed.user');
+    </script>
+    <type>record</type>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>demoseed_acl_config_read</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Write access to DemoSeed configuration</description>
+    <name>x_demoseed_config</name>
+    <operation display_value="write">write</operation>
+    <script>
+      answer = gs.hasRole('admin') || gs.hasRole('x_demoseed.admin');
+    </script>
+    <type>record</type>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>demoseed_acl_config_write</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Create access to DemoSeed configuration</description>
+    <name>x_demoseed_config</name>
+    <operation display_value="create">create</operation>
+    <script>
+      answer = gs.hasRole('admin') || gs.hasRole('x_demoseed.admin');
+    </script>
+    <type>record</type>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>demoseed_acl_config_create</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Delete access to DemoSeed configuration</description>
+    <name>x_demoseed_config</name>
+    <operation display_value="delete">delete</operation>
+    <script>
+      answer = gs.hasRole('admin') || gs.hasRole('x_demoseed.admin');
+    </script>
+    <type>record</type>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>demoseed_acl_config_delete</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACLs for x_demoseed_audit table -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Read access to DemoSeed audit trail</description>
+    <name>x_demoseed_audit</name>
+    <operation display_value="read">read</operation>
+    <script>
+      answer = gs.hasRole('admin') || gs.hasRole('x_demoseed.admin') || gs.hasRole('x_demoseed.user');
+    </script>
+    <type>record</type>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>demoseed_acl_audit_read</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Write access to DemoSeed audit trail</description>
+    <name>x_demoseed_audit</name>
+    <operation display_value="write">write</operation>
+    <script>
+      answer = gs.hasRole('admin') || gs.hasRole('x_demoseed.admin');
+    </script>
+    <type>record</type>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>demoseed_acl_audit_write</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Create access to DemoSeed audit trail</description>
+    <name>x_demoseed_audit</name>
+    <operation display_value="create">create</operation>
+    <script>
+      answer = gs.hasRole('admin') || gs.hasRole('x_demoseed.admin') || gs.hasRole('x_demoseed.user');
+    </script>
+    <type>record</type>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>demoseed_acl_audit_create</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Delete access to DemoSeed audit trail</description>
+    <name>x_demoseed_audit</name>
+    <operation display_value="delete">delete</operation>
+    <script>
+      answer = gs.hasRole('admin') || gs.hasRole('x_demoseed.admin');
+    </script>
+    <type>record</type>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>demoseed_acl_audit_delete</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_security_acl>
+
+  <!-- REST Endpoint ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Execute access to DemoSeed REST API</description>
+    <name>x_demoseed_api_execute</name>
+    <operation display_value="execute">execute</operation>
+    <script>
+      answer = gs.hasRole('admin') || gs.hasRole('x_demoseed.admin') || gs.hasRole('x_demoseed.user');
+    </script>
+    <type>rest_endpoint</type>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>demoseed_acl_rest_execute</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Read access to DemoSeed REST status endpoint</description>
+    <name>x_demoseed_api_status</name>
+    <operation display_value="execute">execute</operation>
+    <script>
+      answer = gs.hasRole('admin') || gs.hasRole('x_demoseed.admin') || gs.hasRole('x_demoseed.user');
+    </script>
+    <type>rest_endpoint</type>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>demoseed_acl_rest_status</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_security_acl>
+
+  <!-- Script Include execute ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Execute access to DemoSeedCore Script Include</description>
+    <name>DemoSeedCore</name>
+    <operation display_value="execute">execute</operation>
+    <script>
+      answer = gs.hasRole('admin') || gs.hasRole('x_demoseed.admin') || gs.hasRole('x_demoseed.user');
+    </script>
+    <type>script_include</type>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>demoseed_acl_si_core</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Execute access to DemoSeedHelper Script Include</description>
+    <name>DemoSeedHelper</name>
+    <operation display_value="execute">execute</operation>
+    <script>
+      answer = gs.hasRole('admin') || gs.hasRole('x_demoseed.admin') || gs.hasRole('x_demoseed.user');
+    </script>
+    <type>script_include</type>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>demoseed_acl_si_helper</sys_id>
+    <sys_scope>x_demoseed</sys_scope>
+  </sys_security_acl>
+</unload>
