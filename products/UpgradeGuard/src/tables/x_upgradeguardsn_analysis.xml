@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_upgradeguardsn_analysis</name>
+  <label>UpgradeGuard Analysis</label>
+  <super_class/>
+  <access>public</access>
+  <create_access>true</create_access>
+  <read_access>true</read_access>
+  <update_access>true</update_access>
+  <delete_access>true</delete_access>
+  <user_role>x_upgradeguardsn.admin</user_role>
+  <fields>
+    <!-- Inventory fields -->
+    <field>
+      <name>component_type</name>
+      <label>Component Type</label>
+      <type>string</type>
+      <max_length>100</max_length>
+      <choice>3</choice>
+      <choices>
+        <choice>
+          <value>script_include</value>
+          <label>Script Include</label>
+        </choice>
+        <choice>
+          <value>business_rule</value>
+          <label>Business Rule</label>
+        </choice>
+        <choice>
+          <value>client_script</value>
+          <label>Client Script</label>
+        </choice>
+        <choice>
+          <value>ui_policy</value>
+          <label>UI Policy</label>
+        </choice>
+        <choice>
+          <value>scheduled_job</value>
+          <label>Scheduled Job</label>
+        </choice>
+        <choice>
+          <value>rest_endpoint</value>
+          <label>REST Endpoint</label>
+        </choice>
+        <choice>
+          <value>custom_table</value>
+          <label>Custom Table</label>
+        </choice>
+        <choice>
+          <value>plugin</value>
+          <label>Plugin</label>
+        </choice>
+        <choice>
+          <value>integration</value>
+          <label>Integration</label>
+        </choice>
+      </choices>
+    </field>
+    <field>
+      <name>component_name</name>
+      <label>Component Name</label>
+      <type>string</type>
+      <max_length>255</max_length>
+    </field>
+    <field>
+      <name>component_sys_id</name>
+      <label>Component Sys ID</label>
+      <type>string</type>
+      <max_length>32</max_length>
+    </field>
+    <field>
+      <name>scope</name>
+      <label>Scope</label>
+      <type>string</type>
+      <max_length>100</max_length>
+    </field>
+    <field>
+      <name>module</name>
+      <label>Module</label>
+      <type>string</type>
+      <max_length>100</max_length>
+      <choice>1</choice>
+      <choices>
+        <choice>
+          <value>itsm</value>
+          <label>ITSM</label>
+        </choice>
+        <choice>
+          <value>csm</value>
+          <label>CSM</label>
+        </choice>
+        <choice>
+          <value>hr</value>
+          <label>HR</label>
+        </choice>
+        <choice>
+          <value>secops</value>
+          <label>SecOps</label>
+        </choice>
+        <choice>
+          <value>itom</value>
+          <label>ITOM</label>
+        </choice>
+        <choice>
+          <value>platform</value>
+          <label>Platform</label>
+        </choice>
+        <choice>
+          <value>other</value>
+          <label>Other</label>
+        </choice>
+      </choices>
+    </field>
+    <field>
+      <name>source_code</name>
+      <label>Source Code</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>usage_count</name>
+      <label>Usage Count</label>
+      <type>integer</type>
+    </field>
+    <field>
+      <name>last_modified</name>
+      <label>Last Modified</label>
+      <type>glide_date_time</type>
+    </field>
+    <!-- Impact result fields -->
+    <field>
+      <name>release_family</name>
+      <label>Release Family</label>
+      <type>string</type>
+      <max_length>100</max_length>
+    </field>
+    <field>
+      <name>change_type</name>
+      <label>Change Type</label>
+      <type>string</type>
+      <max_length>40</max_length>
+      <choice>1</choice>
+      <choices>
+        <choice>
+          <value>breaking</value>
+          <label>Breaking</label>
+        </choice>
+        <choice>
+          <value>additive</value>
+          <label>Additive</label>
+        </choice>
+        <choice>
+          <value>neutral</value>
+          <label>Neutral</label>
+        </choice>
+      </choices>
+    </field>
+    <field>
+      <name>affected_api</name>
+      <label>Affected API</label>
+      <type>string</type>
+      <max_length>255</max_length>
+    </field>
+    <field>
+      <name>release_note_url</name>
+      <label>Release Note URL</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>release_note_summary</name>
+      <label>Release Note Summary</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>migration_guide_url</name>
+      <label>Migration Guide URL</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <!-- Risk score fields -->
+    <field>
+      <name>risk_score</name>
+      <label>Risk Score</label>
+      <type>integer</type>
+    </field>
+    <field>
+      <name>severity</name>
+      <label>Severity</label>
+      <type>string</type>
+      <max_length>20</max_length>
+      <choice>1</choice>
+      <choices>
+        <choice>
+          <value>critical</value>
+          <label>Critical</label>
+        </choice>
+        <choice>
+          <value>high</value>
+          <label>High</label>
+        </choice>
+        <choice>
+          <value>medium</value>
+          <label>Medium</label>
+        </choice>
+        <choice>
+          <value>low</value>
+          <label>Low</label>
+        </choice>
+      </choices>
+    </field>
+    <field>
+      <name>risk_factors</name>
+      <label>Risk Factors</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>migration_steps</name>
+      <label>Migration Steps</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <!-- Analysis metadata -->
+    <field>
+      <name>analysis_run_id</name>
+      <label>Analysis Run ID</label>
+      <type>string</type>
+      <max_length>32</max_length>
+    </field>
+    <field>
+      <name>analysis_date</name>
+      <label>Analysis Date</label>
+      <type>glide_date_time</type>
+    </field>
+    <field>
+      <name>status</name>
+      <label>Status</label>
+      <type>string</type>
+      <max_length>40</max_length>
+      <choice>1</choice>
+      <choices>
+        <choice>
+          <value>pending</value>
+          <label>Pending</label>
+        </choice>
+        <choice>
+          <value>in_progress</value>
+          <label>In Progress</label>
+        </choice>
+        <choice>
+          <value>completed</value>
+          <label>Completed</label>
+        </choice>
+        <choice>
+          <value>error</value>
+          <label>Error</label>
+        </choice>
+      </choices>
+    </field>
+  </fields>
+  <indexes>
+    <index>
+      <name>analysis_run_idx</name>
+      <fields>analysis_run_id</fields>
+    </index>
+    <index>
+      <name>component_idx</name>
+      <fields>component_type,component_name</fields>
+    </index>
+    <index>
+      <name>risk_score_idx</name>
+      <fields>risk_score</fields>
+    </index>
+  </indexes>
+</sys_db_object>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_upgradeguardsn.rest.execute</name>
+  <description>Access to UpgradeGuard Execute REST endpoint</description>
+  <operation>execute</operation>
+  <type>rest_endpoint</type>
+  <source_table/>
+  <active>true</active>
+  <requires_script>false</requires_script>
+  <script/>
+  <condition/>
+  <roles>
+    <role>x_upgradeguardsn.admin</role>
+  </roles>
+</sys_security_acl>

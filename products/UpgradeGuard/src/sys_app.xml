@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_app>
+  <scope>x_upgradeguardsn</scope>
+  <name>UpgradeGuard</name>
+  <short_description>Know exactly what breaks before you upgrade</short_description>
+  <description>A ServiceNow scoped application that analyzes your instance against upcoming release changes and delivers a personalized impact report with breaking-risk scores, affected components, and auto-generated regression test checklists.</description>
+  <version>1.0.0</version>
+  <vendor>Vladimir Kapustin</vendor>
+  <vendor_prefix>x_upgradeguardsn</vendor_prefix>
+  <release_date>2026-06-16</release_date>
+  <active>true</active>
+  <tracking_code/>
+  <modules>
+    <module>
+      <name>UpgradeGuard Dashboard</name>
+      <description>Impact analysis dashboard with risk heatmap and drill-down</description>
+      <type>application</type>
+      <active>true</active>
+    </module>
+  </modules>
+  <roles>
+    <role>
+      <name>x_upgradeguardsn.admin</name>
+      <description>UpgradeGuard Administrator — full access to analysis, test cases, and REST APIs</description>
+    </role>
+  </roles>
+  <tables>
+    <table>x_upgradeguardsn_analysis</table>
+    <table>x_upgradeguardsn_test_case</table>
+  </tables>
+  <script_includes>
+    <script_include>UpgradeGuardEngine</script_include>
+    <script_include>UpgradeGuardReporter</script_include>
+  </script_includes>
+  <rest_endpoints>
+    <rest_endpoint>UpgradeGuard Execute API</rest_endpoint>
+    <rest_endpoint>UpgradeGuard Status API</rest_endpoint>
+  </rest_endpoints>
+  <business_rules>
+    <business_rule>UG Analysis: Before Insert — Validate &amp; Defaults</business_rule>
+    <business_rule>UG Test Case: Before Insert — Validate &amp; Defaults</business_rule>
+  </business_rules>
+  <acls>
+    <acl>x_upgradeguardsn_analysis.read</acl>
+    <acl>x_upgradeguardsn_analysis.write</acl>
+    <acl>x_upgradeguardsn_analysis.delete</acl>
+    <acl>x_upgradeguardsn_test_case.read</acl>
+    <acl>x_upgradeguardsn_test_case.write</acl>
+    <acl>x_upgradeguardsn_test_case.delete</acl>
+    <acl>x_upgradeguardsn.rest.execute</acl>
+    <acl>x_upgradeguardsn.rest.status</acl>
+  </acls>
+  <cross_scope_access>
+    <access>
+      <target_table>sys_script_include</target_table>
+      <operation>read</operation>
+      <description>UpgradeGuardEngine scans Script Includes for deprecated API usage</description>
+    </access>
+    <access>
+      <target_table>sys_script</target_table>
+      <operation>read</operation>
+      <description>UpgradeGuardEngine scans Business Rules for affected table references</description>
+    </access>
+    <access>
+      <target_table>sys_script_client</target_table>
+      <operation>read</operation>
+      <description>UpgradeGuardEngine scans Client Scripts for deprecated API usage</description>
+    </access>
+    <access>
+      <target_table>sys_ui_policy</target_table>
+      <operation>read</operation>
+      <description>UpgradeGuardEngine scans UI Policies for affected table references</description>
+    </access>
+    <access>
+      <target_table>sysauto_script</target_table>
+      <operation>read</operation>
+      <description>UpgradeGuardEngine scans Scheduled Jobs for deprecated API usage</description>
+    </access>
+    <access>
+      <target_table>sys_ws_definition</target_table>
+      <operation>read</operation>
+      <description>UpgradeGuardEngine scans REST Endpoints for deprecated API usage</description>
+    </access>
+    <access>
+      <target_table>sys_ws_operation</target_table>
+      <operation>read</operation>
+      <description>UpgradeGuardEngine scans REST Endpoint operations for deprecated API usage in scripts</description>
+    </access>
+    <access>
+      <target_table>sys_db_object</target_table>
+      <operation>read</operation>
+      <description>UpgradeGuardEngine scans Custom Tables for affected table references</description>
+    </access>
+    <access>
+      <target_table>sys_plugins</target_table>
+      <operation>read</operation>
+      <description>UpgradeGuardEngine scans Plugins for compatibility changes</description>
+    </access>
+    <access>
+      <target_table>sys_rest_message</target_table>
+      <operation>read</operation>
+      <description>UpgradeGuardEngine scans Integrations for deprecated API usage</description>
+    </access>
+  </cross_scope_access>
+  <dependencies>
+    <dependency>
+      <name>GenAI Controller</name>
+      <plugin_id>com.glide.plugin.genai_controller</plugin_id>
+      <required>false</required>
+      <description>Optional — enables AI-powered risk scoring and migration code generation</description>
+    </dependency>
+  </dependencies>
+  <compatibility>
+    <min_version>Utah</min_version>
+    <max_version>Australia</max_version>
+  </compatibility>
+</sys_app>

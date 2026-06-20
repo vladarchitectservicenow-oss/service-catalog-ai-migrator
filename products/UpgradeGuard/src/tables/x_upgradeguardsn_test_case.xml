@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_upgradeguardsn_test_case</name>
+  <label>UpgradeGuard Test Case</label>
+  <super_class/>
+  <access>public</access>
+  <create_access>true</create_access>
+  <read_access>true</read_access>
+  <update_access>true</update_access>
+  <delete_access>true</delete_access>
+  <user_role>x_upgradeguardsn.admin</user_role>
+  <fields>
+    <field>
+      <name>analysis_record</name>
+      <label>Analysis Record</label>
+      <type>reference</type>
+      <reference>x_upgradeguardsn_analysis</reference>
+    </field>
+    <field>
+      <name>test_name</name>
+      <label>Test Name</label>
+      <type>string</type>
+      <max_length>255</max_length>
+    </field>
+    <field>
+      <name>test_description</name>
+      <label>Test Description</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>test_type</name>
+      <label>Test Type</label>
+      <type>string</type>
+      <max_length>40</max_length>
+      <choice>1</choice>
+      <choices>
+        <choice>
+          <value>regression</value>
+          <label>Regression</label>
+        </choice>
+        <choice>
+          <value>smoke</value>
+          <label>Smoke</label>
+        </choice>
+        <choice>
+          <value>integration</value>
+          <label>Integration</label>
+        </choice>
+        <choice>
+          <value>migration</value>
+          <label>Migration</label>
+        </choice>
+      </choices>
+    </field>
+    <field>
+      <name>priority</name>
+      <label>Priority</label>
+      <type>string</type>
+      <max_length>20</max_length>
+      <choice>1</choice>
+      <choices>
+        <choice>
+          <value>critical</value>
+          <label>Critical</label>
+        </choice>
+        <choice>
+          <value>high</value>
+          <label>High</label>
+        </choice>
+        <choice>
+          <value>medium</value>
+          <label>Medium</label>
+        </choice>
+        <choice>
+          <value>low</value>
+          <label>Low</label>
+        </choice>
+      </choices>
+    </field>
+    <field>
+      <name>test_steps</name>
+      <label>Test Steps</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>expected_result</name>
+      <label>Expected Result</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>migration_action</name>
+      <label>Migration Action</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>migration_code_snippet</name>
+      <label>Migration Code Snippet</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>assigned_to</name>
+      <label>Assigned To</label>
+      <type>reference</type>
+      <reference>sys_user</reference>
+    </field>
+    <field>
+      <name>execution_status</name>
+      <label>Execution Status</label>
+      <type>string</type>
+      <max_length>40</max_length>
+      <choice>1</choice>
+      <choices>
+        <choice>
+          <value>not_run</value>
+          <label>Not Run</label>
+        </choice>
+        <choice>
+          <value>passed</value>
+          <label>Passed</label>
+        </choice>
+        <choice>
+          <value>failed</value>
+          <label>Failed</label>
+        </choice>
+        <choice>
+          <value>skipped</value>
+          <label>Skipped</label>
+        </choice>
+      </choices>
+    </field>
+    <field>
+      <name>execution_date</name>
+      <label>Execution Date</label>
+      <type>glide_date_time</type>
+    </field>
+    <field>
+      <name>execution_notes</name>
+      <label>Execution Notes</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>analysis_run_id</name>
+      <label>Analysis Run ID</label>
+      <type>string</type>
+      <max_length>32</max_length>
+    </field>
+  </fields>
+  <indexes>
+    <index>
+      <name>analysis_record_idx</name>
+      <fields>analysis_record</fields>
+    </index>
+    <index>
+      <name>run_id_idx</name>
+      <fields>analysis_run_id</fields>
+    </index>
+    <index>
+      <name>execution_status_idx</name>
+      <fields>execution_status</fields>
+    </index>
+  </indexes>
+</sys_db_object>

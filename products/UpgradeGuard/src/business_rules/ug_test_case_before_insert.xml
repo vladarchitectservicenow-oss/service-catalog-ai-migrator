@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_script>
+  <name>UG Test Case: Before Insert — Validate &amp; Defaults</name>
+  <description>Validates required fields and sets defaults before inserting a test case record.</description>
+  <collection>x_upgradeguardsn_test_case</collection>
+  <when>before</when>
+  <insert>true</insert>
+  <order>100</order>
+  <active>true</active>
+  <condition/>
+  <script><![CDATA[
+(function executeRule(current, previous /*null when async*/) {
+
+    // Set execution_status to 'not_run' if not provided
+    if (!current.execution_status) {
+        current.execution_status = 'not_run';
+    }
+
+    // Validate required fields
+    if (!current.test_name) {
+        gs.addErrorMessage('Test name is required');
+        current.setAbortAction(true);
+        return;
+    }
+
+    if (!current.analysis_record) {
+        gs.addErrorMessage('Analysis record reference is required');
+        current.setAbortAction(true);
+        return;
+    }
+
+    // Validate priority
+    var validPriorities = ['critical', 'high', 'medium', 'low'];
+    if (current.priority && validPriorities.indexOf(current.priority) === -1) {
+        gs.addErrorMessage('Invalid priority: ' + current.priority + '. Must be critical, high, medium, or low.');
+        current.setAbortAction(true);
+        return;
+    }
+
+    // Validate test_type
+    var validTypes = ['regression', 'smoke', 'integration', 'migration'];
+    if (current.test_type && validTypes.indexOf(current.test_type) === -1) {
+        gs.addErrorMessage('Invalid test type: ' + current.test_type + '. Must be regression, smoke, integration, or migration.');
+        current.setAbortAction(true);
+        return;
+    }
+
+    // Set execution_date when status is passed/failed on insert
+    if (current.execution_status === 'passed' || current.execution_status === 'failed') {
+        current.execution_date = new GlideDateTime();
+    }
+
+})(current, previous);
+]]></script>
+</sys_script>

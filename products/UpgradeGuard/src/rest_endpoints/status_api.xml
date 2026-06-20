@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_ws_definition>
+  <name>UpgradeGuard Status API</name>
+  <description>GET endpoint for querying analysis run status, summary, and results. Supports query parameters: run_id, format (json/csv), type (summary/analysis/test_cases).</description>
+  <endpoint>/api/x_upgradeguardsn/v1/status</endpoint>
+  <http_method>GET</http_method>
+  <is_public>false</is_public>
+  <authentication_type>basic</authentication_type>
+  <requires_authentication>true</requires_authentication>
+  <requires_acl>true</requires_acl>
+  <roles>x_upgradeguardsn.admin</roles>
+  <script>
+(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+
+    var queryParams = request.queryParams;
+    var runId = queryParams.run_id || '';
+    var format = queryParams.format || 'json';
+    var type = queryParams.type || 'summary';
+
+    if (!runId) {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({
+            ok: false,
+            error: 'run_id query parameter is required'
+        }));
+        return;
+    }
+
+    try {
+        var reporter = new UpgradeGuardReporter(runId);
+
+        switch (type) {
+
+            case 'summary':
+                var stats = reporter.getSummary();
+                response.setBody(JSON.stringify({
+                    ok: true,
+                    type: 'summary',
+                    run_id: runId,
+                    data: stats
+                }));
+                break;
+
+            case 'analysis':
+                var report = reporter.generateReport(format);
+                if (format === 'csv') {
+                    response.setHeader('Content-Type', 'text/csv');
+                    response.setBody(report);
+                } else {
+                    response.setBody(JSON.stringify({
+                        ok: true,
+                        type: 'analysis',
+                        run_id: runId,
+                        data: JSON.parse(report)
+                    }));
+                }
+                break;
+
+            case 'test_cases':
+                var reporter2 = new UpgradeGuardReporter(runId);
+                var testCases = reporter2._getTestCases();
+                response.setBody(JSON.stringify({
+                    ok: true,
+                    type: 'test_cases',
+                    run_id: runId,
+                    count: testCases.length,
+                    data: testCases
+                }));
+                break;
+
+            case 'runs':
+                // List all analysis runs
+                var runs = [];
+                var gr = new GlideRecord('x_upgradeguardsn_analysis');
+                gr.addQuery('status', 'completed');
+                gr.orderByDesc('analysis_date');
+                gr.setLimit(50);
+                gr.query();
+                var seenRunIds = {};
+                while (gr.next()) {
+                    var rid = gr.getValue('analysis_run_id');
+                    if (!seenRunIds[rid]) {
+                        seenRunIds[rid] = true;
+                        runs.push({
+                            run_id: rid,
+                            release_family: gr.getValue('release_family'),
+                            analysis_date: gr.getValue('analysis_date'),
+                            status: gr.getValue('status')
+                        });
+                    }
+                }
+                response.setBody(JSON.stringify({
+                    ok: true,
+                    type: 'runs',
+                    count: runs.length,
+                    data: runs
+                }));
+                break;
+
+            default:
+                response.setStatus(400);
+                response.setBody(JSON.stringify({
+                    ok: false,
+                    error: 'Unknown type: ' + type + '. Valid types: summary, analysis, test_cases, runs'
+                }));
+        }
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({
+            ok: false,
+            error: 'Internal error: ' + e.message,
+            run_id: runId
+        }));
+    }
+
+})(request, response);
+  </script>
+</sys_ws_definition>

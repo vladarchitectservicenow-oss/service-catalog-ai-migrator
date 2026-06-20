@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_ws_definition>
+  <name>UpgradeGuard Execute API</name>
+  <description>POST endpoint for UpgradeGuard operations. Accepts an 'action' body parameter to dispatch: scan, analyze, report, testgen, migrate.</description>
+  <endpoint>/api/x_upgradeguardsn/v1/execute</endpoint>
+  <http_method>POST</http_method>
+  <is_public>false</is_public>
+  <authentication_type>basic</authentication_type>
+  <requires_authentication>true</requires_authentication>
+  <requires_acl>true</requires_acl>
+  <roles>x_upgradeguardsn.admin</roles>
+  <script>
+(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+
+    var body = request.body.data;
+    var action = body.action || '';
+    var releaseFamily = body.release_family || '';
+    var releaseNotes = body.release_notes || [];
+    var format = body.format || 'json';
+    var runId = body.run_id || '';
+
+    try {
+        switch (action) {
+
+            case 'scan':
+                // Scan instance and return component inventory
+                var engine = new UpgradeGuardEngine(releaseFamily);
+                var components = engine.scanInstance();
+                response.setBody(JSON.stringify({
+                    ok: true,
+                    action: 'scan',
+                    run_id: engine.runId,
+                    component_count: components.length,
+                    components: components
+                }));
+                break;
+
+            case 'analyze':
+                // Full analysis: scan + cross-reference + score + persist
+                if (!releaseFamily) {
+                    response.setStatus(400);
+                    response.setBody(JSON.stringify({
+                        ok: false,
+                        error: 'release_family is required for analyze action'
+                    }));
+                    return;
+                }
+                var engine2 = new UpgradeGuardEngine(releaseFamily);
+                var resultRunId = engine2.runFullAnalysis(releaseNotes);
+                response.setBody(JSON.stringify({
+                    ok: true,
+                    action: 'analyze',
+                    run_id: resultRunId,
+                    message: 'Analysis complete. Use GET /status?run_id=' + resultRunId + ' for results.'
+                }));
+                break;
+
+            case 'report':
+                // Generate report for an existing analysis run
+                if (!runId) {
+                    response.setStatus(400);
+                    response.setBody(JSON.stringify({
+                        ok: false,
+                        error: 'run_id is required for report action'
+                    }));
+                    return;
+                }
+                var reporter = new UpgradeGuardReporter(runId);
+                var report = reporter.generateReport(format);
+                response.setBody(JSON.stringify({
+                    ok: true,
+                    action: 'report',
+                    run_id: runId,
+                    format: format,
+                    report: format === 'json' ? JSON.parse(report) : report
+                }));
+                break;
+
+            case 'testgen':
+                // Generate test cases for an existing analysis run
+                if (!runId) {
+                    response.setStatus(400);
+                    response.setBody(JSON.stringify({
+                        ok: false,
+                        error: 'run_id is required for testgen action'
+                    }));
+                    return;
+                }
+                var reporter2 = new UpgradeGuardReporter(runId);
+                var testCases = reporter2.generateTestCases();
+                response.setBody(JSON.stringify({
+                    ok: true,
+                    action: 'testgen',
+                    run_id: runId,
+                    test_case_count: testCases.length,
+                    test_cases: testCases
+                }));
+                break;
+
+            case 'migrate':
+                // Generate migration steps for breaking changes
+                if (!runId) {
+                    response.setStatus(400);
+                    response.setBody(JSON.stringify({
+                        ok: false,
+                        error: 'run_id is required for migrate action'
+                    }));
+                    return;
+                }
+                var reporter3 = new UpgradeGuardReporter(runId);
+                var migrationResults = reporter3.generateMigrationSteps();
+                response.setBody(JSON.stringify({
+                    ok: true,
+                    action: 'migrate',
+                    run_id: runId,
+                    migration_count: migrationResults.length,
+                    migrations: migrationResults
+                }));
+                break;
+
+            case 'full':
+                // Full pipeline: analyze + testgen + migrate + report
+                if (!releaseFamily) {
+                    response.setStatus(400);
+                    response.setBody(JSON.stringify({
+                        ok: false,
+                        error: 'release_family is required for full action'
+                    }));
+                    return;
+                }
+                var engine3 = new UpgradeGuardEngine(releaseFamily);
+                var fullRunId = engine3.runFullAnalysis(releaseNotes);
+                var reporter4 = new UpgradeGuardReporter(fullRunId);
+                var fullReport = reporter4.runFullReport(format);
+                response.setBody(JSON.stringify({
+                    ok: true,
+                    action: 'full',
+                    run_id: fullRunId,
+                    report: format === 'json' ? JSON.parse(fullReport) : fullReport
+                }));
+                break;
+
+            default:
+                response.setStatus(400);
+                response.setBody(JSON.stringify({
+                    ok: false,
+                    error: 'Unknown action: ' + action + '. Valid actions: scan, analyze, report, testgen, migrate, full'
+                }));
+        }
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({
+            ok: false,
+            error: 'Internal error: ' + e.message,
+            action: action
+        }));
+    }
+
+})(request, response);
+  </script>
+</sys_ws_definition>

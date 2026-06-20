@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_script>
+  <name>UG Analysis: Before Insert — Validate &amp; Defaults</name>
+  <description>Validates required fields and sets defaults before inserting an analysis record.</description>
+  <collection>x_upgradeguardsn_analysis</collection>
+  <when>before</when>
+  <order>100</order>
+  <active>true</active>
+  <condition/>
+  <script><![CDATA[
+(function executeRule(current, previous /*null when async*/) {
+
+    // Set analysis_date if not provided
+    if (!current.analysis_date) {
+        current.analysis_date = new GlideDateTime();
+    }
+
+    // Set status to 'pending' if not provided
+    if (!current.status) {
+        current.status = 'pending';
+    }
+
+    // Validate required fields
+    if (!current.component_name) {
+        gs.addErrorMessage('Component name is required');
+        current.setAbortAction(true);
+        return;
+    }
+
+    if (!current.component_type) {
+        gs.addErrorMessage('Component type is required');
+        current.setAbortAction(true);
+        return;
+    }
+
+    // Validate risk_score range
+    var score = parseInt(current.risk_score || '0', 10);
+    if (score < 0 || score > 100) {
+        gs.addErrorMessage('Risk score must be between 0 and 100');
+        current.setAbortAction(true);
+        return;
+    }
+
+    // Auto-classify module if not set
+    if (!current.module && current.component_name) {
+        var n = current.component_name.toLowerCase();
+        if (n.indexOf('incident') !== -1 || n.indexOf('change') !== -1 ||
+            n.indexOf('problem') !== -1 || n.indexOf('request') !== -1) {
+            current.module = 'itsm';
+        } else if (n.indexOf('case') !== -1 || n.indexOf('customer') !== -1) {
+            current.module = 'csm';
+        } else if (n.indexOf('hr') !== -1 || n.indexOf('employee') !== -1) {
+            current.module = 'hr';
+        } else if (n.indexOf('sec') !== -1 || n.indexOf('vuln') !== -1) {
+            current.module = 'secops';
+        } else if (n.indexOf('cmdb') !== -1 || n.indexOf('discovery') !== -1) {
+            current.module = 'itom';
+        } else if (n.indexOf('sys_') !== -1 || n.indexOf('glide') !== -1) {
+            current.module = 'platform';
+        } else {
+            current.module = 'other';
+        }
+    }
+
+})(current, previous);
+]]></script>
+</sys_script>
