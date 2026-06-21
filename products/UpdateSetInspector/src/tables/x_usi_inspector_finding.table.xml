@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <!--
+        UpdateSet Inspector — Finding Table
+        Consolidates: collisions, dependencies, missing-dependency records
+        Discriminator field 'finding_type' separates record types.
+        Copyright (c) 2026 Vladimir Kapustin
+        SPDX-License-Identifier: AGPL-3.0-only
+    -->
+    <sys_db_object action="INSERT">
+        <name>x_usi_inspector_finding</name>
+        <label>USI Finding</label>
+        <scope display_value="UpdateSet Inspector">x_usi_inspector</scope>
+        <super_class display_value="Task">task</super_class>
+        <is_extendable>true</is_extendable>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+        <sys_package display_value="UpdateSet Inspector">x_usi_inspector</sys_package>
+    </sys_db_object>
+
+    <!-- finding_type: discriminator — collision | dependency | missing_dependency -->
+    <sys_dictionary action="INSERT" element="finding_type" label="Finding Type" table="x_usi_inspector_finding">
+        <name>finding_type</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>40</max_length>
+        <mandatory>true</mandatory>
+        <default_value>collision</default_value>
+        <choice action="INSERT">
+            <choice_element>collision</choice_element>
+            <choice_label>Collision</choice_label>
+            <choice_sequence>100</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>dependency</choice_element>
+            <choice_label>Dependency</choice_label>
+            <choice_sequence>200</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>missing_dependency</choice_element>
+            <choice_label>Missing Dependency</choice_label>
+            <choice_sequence>300</choice_sequence>
+        </choice>
+    </sys_dictionary>
+
+    <!-- update_set_a: first update set involved -->
+    <sys_dictionary action="INSERT" element="update_set_a" label="Update Set A" table="x_usi_inspector_finding">
+        <name>update_set_a</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>100</max_length>
+        <mandatory>true</mandatory>
+    </sys_dictionary>
+
+    <!-- update_set_b: second update set (for collisions) or target record table (for dependencies) -->
+    <sys_dictionary action="INSERT" element="update_set_b" label="Update Set B / Target Table" table="x_usi_inspector_finding">
+        <name>update_set_b</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>100</max_length>
+        <mandatory>false</mandatory>
+    </sys_dictionary>
+
+    <!-- target_table: table of the record involved -->
+    <sys_dictionary action="INSERT" element="target_table" label="Target Table" table="x_usi_inspector_finding">
+        <name>target_table</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>80</max_length>
+        <mandatory>true</mandatory>
+    </sys_dictionary>
+
+    <!-- target_record_name: name of the record -->
+    <sys_dictionary action="INSERT" element="target_record_name" label="Target Record Name" table="x_usi_inspector_finding">
+        <name>target_record_name</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>255</max_length>
+        <mandatory>false</mandatory>
+    </sys_dictionary>
+
+    <!-- target_record_sys_id: sys_id of the record -->
+    <sys_dictionary action="INSERT" element="target_record_sys_id" label="Target Record Sys ID" table="x_usi_inspector_finding">
+        <name>target_record_sys_id</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>32</max_length>
+        <mandatory>false</mandatory>
+    </sys_dictionary>
+
+    <!-- field_conflicts: JSON array of field-level conflicts (for collisions) -->
+    <sys_dictionary action="INSERT" element="field_conflicts" label="Field Conflicts (JSON)" table="x_usi_inspector_finding">
+        <name>field_conflicts</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>4000</max_length>
+        <mandatory>false</mandatory>
+    </sys_dictionary>
+
+    <!-- severity: HIGH / MEDIUM / LOW -->
+    <sys_dictionary action="INSERT" element="severity" label="Severity" table="x_usi_inspector_finding">
+        <name>severity</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>10</max_length>
+        <mandatory>true</mandatory>
+        <default_value>MEDIUM</default_value>
+        <choice action="INSERT">
+            <choice_element>HIGH</choice_element>
+            <choice_label>High</choice_label>
+            <choice_sequence>100</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>MEDIUM</choice_element>
+            <choice_label>Medium</choice_label>
+            <choice_sequence>200</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>LOW</choice_element>
+            <choice_label>Low</choice_label>
+            <choice_sequence>300</choice_sequence>
+        </choice>
+    </sys_dictionary>
+
+    <!-- status: new | reviewed | resolved | ignored -->
+    <sys_dictionary action="INSERT" element="status" label="Status" table="x_usi_inspector_finding">
+        <name>status</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>20</max_length>
+        <mandatory>true</mandatory>
+        <default_value>new</default_value>
+        <choice action="INSERT">
+            <choice_element>new</choice_element>
+            <choice_label>New</choice_label>
+            <choice_sequence>100</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>reviewed</choice_element>
+            <choice_label>Reviewed</choice_label>
+            <choice_sequence>200</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>resolved</choice_element>
+            <choice_label>Resolved</choice_label>
+            <choice_sequence>300</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>ignored</choice_element>
+            <choice_label>Ignored</choice_label>
+            <choice_sequence>400</choice_sequence>
+        </choice>
+    </sys_dictionary>
+
+    <!-- risk_level: risk score associated with this finding -->
+    <sys_dictionary action="INSERT" element="risk_level" label="Risk Level" table="x_usi_inspector_finding">
+        <name>risk_level</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>10</max_length>
+        <mandatory>false</mandatory>
+        <default_value>GREEN</default_value>
+        <choice action="INSERT">
+            <choice_element>RED</choice_element>
+            <choice_label>Red</choice_label>
+            <choice_sequence>100</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>YELLOW</choice_element>
+            <choice_label>Yellow</choice_label>
+            <choice_sequence>200</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>GREEN</choice_element>
+            <choice_label>Green</choice_label>
+            <choice_sequence>300</choice_sequence>
+        </choice>
+    </sys_dictionary>
+
+    <!-- scan_batch_id: groups findings from a single scan run -->
+    <sys_dictionary action="INSERT" element="scan_batch_id" label="Scan Batch ID" table="x_usi_inspector_finding">
+        <name>scan_batch_id</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>40</max_length>
+        <mandatory>true</mandatory>
+    </sys_dictionary>
+
+    <!-- description: human-readable description of the finding -->
+    <sys_dictionary action="INSERT" element="description" label="Description" table="x_usi_inspector_finding">
+        <name>description</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>4000</max_length>
+        <mandatory>false</mandatory>
+    </sys_dictionary>
+
+</database>

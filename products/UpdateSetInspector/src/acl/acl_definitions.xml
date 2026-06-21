@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    UpdateSet Inspector — ACL Definitions
+    Copyright (c) 2026 Vladimir Kapustin
+    SPDX-License-Identifier: AGPL-3.0-only
+-->
+<database>
+    <!-- Role definitions -->
+    <sys_user_role action="INSERT">
+        <name>x_usi_inspector.admin</name>
+        <description>UpdateSet Inspector administrator — full access</description>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_user_role>
+    <sys_user_role action="INSERT">
+        <name>x_usi_inspector.user</name>
+        <description>UpdateSet Inspector user — read-only access</description>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_user_role>
+
+    <!-- x_usi_inspector_finding ACLs -->
+    <sys_security_acl action="INSERT">
+        <name>x_usi_inspector_finding</name>
+        <operation>read</operation>
+        <active>true</active>
+        <admin>true</admin>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl>
+    <sys_security_acl_role action="INSERT">
+        <parent>x_usi_inspector_finding</parent>
+        <operation>read</operation>
+        <role display_value="x_usi_inspector.admin">x_usi_inspector.admin</role>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl_role>
+    <sys_security_acl_role action="INSERT">
+        <parent>x_usi_inspector_finding</parent>
+        <operation>read</operation>
+        <role display_value="x_usi_inspector.user">x_usi_inspector.user</role>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl_role>
+
+    <sys_security_acl action="INSERT">
+        <name>x_usi_inspector_finding</name>
+        <operation>write</operation>
+        <active>true</active>
+        <admin>true</admin>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl>
+    <sys_security_acl_role action="INSERT">
+        <parent>x_usi_inspector_finding</parent>
+        <operation>write</operation>
+        <role display_value="x_usi_inspector.admin">x_usi_inspector.admin</role>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl_role>
+
+    <sys_security_acl action="INSERT">
+        <name>x_usi_inspector_finding</name>
+        <operation>delete</operation>
+        <active>true</active>
+        <admin>true</admin>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl>
+    <sys_security_acl_role action="INSERT">
+        <parent>x_usi_inspector_finding</parent>
+        <operation>delete</operation>
+        <role display_value="x_usi_inspector.admin">x_usi_inspector.admin</role>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl_role>
+
+    <!-- x_usi_inspector_audit ACLs -->
+    <sys_security_acl action="INSERT">
+        <name>x_usi_inspector_audit</name>
+        <operation>read</operation>
+        <active>true</active>
+        <admin>true</admin>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl>
+    <sys_security_acl_role action="INSERT">
+        <parent>x_usi_inspector_audit</parent>
+        <operation>read</operation>
+        <role display_value="x_usi_inspector.admin">x_usi_inspector.admin</role>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl_role>
+    <sys_security_acl_role action="INSERT">
+        <parent>x_usi_inspector_audit</parent>
+        <operation>read</operation>
+        <role display_value="x_usi_inspector.user">x_usi_inspector.user</role>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl_role>
+
+    <sys_security_acl action="INSERT">
+        <name>x_usi_inspector_audit</name>
+        <operation>write</operation>
+        <active>true</active>
+        <admin>true</admin>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl>
+    <sys_security_acl_role action="INSERT">
+        <parent>x_usi_inspector_audit</parent>
+        <operation>write</operation>
+        <role display_value="x_usi_inspector.admin">x_usi_inspector.admin</role>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl_role>
+
+    <sys_security_acl action="INSERT">
+        <name>x_usi_inspector_audit</name>
+        <operation>delete</operation>
+        <active>true</active>
+        <admin>true</admin>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl>
+    <sys_security_acl_role action="INSERT">
+        <parent>x_usi_inspector_audit</parent>
+        <operation>delete</operation>
+        <role display_value="x_usi_inspector.admin">x_usi_inspector.admin</role>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl_role>
+
+    <!-- REST API ACLs -->
+    <sys_security_acl action="INSERT">
+        <name>/api/x_usi_inspector/v1/inspect</name>
+        <operation>execute</operation>
+        <active>true</active>
+        <admin>true</admin>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl>
+    <sys_security_acl_role action="INSERT">
+        <parent>/api/x_usi_inspector/v1/inspect</parent>
+        <operation>execute</operation>
+        <role display_value="x_usi_inspector.admin">x_usi_inspector.admin</role>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl_role>
+    <sys_security_acl_role action="INSERT">
+        <parent>/api/x_usi_inspector/v1/inspect</parent>
+        <operation>execute</operation>
+        <role display_value="x_usi_inspector.user">x_usi_inspector.user</role>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl_role>
+
+    <sys_security_acl action="INSERT">
+        <name>/api/x_usi_inspector/v1/manage</name>
+        <operation>execute</operation>
+        <active>true</active>
+        <admin>true</admin>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl>
+    <sys_security_acl_role action="INSERT">
+        <parent>/api/x_usi_inspector/v1/manage</parent>
+        <operation>execute</operation>
+        <role display_value="x_usi_inspector.admin">x_usi_inspector.admin</role>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+    </sys_security_acl_role>
+</database>

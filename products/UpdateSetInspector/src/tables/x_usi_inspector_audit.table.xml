@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <!--
+        UpdateSet Inspector — Audit Record Table
+        Consolidates: AI summaries, backups, CAB reports, scan metadata
+        Discriminator field 'record_type' separates record types.
+        Copyright (c) 2026 Vladimir Kapustin
+        SPDX-License-Identifier: AGPL-3.0-only
+    -->
+    <sys_db_object action="INSERT">
+        <name>x_usi_inspector_audit</name>
+        <label>USI Audit Record</label>
+        <scope display_value="UpdateSet Inspector">x_usi_inspector</scope>
+        <super_class display_value="Task">task</super_class>
+        <is_extendable>true</is_extendable>
+        <sys_scope display_value="UpdateSet Inspector">x_usi_inspector</sys_scope>
+        <sys_package display_value="UpdateSet Inspector">x_usi_inspector</sys_package>
+    </sys_db_object>
+
+    <!-- record_type: discriminator — ai_summary | backup | cab_report | scan_meta -->
+    <sys_dictionary action="INSERT" element="record_type" label="Record Type" table="x_usi_inspector_audit">
+        <name>record_type</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>30</max_length>
+        <mandatory>true</mandatory>
+        <default_value>scan_meta</default_value>
+        <choice action="INSERT">
+            <choice_element>ai_summary</choice_element>
+            <choice_label>AI Summary</choice_label>
+            <choice_sequence>100</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>backup</choice_element>
+            <choice_label>Backup</choice_label>
+            <choice_sequence>200</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>cab_report</choice_element>
+            <choice_label>CAB Report</choice_label>
+            <choice_sequence>300</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>scan_meta</choice_element>
+            <choice_label>Scan Metadata</choice_label>
+            <choice_sequence>400</choice_sequence>
+        </choice>
+    </sys_dictionary>
+
+    <!-- update_set_name: name of the update set this audit record relates to -->
+    <sys_dictionary action="INSERT" element="update_set_name" label="Update Set Name" table="x_usi_inspector_audit">
+        <name>update_set_name</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>100</max_length>
+        <mandatory>true</mandatory>
+    </sys_dictionary>
+
+    <!-- update_set_sys_id: sys_id of the update set -->
+    <sys_dictionary action="INSERT" element="update_set_sys_id" label="Update Set Sys ID" table="x_usi_inspector_audit">
+        <name>update_set_sys_id</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>32</max_length>
+        <mandatory>false</mandatory>
+    </sys_dictionary>
+
+    <!-- content_json: JSON payload (AI summary JSON, CAB report JSON, backup metadata JSON, scan results JSON) -->
+    <sys_dictionary action="INSERT" element="content_json" label="Content (JSON)" table="x_usi_inspector_audit">
+        <name>content_json</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>8000</max_length>
+        <mandatory>false</mandatory>
+    </sys_dictionary>
+
+    <!-- content_text: Human-readable text (AI summary text, CAB report HTML, restore instructions) -->
+    <sys_dictionary action="INSERT" element="content_text" label="Content (Text)" table="x_usi_inspector_audit">
+        <name>content_text</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>8000</max_length>
+        <mandatory>false</mandatory>
+    </sys_dictionary>
+
+    <!-- risk_level: risk score for this update set at time of record creation -->
+    <sys_dictionary action="INSERT" element="risk_level" label="Risk Level" table="x_usi_inspector_audit">
+        <name>risk_level</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>10</max_length>
+        <mandatory>false</mandatory>
+        <default_value>GREEN</default_value>
+        <choice action="INSERT">
+            <choice_element>RED</choice_element>
+            <choice_label>Red</choice_label>
+            <choice_sequence>100</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>YELLOW</choice_element>
+            <choice_label>Yellow</choice_label>
+            <choice_sequence>200</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>GREEN</choice_element>
+            <choice_label>Green</choice_label>
+            <choice_sequence>300</choice_sequence>
+        </choice>
+    </sys_dictionary>
+
+    <!-- status: pending | completed | failed | archived -->
+    <sys_dictionary action="INSERT" element="status" label="Status" table="x_usi_inspector_audit">
+        <name>status</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>20</max_length>
+        <mandatory>true</mandatory>
+        <default_value>pending</default_value>
+        <choice action="INSERT">
+            <choice_element>pending</choice_element>
+            <choice_label>Pending</choice_label>
+            <choice_sequence>100</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>completed</choice_element>
+            <choice_label>Completed</choice_label>
+            <choice_sequence>200</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>failed</choice_element>
+            <choice_label>Failed</choice_label>
+            <choice_sequence>300</choice_sequence>
+        </choice>
+        <choice action="INSERT">
+            <choice_element>archived</choice_element>
+            <choice_label>Archived</choice_label>
+            <choice_sequence>400</choice_sequence>
+        </choice>
+    </sys_dictionary>
+
+    <!-- backup_attachment_sys_id: for backup records, sys_id of the XML attachment -->
+    <sys_dictionary action="INSERT" element="backup_attachment_sys_id" label="Backup Attachment Sys ID" table="x_usi_inspector_audit">
+        <name>backup_attachment_sys_id</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>32</max_length>
+        <mandatory>false</mandatory>
+    </sys_dictionary>
+
+    <!-- scan_batch_id: links to findings from same scan -->
+    <sys_dictionary action="INSERT" element="scan_batch_id" label="Scan Batch ID" table="x_usi_inspector_audit">
+        <name>scan_batch_id</name>
+        <internal_type display_value="String">string</internal_type>
+        <max_length>40</max_length>
+        <mandatory>false</mandatory>
+    </sys_dictionary>
+
+    <!-- record_count: number of records in the update set (for scan_meta) -->
+    <sys_dictionary action="INSERT" element="record_count" label="Record Count" table="x_usi_inspector_audit">
+        <name>record_count</name>
+        <internal_type display_value="Integer">integer</internal_type>
+        <max_length>40</max_length>
+        <mandatory>false</mandatory>
+    </sys_dictionary>
+
+</database>

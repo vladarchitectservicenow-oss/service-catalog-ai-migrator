@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    UpdateSet Inspector — Scoped Application Definition
+    Copyright (c) 2026 Vladimir Kapustin
+    SPDX-License-Identifier: AGPL-3.0-only
+-->
+<sys_app action="INSERT">
+    <name>UpdateSet Inspector</name>
+    <scope>x_usi_inspector</scope>
+    <version>1.0.0</version>
+    <description>Update set transparency tool — collision detection, dependency mapping, risk scoring, CAB reports, AI-assisted summaries, and pre-clone auto-backup.</description>
+    <active>true</active>
+    <sys_id>0a1b2c3d4e5f60718293a4b5c6d7e8f9</sys_id>
+    <sys_scope action="INSERT">
+        <name>x_usi_inspector</name>
+        <sys_id>0a1b2c3d4e5f60718293a4b5c6d7e8f9</sys_id>
+        <scope>x_usi_inspector</scope>
+        <active>true</active>
+    </sys_scope>
+    <sys_properties action="INSERT">
+        <property>
+            <name>x_usi_inspector.pre_clone_backup_enabled</name>
+            <value>true</value>
+            <description>Enable/disable pre-clone auto-backup of in-progress update sets</description>
+        </property>
+        <property>
+            <name>x_usi_inspector.pre_clone_backup_group</name>
+            <value></value>
+            <description>Group sys_id for backup notification emails</description>
+        </property>
+        <property>
+            <name>x_usi_inspector.pre_clone_schedule</name>
+            <value>0 2 * * *</value>
+            <description>Cron expression for pre-clone backup scheduled job</description>
+        </property>
+        <property>
+            <name>x_usi_inspector.collision_notification</name>
+            <value>true</value>
+            <description>Enable email notification on collision detection</description>
+        </property>
+    </sys_properties>
+</sys_app>

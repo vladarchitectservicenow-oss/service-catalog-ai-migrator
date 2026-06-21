@@ -1,0 +1,124 @@
+{
+  "name": "UpdateSet Inspector",
+  "scope": "x_usi_inspector",
+  "version": "1.0.0",
+  "description": "Update set transparency tool — collision detection, dependency mapping, risk scoring, CAB reports, AI-assisted summaries, and pre-clone auto-backup",
+  "author": "Vladimir Kapustin",
+  "license": "AGPL-3.0-only",
+  "components": {
+    "tables": [
+      {
+        "name": "x_usi_inspector_finding",
+        "label": "USI Finding",
+        "extends": "task",
+        "fields": ["finding_type", "update_set_a", "update_set_b", "target_table", "target_record_name", "target_record_sys_id", "field_conflicts", "severity", "status", "risk_level", "scan_batch_id", "description"]
+      },
+      {
+        "name": "x_usi_inspector_audit",
+        "label": "USI Audit Record",
+        "extends": "task",
+        "fields": ["record_type", "update_set_name", "update_set_sys_id", "content_json", "content_text", "risk_level", "status", "backup_attachment_sys_id", "scan_batch_id", "record_count"]
+      }
+    ],
+    "script_includes": [
+      {
+        "name": "USIContentParser",
+        "file": "02_script_includes/01_core_engine.js",
+        "description": "Parses sys_update_xml payloads into structured data"
+      },
+      {
+        "name": "USICollisionDetector",
+        "file": "02_script_includes/01_core_engine.js",
+        "description": "Detects cross-update-set record collisions"
+      },
+      {
+        "name": "USIDependencyAnalyzer",
+        "file": "02_script_includes/01_core_engine.js",
+        "description": "Maps reference dependencies and deployment order"
+      },
+      {
+        "name": "USIRiskScorer",
+        "file": "02_script_includes/01_core_engine.js",
+        "description": "Classifies update set risk as RED/YELLOW/GREEN"
+      },
+      {
+        "name": "USIReportGenerator",
+        "file": "02_script_includes/02_support_services.js",
+        "description": "Generates CAB review reports"
+      },
+      {
+        "name": "USIBackupManager",
+        "file": "02_script_includes/02_support_services.js",
+        "description": "Pre-clone auto-backup of in-progress update sets"
+      },
+      {
+        "name": "USIAIChangeSummarizer",
+        "file": "02_script_includes/02_support_services.js",
+        "description": "AI-assisted change summary with rule-based fallback"
+      }
+    ],
+    "rest_api": [
+      {
+        "endpoint": "GET /api/x_usi_inspector/v1/inspect",
+        "file": "03_rest_api/01_inspect_api.js",
+        "actions": ["content", "collisions", "dependencies", "risk", "deploy_order", "findings", "backups", "reports", "ai_summaries"]
+      },
+      {
+        "endpoint": "POST /api/x_usi_inspector/v1/manage",
+        "file": "03_rest_api/02_manage_api.js",
+        "actions": ["generate_report", "ai_summary", "trigger_backup", "restore_backup", "scan_all_collisions", "clear_findings"]
+      }
+    ],
+    "business_rules": [
+      {
+        "table": "x_usi_inspector_finding",
+        "when": "before insert",
+        "order": 100,
+        "file": "04_business_rules/01_auto_risk_level.js",
+        "description": "Auto-compute risk_level from severity on insert"
+      },
+      {
+        "table": "x_usi_inspector_audit",
+        "when": "before insert",
+        "order": 100,
+        "file": "04_business_rules/02_auto_audit_defaults.js",
+        "description": "Auto-set default status and resolve update_set_name from sys_id"
+      }
+    ],
+    "scheduled_jobs": [
+      {
+        "name": "USI Pre-Clone Backup",
+        "schedule": "0 2 * * *",
+        "file": "05_scheduled_jobs/01_pre_clone_backup.js",
+        "description": "Backs up all in-progress update sets as XML attachments"
+      }
+    ],
+    "acl": [
+      {"table": "x_usi_inspector_finding", "operations": ["read", "write", "delete"]},
+      {"table": "x_usi_inspector_audit", "operations": ["read", "write", "delete"]},
+      {"endpoint": "/api/x_usi_inspector/v1/inspect", "operations": ["execute"]},
+      {"endpoint": "/api/x_usi_inspector/v1/manage", "operations": ["execute"]}
+    ],
+    "roles": [
+      {"name": "x_usi_inspector.admin", "description": "Full access to USI tables and APIs"},
+      {"name": "x_usi_inspector.user", "description": "Read-only access to USI tables and inspect API"}
+    ]
+  },
+  "constraints": {
+    "max_script_includes": 2,
+    "max_tables": 2,
+    "max_rest_endpoints": 2,
+    "actual": {
+      "script_includes": 2,
+      "tables": 2,
+      "rest_endpoints": 2,
+      "business_rules": 2,
+      "scheduled_jobs": 1
+    }
+  },
+  "cross_scope_privileges": {
+    "read": ["sys_update_set", "sys_update_xml", "sys_db_object", "sys_dictionary", "sys_security_acl", "sys_script", "sys_script_include"],
+    "write": [],
+    "note": "USI reads from sys_update_set and sys_update_xml (global scope). No cross-scope write required. All writes are to x_usi_inspector_* tables (same scope)."
+  }
+}
