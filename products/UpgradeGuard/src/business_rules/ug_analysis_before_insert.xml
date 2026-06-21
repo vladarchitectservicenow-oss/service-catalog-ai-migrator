@@ -4,6 +4,7 @@
   <description>Validates required fields and sets defaults before inserting an analysis record.</description>
   <collection>x_upgradeguardsn_analysis</collection>
   <when>before</when>
+  <insert>true</insert>
   <order>100</order>
   <active>true</active>
   <condition/>

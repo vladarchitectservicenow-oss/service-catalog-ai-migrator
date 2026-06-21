@@ -18,12 +18,12 @@
       <active>true</active>
     </module>
   </modules>
-  <roles>
-    <role>
+  <sys_user_roles>
+    <sys_user_role>
       <name>x_upgradeguardsn.admin</name>
       <description>UpgradeGuard Administrator — full access to analysis, test cases, and REST APIs</description>
-    </role>
-  </roles>
+    </sys_user_role>
+  </sys_user_roles>
   <tables>
     <table>x_upgradeguardsn_analysis</table>
     <table>x_upgradeguardsn_test_case</table>
@@ -92,7 +92,7 @@
       <description>UpgradeGuardEngine scans Custom Tables for affected table references</description>
     </access>
     <access>
-      <target_table>sys_plugins</target_table>
+      <target_table>v_plugin</target_table>
       <operation>read</operation>
       <description>UpgradeGuardEngine scans Plugins for compatibility changes</description>
     </access>

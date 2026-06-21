@@ -290,7 +290,7 @@ UpgradeGuardEngine.prototype = {
     },
 
     _scanPlugins: function() {
-        var gr = new GlideRecord('sys_plugins');
+        var gr = new GlideRecord('v_plugin');
         gr.addQuery('active', true);
         gr.setLimit(200);
         gr.query();

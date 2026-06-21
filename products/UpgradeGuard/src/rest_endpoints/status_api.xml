@@ -58,7 +58,7 @@
 
             case 'test_cases':
                 var reporter2 = new UpgradeGuardReporter(runId);
-                var testCases = reporter2._getTestCases();
+                var testCases = reporter2.generateTestCases();
                 response.setBody(JSON.stringify({
                     ok: true,
                     type: 'test_cases',
