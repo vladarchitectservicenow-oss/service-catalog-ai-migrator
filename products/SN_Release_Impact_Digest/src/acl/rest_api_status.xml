@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_snc_rid.rest_api.status</name>
+  <operation>execute</operation>
+  <type>rest_endpoint</type>
+  <description>Allow authenticated users to access the RID status REST API</description>
+  <requires_role>true</requires_role>
+  <roles>
+    <role>x_snc_rid.user</role>
+    <role>x_snc_rid.admin</role>
+  </roles>
+  <script><![CDATA[
+    answer = true;
+  ]]></script>
+</sys_security_acl>

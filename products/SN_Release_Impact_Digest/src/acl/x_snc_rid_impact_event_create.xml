@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_snc_rid_impact_event.create</name>
+  <operation>create</operation>
+  <type>record</type>
+  <description>Allow create access to impact events for users with x_snc_rid.admin role</description>
+  <requires_role>true</requires_role>
+  <roles>
+    <role>x_snc_rid.admin</role>
+  </roles>
+  <script><![CDATA[
+    answer = true;
+  ]]></script>
+</sys_security_acl>

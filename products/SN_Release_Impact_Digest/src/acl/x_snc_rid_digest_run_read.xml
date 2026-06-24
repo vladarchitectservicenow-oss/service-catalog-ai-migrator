@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_snc_rid_digest_run.read</name>
+  <operation>read</operation>
+  <type>record</type>
+  <description>Allow read access to digest runs for users with x_snc_rid.user role</description>
+  <requires_role>true</requires_role>
+  <roles>
+    <role>x_snc_rid.user</role>
+    <role>x_snc_rid.admin</role>
+  </roles>
+  <script><![CDATA[
+    answer = true;
+  ]]></script>
+</sys_security_acl>

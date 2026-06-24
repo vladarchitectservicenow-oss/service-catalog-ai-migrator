@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_script>
+  <name>br_digest_run_auto_generate</name>
+  <collection>x_snc_rid_digest_run</collection>
+  <when>before</when>
+  <order>100</order>
+  <active>true</active>
+  <description>Auto-generate run_id on insert, set started_at timestamp</description>
+  <script><![CDATA[
+// SN Release Impact Digest — Business Rule: Auto-generate run_id on insert
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function executeRule(current, previous /*null when async*/) {
+
+    if (!current.run_id) {
+        current.run_id = gs.generateGUID();
+    }
+
+    if (!current.started_at) {
+        current.started_at = new GlideDateTime().getDisplayValue();
+    }
+
+    if (!current.status) {
+        current.status = 'pending';
+    }
+
+})(current, previous);
+  ]]></script>
+</sys_script>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_app>
+  <name>SN Release Impact Digest</name>
+  <scope>x_snc_rid</scope>
+  <version>1.0.0</version>
+  <description>Cross-references your ServiceNow instance usage against release notes to deliver a personalized upgrade impact report — affected modules, breaking-risk heatmap, auto-generated regression checklist, and migration steps.</description>
+  <release_family>Australia</release_family>
+  <author>Vladimir Kapustin</author>
+  <license>AGPL-3.0-only</license>
+
+  <!-- Application roles -->
+  <sys_user_role>
+    <name>x_snc_rid.user</name>
+    <description>Can view digest runs, impact events, and execute the RID REST API</description>
+  </sys_user_role>
+  <sys_user_role>
+    <name>x_snc_rid.admin</name>
+    <description>Full access to all RID tables, ACLs, and REST endpoints</description>
+  </sys_user_role>
+
+  <!-- Cross-scope access privileges for OOTB tables queried by RIDInventoryScanner -->
+  <sys_scope_privilege>
+    <source_scope>x_snc_rid</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>v_plugin</target_table>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <source_scope>x_snc_rid</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_db_object</target_table>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <source_scope>x_snc_rid</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_script</target_table>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <source_scope>x_snc_rid</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_script_client</target_table>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <source_scope>x_snc_rid</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_ui_policy</target_table>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <source_scope>x_snc_rid</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sysauto_script</target_table>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <source_scope>x_snc_rid</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_ws_definition</target_table>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <source_scope>x_snc_rid</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_hub_flow</target_table>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <source_scope>x_snc_rid</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_audit</target_table>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+</sys_app>

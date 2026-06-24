@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_snc_rid_impact_event</name>
+  <label>Release Impact Event</label>
+  <super_class/>
+  <is_extendable>false</is_extendable>
+  <fields>
+    <!-- record_type discriminator: inventory | release_note | impact_event | regression_case -->
+    <field>
+      <name>record_type</name>
+      <type>string</type>
+      <max_length>40</max_length>
+      <label>Record Type</label>
+      <mandatory>true</mandatory>
+      <default_value>impact_event</default_value>
+      <choice>3</choice>
+      <choices>
+        <choice>
+          <value>inventory</value>
+          <label>Inventory Snapshot</label>
+        </choice>
+        <choice>
+          <value>release_note</value>
+          <label>Release Note</label>
+        </choice>
+        <choice>
+          <value>impact_event</value>
+          <label>Impact Event</label>
+        </choice>
+        <choice>
+          <value>regression_case</value>
+          <label>Regression Test Case</label>
+        </choice>
+      </choices>
+    </field>
+
+    <!-- Common fields -->
+    <field>
+      <name>name</name>
+      <type>string</type>
+      <max_length>255</max_length>
+      <label>Name</label>
+    </field>
+    <field>
+      <name>description</name>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <label>Description</label>
+    </field>
+    <field>
+      <name>payload</name>
+      <type>string</type>
+      <max_length>100000</max_length>
+      <label>JSON Payload</label>
+    </field>
+
+    <!-- Inventory fields (record_type=inventory) -->
+    <field>
+      <name>inventory_type</name>
+      <type>string</type>
+      <max_length>100</max_length>
+      <label>Inventory Type</label>
+      <choice>1</choice>
+      <choices>
+        <choice><value>plugin</value><label>Plugin</label></choice>
+        <choice><value>custom_table</value><label>Custom Table</label></choice>
+        <choice><value>business_rule</value><label>Business Rule</label></choice>
+        <choice><value>client_script</value><label>Client Script</label></choice>
+        <choice><value>ui_policy</value><label>UI Policy</label></choice>
+        <choice><value>scheduled_job</value><label>Scheduled Job</label></choice>
+        <choice><value>rest_endpoint</value><label>REST Endpoint</label></choice>
+        <choice><value>flow</value><label>Flow</label></choice>
+        <choice><value>api_usage</value><label>API Usage</label></choice>
+      </choices>
+    </field>
+    <field>
+      <name>inventory_key</name>
+      <type>string</type>
+      <max_length>255</max_length>
+      <label>Inventory Key</label>
+    </field>
+    <field>
+      <name>inventory_value</name>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <label>Inventory Value</label>
+    </field>
+
+    <!-- Release note fields (record_type=release_note) -->
+    <field>
+      <name>release_family</name>
+      <type>string</type>
+      <max_length>100</max_length>
+      <label>Release Family</label>
+    </field>
+    <field>
+      <name>module</name>
+      <type>string</type>
+      <max_length>255</max_length>
+      <label>Module</label>
+    </field>
+    <field>
+      <name>component</name>
+      <type>string</type>
+      <max_length>255</max_length>
+      <label>Component</label>
+    </field>
+    <field>
+      <name>change_type</name>
+      <type>string</type>
+      <max_length>100</max_length>
+      <label>Change Type</label>
+      <choice>1</choice>
+      <choices>
+        <choice><value>breaking</value><label>Breaking</label></choice>
+        <choice><value>deprecation</value><label>Deprecation</label></choice>
+        <choice><value>additive</value><label>Additive</label></choice>
+        <choice><value>cosmetic</value><label>Cosmetic</label></choice>
+        <choice><value>removal</value><label>Removal</label></choice>
+      </choices>
+    </field>
+    <field>
+      <name>affected_apis</name>
+      <type>string</type>
+      <max_length>2000</max_length>
+      <label>Affected APIs</label>
+    </field>
+    <field>
+      <name>migration_notes</name>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <label>Migration Notes</label>
+    </field>
+
+    <!-- Impact event fields (record_type=impact_event) -->
+    <field>
+      <name>match_tier</name>
+      <type>string</type>
+      <max_length>20</max_length>
+      <label>Match Tier</label>
+      <choice>1</choice>
+      <choices>
+        <choice><value>TIER_1</value><label>Tier 1 — Exact</label></choice>
+        <choice><value>TIER_2</value><label>Tier 2 — Keyword</label></choice>
+        <choice><value>TIER_3</value><label>Tier 3 — Broad</label></choice>
+      </choices>
+    </field>
+    <field>
+      <name>confidence</name>
+      <type>integer</type>
+      <label>Confidence (0-100)</label>
+    </field>
+    <field>
+      <name>breaking_risk_score</name>
+      <type>integer</type>
+      <label>Breaking Risk Score (0-100)</label>
+    </field>
+    <field>
+      <name>reasoning</name>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <label>Reasoning</label>
+    </field>
+    <field>
+      <name>affected_components</name>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <label>Affected Components</label>
+    </field>
+    <field>
+      <name>digest_run</name>
+      <type>reference</type>
+      <reference>x_snc_rid_digest_run</reference>
+      <label>Digest Run</label>
+    </field>
+
+    <!-- Regression case fields (record_type=regression_case) -->
+    <field>
+      <name>priority</name>
+      <type>integer</type>
+      <label>Priority</label>
+    </field>
+    <field>
+      <name>risk_label</name>
+      <type>string</type>
+      <max_length>40</max_length>
+      <label>Risk Label</label>
+      <choice>1</choice>
+      <choices>
+        <choice><value>CRITICAL</value><label>CRITICAL</label></choice>
+        <choice><value>HIGH</value><label>HIGH</label></choice>
+        <choice><value>MEDIUM</value><label>MEDIUM</label></choice>
+        <choice><value>LOW</value><label>LOW</label></choice>
+      </choices>
+    </field>
+    <field>
+      <name>test_instruction</name>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <label>Test Instruction</label>
+    </field>
+    <field>
+      <name>expected_behavior</name>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <label>Expected Behavior</label>
+    </field>
+    <field>
+      <name>risk_if_skipped</name>
+      <type>string</type>
+      <max_length>2000</max_length>
+      <label>Risk If Skipped</label>
+    </field>
+    <field>
+      <name>assigned_to</name>
+      <type>reference</type>
+      <reference>sys_user</reference>
+      <label>Assigned To</label>
+    </field>
+    <field>
+      <name>state</name>
+      <type>string</type>
+      <max_length>40</max_length>
+      <label>State</label>
+      <default_value>pending</default_value>
+      <choice>1</choice>
+      <choices>
+        <choice><value>pending</value><label>Pending</label></choice>
+        <choice><value>in_progress</value><label>In Progress</label></choice>
+        <choice><value>resolved</value><label>Resolved</label></choice>
+        <choice><value>closed</value><label>Closed</label></choice>
+      </choices>
+    </field>
+  </fields>
+</sys_db_object>

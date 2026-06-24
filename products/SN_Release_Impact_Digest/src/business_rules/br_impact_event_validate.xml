@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_script>
+  <name>Validate impact event on insert</name>
+  <collection>x_snc_rid_impact_event</collection>
+  <when>before</when>
+  <action>insert</action>
+  <active>true</active>
+  <order>100</order>
+  <condition/>
+  <script><![CDATA[
+// SN Release Impact Digest — Business Rule: Validate impact event on insert
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function executeRule(current, previous /*null when async*/) {
+
+    if (!current.record_type) {
+        current.record_type = 'impact_event';
+    }
+
+    // Validate record_type
+    var validTypes = ['inventory', 'release_note', 'impact_event', 'regression_case'];
+    if (validTypes.indexOf(current.record_type) === -1) {
+        gs.addErrorMessage('Invalid record_type: ' + current.record_type +
+            '. Must be one of: ' + validTypes.join(', '));
+        current.setAbortAction(true);
+        return;
+    }
+
+    // Validate impact_event specific fields
+    if (current.record_type === 'impact_event') {
+        if (!current.breaking_risk_score) {
+            current.breaking_risk_score = 0;
+        }
+        if (current.breaking_risk_score < 0) { current.breaking_risk_score = 0; }
+        if (current.breaking_risk_score > 100) { current.breaking_risk_score = 100; }
+
+        if (!current.confidence) {
+            current.confidence = 0;
+        }
+        if (current.confidence < 0) { current.confidence = 0; }
+        if (current.confidence > 100) { current.confidence = 100; }
+    }
+
+    // Validate regression_case specific fields
+    if (current.record_type === 'regression_case') {
+        if (!current.priority) {
+            current.priority = 999;
+        }
+        if (!current.state) {
+            current.state = 'pending';
+        }
+    }
+
+})(current, previous);
+  ]]></script>
+</sys_script>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_snc_rid_digest_run</name>
+  <label>Digest Run</label>
+  <super_class/>
+  <is_extendable>false</is_extendable>
+  <fields>
+    <field>
+      <name>run_id</name>
+      <type>string</type>
+      <max_length>100</max_length>
+      <label>Run ID</label>
+      <mandatory>true</mandatory>
+    </field>
+    <field>
+      <name>release_family</name>
+      <type>string</type>
+      <max_length>100</max_length>
+      <label>Release Family</label>
+      <mandatory>true</mandatory>
+    </field>
+    <field>
+      <name>status</name>
+      <type>string</type>
+      <max_length>40</max_length>
+      <label>Status</label>
+      <default_value>pending</default_value>
+      <choice>1</choice>
+      <choices>
+        <choice><value>pending</value><label>Pending</label></choice>
+        <choice><value>scanning</value><label>Scanning Inventory</label></choice>
+        <choice><value>matching</value><label>Cross-Referencing</label></choice>
+        <choice><value>scoring</value><label>Scoring Impact</label></choice>
+        <choice><value>complete</value><label>Complete</label></choice>
+        <choice><value>error</value><label>Error</label></choice>
+      </choices>
+    </field>
+    <field>
+      <name>started_at</name>
+      <type>glide_date_time</type>
+      <label>Started At</label>
+    </field>
+    <field>
+      <name>completed_at</name>
+      <type>glide_date_time</type>
+      <label>Completed At</label>
+    </field>
+    <field>
+      <name>total_plugins</name>
+      <type>integer</type>
+      <label>Total Plugins</label>
+    </field>
+    <field>
+      <name>total_custom_tables</name>
+      <type>integer</type>
+      <label>Total Custom Tables</label>
+    </field>
+    <field>
+      <name>total_business_rules</name>
+      <type>integer</type>
+      <label>Total Business Rules</label>
+    </field>
+    <field>
+      <name>total_client_scripts</name>
+      <type>integer</type>
+      <label>Total Client Scripts</label>
+    </field>
+    <field>
+      <name>total_ui_policies</name>
+      <type>integer</type>
+      <label>Total UI Policies</label>
+    </field>
+    <field>
+      <name>total_scheduled_jobs</name>
+      <type>integer</type>
+      <label>Total Scheduled Jobs</label>
+    </field>
+    <field>
+      <name>total_flows</name>
+      <type>integer</type>
+      <label>Total Flows</label>
+    </field>
+    <field>
+      <name>total_rest_endpoints</name>
+      <type>integer</type>
+      <label>Total REST Endpoints</label>
+    </field>
+    <field>
+      <name>total_release_notes</name>
+      <type>integer</type>
+      <label>Total Release Notes Processed</label>
+    </field>
+    <field>
+      <name>total_impact_events</name>
+      <type>integer</type>
+      <label>Total Impact Events</label>
+    </field>
+    <field>
+      <name>critical_count</name>
+      <type>integer</type>
+      <label>Critical Impact Count</label>
+    </field>
+    <field>
+      <name>high_count</name>
+      <type>integer</type>
+      <label>High Impact Count</label>
+    </field>
+    <field>
+      <name>medium_count</name>
+      <type>integer</type>
+      <label>Medium Impact Count</label>
+    </field>
+    <field>
+      <name>low_count</name>
+      <type>integer</type>
+      <label>Low Impact Count</label>
+    </field>
+    <field>
+      <name>summary_json</name>
+      <type>string</type>
+      <max_length>8000</max_length>
+      <label>Summary JSON</label>
+    </field>
+    <field>
+      <name>error_message</name>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <label>Error Message</label>
+    </field>
+    <field>
+      <name>triggered_by</name>
+      <type>reference</type>
+      <reference>sys_user</reference>
+      <label>Triggered By</label>
+    </field>
+  </fields>
+</sys_db_object>
