@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_rest_api_fn action="INSERT_OR_UPDATE">
+    <name>execute</name>
+    <http_method>POST</http_method>
+    <relative_path>/v1/execute</relative_path>
+    <requires_basic_auth>true</requires_basic_auth>
+    <requires_acl_authorization>true</requires_acl_authorization>
+    <web_service_operation>execute</web_service_operation>
+    <web_service_definition>x_snc_uibm_execute_api</web_service_definition>
+    <active>true</active>
+    <description>POST /api/x_snc_uibm/v1/execute — Action dispatch via "action" body parameter:
+    scan | analyze | metrics | safe-mode-enable | safe-mode-disable | disable-component | recommend | full-scan | full-analysis | orphan-scan</description>
+    <sys_id>c3dd5e3b2f4b3010a5a3d5bef699b640</sys_id>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-06-25 05:00:00</sys_updated_on>
+    <sys_scope>x_snc_uibm</sys_scope>
+    <function_name>execute</function_name>
+    <service_id>x_snc_uibm</service_id>
+    <service_version>v1</service_version>
+    <script><![CDATA[
+// Handler script — delegates to ExecuteAPI Script Include
+(function() {
+    var handler = new ExecuteAPI();
+    handler.process(request, response);
+})();
+    ]]></script>
+</sys_rest_api_fn>

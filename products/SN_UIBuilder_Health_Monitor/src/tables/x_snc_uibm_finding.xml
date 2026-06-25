@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object action="INSERT_OR_UPDATE">
+    <name>x_snc_uibm_finding</name>
+    <super_class/>
+    <is_extendable>false</is_extendable>
+    <label>Finding</label>
+    <live_feed>false</live_feed>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <roles/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    <sys_id>b2cc4d2b2f4b3010a5a3d5bef699b630</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-06-25 05:00:00</sys_updated_on>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <client_callable>false</client_callable>
+    <configuration_ref/>
+    <extension_model/>
+    <core_scope>false</core_scope>
+    <sys_scope>x_snc_uibm</sys_scope>
+
+    <!-- Fields -->
+    <columns>
+        <!-- Finding identification -->
+        <element name="number" label="Number" max_length="40" type="string"/>
+        <element name="finding_type" label="Finding Type" max_length="30" type="choice" mandatory="true">
+            <choices>
+                <choice value="circular" label="Circular Dependency"/>
+                <choice value="orphaned" label="Orphaned Component"/>
+                <choice value="broken_ref" label="Broken Reference"/>
+                <choice value="performance" label="Performance Issue"/>
+                <choice value="complexity" label="High Complexity"/>
+                <choice value="recommendation" label="Recommendation"/>
+            </choices>
+        </element>
+        <element name="severity" label="Severity" max_length="20" type="choice" mandatory="true">
+            <choices>
+                <choice value="critical" label="Critical"/>
+                <choice value="warning" label="Warning"/>
+                <choice value="info" label="Info"/>
+            </choices>
+        </element>
+        <element name="status" label="Status" max_length="20" type="choice" mandatory="true">
+            <choices>
+                <choice value="open" label="Open"/>
+                <choice value="addressed" label="Addressed"/>
+                <choice value="ignored" label="Ignored"/>
+            </choices>
+        </element>
+
+        <!-- Page reference -->
+        <element name="page_sys_id" label="Page Sys ID" max_length="32" type="string"/>
+        <element name="page_name" label="Page Name" max_length="200" type="string"/>
+
+        <!-- Finding details -->
+        <element name="title" label="Title" max_length="500" type="string" mandatory="true"/>
+        <element name="description" label="Description" max_length="4000" type="string"/>
+        <element name="action" label="Recommended Action" max_length="4000" type="string"/>
+        <element name="category" label="Category" max_length="30" type="choice">
+            <choices>
+                <choice value="performance" label="Performance"/>
+                <choice value="maintainability" label="Maintainability"/>
+                <choice value="dependency" label="Dependency"/>
+                <choice value="upgrade_risk" label="Upgrade Risk"/>
+            </choices>
+        </element>
+        <element name="effort" label="Effort Estimate" max_length="20" type="choice">
+            <choices>
+                <choice value="low" label="Low (5 min)"/>
+                <choice value="medium" label="Medium (30 min)"/>
+                <choice value="high" label="High (2+ hours)"/>
+            </choices>
+        </element>
+
+        <!-- Affected components -->
+        <element name="affected_component_ids" label="Affected Component IDs" max_length="4000" type="string"/>
+        <element name="affected_component_names" label="Affected Component Names" max_length="1000" type="string"/>
+        <element name="cycle_path" label="Cycle Path" max_length="2000" type="string"/>
+        <element name="detail_json" label="Detail JSON" max_length="8000" type="string"/>
+
+        <!-- Scan metadata -->
+        <element name="scan_run_id" label="Scan Run ID" max_length="32" type="string"/>
+        <element name="detected_at" label="Detected At" max_length="40" type="glide_date_time" mandatory="true"/>
+
+        <!-- Resolution -->
+        <element name="resolved_at" label="Resolved At" max_length="40" type="glide_date_time"/>
+        <element name="resolved_by" label="Resolved By" max_length="32" type="reference" reference="sys_user"/>
+    </columns>
+
+    <!-- Indexes -->
+    <indexes>
+        <index name="x_snc_uibm_finding_page_severity" fields="page_sys_id,severity"/>
+        <index name="x_snc_uibm_finding_type" fields="finding_type"/>
+        <index name="x_snc_uibm_finding_status" fields="status"/>
+        <index name="x_snc_uibm_finding_scan_run" fields="scan_run_id"/>
+    </indexes>
+</sys_db_object>

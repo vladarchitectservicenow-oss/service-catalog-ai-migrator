@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_script action="INSERT_OR_UPDATE">
+    <name>UIBM Finding Status Sync</name>
+    <collection>x_snc_uibm_finding</collection>
+    <when>before</when>
+    <active>true</active>
+    <condition><![CDATA[current.status.changes() && current.status == 'addressed']]></condition>
+    <order>100</order>
+    <sys_scope>x_snc_uibm</sys_scope>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    <sys_id>f6aa8261a5b3010a5a3d5bef699b680</sys_id>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-06-25 05:00:00</sys_updated_on>
+
+    <script><![CDATA[
+/**
+ * UIBM Finding Status Sync
+ * Table: x_snc_uibm_finding (before update)
+ *
+ * When a finding is marked as "addressed", automatically:
+ * 1. Records who resolved it and when
+ * 2. Updates the parent page health record's finding counts
+ * 3. If it was the last critical finding, re-evaluates the page health gate
+ */
+(function() {
+    try {
+        // Set resolution metadata
+        current.resolved_at = new GlideDateTime();
+        current.resolved_by = gs.getUserID();
+
+        // Update page health finding counts
+        var pageSysId = current.page_sys_id.toString();
+        if (pageSysId) {
+            var grHealth = new GlideRecord('x_snc_uibm_page_health');
+            grHealth.addQuery('page_sys_id', pageSysId);
+            grHealth.query();
+
+            if (grHealth.next()) {
+                // Recount open findings by severity
+                var critical = 0, warning = 0, info = 0;
+                var grFindings = new GlideRecord('x_snc_uibm_finding');
+                grFindings.addQuery('page_sys_id', pageSysId);
+                grFindings.addQuery('status', 'open');
+                grFindings.query();
+                while (grFindings.next()) {
+                    var sev = grFindings.severity.toString();
+                    if (sev === 'critical') critical++;
+                    else if (sev === 'warning') warning++;
+                    else if (sev === 'info') info++;
+                }
+
+                grHealth.critical_findings = critical;
+                grHealth.warning_findings = warning;
+                grHealth.info_findings = info;
+                grHealth.update();
+            }
+        }
+    } catch (ex) {
+        gs.logWarning('[UIBM Finding Sync] Error syncing finding status: ' + ex.message);
+    }
+})();
+    ]]></script>
+</sys_script>

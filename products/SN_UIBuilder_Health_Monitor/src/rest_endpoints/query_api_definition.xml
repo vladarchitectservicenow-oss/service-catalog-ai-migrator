@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_ws_definition action="INSERT_OR_UPDATE">
+    <name>x_snc_uibm_query_api</name>
+    <active>true</active>
+    <base_uri>/v1</base_uri>
+    <description>Query API — GET endpoint for UIBM queries (health, gate, findings, recommendations, etc.)</description>
+    <http_method>GET</http_method>
+    <requires_basic_auth>true</requires_basic_auth>
+    <requires_acl_authorization>true</requires_acl_authorization>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    <sys_id>d4ee6f4c2f4b3010a5a3d5bef699b651</sys_id>
+    <sys_scope>x_snc_uibm</sys_scope>
+    <service_id>x_snc_uibm</service_id>
+    <service_version>v1</service_version>
+</sys_ws_definition>

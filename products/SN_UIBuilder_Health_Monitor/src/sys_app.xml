@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_app action="INSERT_OR_UPDATE">
+    <name>UIBuilder Health Monitor</name>
+    <scope>x_snc_uibm</scope>
+    <version>1.0.0</version>
+    <description>Diagnoses every UI Builder page on your instance: scores component complexity, detects circular dependencies and orphaned references, provides Safe Mode to recover frozen pages, and generates actionable optimization recommendations.</description>
+    <license>AGPL-3.0</license>
+    <active>true</active>
+    <can_edit_in_studio>true</can_edit_in_studio>
+    <js_level>es_latest</js_level>
+    <source_table>sys_app</source_table>
+    <sys_id>eb5a2c1b2f4b3010a5a3d5bef699b618</sys_id>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-06-25 05:00:00</sys_updated_on>
+</sys_app>

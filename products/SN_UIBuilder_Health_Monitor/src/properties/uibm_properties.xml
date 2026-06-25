@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_properties_set action="INSERT_OR_UPDATE">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <name>x_snc_uibm.scan.schedule</name>
+        <value>02:00</value>
+        <description>Nightly scan time (24h format). Default: 02:00</description>
+        <type>string</type>
+        <sys_scope>x_snc_uibm</sys_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    </sys_properties>
+
+    <sys_properties action="INSERT_OR_UPDATE">
+        <name>x_snc_uibm.perf.threshold.load</name>
+        <value>5000</value>
+        <description>Alert if page load time exceeds N milliseconds. Default: 5000</description>
+        <type>integer</type>
+        <sys_scope>x_snc_uibm</sys_scope>
+    </sys_properties>
+
+    <sys_properties action="INSERT_OR_UPDATE">
+        <name>x_snc_uibm.perf.threshold.tasks</name>
+        <value>10</value>
+        <description>Alert if long task count exceeds N. Default: 10</description>
+        <type>integer</type>
+        <sys_scope>x_snc_uibm</sys_scope>
+    </sys_properties>
+
+    <sys_properties action="INSERT_OR_UPDATE">
+        <name>x_snc_uibm.perf.threshold.memory</name>
+        <value>200</value>
+        <description>Alert if JS heap memory exceeds N MB. Default: 200</description>
+        <type>integer</type>
+        <sys_scope>x_snc_uibm</sys_scope>
+    </sys_properties>
+
+    <sys_properties action="INSERT_OR_UPDATE">
+        <name>x_snc_uibm.ci.gate_threshold</name>
+        <value>60</value>
+        <description>CI/CD gate complexity score threshold. Pages above this score FAIL the gate. Default: 60</description>
+        <type>integer</type>
+        <sys_scope>x_snc_uibm</sys_scope>
+    </sys_properties>
+
+    <sys_properties action="INSERT_OR_UPDATE">
+        <name>x_snc_uibm.ai.enabled</name>
+        <value>false</value>
+        <description>Enable BYOK component analysis via GenAI Controller. Default: false (rule-based recommendations work without this)</description>
+        <type>boolean</type>
+        <sys_scope>x_snc_uibm</sys_scope>
+    </sys_properties>
+
+    <sys_properties action="INSERT_OR_UPDATE">
+        <name>x_snc_uibm.ai.batch_size</name>
+        <value>5</value>
+        <description>Components per LLM batch for BYOK analysis. Default: 5</description>
+        <type>integer</type>
+        <sys_scope>x_snc_uibm</sys_scope>
+    </sys_properties>
+
+    <sys_properties action="INSERT_OR_UPDATE">
+        <name>x_snc_uibm.safemode.max_idle</name>
+        <value>30</value>
+        <description>Auto-disable Safe Mode after N minutes idle. Default: 30</description>
+        <type>integer</type>
+        <sys_scope>x_snc_uibm</sys_scope>
+    </sys_properties>
+</sys_properties_set>
