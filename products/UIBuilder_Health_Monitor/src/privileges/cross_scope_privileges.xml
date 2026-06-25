@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Cross-scope privileges for UIBuilder Health Monitor
+     The scoped app x_snc_uibm needs read access to these OOTB tables:
+     - sys_ux_page (read UI Builder pages)
+     - sys_ux_macroponent (read component definitions)
+     - sys_ux_macroponent_component (read/disable components for Safe Mode)
+     - sys_ux_event_subscription (read event bindings)
+     - sys_ux_event_definition (verify event references)
+     - sys_ux_client_data_parameter (read data parameters)
+     - sys_data_source (read data source declarations)
+     - sys_db_object (verify table references)
+     - sys_script_include (verify script include references)
+     - sys_user (resolve Safe Mode user references)
+     - sys_app (verify app is installed/active)
+     - sys_ui_page_component (fallback component tree builder)
+-->
+<sys_scope_privilege_set action="INSERT_OR_UPDATE">
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_ux_page</name>
+        <operation>read</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_ux_macroponent</name>
+        <operation>read</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_ux_macroponent</name>
+        <operation>write</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_ux_macroponent_component</name>
+        <operation>read</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_ux_macroponent_component</name>
+        <operation>write</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_ux_event_subscription</name>
+        <operation>read</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_ux_event_definition</name>
+        <operation>read</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_ux_client_data_parameter</name>
+        <operation>read</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_data_source</name>
+        <operation>read</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_db_object</name>
+        <operation>read</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_script_include</name>
+        <operation>read</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_user</name>
+        <operation>read</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_app</name>
+        <operation>read</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <name>sys_ui_page_component</name>
+        <operation>read</operation>
+        <source_scope>x_snc_uibm</source_scope>
+        <target_scope>global</target_scope>
+    </sys_scope_privilege>
+</sys_scope_privilege_set>

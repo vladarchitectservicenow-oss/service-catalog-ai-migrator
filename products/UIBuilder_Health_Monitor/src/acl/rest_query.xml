@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl action="INSERT_OR_UPDATE">
+    <name>/api/x_snc_uibm/v1/query</name>
+    <operation>execute</operation>
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <role_overrides>true</role_overrides>
+    <roles>x_snc_uibm.admin</roles>
+    <sys_scope>x_snc_uibm</sys_scope>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    <sys_id>d6ee6f4c2f4b3010a5a3d5bef699b651</sys_id>
+</sys_security_acl>

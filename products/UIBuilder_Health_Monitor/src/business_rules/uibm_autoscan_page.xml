@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_script action="INSERT_OR_UPDATE">
+    <name>UIBM Auto-Scan on Page Save</name>
+    <collection>sys_ux_page</collection>
+    <when>after</when>
+    <active>true</active>
+    <condition><![CDATA[current.changes() && (current.active.changes() || current.name.changes() || current.sys_scope.changes())]]></condition>
+    <order>100</order>
+    <sys_scope>x_snc_uibm</sys_scope>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    <sys_id>e5ff7150a5b3010a5a3d5bef699b670</sys_id>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-06-25 05:00:00</sys_updated_on>
+
+    <script><![CDATA[
+/**
+ * UIBM Auto-Scan on Page Save
+ * Table: sys_ux_page (after update, after insert)
+ *
+ * When a UI Builder page is saved (created or updated), automatically triggers
+ * a complexity scan and dependency analysis for that page. This ensures health
+ * data is always current without waiting for the nightly scheduled job.
+ *
+ * Error-safe: never blocks the page save operation.
+ */
+(function() {
+    // Cached app-active check (avoid querying sys_app on every page save)
+    var UIBM_APP_ACTIVE = gs.getSession().getClientData('uibm_app_active');
+    if (UIBM_APP_ACTIVE === null || UIBM_APP_ACTIVE === undefined) {
+        try {
+            var grApp = new GlideRecord('sys_app');
+            grApp.addQuery('scope', 'x_snc_uibm');
+            grApp.addQuery('active', true);
+            grApp.setLimit(1);
+            grApp.query();
+            UIBM_APP_ACTIVE = grApp.next();
+            gs.getSession().putClientData('uibm_app_active', UIBM_APP_ACTIVE ? 'true' : 'false');
+        } catch (e) {
+            return;
+        }
+    } else {
+        UIBM_APP_ACTIVE = (UIBM_APP_ACTIVE === 'true');
+    }
+    if (!UIBM_APP_ACTIVE) return;
+
+    try {
+        var pageSysId = current.getUniqueValue();
+        if (!pageSysId) return;
+
+        // Run complexity scan
+        var core = new UIBMCore();
+        core.scanPage(pageSysId);
+
+        // Run dependency analysis
+        var analyzer = new UIBMAnalyzer();
+        analyzer.analyzeDependencies(pageSysId);
+
+        gs.log('[UIBM] Auto-scanned page: ' + (current.name ? current.name.toString() : pageSysId));
+    } catch (ex) {
+        // Never block the save — log and continue
+        gs.logWarning('[UIBM Auto-Scan] Error during auto-scan (save not blocked): ' + ex.message);
+    }
+})();
+    ]]></script>
+</sys_script>

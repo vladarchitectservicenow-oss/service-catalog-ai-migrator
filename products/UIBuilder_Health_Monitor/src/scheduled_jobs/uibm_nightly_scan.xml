@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sysauto_script action="INSERT_OR_UPDATE">
+    <name>UIBM Nightly Scan</name>
+    <active>true</active>
+    <run_type>daily</run_type>
+    <run_start>2026-06-25 02:00:00</run_start>
+    <run_dayofweek>1</run_dayofweek>
+    <run_dayofmonth>1</run_dayofmonth>
+    <description>Runs nightly complexity scan + dependency analysis across all UI Builder pages. Configurable via x_snc_uibm.scan.schedule property.</description>
+    <script><![CDATA[
+gs.log('[UIBM] Nightly scan started at ' + new GlideDateTime().getDisplayValue());
+
+try {
+    // Phase 1: Complexity scan
+    var core = new UIBMCore();
+    var scanResult = core.scanAllPages();
+    gs.log('[UIBM] Complexity scan complete: ' + (scanResult.ok ? scanResult.data.pages_scanned + ' pages scanned' : scanResult.error));
+
+    // Phase 2: Dependency analysis (cycle detection, orphan detection, broken refs)
+    var analyzer = new UIBMAnalyzer();
+    var analysisResult = analyzer.runFullAnalysis();
+    gs.log('[UIBM] Dependency analysis complete: ' + (analysisResult.ok ?
+        analysisResult.data.pages_analyzed + ' pages, ' +
+        analysisResult.data.cycles_found + ' cycles, ' +
+        analysisResult.data.broken_refs_found + ' broken refs, ' +
+        analysisResult.data.orphans_found + ' orphans' : analysisResult.error));
+
+    // Phase 3: Generate recommendations for pages with findings
+    var grHealth = new GlideRecord('x_snc_uibm_page_health');
+    grHealth.addNotNullQuery('complexity_score');
+    grHealth.addQuery('score_category', 'red');
+    grHealth.query();
+    var recCount = 0;
+    while (grHealth.next()) {
+        var pageId = grHealth.page_sys_id.toString();
+        var recResult = core.getRecommendations(pageId);
+        if (recResult.ok) recCount += recResult.data.length;
+    }
+    gs.log('[UIBM] Recommendations generated: ' + recCount + ' for red-category pages');
+
+} catch (ex) {
+    gs.logError('[UIBM Nightly Scan] Fatal error: ' + ex.message);
+}
+
+gs.log('[UIBM] Nightly scan completed at ' + new GlideDateTime().getDisplayValue());
+    ]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    <sys_id>b2dd5e3b2f4b3010a5a3d5bef699b690</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-06-25 05:00:00</sys_updated_on>
+    <sys_scope>x_snc_uibm</sys_scope>
+</sysauto_script>

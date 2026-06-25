@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object action="INSERT_OR_UPDATE">
+    <name>x_snc_uibm_page_health</name>
+    <super_class/>
+    <is_extendable>false</is_extendable>
+    <label>Page Health</label>
+    <live_feed>false</live_feed>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <roles/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    <sys_id>a1bb3c1b2f4b3010a5a3d5bef699b620</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-06-25 05:00:00</sys_updated_on>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <client_callable>false</client_callable>
+    <configuration_ref/>
+    <extension_model/>
+    <core_scope>false</core_scope>
+    <sys_scope>x_snc_uibm</sys_scope>
+
+    <!-- Fields -->
+    <columns>
+        <!-- Page identification -->
+        <element name="page_sys_id" label="Page Sys ID" max_length="32" type="string" mandatory="true"/>
+        <element name="page_name" label="Page Name" max_length="200" type="string" mandatory="true"/>
+        <element name="page_route" label="Page Route" max_length="500" type="string"/>
+
+        <!-- Complexity scoring -->
+        <element name="complexity_score" label="Complexity Score" max_length="40" type="integer"/>
+        <element name="score_category" label="Score Category" max_length="20" type="choice">
+            <choices>
+                <choice value="green" label="Green (0-30)"/>
+                <choice value="yellow" label="Yellow (31-60)"/>
+                <choice value="red" label="Red (61-100)"/>
+            </choices>
+        </element>
+
+        <!-- Score breakdown -->
+        <element name="component_count" label="Component Count" max_length="40" type="integer"/>
+        <element name="nesting_depth" label="Max Nesting Depth" max_length="40" type="integer"/>
+        <element name="data_source_count" label="Data Source Count" max_length="40" type="integer"/>
+        <element name="gliderecord_calls" label="GlideRecord Call Estimate" max_length="40" type="integer"/>
+        <element name="external_deps" label="External Dependencies" max_length="40" type="integer"/>
+        <element name="score_breakdown" label="Score Breakdown JSON" max_length="4000" type="string"/>
+
+        <!-- Performance metrics (aggregated, latest sample) -->
+        <element name="avg_load_ms" label="Avg Load Time (ms)" max_length="40" type="integer"/>
+        <element name="max_load_ms" label="Max Load Time (ms)" max_length="40" type="integer"/>
+        <element name="long_task_count" label="Long Task Count" max_length="40" type="integer"/>
+        <element name="memory_used_mb" label="Memory Used (MB)" max_length="40" type="integer"/>
+        <element name="perf_trend" label="Performance Trend" max_length="20" type="choice">
+            <choices>
+                <choice value="improving" label="Improving"/>
+                <choice value="stable" label="Stable"/>
+                <choice value="degrading" label="Degrading"/>
+                <choice value="unknown" label="Unknown"/>
+            </choices>
+        </element>
+
+        <!-- Findings summary -->
+        <element name="critical_findings" label="Critical Findings" max_length="40" type="integer"/>
+        <element name="warning_findings" label="Warning Findings" max_length="40" type="integer"/>
+        <element name="info_findings" label="Info Findings" max_length="40" type="integer"/>
+
+        <!-- Scan metadata -->
+        <element name="last_scanned" label="Last Scanned" max_length="40" type="glide_date_time"/>
+        <element name="scan_run_id" label="Scan Run ID" max_length="32" type="string"/>
+        <element name="component_json" label="Component Tree JSON" max_length="32000" type="string"/>
+
+        <!-- Safe mode tracking -->
+        <element name="safe_mode_active" label="Safe Mode Active" max_length="40" type="boolean"/>
+        <element name="safe_mode_user" label="Safe Mode User" max_length="32" type="reference" reference="sys_user"/>
+        <element name="safe_mode_enabled_at" label="Safe Mode Enabled At" max_length="40" type="glide_date_time"/>
+        <element name="disabled_components" label="Disabled Components JSON" max_length="4000" type="string"/>
+    </columns>
+
+    <!-- Indexes -->
+    <indexes>
+        <index name="x_snc_uibm_page_health_page_sys_id" fields="page_sys_id"/>
+        <index name="x_snc_uibm_page_health_score" fields="complexity_score"/>
+        <index name="x_snc_uibm_page_health_last_scanned" fields="last_scanned"/>
+    </indexes>
+</sys_db_object>

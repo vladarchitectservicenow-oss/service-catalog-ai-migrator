@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_rest_api_fn action="INSERT_OR_UPDATE">
+    <name>query</name>
+    <http_method>GET</http_method>
+    <relative_path>/v1/query</relative_path>
+    <requires_basic_auth>true</requires_basic_auth>
+    <requires_acl_authorization>true</requires_acl_authorization>
+    <web_service_operation>query</web_service_operation>
+    <web_service_definition>x_snc_uibm_query_api</web_service_definition>
+    <active>true</active>
+    <description>GET /api/x_snc_uibm/v1/query — Type dispatch via "type" query parameter:
+    health | gate | findings | recommendations | safe-mode | report | pages</description>
+    <sys_id>d4ee6f4c2f4b3010a5a3d5bef699b650</sys_id>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-06-25 05:00:00</sys_updated_on>
+    <sys_scope>x_snc_uibm</sys_scope>
+    <function_name>query</function_name>
+    <service_id>x_snc_uibm</service_id>
+    <service_version>v1</service_version>
+    <script><![CDATA[
+// Handler script — delegates to QueryAPI Script Include
+(function() {
+    var handler = new QueryAPI();
+    handler.process(request, response);
+})();
+    ]]></script>
+</sys_rest_api_fn>

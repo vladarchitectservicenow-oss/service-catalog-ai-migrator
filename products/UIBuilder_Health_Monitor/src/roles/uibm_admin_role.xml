@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_snc_uibm.admin</name>
+    <assignable_by/>
+    <can_delegate>true</can_delegate>
+    <description>Administrator role for UIBuilder Health Monitor scoped app. Grants access to UIBM tables and REST APIs.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <scoped_admin>false</scoped_admin>
+    <suffix>admin</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-06-25 05:00:00</sys_created_on>
+    <sys_id>a1cc4d2b2f4b3010a5a3d5bef699b680</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-06-25 05:00:00</sys_updated_on>
+    <sys_scope>x_snc_uibm</sys_scope>
+</sys_user_role>
