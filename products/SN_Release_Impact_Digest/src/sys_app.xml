@@ -22,7 +22,7 @@
   <sys_scope_privilege>
     <source_scope>x_snc_rid</source_scope>
     <target_scope>global</target_scope>
-    <target_table>v_plugin</target_table>
+    <target_table>sys_plugins</target_table>
     <operation>read</operation>
     <status>allowed</status>
   </sys_scope_privilege>

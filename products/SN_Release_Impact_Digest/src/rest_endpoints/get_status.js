@@ -51,12 +51,14 @@
 
         var runData = _serializeRun(gr);
 
-        // Fetch associated impact events
+        // Fetch associated impact events — ordered by breaking_risk_score DESC
+        // so the highest-risk items appear first in the response (UX expectation
+        // for an impact report).
         var impactEvents = [];
         var eventGr = new GlideRecord('x_snc_rid_impact_event');
         eventGr.addQuery('digest_run', gr.getUniqueValue());
         eventGr.addQuery('record_type', 'impact_event');
-        eventGr.orderBy('breaking_risk_score');
+        eventGr.orderByDesc('breaking_risk_score');
         eventGr.query();
         while (eventGr.next()) {
             impactEvents.push({
@@ -125,20 +127,37 @@
 
     /**
      * Fetch summary of all digest runs.
+     * Supports pagination via `offset` and `limit` query parameters.
+     * Default: limit=50, offset=0. Hard cap: limit<=200.
      */
     function _handleSummary(response) {
+        var offsetParam = parseInt(queryParams.offset || '0', 10);
+        var limitParam = parseInt(queryParams.limit || '50', 10);
+        if (isNaN(offsetParam) || offsetParam < 0) { offsetParam = 0; }
+        if (isNaN(limitParam) || limitParam <= 0) { limitParam = 50; }
+        if (limitParam > 200) { limitParam = 200; }
+
         var runs = [];
         var gr = new GlideRecord('x_snc_rid_digest_run');
         gr.orderByDesc('started_at');
-        gr.setLimit(50);
+        gr.setLimit(limitParam);
+        gr.setOffset(offsetParam);
         gr.query();
         while (gr.next()) {
             runs.push(_serializeRun(gr));
         }
 
+        // Total count for pagination metadata
+        var totalGr = new GlideRecord('x_snc_rid_digest_run');
+        totalGr.query();
+        totalGr.getRowCount();
+
         response.setStatus(200);
         response.setBody(JSON.stringify({
-            total_runs: runs.length,
+            total_runs: totalGr.getRowCount(),
+            offset: offsetParam,
+            limit: limitParam,
+            returned: runs.length,
             runs: runs
         }));
     }

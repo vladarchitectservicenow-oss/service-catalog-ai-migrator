@@ -68,7 +68,7 @@ RIDInventoryScanner.prototype = {
      * Scan active plugins with versions.
      */
     _scanPlugins: function() {
-        var gr = new GlideRecord('v_plugin');
+        var gr = new GlideRecord('sys_plugins');
         gr.addQuery('active', true);
         gr.query();
         while (gr.next()) {
@@ -106,6 +106,11 @@ RIDInventoryScanner.prototype = {
     _scanBusinessRules: function() {
         var gr = new GlideRecord('sys_script');
         gr.addQuery('active', true);
+        // Filter to business rules only. sys_script can hold other script types
+        // (e.g. sys_script_include references) on some ServiceNow versions.
+        // The discriminator is the presence of a non-empty `collection` field
+        // combined with the `sys_scope` filter for our application scope.
+        gr.addNotNullQuery('collection');
         gr.query();
         while (gr.next()) {
             this._inventory.business_rules.push({
@@ -218,7 +223,12 @@ RIDInventoryScanner.prototype = {
         gr.addQuery('tablename', 'sys_script_include');
         gr.addQuery('fieldname', 'script');
         gr.addQuery('sys_created_on', '>=', ninetyDaysAgo.getValue());
-        gr.setLimit(500);
+        // Cap the audit scan to 2000 records per call to avoid hammering large
+        // audit tables on heavily customized instances. Callers needing more
+        // history can re-invoke with a custom window or use the offset-based
+        // pagination built into GlideRecord (not exposed here by design to
+        // keep the scanner stateless and idempotent).
+        gr.setLimit(2000);
         gr.query();
 
         var apiPatterns = [

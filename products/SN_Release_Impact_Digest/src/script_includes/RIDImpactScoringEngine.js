@@ -15,11 +15,47 @@ var RIDImpactScoringEngine = Class.create();
 RIDImpactScoringEngine.prototype = {
 
     /**
-     * @param {string} inventoryJson — JSON output from RIDInventoryScanner.scan()
+     * Initialize the engine. The optional `options` argument allows callers to
+     * pass configuration such as custom stop-word lists for non-English release
+     * notes. When omitted, a small built-in English stop-word set is used.
+     *
+     * @param {string} inventoryJson
+     * @param {Object} [options]
+     * @param {string[]} [options.stopWords] — extra stop words to add to the
+     *   built-in list (does not replace it). Pass an entire localized list and
+     *   set `options.replaceStopWords=true` to override.
+     * @param {boolean} [options.replaceStopWords=false] — when true, the
+     *   `stopWords` array fully replaces the built-in list.
      */
-    initialize: function(inventoryJson) {
+    initialize: function(inventoryJson, options) {
         this._inventory = JSON.parse(inventoryJson);
         this._results = [];
+        this._options = options || {};
+
+        // Default English stop word list. Callers may extend or replace this
+        // via the `options.stopWords` argument (see above) for non-English
+        // instances. This avoids the L5 issue where hardcoded English stop
+        // words degraded Tier 2/3 matching on Japanese / Spanish / etc.
+        // release notes.
+        this._stopWords = [
+            'the', 'and', 'for', 'that', 'this', 'with', 'from', 'have', 'been',
+            'will', 'when', 'your', 'can', 'not', 'are', 'was', 'has', 'but',
+            'all', 'its'
+        ];
+        if (Array.isArray(this._options.stopWords)) {
+            if (this._options.replaceStopWords === true) {
+                this._stopWords = this._options.stopWords;
+            } else {
+                // Merge: built-in + caller-supplied, deduplicated.
+                var merged = this._stopWords.slice();
+                for (var i = 0; i < this._options.stopWords.length; i++) {
+                    if (merged.indexOf(this._options.stopWords[i]) === -1) {
+                        merged.push(this._options.stopWords[i]);
+                    }
+                }
+                this._stopWords = merged;
+            }
+        }
     },
 
     /**
@@ -70,7 +106,20 @@ RIDImpactScoringEngine.prototype = {
      * Tier 1: Exact match on plugin name, table name, or API signature.
      */
     _tier1ExactMatch: function(note) {
-        var affectedApis = note.affected_apis || [];
+        // Defensive: affected_apis may arrive as a comma-separated string (per the
+        // x_snc_rid_impact_event.affected_apis field type=string). Normalize to an
+        // array so .length returns the element count, not the character count.
+        var affectedApisRaw = note.affected_apis;
+        var affectedApis = [];
+        if (Array.isArray(affectedApisRaw)) {
+            affectedApis = affectedApisRaw;
+        } else if (typeof affectedApisRaw === 'string' && affectedApisRaw.length > 0) {
+            affectedApis = affectedApisRaw.split(',').map(function(s) {
+                return s.trim();
+            }).filter(function(s) {
+                return s.length > 0;
+            });
+        }
         var component = (note.component || '').toLowerCase();
         var module = (note.module || '').toLowerCase();
 
@@ -164,6 +213,9 @@ RIDImpactScoringEngine.prototype = {
 
     /**
      * Tier 3: Broad pattern match — low confidence, explicit caveat.
+     * Searches individual inventory arrays (plugins, tables, BRs, etc.) for
+     * keyword overlap instead of serializing the whole inventory object into a
+     * single multi-MB string. Scales to large instances.
      */
     _tier3BroadMatch: function(note) {
         var description = (note.description || '').toLowerCase();
@@ -179,12 +231,30 @@ RIDImpactScoringEngine.prototype = {
 
         if (signalCount < 2) { return null; }
 
-        // Check if any inventory item has ANY overlap
-        var allText = JSON.stringify(this._inventory).toLowerCase();
+        // Search each inventory array independently and count keyword overlaps.
+        // Avoids JSON.stringify of the entire inventory object.
         var keywords = this._extractKeywords(description);
+        if (keywords.length === 0) { return null; }
+
+        var inv = this._inventory;
+        var searchableSources = [
+            inv.plugins,           // [{name, ...}]
+            inv.custom_tables,     // [{name, ...}]
+            inv.business_rules,    // [{name, table, ...}]
+            inv.client_scripts,    // [{name, table, ...}]
+            inv.flows,             // [{name, description, ...}]
+            inv.rest_endpoints     // [{name, base_path, ...}]
+        ];
+
         var overlap = 0;
-        for (var j = 0; j < keywords.length; j++) {
-            if (allText.indexOf(keywords[j]) !== -1) { overlap++; }
+        for (var s = 0; s < searchableSources.length; s++) {
+            var arr = searchableSources[s] || [];
+            for (var a = 0; a < arr.length; a++) {
+                var itemText = JSON.stringify(arr[a]).toLowerCase();
+                for (var k = 0; k < keywords.length; k++) {
+                    if (itemText.indexOf(keywords[k]) !== -1) { overlap++; }
+                }
+            }
         }
 
         if (overlap === 0) { return null; }
@@ -238,8 +308,9 @@ RIDImpactScoringEngine.prototype = {
      * Extract meaningful keywords from text.
      */
     _extractKeywords: function(text) {
-        var stopWords = ['the', 'and', 'for', 'that', 'this', 'with', 'from', 'have', 'been',
-            'will', 'when', 'your', 'can', 'not', 'are', 'was', 'has', 'but', 'all', 'its'];
+        // Stop word list is configurable via initialize({stopWords: [...]}) for
+        // non-English release notes. Default is English (set in initialize).
+        var stopWords = this._stopWords || [];
         var words = text.replace(/[^a-z0-9\s]/g, ' ').split(/\s+/);
         var keywords = [];
         for (var i = 0; i < words.length; i++) {

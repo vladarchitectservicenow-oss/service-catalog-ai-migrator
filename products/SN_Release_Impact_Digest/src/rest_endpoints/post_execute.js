@@ -85,7 +85,11 @@
         var inventoryJson = scanner.scan(true);
         var inventory = JSON.parse(inventoryJson);
 
-        // Re-query the run record for updates (GlideRecord is not writable after insert)
+        // GlideRecord remains writable after insert(); re-query here is a defensive
+        // pattern that gives us a fresh, server-populated object (e.g. with
+        // auto-numbered fields or BR-derived values reflected). Not strictly
+        // required for setValue+update, but kept for clarity and to avoid stale
+        // local state if a before-insert BR mutates fields.
         runGr = new GlideRecord('x_snc_rid_digest_run');
         runGr.get(runSysId);
 
@@ -155,7 +159,7 @@
             caseGr.insert();
         }
 
-        // Step 7: Finalize run — re-query for final update
+        // Step 7: Finalize run
         runGr = new GlideRecord('x_snc_rid_digest_run');
         runGr.get(runSysId);
         runGr.setValue('status', 'complete');
@@ -166,14 +170,26 @@
         runGr.setValue('high_count', highCount);
         runGr.setValue('medium_count', mediumCount);
         runGr.setValue('low_count', lowCount);
-        runGr.setValue('summary_json', JSON.stringify({
+        // Guard against silent truncation: summary_json has max_length=8000.
+        // If the JSON grows beyond that, store a summary in error_message and
+        // log a warning instead of overwriting with a truncated blob.
+        var summaryObj = {
             total_impact_events: impactResults.length,
             critical: criticalCount,
             high: highCount,
             medium: mediumCount,
             low: lowCount,
             regression_cases: checklist.length
-        }));
+        };
+        var summaryStr = JSON.stringify(summaryObj);
+        if (summaryStr.length > 8000) {
+            runGr.setValue('error_message',
+                'summary_json exceeded 8000 chars (actual=' + summaryStr.length +
+                '). Object skipped to prevent silent truncation. Increase field max_length or split payload.');
+            runGr.setValue('summary_json', '');
+        } else {
+            runGr.setValue('summary_json', summaryStr);
+        }
         runGr.update();
 
         response.setStatus(200);

@@ -3,6 +3,7 @@
   <name>br_digest_run_auto_generate</name>
   <collection>x_snc_rid_digest_run</collection>
   <when>before</when>
+  <action>insert</action>
   <order>100</order>
   <active>true</active>
   <description>Auto-generate run_id on insert, set started_at timestamp</description>

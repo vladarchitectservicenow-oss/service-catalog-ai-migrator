@@ -47,6 +47,15 @@
       <max_length>4000</max_length>
       <label>Description</label>
     </field>
+    <!--
+      Payload stores large JSON snapshots (e.g. full inventory fingerprint).
+      ServiceNow string fields are practically limited to ~4000 chars when indexed/searchable.
+      This field is stored as-is (no index on the column) and is treated as a
+      large text blob. Max length set to 100000 to comfortably hold full inventory
+      snapshots from large instances (hundreds of plugins, thousands of tables).
+      Callers that need to search/filter should use a dedicated indexed field
+      (e.g. inventory_type) rather than querying payload content directly.
+    -->
     <field>
       <name>payload</name>
       <type>string</type>
