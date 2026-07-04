@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 05:00:00">
+  <!-- REST Endpoint 1: POST /api/x_snc_testreach/execute -->
+  <!-- Action-based dispatch for all write/analysis operations -->
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <name>TestReach Execute</name>
+    <path>/api/x_snc_testreach/execute</path>
+    <method>POST</method>
+    <consumes>application/json</consumes>
+    <produces>application/json</produces>
+    <active>true</active>
+    <authentication_required>true</authentication_required>
+    <requires_acl>true</requires_acl>
+    <is_public>false</is_public>
+    <sys_scope>x_snc_testreach</sys_scope>
+    <description>Action-based dispatch endpoint for TestReach operations: analyze, risk_score, upgrade_gap, generate_skeleton, coverage_check.</description>
+    <script><![CDATA[
+(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+
+    var requestBody = request.body.data;
+    var action = requestBody.action || '';
+    var appScope = requestBody.app_scope || '';
+    var params = requestBody.params || {};
+
+    if (!appScope) {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({
+            ok: false,
+            error: 'Missing required parameter: app_scope'
+        }));
+        return;
+    }
+
+    var coverageEngine = new TestReachCoverageEngine();
+    var riskEngine = new TestReachRiskEngine();
+
+    switch (action) {
+        case 'analyze':
+            var result = coverageEngine.analyzeAll(appScope);
+            var snapshotId = coverageEngine.snapshotCoverage(appScope);
+            response.setStatus(200);
+            response.setBody(JSON.stringify({
+                ok: true,
+                data: {
+                    snapshot_id: snapshotId,
+                    total_artifacts: result.stats.total,
+                    tested_count: result.stats.tested,
+                    untested_count: result.stats.untested,
+                    coverage_pct: result.stats.coverage_pct,
+                    duration_ms: 0
+                }
+            }));
+            break;
+
+        case 'risk_score':
+            var upgradeTarget = params.upgrade_target || 'xanadu';
+            var riskResult = riskEngine.computeRiskScore(appScope, upgradeTarget);
+            response.setStatus(200);
+            response.setBody(JSON.stringify({
+                ok: true,
+                data: {
+                    risk_score: riskResult.risk_score,
+                    details: riskResult.details
+                }
+            }));
+            break;
+
+        case 'upgrade_gap':
+            var upgradeTargetGap = params.upgrade_target || 'xanadu';
+            var gaps = riskEngine.generateUpgradeGapReport(upgradeTargetGap);
+            response.setStatus(200);
+            response.setBody(JSON.stringify({
+                ok: true,
+                data: {
+                    upgrade_target: upgradeTargetGap,
+                    gap_count: gaps.length,
+                    gaps: gaps
+                }
+            }));
+            break;
+
+        case 'generate_skeleton':
+            var artifactSysId = params.artifact_sys_id || '';
+            var artifactType = params.artifact_type || '';
+            if (!artifactSysId || !artifactType) {
+                response.setStatus(400);
+                response.setBody(JSON.stringify({
+                    ok: false,
+                    error: 'Missing required params: artifact_sys_id, artifact_type'
+                }));
+                return;
+            }
+            var skeleton = riskEngine.generateTestSkeleton(artifactSysId, artifactType);
+            response.setStatus(200);
+            response.setBody(JSON.stringify({
+                ok: true,
+                data: {
+                    test_sys_id: skeleton.test_sys_id,
+                    step_count: skeleton.steps.length,
+                    steps: skeleton.steps
+                }
+            }));
+            break;
+
+        case 'coverage_check':
+            var threshold = params.threshold || 60;
+            var ciResult = riskEngine.checkCIThreshold(appScope, threshold);
+            response.setStatus(200);
+            response.setBody(JSON.stringify({
+                ok: true,
+                data: ciResult
+            }));
+            break;
+
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                ok: false,
+                error: "Unknown action: '" + action + "'. Valid actions: analyze, risk_score, upgrade_gap, generate_skeleton, coverage_check"
+            }));
+    }
+
+})(request, response);
+]]></script>
+  </sys_ws_definition>
+
+  <!-- REST Endpoint 2: GET /api/x_snc_testreach/status -->
+  <!-- Read-only reporting endpoint -->
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <name>TestReach Status</name>
+    <path>/api/x_snc_testreach/status</path>
+    <method>GET</method>
+    <consumes>application/json</consumes>
+    <produces>application/json</produces>
+    <active>true</active>
+    <authentication_required>true</authentication_required>
+    <requires_acl>true</requires_acl>
+    <is_public>false</is_public>
+    <sys_scope>x_snc_testreach</sys_scope>
+    <description>Read-only reporting endpoint. Returns coverage summary, risk scores, and trend data.</description>
+    <script><![CDATA[
+(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+
+    var appScope = request.queryParams.app_scope || '';
+    var upgradeTarget = request.queryParams.upgrade_target || 'xanadu';
+    var includeTrend = request.queryParams.include_trend === 'true';
+    var includeGaps = request.queryParams.include_gaps === 'true';
+
+    if (!appScope) {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({
+            ok: false,
+            error: 'Missing required query parameter: app_scope'
+        }));
+        return;
+    }
+
+    var riskEngine = new TestReachRiskEngine();
+    var coverageEngine = new TestReachCoverageEngine();
+
+    // Get risk score
+    var riskGr = new GlideRecord('x_snc_testreach_risk_score');
+    riskGr.addQuery('app_scope', appScope);
+    riskGr.addQuery('upgrade_target', upgradeTarget);
+    riskGr.orderByDesc('computed_ts');
+    riskGr.setLimit(1);
+    riskGr.query();
+
+    var riskScore = 0;
+    var coveragePct = 0;
+    var totalArtifacts = 0;
+    var testedCount = 0;
+    var untestedCount = 0;
+    var lastAnalyzed = '';
+    var appName = appScope;
+
+    if (riskGr.next()) {
+        riskScore = parseInt(riskGr.getValue('risk_score') || 0, 10);
+        coveragePct = parseFloat(riskGr.getValue('coverage_pct') || 0);
+        totalArtifacts = parseInt(riskGr.getValue('total_artifacts') || 0, 10);
+        untestedCount = parseInt(riskGr.getValue('untested_count') || 0, 10);
+        testedCount = totalArtifacts - untestedCount;
+        lastAnalyzed = riskGr.getValue('computed_ts') || '';
+        appName = riskGr.getValue('app_name') || appScope;
+    }
+
+    var data = {
+        app_scope: appScope,
+        app_name: appName,
+        coverage_pct: coveragePct,
+        total_artifacts: totalArtifacts,
+        tested_count: testedCount,
+        untested_count: untestedCount,
+        risk_score: riskScore,
+        last_analyzed: lastAnalyzed
+    };
+
+    // Include trend data if requested
+    if (includeTrend) {
+        data.trend = coverageEngine.getCoverageTrend(appScope, 12);
+    }
+
+    // Include gap data if requested
+    if (includeGaps) {
+        var gapGr = new GlideRecord('x_snc_testreach_coverage_snapshot');
+        gapGr.addQuery('app_scope', appScope);
+        gapGr.addQuery('snapshot_type', 'gap');
+        gapGr.orderByDesc('criticality');
+        gapGr.setLimit(20);
+        gapGr.query();
+
+        var topGaps = [];
+        while (gapGr.next()) {
+            topGaps.push({
+                name: gapGr.getValue('artifact_name') || '',
+                type: gapGr.getValue('artifact_type') || '',
+                criticality: parseInt(gapGr.getValue('criticality') || 1, 10)
+            });
+        }
+        data.top_gaps = topGaps;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify({
+        ok: true,
+        data: data
+    }));
+
+})(request, response);
+]]></script>
+  </sys_ws_definition>
+</unload>

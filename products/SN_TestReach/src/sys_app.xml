@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 05:00:00">
+  <sys_scope action="INSERT_OR_UPDATE">
+    <scope>4b7a2c1d3f9e8a00b5c6d7e8f9a0b1c2</scope>
+    <scope_name>x_snc_testreach</scope_name>
+    <name>TestReach</name>
+    <description>ATF Coverage Analyzer &amp; Test Gap Detector — maps every business rule, script include, client script, flow, and UI action to the ATF tests that exercise it, then surfaces gaps as a heatmap, upgrade risk score, and auto-generated test skeletons.</description>
+    <active>true</active>
+    <sys_class_name>sys_scope</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-07-04 05:00:00</sys_created_on>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-07-04 05:00:00</sys_updated_on>
+    <vendor>Vladimir Kapustin</vendor>
+    <vendor_prefix>x_snc_testreach</vendor_prefix>
+    <runtime_access_tracking>false</runtime_access_tracking>
+    <restrict_table_access>false</restrict_table_access>
+    <restrict_runtime_access>false</restrict_runtime_access>
+    <can_edit_in_studio>true</can_edit_in_studio>
+    <tracked>true</tracked>
+    <template>false</template>
+    <is_private>false</is_private>
+    <version>1.0.0</version>
+    <release_notes>Initial release: static coverage analysis, risk scoring, upgrade gap detection, AI-powered test skeleton generation, CI/CD integration API.</release_notes>
+  </sys_scope>
+</unload>

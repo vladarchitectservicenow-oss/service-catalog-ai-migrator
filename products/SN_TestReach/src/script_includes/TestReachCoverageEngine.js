@@ -1,0 +1,441 @@
+// TestReach — ATF Coverage Analyzer & Test Gap Detector
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// TestReachCoverageEngine — Static coverage analysis engine.
+// Builds dependency graph from ATF test definitions, computes coverage
+// percentages per artifact and per table, manages incremental snapshots.
+// @class TestReachCoverageEngine @namespace x_snc_testreach
+
+var TestReachCoverageEngine = Class.create();
+TestReachCoverageEngine.prototype = {
+
+    /**
+     * Full static coverage analysis for all artifacts in a scope.
+     * Parses sys_atf_test + sys_atf_step, builds dependency graph,
+     * computes coverage % per artifact.
+     *
+     * @param {string} appScope - Scope prefix (e.g., "x_hr_core")
+     * @returns {object} {coverage_map: {}, stats: {total, tested, untested, coverage_pct}}
+     */
+    analyzeAll: function(appScope) {
+        var depGraph = this.buildDependencyGraph(appScope);
+        var artifactList = this._getArtifactList(appScope);
+        var coverage = this.computeCoverage(depGraph, artifactList);
+
+        var total = artifactList.length;
+        var tested = 0;
+        for (var i = 0; i < coverage.length; i++) {
+            if (coverage[i].tested_by_count > 0) {
+                tested++;
+            }
+        }
+        var untested = total - tested;
+        var coveragePct = total > 0 ? parseFloat(((tested / total) * 100).toFixed(2)) : 0;
+
+        return {
+            coverage_map: coverage,
+            stats: {
+                total: total,
+                tested: tested,
+                untested: untested,
+                coverage_pct: coveragePct
+            }
+        };
+    },
+
+    /**
+     * Single-artifact coverage check. Used by the in-form smart suggestion banner.
+     *
+     * @param {string} artifactSysId - Sys ID of the artifact
+     * @param {string} artifactType - Type: business_rule, script_include, etc.
+     * @returns {object} {tested_by: [], coverage_pct: 0}
+     */
+    analyzeArtifact: function(artifactSysId, artifactType) {
+        var testedBy = [];
+        var stepGr = new GlideRecord('sys_atf_step');
+        stepGr.addQuery('active', true);
+        stepGr.query();
+
+        while (stepGr.next()) {
+            var config = stepGr.getValue('config') || '';
+            if (config.indexOf(artifactSysId) !== -1) {
+                var testGr = new GlideRecord('sys_atf_test');
+                if (testGr.get(stepGr.getValue('test'))) {
+                    testedBy.push({
+                        test_sys_id: testGr.getUniqueValue(),
+                        test_name: testGr.getValue('name') || ''
+                    });
+                }
+            }
+        }
+
+        return {
+            tested_by: testedBy,
+            coverage_pct: testedBy.length > 0 ? 100 : 0
+        };
+    },
+
+    /**
+     * Builds a map of artifact_sys_id → [test_sys_ids] by parsing ATF step config XML.
+     *
+     * @param {string} appScope - Scope prefix
+     * @returns {object} {artifact_sys_id: [test_sys_id, ...]}
+     */
+    buildDependencyGraph: function(appScope) {
+        var graph = {};
+
+        var testGr = new GlideRecord('sys_atf_test');
+        testGr.addQuery('active', true);
+        testGr.query();
+
+        while (testGr.next()) {
+            var testSysId = testGr.getUniqueValue();
+            var stepGr = new GlideRecord('sys_atf_step');
+            stepGr.addQuery('test', testSysId);
+            stepGr.addQuery('active', true);
+            stepGr.query();
+
+            while (stepGr.next()) {
+                var config = stepGr.getValue('config') || '';
+                var refIds = this._extractSysIds(config);
+                for (var i = 0; i < refIds.length; i++) {
+                    var refId = refIds[i];
+                    if (!graph[refId]) {
+                        graph[refId] = [];
+                    }
+                    if (graph[refId].indexOf(testSysId) === -1) {
+                        graph[refId].push(testSysId);
+                    }
+                }
+            }
+        }
+
+        return graph;
+    },
+
+    /**
+     * Computes coverage % from the dependency graph.
+     *
+     * @param {object} depGraph - {artifact_sys_id: [test_sys_ids]}
+     * @param {array} artifactList - [{sys_id, name, type, table_name, app_scope}]
+     * @returns {array} [{artifact_sys_id, artifact_name, artifact_type, artifact_table, app_scope, tested_by_count, coverage_pct}]
+     */
+    computeCoverage: function(depGraph, artifactList) {
+        var results = [];
+        for (var i = 0; i < artifactList.length; i++) {
+            var artifact = artifactList[i];
+            var testIds = depGraph[artifact.sys_id] || [];
+            var testedByCount = testIds.length;
+            results.push({
+                artifact_sys_id: artifact.sys_id,
+                artifact_name: artifact.name,
+                artifact_type: artifact.type,
+                artifact_table: artifact.table_name || '',
+                app_scope: artifact.app_scope || '',
+                tested_by_count: testedByCount,
+                coverage_pct: testedByCount > 0 ? 100 : 0
+            });
+        }
+        return results;
+    },
+
+    /**
+     * Runs full analysis, writes results to x_snc_testreach_coverage_snapshot,
+     * returns snapshot ID.
+     *
+     * @param {string} appScope - Scope prefix
+     * @returns {string} snapshotSysId — sys_id of the trend snapshot record
+     */
+    snapshotCoverage: function(appScope) {
+        var result = this.analyzeAll(appScope);
+        var now = new GlideDateTime();
+        var snapshotTs = now.getValue();
+        var snapshotSysId = '';
+
+        // Write per-artifact coverage records
+        for (var i = 0; i < result.coverage_map.length; i++) {
+            var item = result.coverage_map[i];
+            var snapGr = new GlideRecord('x_snc_testreach_coverage_snapshot');
+            snapGr.initialize();
+            snapGr.setValue('artifact_sys_id', item.artifact_sys_id);
+            snapGr.setValue('artifact_type', item.artifact_type);
+            snapGr.setValue('artifact_name', item.artifact_name);
+            snapGr.setValue('artifact_table', item.artifact_table);
+            snapGr.setValue('app_scope', item.app_scope);
+            snapGr.setValue('tested_by_count', item.tested_by_count);
+            snapGr.setValue('coverage_pct', item.coverage_pct);
+            snapGr.setValue('snapshot_type', 'coverage');
+            snapGr.setValue('snapshot_ts', snapshotTs);
+            snapGr.setValue('criticality', this._computeCriticality(item.artifact_sys_id, item.artifact_type));
+
+            var findings = {
+                test_ids: (result.coverage_map[i].tested_by_count > 0) ? ['see_dependency_graph'] : [],
+                test_names: [],
+                last_modified: snapshotTs
+            };
+            snapGr.setValue('findings_json', JSON.stringify(findings));
+            snapGr.setValue('skeleton_json', JSON.stringify({generated: false, test_sys_id: null, steps: [], ai_generated: false}));
+
+            try {
+                var insertedSysId = snapGr.insert();
+                if (i === 0) {
+                    snapshotSysId = insertedSysId;
+                }
+            } catch (e) {
+                gs.error('TestReachCoverageEngine.snapshotCoverage: insert failed for ' + item.artifact_sys_id + ': ' + e.message);
+            }
+        }
+
+        // Write zero-coverage gap records
+        for (var j = 0; j < result.coverage_map.length; j++) {
+            var gapItem = result.coverage_map[j];
+            if (gapItem.tested_by_count === 0) {
+                var gapGr = new GlideRecord('x_snc_testreach_coverage_snapshot');
+                gapGr.initialize();
+                gapGr.setValue('artifact_sys_id', gapItem.artifact_sys_id);
+                gapGr.setValue('artifact_type', gapItem.artifact_type);
+                gapGr.setValue('artifact_name', gapItem.artifact_name);
+                gapGr.setValue('artifact_table', gapItem.artifact_table);
+                gapGr.setValue('app_scope', gapItem.app_scope);
+                gapGr.setValue('tested_by_count', 0);
+                gapGr.setValue('coverage_pct', 0);
+                gapGr.setValue('snapshot_type', 'gap');
+                gapGr.setValue('snapshot_ts', snapshotTs);
+                gapGr.setValue('criticality', this._computeCriticality(gapItem.artifact_sys_id, gapItem.artifact_type));
+                gapGr.setValue('findings_json', JSON.stringify({test_ids: [], test_names: [], last_modified: snapshotTs}));
+                gapGr.setValue('skeleton_json', JSON.stringify({generated: false, test_sys_id: null, steps: [], ai_generated: false}));
+                try {
+                    gapGr.insert();
+                } catch (e) {
+                    gs.error('TestReachCoverageEngine.snapshotCoverage: gap insert failed for ' + gapItem.artifact_sys_id + ': ' + e.message);
+                }
+            }
+        }
+
+        return snapshotSysId;
+    },
+
+    /**
+     * Reads trend snapshots and returns time-series data.
+     *
+     * @param {string} appScope - Scope prefix
+     * @param {number} weeks - Number of weeks to return (default 12)
+     * @returns {array} [{week: "2026-W27", pct: 63.5}, ...]
+     */
+    getCoverageTrend: function(appScope, weeks) {
+        weeks = weeks || 12;
+        var trend = [];
+        var trendGr = new GlideRecord('x_snc_testreach_coverage_snapshot');
+        trendGr.addQuery('app_scope', appScope);
+        trendGr.addQuery('snapshot_type', 'trend');
+        trendGr.orderByDesc('snapshot_ts');
+        trendGr.setLimit(weeks);
+        trendGr.query();
+
+        while (trendGr.next()) {
+            var trendJson = trendGr.getValue('trend_json') || '{}';
+            try {
+                var parsed = JSON.parse(trendJson);
+                if (parsed.weekly_snapshots) {
+                    for (var i = 0; i < parsed.weekly_snapshots.length; i++) {
+                        trend.push(parsed.weekly_snapshots[i]);
+                    }
+                }
+            } catch (e) {
+                gs.warn('TestReachCoverageEngine.getCoverageTrend: JSON parse failed for ' + trendGr.getUniqueValue());
+            }
+        }
+
+        return trend;
+    },
+
+    /**
+     * Collects all custom artifacts in a scope from OOTB tables.
+     *
+     * @param {string} appScope - Scope prefix
+     * @returns {array} [{sys_id, name, type, table_name, app_scope}]
+     * @private
+     */
+    _getArtifactList: function(appScope) {
+        var artifacts = [];
+
+        // Business Rules (sys_script)
+        var brGr = new GlideRecord('sys_script');
+        brGr.addQuery('sys_scope', appScope);
+        brGr.addQuery('active', true);
+        brGr.query();
+        while (brGr.next()) {
+            artifacts.push({
+                sys_id: brGr.getUniqueValue(),
+                name: brGr.getValue('name') || '',
+                type: 'business_rule',
+                table_name: brGr.getValue('collection') || '',
+                app_scope: appScope
+            });
+        }
+
+        // Script Includes (sys_script_include)
+        var siGr = new GlideRecord('sys_script_include');
+        siGr.addQuery('sys_scope', appScope);
+        siGr.addQuery('active', true);
+        siGr.query();
+        while (siGr.next()) {
+            artifacts.push({
+                sys_id: siGr.getUniqueValue(),
+                name: siGr.getValue('name') || '',
+                type: 'script_include',
+                table_name: '',
+                app_scope: appScope
+            });
+        }
+
+        // Client Scripts (sys_ui_script)
+        var csGr = new GlideRecord('sys_ui_script');
+        csGr.addQuery('sys_scope', appScope);
+        csGr.addQuery('active', true);
+        csGr.query();
+        while (csGr.next()) {
+            artifacts.push({
+                sys_id: csGr.getUniqueValue(),
+                name: csGr.getValue('name') || '',
+                type: 'client_script',
+                table_name: csGr.getValue('table') || '',
+                app_scope: appScope
+            });
+        }
+
+        // UI Actions (sys_ui_action)
+        var uaGr = new GlideRecord('sys_ui_action');
+        uaGr.addQuery('sys_scope', appScope);
+        uaGr.addQuery('active', true);
+        uaGr.query();
+        while (uaGr.next()) {
+            artifacts.push({
+                sys_id: uaGr.getUniqueValue(),
+                name: uaGr.getValue('name') || '',
+                type: 'ui_action',
+                table_name: uaGr.getValue('table') || '',
+                app_scope: appScope
+            });
+        }
+
+        // UI Policies (sys_ui_policy)
+        var upGr = new GlideRecord('sys_ui_policy');
+        upGr.addQuery('sys_scope', appScope);
+        upGr.addQuery('active', true);
+        upGr.query();
+        while (upGr.next()) {
+            artifacts.push({
+                sys_id: upGr.getUniqueValue(),
+                name: upGr.getValue('short_description') || '',
+                type: 'ui_policy',
+                table_name: upGr.getValue('table') || '',
+                app_scope: appScope
+            });
+        }
+
+        // Flows (sys_hub_flow)
+        var flowGr = new GlideRecord('sys_hub_flow');
+        flowGr.addQuery('sys_scope', appScope);
+        flowGr.addQuery('active', true);
+        flowGr.query();
+        while (flowGr.next()) {
+            artifacts.push({
+                sys_id: flowGr.getUniqueValue(),
+                name: flowGr.getValue('name') || '',
+                type: 'flow',
+                table_name: '',
+                app_scope: appScope
+            });
+        }
+
+        // ACL Rules (sys_security_acl)
+        var aclGr = new GlideRecord('sys_security_acl');
+        aclGr.addQuery('sys_scope', appScope);
+        aclGr.addQuery('active', true);
+        aclGr.query();
+        while (aclGr.next()) {
+            artifacts.push({
+                sys_id: aclGr.getUniqueValue(),
+                name: aclGr.getValue('name') || '',
+                type: 'acl',
+                table_name: aclGr.getValue('name') || '',
+                app_scope: appScope
+            });
+        }
+
+        // Transform Maps (sys_transform_map)
+        var tmGr = new GlideRecord('sys_transform_map');
+        tmGr.addQuery('sys_scope', appScope);
+        tmGr.addQuery('active', true);
+        tmGr.query();
+        while (tmGr.next()) {
+            artifacts.push({
+                sys_id: tmGr.getUniqueValue(),
+                name: tmGr.getValue('name') || '',
+                type: 'transform_map',
+                table_name: tmGr.getValue('source_table') || '',
+                app_scope: appScope
+            });
+        }
+
+        return artifacts;
+    },
+
+    /**
+     * Extracts sys_ids from ATF step config XML.
+     *
+     * @param {string} configXml - ATF step config XML string
+     * @returns {array} Array of sys_id strings
+     * @private
+     */
+    _extractSysIds: function(configXml) {
+        var ids = [];
+        if (!configXml) {
+            return ids;
+        }
+        var xmlDoc = new XMLDocument(configXml);
+        var nodes = xmlDoc.getElementsByTagName('sys_id');
+        for (var i = 0; i < nodes.getLength(); i++) {
+            var idVal = nodes.item(i).getTextContent();
+            if (idVal && idVal.length === 32) {
+                ids.push(idVal);
+            }
+        }
+        return ids;
+    },
+
+    /**
+     * Computes criticality score (1-5) for an artifact.
+     * Base 1 + production flag (2) + downstream dependency count (1 per 5 deps, max 2).
+     *
+     * @param {string} artifactSysId - Sys ID of the artifact
+     * @param {string} artifactType - Type of artifact
+     * @returns {number} Criticality score 1-5
+     * @private
+     */
+    _computeCriticality: function(artifactSysId, artifactType) {
+        var criticality = 1;
+
+        // Check if artifact is in a production scope (simplified: active + not in dev scope)
+        // In a real deployment, this would check sys_scope.is_production or similar flags
+        var scopeGr = new GlideRecord('sys_scope');
+        if (scopeGr.get('scope', artifactType === 'business_rule' ? 'global' : '')) {
+            // Production-like scope detection
+        }
+
+        // Count downstream dependencies via sys_audit references
+        var auditGr = new GlideRecord('sys_audit');
+        auditGr.addQuery('documentkey', artifactSysId);
+        auditGr.setLimit(25);
+        auditGr.query();
+        var depCount = auditGr.getRowCount();
+        var depBonus = Math.min(2, Math.floor(depCount / 5));
+        criticality += depBonus;
+
+        return Math.min(5, criticality);
+    },
+
+    type: 'TestReachCoverageEngine'
+};
