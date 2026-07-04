@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sysauto_script action="INSERT_OR_UPDATE">
+  <sys_id>91211111111111111111111111111111</sys_id>
+  <active>true</active>
+  <name>TestReach Weekly Risk Score Refresh</name>
+  <when>run_once</when>
+  <sys_trigger>{"type":"ScheduledTrigger","trigger_time":"2026-07-05 03:00:00","repeat":"7 day"}</sys_trigger>
+  <run_type>scheduled</run_type>
+  <run_as>system</run_as>
+  <script><![CDATA[(function() {
+  var engine = new x_snc_testreach.TestReachRiskEngine();
+  var scopeGr = new GlideRecord('sys_app');
+  scopeGr.addQuery('vendor_prefix', 'x_');
+  scopeGr.addQuery('scope', '!=', 'global');
+  scopeGr.addQuery('scope', '!=', 'x_snc_testreach');
+  scopeGr.query();
+  while (scopeGr.next()) {
+    var scope = scopeGr.getValue('scope');
+    if (!scope) continue;
+    try {
+      var risk = engine.computeRiskScore(scope, '');
+      gs.log('TestReach: weekly risk refresh for ' + scope + ' risk_score=' + risk.risk_score);
+    } catch (e) {
+      gs.logError('TestReach: weekly risk refresh failed for ' + scope + ': ' + e.message, 'TestReach');
+    }
+  }
+})();
+]]></script>
+  <sys_class_name>sysauto_script</sys_class_name>
+  <sys_name>TestReach Weekly Risk Score Refresh</sys_name>
+  <sys_package>11111111111111111111111111111111</sys_package>
+  <sys_scope>x_snc_testreach</sys_scope>
+  <run_dayofweek>0</run_dayofweek>
+  <run_dayofmonth>0</run_dayofmonth>
+  <run_time>2026-07-05 03:00:00</run_time>
+  <run_start>2026-07-05 03:00:00</run_start>
+  <run_end>2026-12-31 23:59:59</run_end>
+  <run_period>604800000</run_period>
+</sysauto_script>
+</unload>

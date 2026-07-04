@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sys_user_role action="INSERT_OR_UPDATE">
+  <sys_id>71111111111111111111111111111111</sys_id>
+  <name>x_snc_testreach.user</name>
+  <description>Read-only access to TestReach coverage data, dashboards, and reports.</description>
+  <assignable_by>admin</assignable_by>
+  <scoped_admin>false</scoped_admin>
+  <suffix>user</suffix>
+  <elevated_privilege>false</elevated_privilege>
+  <public>true</public>
+  <includes/>
+  <contains_roles/>
+  <sys_name>x_snc_testreach.user</sys_name>
+</sys_user_role>
+<sys_user_role action="INSERT_OR_UPDATE">
+  <sys_id>71211111111111111111111111111111</sys_id>
+  <name>x_snc_testreach.admin</name>
+  <description>Full access. Can trigger coverage analysis, configure thresholds, generate test skeletons.</description>
+  <assignable_by>admin</assignable_by>
+  <scoped_admin>false</scoped_admin>
+  <suffix>admin</suffix>
+  <elevated_privilege>false</elevated_privilege>
+  <public>true</public>
+  <includes/>
+  <contains_roles>x_snc_testreach.user</contains_roles>
+  <sys_name>x_snc_testreach.admin</sys_name>
+</sys_user_role>
+</unload>

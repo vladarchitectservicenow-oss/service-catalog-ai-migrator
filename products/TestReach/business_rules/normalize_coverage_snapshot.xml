@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sys_script action="INSERT_OR_UPDATE">
+  <sys_id>61211111111111111111111111111111</sys_id>
+  <active>true</active>
+  <when>before</when>
+  <operation_type>insert</operation_type>
+  <operation>x_snc_testreach_coverage_snapshot</operation>
+  <name>TestReach: Normalize Coverage Snapshot</name>
+  <script><![CDATA[(function executeRule(current, previous) {
+  var type = current.getValue('snapshot_type');
+  var validTypes = ['coverage', 'trend', 'gap'];
+  if (validTypes.indexOf(type) === -1) {
+    gs.addErrorMessage("TestReach: snapshot_type must be one of: " + validTypes.join(', '));
+    current.setAbortAction(true);
+    return;
+  }
+  if (!current.getValue('app_scope')) {
+    gs.addErrorMessage('TestReach: app_scope is required on coverage snapshot rows.');
+    current.setAbortAction(true);
+    return;
+  }
+  if (!current.getValue('artifact_sys_id')) {
+    gs.addErrorMessage('TestReach: artifact_sys_id is required on coverage snapshot rows.');
+    current.setAbortAction(true);
+    return;
+  }
+  var pct = parseFloat(current.getValue('coverage_pct'));
+  if (isNaN(pct) || pct < 0 || pct > 100) {
+    current.setValue('coverage_pct', 0);
+  }
+  if (!current.getValue('snapshot_ts')) {
+    current.setValue('snapshot_ts', new GlideDateTime());
+  }
+  var crit = parseInt(current.getValue('criticality'), 10);
+  if (isNaN(crit) || crit < 1) current.setValue('criticality', 1);
+  if (crit > 5) current.setValue('criticality', 5);
+})(current, previous);
+]]></script>
+  <table>x_snc_testreach_coverage_snapshot</table>
+  <action_insert>true</action_insert>
+  <action_update>false</action_update>
+  <action_delete>false</action_delete>
+  <action_query>false</action_query>
+  <order>100</order>
+  <is_restricted>false</is_restricted>
+  <view>Default view</view>
+</sys_script>
+</unload>

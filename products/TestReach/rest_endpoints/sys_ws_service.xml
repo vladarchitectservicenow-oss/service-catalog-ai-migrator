@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sys_ws_service action="INSERT_OR_UPDATE">
+  <sys_id>53111111111111111111111111111111</sys_id>
+  <active>true</active>
+  <name>x_snc_testreach</name>
+  <base_route>api/x_snc_testreach/</base_route>
+  <enforce_acl>true</enforce_acl>
+  <info>TestReach REST API. POST /execute for action dispatch, GET /status for reporting.</info>
+  <service_id>x_snc_testreach</service_id>
+  <scoped>true</scoped>
+</sys_ws_service>
+</unload>

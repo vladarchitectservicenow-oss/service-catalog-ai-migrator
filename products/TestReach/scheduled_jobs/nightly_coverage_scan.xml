@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sysauto_script action="INSERT_OR_UPDATE">
+  <sys_id>91111111111111111111111111111111</sys_id>
+  <active>true</active>
+  <name>TestReach Nightly Coverage Scan</name>
+  <when>run_once</when>
+  <sys_trigger>{"type":"ScheduledTrigger","trigger_time":"2026-07-05 02:00:00","repeat":"1 day"}</sys_trigger>
+  <run_type>scheduled</run_type>
+  <run_as>system</run_as>
+  <script><![CDATA[(function() {
+  var engine = new x_snc_testreach.TestReachCoverageEngine();
+  var scopeGr = new GlideRecord('sys_app');
+  scopeGr.addQuery('vendor_prefix', 'x_');
+  scopeGr.addQuery('scope', '!=', 'global');
+  scopeGr.addQuery('scope', '!=', 'x_snc_testreach');
+  scopeGr.query();
+  while (scopeGr.next()) {
+    var scope = scopeGr.getValue('scope');
+    if (!scope) continue;
+    try {
+      var result = engine.snapshotCoverage(scope);
+      gs.log('TestReach: nightly scan for ' + scope + ' complete. coverage=' +
+        result.coverage_pct + '% tested=' + result.tested_count +
+        ' untested=' + result.untested_count);
+    } catch (e) {
+      gs.logError('TestReach: nightly scan failed for ' + scope + ': ' + e.message, 'TestReach');
+    }
+  }
+})();
+]]></script>
+  <sys_class_name>sysauto_script</sys_class_name>
+  <sys_name>TestReach Nightly Coverage Scan</sys_name>
+  <sys_package>11111111111111111111111111111111</sys_package>
+  <sys_scope>x_snc_testreach</sys_scope>
+  <run_dayofweek>0</run_dayofweek>
+  <run_dayofmonth>0</run_dayofmonth>
+  <run_time>2026-07-05 02:00:00</run_time>
+  <run_start>2026-07-05 02:00:00</run_start>
+  <run_end>2026-12-31 23:59:59</run_end>
+  <run_period>86400000</run_period>
+</sysauto_script>
+</unload>

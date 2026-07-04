@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sys_db_object action="INSERT_OR_UPDATE">
+  <sys_id>32111111111111111111111111111111</sys_id>
+  <name>x_snc_testreach_risk_score</name>
+  <label>TestReach Risk Score</label>
+  <plural_label>TestReach Risk Scores</plural_label>
+  <access>package_private</access>
+  <create_access_controls>true</create_access_controls>
+  <read_access_controls>true</read_access_controls>
+  <write_access_controls>true</write_access_controls>
+  <delete_access_controls>true</delete_access_controls>
+  <live_feed_enabled>false</live_feed_enabled>
+  <allow_web_service_access>false</allow_web_service_access>
+  <allow_null>false</allow_null>
+  <caller_access>none</caller_access>
+  <is_extendable>false</is_extendable>
+  <number_ref/>
+  <number_of_rows>0</number_of_rows>
+  <extension_model>0</extension_model>
+  <extension_table/>
+  <portrait_layout/>
+  <actions/>
+</sys_db_object>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>32100000000000000000000000000001</sys_id>
+  <name>x_snc_testreach_risk_score</name>
+  <element>app_scope</element>
+  <column_label>App Scope</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>true</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>string</internal_type>
+  <max_length>40</max_length>
+  <default_value/>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>32100000000000000000000000000002</sys_id>
+  <name>x_snc_testreach_risk_score</name>
+  <element>app_name</element>
+  <column_label>App Name</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>string</internal_type>
+  <max_length>200</max_length>
+  <default_value/>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>32100000000000000000000000000003</sys_id>
+  <name>x_snc_testreach_risk_score</name>
+  <element>upgrade_target</element>
+  <column_label>Upgrade Target</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>true</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>string</internal_type>
+  <max_length>40</max_length>
+  <default_value/>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>32100000000000000000000000000004</sys_id>
+  <name>x_snc_testreach_risk_score</name>
+  <element>risk_score</element>
+  <column_label>Risk Score</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>true</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>integer</internal_type>
+  <max_length>40</max_length>
+  <default_value>0</default_value>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>32100000000000000000000000000005</sys_id>
+  <name>x_snc_testreach_risk_score</name>
+  <element>untested_count</element>
+  <column_label>Untested Count</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>integer</internal_type>
+  <max_length>40</max_length>
+  <default_value>0</default_value>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>32100000000000000000000000000006</sys_id>
+  <name>x_snc_testreach_risk_score</name>
+  <element>low_coverage_count</element>
+  <column_label>Low Coverage Count</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>integer</internal_type>
+  <max_length>40</max_length>
+  <default_value>0</default_value>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>32100000000000000000000000000007</sys_id>
+  <name>x_snc_testreach_risk_score</name>
+  <element>total_artifacts</element>
+  <column_label>Total Artifacts</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>integer</internal_type>
+  <max_length>40</max_length>
+  <default_value>0</default_value>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>32100000000000000000000000000008</sys_id>
+  <name>x_snc_testreach_risk_score</name>
+  <element>coverage_pct</element>
+  <column_label>Coverage %</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>decimal</internal_type>
+  <max_length>20</max_length>
+  <default_value>0</default_value>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>32100000000000000000000000000009</sys_id>
+  <name>x_snc_testreach_risk_score</name>
+  <element>details_json</element>
+  <column_label>Details JSON</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>false</display>
+  <unique>false</unique>
+  <internal_type>string</internal_type>
+  <max_length>8000</max_length>
+  <default_value/>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>3210000000000000000000000000000a</sys_id>
+  <name>x_snc_testreach_risk_score</name>
+  <element>computed_ts</element>
+  <column_label>Computed Timestamp</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>true</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>glide_date_time</internal_type>
+  <max_length>40</max_length>
+  <default_value>javascript:gs.nowDateTime()</default_value>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>3210000000000000000000000000000b</sys_id>
+  <name>x_snc_testreach_risk_score</name>
+  <element>threshold_pass</element>
+  <column_label>Threshold Pass</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>boolean</internal_type>
+  <max_length>40</max_length>
+  <default_value>false</default_value>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+</unload>

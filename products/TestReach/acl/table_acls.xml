@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sys_security_acl action="INSERT_OR_UPDATE">
+  <sys_id>72111111111111111111111111111111</sys_id>
+  <name>x_snc_testreach.x_snc_testreach_coverage_snapshot</name>
+  <operation>read</operation>
+  <active>true</active>
+  <admin_overrides>true</admin_overrides>
+  <decision_type>allow</decision_type>
+  <description>Read access to TestReach coverage data for TestReach users.</description>
+  <script/>
+  <condition/>
+  <table>x_snc_testreach_coverage_snapshot</table>
+  <role>x_snc_testreach.user</role>
+</sys_security_acl>
+<sys_security_acl action="INSERT_OR_UPDATE">
+  <sys_id>72211111111111111111111111111111</sys_id>
+  <name>x_snc_testreach.x_snc_testreach_coverage_snapshot</name>
+  <operation>write</operation>
+  <active>true</active>
+  <admin_overrides>true</admin_overrides>
+  <decision_type>allow</decision_type>
+  <description>Write access to TestReach coverage data for TestReach admins.</description>
+  <script/>
+  <condition/>
+  <table>x_snc_testreach_coverage_snapshot</table>
+  <role>x_snc_testreach.admin</role>
+</sys_security_acl>
+<sys_security_acl action="INSERT_OR_UPDATE">
+  <sys_id>72311111111111111111111111111111</sys_id>
+  <name>x_snc_testreach.x_snc_testreach_risk_score</name>
+  <operation>read</operation>
+  <active>true</active>
+  <admin_overrides>true</admin_overrides>
+  <decision_type>allow</decision_type>
+  <description>Read access to TestReach risk scores for TestReach users.</description>
+  <script/>
+  <condition/>
+  <table>x_snc_testreach_risk_score</table>
+  <role>x_snc_testreach.user</role>
+</sys_security_acl>
+<sys_security_acl action="INSERT_OR_UPDATE">
+  <sys_id>72411111111111111111111111111111</sys_id>
+  <name>x_snc_testreach.x_snc_testreach_risk_score</name>
+  <operation>write</operation>
+  <active>true</active>
+  <admin_overrides>true</admin_overrides>
+  <decision_type>allow</decision_type>
+  <description>Write access to TestReach risk scores for TestReach admins.</description>
+  <script/>
+  <condition/>
+  <table>x_snc_testreach_risk_score</table>
+  <role>x_snc_testreach.admin</role>
+</sys_security_acl>
+</unload>

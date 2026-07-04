@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sys_db_object action="INSERT_OR_UPDATE">
+  <sys_id>31111111111111111111111111111111</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <label>TestReach Coverage Snapshot</label>
+  <plural_label>TestReach Coverage Snapshots</plural_label>
+  <access>package_private</access>
+  <create_access_controls>true</create_access_controls>
+  <read_access_controls>true</read_access_controls>
+  <write_access_controls>true</write_access_controls>
+  <delete_access_controls>true</delete_access_controls>
+  <live_feed_enabled>false</live_feed_enabled>
+  <allow_web_service_access>false</allow_web_service_access>
+  <allow_null>false</allow_null>
+  <caller_access>none</caller_access>
+  <is_extendable>false</is_extendable>
+  <number_ref/>
+  <number_of_rows>0</number_of_rows>
+  <extension_model>0</extension_model>
+  <extension_table/>
+  <portrait_layout/>
+  <actions/>
+</sys_db_object>
+</unload>

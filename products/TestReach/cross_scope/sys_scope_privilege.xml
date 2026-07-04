@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<!--
+  Cross-scope access records. Each <sys_scope_privilege> grants read access from
+  x_snc_testreach into the target scope. The application must be installed on an
+  instance with these scopes; on PDI they are present by default.
+-->
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81111111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_atf_test</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Read ATF test definitions to map tests to artifacts.</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81211111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_atf_step</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Read ATF step configs to extract artifact references.</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81311111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_script</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Read business rules for coverage analysis.</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81411111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_script_include</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Read script includes for coverage analysis.</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81511111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_ui_action</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Read UI actions for coverage analysis.</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81611111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_ui_script</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Read client scripts for coverage analysis.</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81711111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_ui_policy</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Read UI policies for coverage analysis.</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81811111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_hub_flow</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Read flows for coverage analysis.</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81911111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_security_acl</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Read ACL rules for coverage analysis.</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81a11111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_app</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>List scoped apps to drive analysis scope selection.</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81b11111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_upgrade_history_log</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Cross-reference upgrade skipped records for the upgrade gap report.</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81c11111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_audit</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Read sys_audit to count downstream references for criticality calculation.</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81d11111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_transform_map</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Read transform maps for coverage analysis (transform_map artifact type).</description>
+</sys_scope_privilege>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+  <sys_id>81e11111111111111111111111111111</sys_id>
+  <source_scope>x_snc_testreach</source_scope>
+  <target_scope>global</target_scope>
+  <target_name>sys_scope</target_name>
+  <target_type>table</target_type>
+  <operation>read</operation>
+  <status>allowed</status>
+  <description>Read sys_scope for production-like scope detection in criticality calculation.</description>
+</sys_scope_privilege>
+</unload>

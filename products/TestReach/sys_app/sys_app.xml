@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sys_app action="INSERT_OR_UPDATE">
+  <sys_id>11111111111111111111111111111111</sys_id>
+  <name>TestReach</name>
+  <scope>x_snc_testreach</scope>
+  <version>1.0.0</version>
+  <vendor>ServiceNow Community</vendor>
+  <vendor_prefix>x_snc</vendor_prefix>
+  <description>ATF Coverage Analyzer and Test Gap Detector. Maps ATF tests to artifacts (business rules, script includes, client scripts, flows, UI actions) to surface coverage gaps, upgrade risk, and auto-generated test skeletons.</description>
+  <short_description>ATF Coverage Intelligence</short_description>
+  <licensing_model>Free</licensing_model>
+  <cost>0</cost>
+  <logo/>
+  <active>true</active>
+  <template>false</template>
+  <device_class>0</device_class>
+  <package>0</package>
+  <rest_consumer/>
+  <homepage_url>https://github.com/vladarchitectservicenow-oss/testreach</homepage_url>
+  <source_url>https://github.com/vladarchitectservicenow-oss/testreach</source_url>
+  <license_agreement>Free distribution under MIT license. No warranty. Use at own risk.</license_agreement>
+  <copyright>2026</copyright>
+  <state>published</state>
+  <serialized>false</serialized>
+  <user_specific>false</user_specific>
+  <scoped_admin>false</scoped_admin>
+  <navigation/>
+  <scoped>
+    <rest_endpoints>
+      <path alias="execute">api/x_snc_testreach/execute</path>
+      <path alias="status">api/x_snc_testreach/status</path>
+    </rest_endpoints>
+  </scoped>
+</sys_app>
+</unload>

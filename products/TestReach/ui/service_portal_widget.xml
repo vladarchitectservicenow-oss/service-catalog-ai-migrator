@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sp_page action="INSERT_OR_UPDATE">
+  <sys_id>a1111111111111111111111111111111</sys_id>
+  <active>true</active>
+  <description>TestReach coverage dashboard with heatmap, risk score, and gap list.</description>
+  <id>testreach_dashboard</id>
+  <name>TestReach Dashboard</name>
+  <title>TestReach Coverage Dashboard</title>
+  <type>portal</type>
+  <url>testreach</url>
+  <portal/>
+</sp_page>
+<sp_widget action="INSERT_OR_UPDATE">
+  <sys_id>a2111111111111111111111111111111</sys_id>
+  <active>true</active>
+  <client_script><![CDATA[api.controller=function() {
+  var c = this;
+  c.data = { ok: false, summary: null, trend: [], topGaps: [] };
+  c.serverAction = 'load';
+};
+]]></client_script>
+  <controller_as>c</controller_as>
+  <css/>
+  <demo_data/>
+  <description>TestReach widget. Loads the latest coverage and risk data for a single app scope.</description>
+  <has_preview>false</has_preview>
+  <html_template><![CDATA[<div class="panel panel-default" ng-if="c.data.ok">
+  <div class="panel-heading">
+    <h3 class="panel-title">TestReach — {{c.data.summary.app_scope}}</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="metric">
+          <div class="metric-label">Coverage</div>
+          <div class="metric-value">{{c.data.summary.coverage_pct}}%</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="metric">
+          <div class="metric-label">Risk Score</div>
+          <div class="metric-value">{{c.data.risk.risk_score}}</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="metric">
+          <div class="metric-label">Untested Artifacts</div>
+          <div class="metric-value">{{c.data.summary.untested_count}}</div>
+        </div>
+      </div>
+    </div>
+    <h4>Top Gaps</h4>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="g in c.data.topGaps track by g.sys_id">
+        <strong>{{g.name}}</strong> <span class="label label-default">{{g.type}}</span>
+        <span class="badge">crit {{g.criticality}}</span>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="alert alert-warning" ng-if="!c.data.ok">
+  TestReach: no coverage data for this app yet. Run a coverage scan first.
+</div>
+]]></html_template>
+  <link/>
+  <name>TestReach Coverage Widget</name>
+  <option_schema/>
+  <public>true</public>
+  <script_server><![CDATA[(function() {
+  data.appScope = input.app_scope || $sp.getParameter('app_scope') || '';
+  if (!data.appScope) {
+    data.ok = false;
+    return;
+  }
+  try {
+    var engine = new x_snc_testreach.TestReachRiskEngine();
+    var dashboard = engine.getDashboardData(data.appScope);
+    data.ok = true;
+    data.summary = dashboard.summary;
+    data.risk = dashboard.risk;
+    data.trend = dashboard.trend;
+    data.topGaps = dashboard.gaps.slice(0, 10);
+  } catch (e) {
+    data.ok = false;
+    data.error = e.message;
+  }
+})();
+]]></script_server>
+  <sys_class_name>sp_widget</sys_class_name>
+  <sys_name>TestReach Coverage Widget</sys_name>
+  <sys_package>11111111111111111111111111111111</sys_package>
+  <sys_scope>x_snc_testreach</sys_scope>
+  <template/>
+  <url/>
+</sp_widget>
+</unload>

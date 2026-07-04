@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sys_ws_operation action="INSERT_OR_UPDATE">
+  <sys_id>51111111111111111111111111111111</sys_id>
+  <active>true</active>
+  <name>execute</name>
+  <operation_scratch/>
+  <relative_path>/execute</relative_path>
+  <http_method>POST</http_method>
+  <run_in_separate_session>false</run_in_separate_session>
+  <run_with_acl>true</run_with_acl>
+  <service>x_snc_testreach</service>
+  <operation_script><![CDATA[(function process(request, response) {
+  try {
+    var body = request.body ? request.body.data : {};
+    if (typeof body === 'string') {
+      try { body = JSON.parse(body); } catch (e) { body = {}; }
+    }
+    if (!body) body = {};
+    var engine = new x_snc_testreach.TestReachRiskEngine();
+    var result = engine.dispatch(body);
+    if (!result.ok) {
+      response.setStatus(result.http_status || 400);
+    } else {
+      response.setStatus(result.http_status || 200);
+    }
+    response.setContentType('application/json');
+    var payload = result.ok ? { ok: true, data: result.data } : { ok: false, error: result.error };
+    response.getStreamWriter().writeString(JSON.stringify(payload));
+  } catch (e) {
+    response.setStatus(500);
+    response.setContentType('application/json');
+    response.getStreamWriter().writeString(JSON.stringify({
+      ok: false,
+      error: 'Unhandled exception: ' + (e.message || e.toString())
+    }));
+  }
+})(request, response);
+]]></operation_script>
+</sys_ws_operation>
+</unload>

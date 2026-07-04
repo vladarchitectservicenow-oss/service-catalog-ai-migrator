@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sys_ws_operation action="INSERT_OR_UPDATE">
+  <sys_id>52111111111111111111111111111111</sys_id>
+  <active>true</active>
+  <name>status</name>
+  <operation_scratch/>
+  <relative_path>/status</relative_path>
+  <http_method>GET</http_method>
+  <run_in_separate_session>false</run_in_separate_session>
+  <run_with_acl>true</run_with_acl>
+  <service>x_snc_testreach</service>
+  <operation_script><![CDATA[(function process(request, response) {
+  try {
+    var params = request.queryParams || {};
+    var appScope = params.app_scope;
+    if (!appScope) {
+      response.setStatus(400);
+      response.setContentType('application/json');
+      response.getStreamWriter().writeString(JSON.stringify({
+        ok: false,
+        error: 'app_scope query parameter is required'
+      }));
+      return;
+    }
+    var includeTrend = (params.include_trend === 'true' || params.include_trend === true);
+    var includeGaps = (params.include_gaps === 'true' || params.include_gaps === true);
+    var upgradeTarget = params.upgrade_target || '';
+    var engine = new x_snc_testreach.TestReachRiskEngine();
+    var dashboard = engine.getDashboardData(appScope);
+    var data = {
+      app_scope: appScope,
+      app_name: dashboard.summary.app_name,
+      coverage_pct: dashboard.summary.coverage_pct,
+      total_artifacts: dashboard.summary.total_artifacts,
+      tested_count: dashboard.summary.tested_count,
+      untested_count: dashboard.summary.untested_count,
+      risk_score: dashboard.risk ? dashboard.risk.risk_score : 0,
+      last_analyzed: dashboard.risk ? dashboard.risk.computed_ts : ''
+    };
+    if (includeTrend) data.trend = dashboard.trend;
+    if (includeGaps) data.top_gaps = dashboard.gaps;
+    response.setStatus(200);
+    response.setContentType('application/json');
+    response.getStreamWriter().writeString(JSON.stringify({ ok: true, data: data }));
+  } catch (e) {
+    response.setStatus(500);
+    response.setContentType('application/json');
+    response.getStreamWriter().writeString(JSON.stringify({
+      ok: false,
+      error: 'Unhandled exception: ' + (e.message || e.toString())
+    }));
+  }
+})(request, response);
+]]></operation_script>
+</sys_ws_operation>
+</unload>

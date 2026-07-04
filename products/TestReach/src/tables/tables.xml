@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 05:00:00">
+  <!-- Table 1: x_snc_testreach_coverage_snapshot -->
+  <!-- Primary coverage data store. Polymorphic type field distinguishes record purposes. -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <label>Coverage Snapshot</label>
+    <super_class/>
+    <sys_scope>x_snc_testreach</sys_scope>
+    <is_extendable>false</is_extendable>
+    <access>public</access>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <user_role>x_snc_testreach.user</user_role>
+    <audit>false</audit>
+    <live_feed_enabled>false</live_feed_enabled>
+    <configuration_access>true</configuration_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>artifact_sys_id</element>
+    <label>Artifact Sys ID</label>
+    <type>string</type>
+    <max_length>32</max_length>
+    <mandatory>true</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>artifact_type</element>
+    <label>Artifact Type</label>
+    <type>choice</type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <choice>0</choice>
+    <choice_table>x_snc_testreach_coverage_snapshot</choice_table>
+    <choice_field>artifact_type</choice_field>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>artifact_type</element>
+    <value>business_rule</value>
+    <label>Business Rule</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_choice>
+
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>artifact_type</element>
+    <value>script_include</value>
+    <label>Script Include</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_choice>
+
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>artifact_type</element>
+    <value>client_script</value>
+    <label>Client Script</label>
+    <sequence>30</sequence>
+    <inactive>false</inactive>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_choice>
+
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>artifact_type</element>
+    <value>ui_action</value>
+    <label>UI Action</label>
+    <sequence>40</sequence>
+    <inactive>false</inactive>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_choice>
+
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>artifact_type</element>
+    <value>ui_policy</value>
+    <label>UI Policy</label>
+    <sequence>50</sequence>
+    <inactive>false</inactive>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_choice>
+
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>artifact_type</element>
+    <value>flow</value>
+    <label>Flow</label>
+    <sequence>60</sequence>
+    <inactive>false</inactive>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_choice>
+
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>artifact_type</element>
+    <value>acl</value>
+    <label>ACL Rule</label>
+    <sequence>70</sequence>
+    <inactive>false</inactive>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_choice>
+
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>artifact_type</element>
+    <value>transform_map</value>
+    <label>Transform Map</label>
+    <sequence>80</sequence>
+    <inactive>false</inactive>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>artifact_name</element>
+    <label>Artifact Name</label>
+    <type>string</type>
+    <max_length>200</max_length>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>artifact_table</element>
+    <label>Artifact Table</label>
+    <type>string</type>
+    <max_length>80</max_length>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>app_scope</element>
+    <label>App Scope</label>
+    <type>string</type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>tested_by_count</element>
+    <label>Tested By Count</label>
+    <type>integer</type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <default_value>0</default_value>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>coverage_pct</element>
+    <label>Coverage %</label>
+    <type>decimal</type>
+    <max_length>6</max_length>
+    <decimal_digits>2</decimal_digits>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <default_value>0.00</default_value>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>snapshot_type</element>
+    <label>Snapshot Type</label>
+    <type>choice</type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <choice>0</choice>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>snapshot_type</element>
+    <value>coverage</value>
+    <label>Coverage (per-artifact)</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_choice>
+
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>snapshot_type</element>
+    <value>trend</value>
+    <label>Trend (weekly aggregate)</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_choice>
+
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>snapshot_type</element>
+    <value>gap</value>
+    <label>Gap (zero-coverage artifact)</label>
+    <sequence>30</sequence>
+    <inactive>false</inactive>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>snapshot_ts</element>
+    <label>Snapshot Timestamp</label>
+    <type>glide_date_time</type>
+    <mandatory>true</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>findings_json</element>
+    <label>Findings JSON</label>
+    <type>string</type>
+    <max_length>8000</max_length>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>skeleton_json</element>
+    <label>Skeleton JSON</label>
+    <type>string</type>
+    <max_length>8000</max_length>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>trend_json</element>
+    <label>Trend JSON</label>
+    <type>string</type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>criticality</element>
+    <label>Criticality</label>
+    <type>integer</type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <default_value>1</default_value>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <element>last_modified_by</element>
+    <label>Last Modified By</label>
+    <type>string</type>
+    <max_length>100</max_length>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <!-- Table 2: x_snc_testreach_risk_score -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <label>Risk Score</label>
+    <super_class/>
+    <sys_scope>x_snc_testreach</sys_scope>
+    <is_extendable>false</is_extendable>
+    <access>public</access>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <user_role>x_snc_testreach.user</user_role>
+    <audit>false</audit>
+    <live_feed_enabled>false</live_feed_enabled>
+    <configuration_access>true</configuration_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <element>app_scope</element>
+    <label>App Scope</label>
+    <type>string</type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <element>app_name</element>
+    <label>App Name</label>
+    <type>string</type>
+    <max_length>200</max_length>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <element>upgrade_target</element>
+    <label>Upgrade Target</label>
+    <type>string</type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <element>risk_score</element>
+    <label>Risk Score</label>
+    <type>integer</type>
+    <mandatory>true</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <default_value>0</default_value>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <element>untested_count</element>
+    <label>Untested Count</label>
+    <type>integer</type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <default_value>0</default_value>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <element>low_coverage_count</element>
+    <label>Low Coverage Count</label>
+    <type>integer</type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <default_value>0</default_value>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <element>total_artifacts</element>
+    <label>Total Artifacts</label>
+    <type>integer</type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <default_value>0</default_value>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <element>coverage_pct</element>
+    <label>Coverage %</label>
+    <type>decimal</type>
+    <max_length>6</max_length>
+    <decimal_digits>2</decimal_digits>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <default_value>0.00</default_value>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <element>details_json</element>
+    <label>Details JSON</label>
+    <type>string</type>
+    <max_length>8000</max_length>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <element>computed_ts</element>
+    <label>Computed Timestamp</label>
+    <type>glide_date_time</type>
+    <mandatory>true</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <element>threshold_pass</element>
+    <label>Threshold Pass</label>
+    <type>boolean</type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+    <default_value>false</default_value>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_dictionary>
+</unload>

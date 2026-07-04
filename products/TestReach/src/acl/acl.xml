@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 05:00:00">
+  <!-- ACL: x_snc_testreach_coverage_snapshot — Read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <type>record</type>
+    <operation>read</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.user</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.user to read coverage snapshot records.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: x_snc_testreach_coverage_snapshot — Create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <type>record</type>
+    <operation>create</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.admin</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.admin to create coverage snapshot records.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: x_snc_testreach_coverage_snapshot — Write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <type>record</type>
+    <operation>write</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.admin</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.admin to update coverage snapshot records.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: x_snc_testreach_coverage_snapshot — Delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_coverage_snapshot</name>
+    <type>record</type>
+    <operation>delete</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.admin</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.admin to delete coverage snapshot records.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: x_snc_testreach_risk_score — Read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <type>record</type>
+    <operation>read</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.user</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.user to read risk score records.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: x_snc_testreach_risk_score — Create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <type>record</type>
+    <operation>create</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.admin</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.admin to create risk score records.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: x_snc_testreach_risk_score — Write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <type>record</type>
+    <operation>write</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.admin</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.admin to update risk score records.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: x_snc_testreach_risk_score — Delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_risk_score</name>
+    <type>record</type>
+    <operation>delete</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.admin</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.admin to delete risk score records.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: REST Endpoint — POST /execute -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>TestReach Execute</name>
+    <type>rest_endpoint</type>
+    <operation>execute</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.user</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.user to execute the TestReach Execute REST endpoint.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: REST Endpoint — GET /status -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>TestReach Status</name>
+    <type>rest_endpoint</type>
+    <operation>execute</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.user</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.user to execute the TestReach Status REST endpoint.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+</unload>

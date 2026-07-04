@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 05:00:00">
+  <!-- Business Rule 1: Auto-Suggest on BR Open -->
+  <sys_script action="INSERT_OR_UPDATE">
+    <name>TestReach: Auto-Suggest on BR Open</name>
+    <collection>sys_script</collection>
+    <active>true</active>
+    <when>onDisplay</when>
+    <order>100</order>
+    <condition/>
+    <script><![CDATA[
+(function executeRule(current, previous /*null when async*/) {
+
+    var coverageEngine = new TestReachCoverageEngine();
+    var result = coverageEngine.analyzeArtifact(current.getUniqueValue(), 'business_rule');
+
+    if (result.tested_by.length > 0) {
+        var testNames = [];
+        for (var i = 0; i < result.tested_by.length; i++) {
+            testNames.push(result.tested_by[i].test_name);
+        }
+        gs.addInfoMessage(
+            'TestReach: This business rule is covered by ' + result.tested_by.length +
+            ' ATF test(s): ' + testNames.join(', ') +
+            '. If you modify the condition or script, review these tests.'
+        );
+    } else {
+        gs.addInfoMessage(
+            'TestReach: This business rule has ZERO ATF test coverage. ' +
+            'Consider generating a test skeleton via the "Generate ATF Test Stub" UI Action.'
+        );
+    }
+
+})(current, previous);
+]]></script>
+    <sys_scope>x_snc_testreach</sys_scope>
+    <description>Displays an in-form banner on business rule forms showing ATF test coverage status and smart suggestions.</description>
+  </sys_script>
+
+  <!-- Business Rule 2: Validate Threshold on Insert -->
+  <sys_script action="INSERT_OR_UPDATE">
+    <name>TestReach: Validate Threshold on Insert</name>
+    <collection>x_snc_testreach_risk_score</collection>
+    <active>true</active>
+    <when>before</when>
+    <insert>true</insert>
+    <update>true</update>
+    <order>100</order>
+    <condition/>
+    <script><![CDATA[
+(function executeRule(current, previous /*null when async*/) {
+
+    // Validate risk_score is 0-100
+    var riskScore = parseInt(current.getValue('risk_score') || 0, 10);
+    if (riskScore < 0 || riskScore > 100) {
+        current.setValue('risk_score', Math.max(0, Math.min(100, riskScore)));
+        gs.warn('TestReach: Risk score clamped to valid range 0-100. Original value was outside bounds.');
+    }
+
+    // Validate app_scope is not empty
+    var appScope = current.getValue('app_scope') || '';
+    if (!appScope) {
+        gs.addErrorMessage('TestReach: app_scope is required for risk score records.');
+        current.setAbortAction(true);
+        return;
+    }
+
+    // Validate upgrade_target is not empty
+    var upgradeTarget = current.getValue('upgrade_target') || '';
+    if (!upgradeTarget) {
+        gs.addErrorMessage('TestReach: upgrade_target is required for risk score records.');
+        current.setAbortAction(true);
+        return;
+    }
+
+    // Auto-set computed_ts if not provided
+    if (!current.getValue('computed_ts')) {
+        current.setValue('computed_ts', new GlideDateTime().getValue());
+    }
+
+})(current, previous);
+]]></script>
+    <sys_scope>x_snc_testreach</sys_scope>
+    <description>Validates risk score records on insert/update: ensures risk_score is 0-100, app_scope and upgrade_target are not empty, and auto-sets computed_ts.</description>
+  </sys_script>
+</unload>

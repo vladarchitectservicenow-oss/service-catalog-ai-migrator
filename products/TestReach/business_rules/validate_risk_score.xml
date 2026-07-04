@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sys_script action="INSERT_OR_UPDATE">
+  <sys_id>61111111111111111111111111111111</sys_id>
+  <active>true</active>
+  <when>before</when>
+  <operation_type>insert</operation_type>
+  <operation>x_snc_testreach_risk_score</operation>
+  <name>TestReach: Validate Threshold on Insert</name>
+  <script><![CDATA[(function executeRule(current, previous) {
+  var score = parseInt(current.getValue('risk_score'), 10);
+  if (isNaN(score) || score < 0 || score > 100) {
+    gs.addErrorMessage('TestReach: risk_score must be between 0 and 100.');
+    current.setAbortAction(true);
+    return;
+  }
+  if (!current.getValue('app_scope')) {
+    gs.addErrorMessage('TestReach: app_scope is required.');
+    current.setAbortAction(true);
+    return;
+  }
+  var untested = parseInt(current.getValue('untested_count'), 10) || 0;
+  var lowCov   = parseInt(current.getValue('low_coverage_count'), 10) || 0;
+  var total    = parseInt(current.getValue('total_artifacts'), 10) || 0;
+  if (total < 0 || untested < 0 || lowCov < 0 || untested > total) {
+    gs.addErrorMessage('TestReach: artifact counts are inconsistent (untested_count cannot exceed total_artifacts).');
+    current.setAbortAction(true);
+    return;
+  }
+  current.setValue('threshold_pass', score <= 50);
+  if (!current.getValue('computed_ts')) {
+    current.setValue('computed_ts', new GlideDateTime());
+  }
+})(current, previous);
+]]></script>
+  <table>x_snc_testreach_risk_score</table>
+  <action_insert>true</action_insert>
+  <action_update>false</action_update>
+  <action_delete>false</action_delete>
+  <action_query>false</action_query>
+  <order>100</order>
+  <is_restricted>false</is_restricted>
+  <view>Default view</view>
+</sys_script>
+</unload>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sys_app_license action="INSERT_OR_UPDATE">
+  <sys_id>21111111111111111111111111111111</sys_id>
+  <app>11111111111111111111111111111111</app>
+  <name>TestReach Community License</name>
+  <description>TestReach free community edition. Coverage analyzer for ServiceNow ATF.</description>
+  <model>none</model>
+  <count>0</count>
+  <count_type>unlimited</count_type>
+  <active>true</active>
+</sys_app_license>
+</unload>

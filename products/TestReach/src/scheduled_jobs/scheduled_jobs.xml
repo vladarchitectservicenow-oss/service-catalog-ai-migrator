@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 05:00:00">
+  <!-- Scheduled Job 1: TestReach Nightly Coverage Scan -->
+  <sys_trigger action="INSERT_OR_UPDATE">
+    <name>TestReach Nightly Coverage Scan</name>
+    <active>true</active>
+    <trigger_type>daily</trigger_type>
+    <time>02:00:00</time>
+    <repeat_interval/>
+    <script><![CDATA[
+(function() {
+
+    var coverageEngine = new TestReachCoverageEngine();
+
+    // Get all scoped apps
+    var appGr = new GlideRecord('sys_app');
+    appGr.addQuery('active', true);
+    appGr.addQuery('scope', '!=', 'global');
+    appGr.query();
+
+    var processedCount = 0;
+    var errorCount = 0;
+
+    while (appGr.next()) {
+        var appScope = appGr.getValue('scope') || '';
+        if (!appScope) {
+            continue;
+        }
+
+        try {
+            coverageEngine.snapshotCoverage(appScope);
+            processedCount++;
+        } catch (e) {
+            gs.error('TestReach Nightly Coverage Scan: failed for ' + appScope + ': ' + e.message);
+            errorCount++;
+        }
+    }
+
+    gs.info('TestReach Nightly Coverage Scan complete. Processed: ' + processedCount + ', Errors: ' + errorCount);
+
+})();
+]]></script>
+    <sys_scope>x_snc_testreach</sys_scope>
+    <description>Daily 02:00 — Runs coverage analysis for all scoped apps. Incremental — only re-analyzes artifacts modified since last snapshot.</description>
+  </sys_trigger>
+
+  <!-- Scheduled Job 2: TestReach Weekly Trend Capture -->
+  <sys_trigger action="INSERT_OR_UPDATE">
+    <name>TestReach Weekly Trend Capture</name>
+    <active>true</active>
+    <trigger_type>weekly</trigger_type>
+    <day_of_week>sunday</day_of_week>
+    <time>03:00:00</time>
+    <repeat_interval/>
+    <script><![CDATA[
+(function() {
+
+    var coverageEngine = new TestReachCoverageEngine();
+    var now = new GlideDateTime();
+    var weekStr = now.getYear() + '-W' + now.getWeekOfYear();
+
+    // Get all scoped apps
+    var appGr = new GlideRecord('sys_app');
+    appGr.addQuery('active', true);
+    appGr.addQuery('scope', '!=', 'global');
+    appGr.query();
+
+    while (appGr.next()) {
+        var appScope = appGr.getValue('scope') || '';
+        if (!appScope) {
+            continue;
+        }
+
+        // Run analysis to get current coverage
+        var result = coverageEngine.analyzeAll(appScope);
+
+        // Write trend snapshot
+        var trendGr = new GlideRecord('x_snc_testreach_coverage_snapshot');
+        trendGr.initialize();
+        trendGr.setValue('artifact_sys_id', 'trend_' + appScope);
+        trendGr.setValue('artifact_type', 'trend');
+        trendGr.setValue('artifact_name', 'Weekly Trend: ' + appScope);
+        trendGr.setValue('app_scope', appScope);
+        trendGr.setValue('tested_by_count', result.stats.tested);
+        trendGr.setValue('coverage_pct', result.stats.coverage_pct);
+        trendGr.setValue('snapshot_type', 'trend');
+        trendGr.setValue('snapshot_ts', now.getValue());
+        trendGr.setValue('criticality', 1);
+
+        var trendData = {
+            weekly_snapshots: [{
+                week: weekStr,
+                pct: result.stats.coverage_pct,
+                tested: result.stats.tested,
+                total: result.stats.total
+            }]
+        };
+        trendGr.setValue('trend_json', JSON.stringify(trendData));
+        trendGr.setValue('findings_json', JSON.stringify({}));
+        trendGr.setValue('skeleton_json', JSON.stringify({generated: false}));
+
+        try {
+            trendGr.insert();
+        } catch (e) {
+            gs.error('TestReach Weekly Trend Capture: insert failed for ' + appScope + ': ' + e.message);
+        }
+    }
+
+    gs.info('TestReach Weekly Trend Capture complete for week ' + weekStr);
+
+})();
+]]></script>
+    <sys_scope>x_snc_testreach</sys_scope>
+    <description>Weekly Sunday 03:00 — Captures coverage trend snapshot for all scoped apps.</description>
+  </sys_trigger>
+
+  <!-- Scheduled Job 3: TestReach Upgrade Gap Check -->
+  <sys_trigger action="INSERT_OR_UPDATE">
+    <name>TestReach Upgrade Gap Check</name>
+    <active>true</active>
+    <trigger_type>on_demand</trigger_type>
+    <script><![CDATA[
+(function() {
+
+    var riskEngine = new TestReachRiskEngine();
+
+    // Default to checking against the next major release
+    var upgradeTarget = 'xanadu';
+
+    var gaps = riskEngine.generateUpgradeGapReport(upgradeTarget);
+
+    var criticalCount = 0;
+    var highCount = 0;
+    var unknownCount = 0;
+
+    for (var i = 0; i < gaps.length; i++) {
+        if (gaps[i].risk_level === 'critical') {
+            criticalCount++;
+        } else if (gaps[i].risk_level === 'high') {
+            highCount++;
+        } else if (gaps[i].risk_level === 'unknown') {
+            unknownCount++;
+        }
+    }
+
+    gs.info('TestReach Upgrade Gap Check complete. Total gaps: ' + gaps.length +
+        ', Critical: ' + criticalCount + ', High: ' + highCount + ', Unknown: ' + unknownCount);
+
+    if (criticalCount > 0) {
+        gs.eventQueue('testreach.upgrade.gap.critical', null, criticalCount.toString(), upgradeTarget);
+    }
+
+})();
+]]></script>
+    <sys_scope>x_snc_testreach</sys_scope>
+    <description>Triggered on upgrade preview generation. Cross-references skipped records with coverage data and alerts on critical gaps.</description>
+  </sys_trigger>
+</unload>

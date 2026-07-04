@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 07:00:00">
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>31100000000000000000000000000001</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>artifact_sys_id</element>
+  <column_label>Artifact Sys ID</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>true</mandatory>
+  <display>false</display>
+  <unique>false</unique>
+  <internal_type>string</internal_type>
+  <max_length>32</max_length>
+  <default_value/>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>31100000000000000000000000000002</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>artifact_type</element>
+  <column_label>Artifact Type</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>true</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>choice</internal_type>
+  <max_length>40</max_length>
+  <default_value>business_rule</default_value>
+  <reference/>
+  <choice_table>sys_choice</choice_table>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>31100000000000000000000000000003</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>artifact_name</element>
+  <column_label>Artifact Name</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>string</internal_type>
+  <max_length>200</max_length>
+  <default_value/>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>31100000000000000000000000000004</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>artifact_table</element>
+  <column_label>Artifact Table</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>string</internal_type>
+  <max_length>80</max_length>
+  <default_value/>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>31100000000000000000000000000005</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>app_scope</element>
+  <column_label>App Scope</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>true</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>string</internal_type>
+  <max_length>40</max_length>
+  <default_value/>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>31100000000000000000000000000006</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>tested_by_count</element>
+  <column_label>Tested By Count</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>integer</internal_type>
+  <max_length>40</max_length>
+  <default_value>0</default_value>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>31100000000000000000000000000007</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>coverage_pct</element>
+  <column_label>Coverage %</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>decimal</internal_type>
+  <max_length>20</max_length>
+  <default_value>0</default_value>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>31100000000000000000000000000008</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>snapshot_type</element>
+  <column_label>Snapshot Type</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>true</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>choice</internal_type>
+  <max_length>40</max_length>
+  <default_value>coverage</default_value>
+  <reference/>
+  <choice_table>sys_choice</choice_table>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>31100000000000000000000000000009</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>snapshot_ts</element>
+  <column_label>Snapshot Timestamp</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>true</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>glide_date_time</internal_type>
+  <max_length>40</max_length>
+  <default_value>javascript:gs.nowDateTime()</default_value>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>3110000000000000000000000000000a</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>findings_json</element>
+  <column_label>Findings JSON</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>false</display>
+  <unique>false</unique>
+  <internal_type>string</internal_type>
+  <max_length>8000</max_length>
+  <default_value/>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>3110000000000000000000000000000b</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>skeleton_json</element>
+  <column_label>Skeleton JSON</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>false</display>
+  <unique>false</unique>
+  <internal_type>string</internal_type>
+  <max_length>8000</max_length>
+  <default_value/>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>3110000000000000000000000000000c</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>trend_json</element>
+  <column_label>Trend JSON</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>false</display>
+  <unique>false</unique>
+  <internal_type>string</internal_type>
+  <max_length>4000</max_length>
+  <default_value/>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>3110000000000000000000000000000d</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>criticality</element>
+  <column_label>Criticality</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>false</read_only>
+  <mandatory>false</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>integer</internal_type>
+  <max_length>40</max_length>
+  <default_value>1</default_value>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+<sys_dictionary action="INSERT_OR_UPDATE">
+  <sys_id>3110000000000000000000000000000e</sys_id>
+  <name>x_snc_testreach_coverage_snapshot</name>
+  <element>last_modified_by</element>
+  <column_label>Last Modified By</column_label>
+  <active>true</active>
+  <array>false</array>
+  <read_only>true</read_only>
+  <mandatory>false</mandatory>
+  <display>true</display>
+  <unique>false</unique>
+  <internal_type>string</internal_type>
+  <max_length>100</max_length>
+  <default_value>javascript:gs.getUserName()</default_value>
+  <reference/>
+  <choice_field/>
+</sys_dictionary>
+</unload>

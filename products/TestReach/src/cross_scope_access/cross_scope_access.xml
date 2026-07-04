@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-04 05:00:00">
+  <!-- Cross-Scope Access Records for TestReach -->
+  <!-- TestReach reads from OOTB tables and requires cross-scope access grants -->
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_atf_test</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads ATF test definitions to build dependency graph.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_atf_step</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads ATF step configs to extract referenced sys_ids.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_script</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads business rules to map to tests.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_script_include</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads script includes to map to tests.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_ui_action</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads UI actions to map to tests.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_ui_policy</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads UI policies to map to tests.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_ui_script</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads client scripts to map to tests.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_hub_flow</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads flows to map to tests.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_security_acl</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads ACL rules to map to tests.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_db_object</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads table definitions for per-table coverage.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_upgrade_history_log</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads upgrade history to cross-reference skipped records.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_app</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads scoped app definitions for analysis.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_audit</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads audit records for incremental recomputation.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_transform_map</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads transform maps to map to tests.</description>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_snc_testreach</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_scope</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+    <description>TestReach reads scope definitions for app listing.</description>
+  </sys_scope_privilege>
+</unload>
