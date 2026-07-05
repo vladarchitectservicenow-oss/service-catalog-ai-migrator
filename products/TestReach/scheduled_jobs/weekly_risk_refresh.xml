@@ -2,7 +2,7 @@
 <unload unload_date="2026-07-04 07:00:00">
 <sysauto_script action="INSERT_OR_UPDATE">
   <sys_id>91211111111111111111111111111111</sys_id>
-  <active>true</active>
+  <active>false</active>
   <name>TestReach Weekly Risk Score Refresh</name>
   <when>run_once</when>
   <sys_trigger>{"type":"ScheduledTrigger","trigger_time":"2026-07-05 03:00:00","repeat":"7 day"}</sys_trigger>
@@ -35,7 +35,7 @@
   <run_dayofmonth>0</run_dayofmonth>
   <run_time>2026-07-05 03:00:00</run_time>
   <run_start>2026-07-05 03:00:00</run_start>
-  <run_end>2026-12-31 23:59:59</run_end>
+  <run_end>2036-12-31 23:59:59</run_end>
   <run_period>604800000</run_period>
 </sysauto_script>
 </unload>

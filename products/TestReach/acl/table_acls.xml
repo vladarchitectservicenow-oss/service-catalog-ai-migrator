@@ -52,4 +52,56 @@
   <table>x_snc_testreach_risk_score</table>
   <role>x_snc_testreach.admin</role>
 </sys_security_acl>
+<sys_security_acl action="INSERT_OR_UPDATE">
+  <sys_id>72511111111111111111111111111111</sys_id>
+  <name>x_snc_testreach.x_snc_testreach_coverage_snapshot</name>
+  <operation>delete</operation>
+  <active>true</active>
+  <admin_overrides>true</admin_overrides>
+  <decision_type>allow</decision_type>
+  <description>Delete access to TestReach coverage snapshots for TestReach admins.</description>
+  <script/>
+  <condition/>
+  <table>x_snc_testreach_coverage_snapshot</table>
+  <role>x_snc_testreach.admin</role>
+</sys_security_acl>
+<sys_security_acl action="INSERT_OR_UPDATE">
+  <sys_id>72611111111111111111111111111111</sys_id>
+  <name>x_snc_testreach.x_snc_testreach_risk_score</name>
+  <operation>delete</operation>
+  <active>true</active>
+  <admin_overrides>true</admin_overrides>
+  <decision_type>allow</decision_type>
+  <description>Delete access to TestReach risk scores for TestReach admins.</description>
+  <script/>
+  <condition/>
+  <table>x_snc_testreach_risk_score</table>
+  <role>x_snc_testreach.admin</role>
+</sys_security_acl>
+<sys_security_acl action="INSERT_OR_UPDATE">
+  <sys_id>72711111111111111111111111111111</sys_id>
+  <name>/api/x_snc_testreach/execute</name>
+  <operation>execute</operation>
+  <active>true</active>
+  <admin_overrides>true</admin_overrides>
+  <decision_type>allow</decision_type>
+  <description>Execute access to TestReach POST /execute endpoint for TestReach admins.</description>
+  <script/>
+  <condition/>
+  <type>rest_service</type>
+  <role>x_snc_testreach.admin</role>
+</sys_security_acl>
+<sys_security_acl action="INSERT_OR_UPDATE">
+  <sys_id>72811111111111111111111111111111</sys_id>
+  <name>/api/x_snc_testreach/status</name>
+  <operation>read</operation>
+  <active>true</active>
+  <admin_overrides>true</admin_overrides>
+  <decision_type>allow</decision_type>
+  <description>Read access to TestReach GET /status endpoint for TestReach users.</description>
+  <script/>
+  <condition/>
+  <type>rest_service</type>
+  <role>x_snc_testreach.user</role>
+</sys_security_acl>
 </unload>
