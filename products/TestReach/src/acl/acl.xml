@@ -112,6 +112,62 @@
     <sys_scope>x_snc_testreach</sys_scope>
   </sys_security_acl>
 
+  <!-- ACL: x_snc_testreach_test_skeleton — Read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_test_skeleton</name>
+    <type>record</type>
+    <operation>read</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.user</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.user to read test skeleton records.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: x_snc_testreach_test_skeleton — Create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_test_skeleton</name>
+    <type>record</type>
+    <operation>create</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.admin</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.admin to create test skeleton records.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: x_snc_testreach_test_skeleton — Write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_test_skeleton</name>
+    <type>record</type>
+    <operation>write</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.admin</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.admin to update test skeleton records.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: x_snc_testreach_test_skeleton — Delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_testreach_test_skeleton</name>
+    <type>record</type>
+    <operation>delete</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.admin</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.admin to delete test skeleton records.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
   <!-- ACL: REST Endpoint — POST /execute -->
   <sys_security_acl action="INSERT_OR_UPDATE">
     <name>TestReach Execute</name>
