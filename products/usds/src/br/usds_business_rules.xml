@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-09 07:00:00">
+  <sys_script action="INSERT_OR_UPDATE">
+    <name>USDS: Set Default Status</name>
+    <collection>x_snc_usds_review</collection>
+    <when>before</when>
+    <insert>true</insert>
+    <update>false</update>
+    <delete>false</delete>
+    <order>100</order>
+    <active>true</active>
+    <condition><![CDATA[current.status == '' || current.status == null]]></condition>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+(function executeRule(current, previous) {
+    if (!current.status) {
+        current.status = 'draft';
+    }
+    if (!current.approval_state) {
+        current.approval_state = 'not_requested';
+    }
+})(current, previous);
+    ]]></script>
+  </sys_script>
+
+  <sys_script action="INSERT_OR_UPDATE">
+    <name>USDS: Validate Status Transition</name>
+    <collection>x_snc_usds_review</collection>
+    <when>before</when>
+    <insert>false</insert>
+    <update>true</update>
+    <delete>false</delete>
+    <order>200</order>
+    <active>true</active>
+    <condition><![CDATA[current.status.changes()]]></condition>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+(function executeRule(current, previous) {
+    var validTransitions = {
+        'draft': ['in_review'],
+        'in_review': ['approved', 'rejected'],
+        'approved': ['committed'],
+        'rejected': ['draft', 'in_review'],
+        'committed': ['rolled_back'],
+        'rolled_back': ['draft']
+    };
+
+    var from = previous.status || 'draft';
+    var to = current.status;
+
+    var allowed = validTransitions[from] || [];
+    if (allowed.indexOf(to) === -1) {
+        gs.addErrorMessage('Invalid status transition: ' + from + ' to ' + to +
+                          '. Allowed: ' + allowed.join(', '));
+        current.setAbortAction(true);
+    }
+})(current, previous);
+    ]]></script>
+  </sys_script>
+
+  <sys_script action="INSERT_OR_UPDATE">
+    <name>USDS: Set Commit Timestamp</name>
+    <collection>x_snc_usds_review</collection>
+    <when>before</when>
+    <insert>false</insert>
+    <update>true</update>
+    <delete>false</delete>
+    <order>300</order>
+    <active>true</active>
+    <condition><![CDATA[current.status == 'committed' && previous.status != 'committed']]></condition>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+(function executeRule(current, previous) {
+    current.committed_at = new GlideDateTime().getValue();
+})(current, previous);
+    ]]></script>
+  </sys_script>
+
+  <sys_script action="INSERT_OR_UPDATE">
+    <name>USDS: Set Comment Author</name>
+    <collection>x_snc_usds_comment</collection>
+    <when>before</when>
+    <insert>true</insert>
+    <update>false</update>
+    <delete>false</delete>
+    <order>100</order>
+    <active>true</active>
+    <condition><![CDATA[current.author == '' || current.author == null]]></condition>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+(function executeRule(current, previous) {
+    if (!current.author) {
+        current.author = gs.getUserID();
+    }
+})(current, previous);
+    ]]></script>
+  </sys_script>
+</unload>

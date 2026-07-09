@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-09 07:00:00">
+
+<sys_db_object action="INSERT_OR_UPDATE">
+    <access_controls>true</access_controls>
+    <create_access_controls>true</create_access_controls>
+    <delete_access_controls>true</delete_access_controls>
+    <is_extendable>false</is_extendable>
+    <label>USDS Review Comment</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_snc_usds_comment</name>
+    <number_ref display_value="USDS CMT" name="sys_number">1b85cce01b6f4510f4e886c61a4bcb</number_ref>
+    <read_access_controls>true</read_access_controls>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>system</sys_created_by>
+    <sys_created_on>2026-07-09 07:00:00</sys_created_on>
+    <sys_id>0b85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <update_access_controls>true</update_access_controls>
+    <user_role display_value="x_snc_usds.reviewer" name="x_snc_usds.reviewer">0f9448e01b6f4510f4e886c61a4bcb</user_role>
+</sys_db_object>
+
+<sys_number action="INSERT_OR_UPDATE">
+    <category>x_snc_usds_comment</category>
+    <number>1000</number>
+    <prefix>USDS CMT</prefix>
+    <sys_class_name>sys_number</sys_class_name>
+    <sys_id>1b85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <table>x_snc_usds_comment</table>
+</sys_number>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="number">
+    <column_label>Number</column_label>
+    <default_value></default_value>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_usds_comment</name>
+    <sys_id>2b85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_name>Number</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="review">
+    <column_label>Review</column_label>
+    <default_value></default_value>
+    <internal_type display_value="Reference">reference</internal_type>
+    <max_length>32</max_length>
+    <name>x_snc_usds_comment</name>
+    <reference display_value="USDS Review" name="x_snc_usds_review">7b44c8e01b6f4510f4e886c61a4bcb</reference>
+    <sys_id>3b85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_name>Review</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="field_path">
+    <column_label>Field Path</column_label>
+    <default_value></default_value>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>500</max_length>
+    <name>x_snc_usds_comment</name>
+    <sys_id>4b85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_name>Field Path</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="comment_text">
+    <column_label>Comment Text</column_label>
+    <default_value></default_value>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_snc_usds_comment</name>
+    <sys_id>5b85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_name>Comment Text</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="comment_type">
+    <choice>3</choice>
+    <column_label>Comment Type</column_label>
+    <default_value>general</default_value>
+    <internal_type display_value="Choice">choice</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_usds_comment</name>
+    <sys_id>6b85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_name>Comment Type</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+</sys_dictionary>
+
+<sys_choice action="INSERT_OR_UPDATE" field="comment_type" name="x_snc_usds_comment">
+    <element>comment_type</element>
+    <label>General</label>
+    <language>en</language>
+    <name>x_snc_usds_comment</name>
+    <sequence>10</sequence>
+    <sys_id>7b85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <value>general</value>
+</sys_choice>
+<sys_choice action="INSERT_OR_UPDATE" field="comment_type" name="x_snc_usds_comment">
+    <element>comment_type</element>
+    <label>Approval</label>
+    <language>en</language>
+    <name>x_snc_usds_comment</name>
+    <sequence>20</sequence>
+    <sys_id>8b85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <value>approval</value>
+</sys_choice>
+<sys_choice action="INSERT_OR_UPDATE" field="comment_type" name="x_snc_usds_comment">
+    <element>comment_type</element>
+    <label>Rejection</label>
+    <language>en</language>
+    <name>x_snc_usds_comment</name>
+    <sequence>30</sequence>
+    <sys_id>9b85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <value>rejection</value>
+</sys_choice>
+<sys_choice action="INSERT_OR_UPDATE" field="comment_type" name="x_snc_usds_comment">
+    <element>comment_type</element>
+    <label>Resolution</label>
+    <language>en</language>
+    <name>x_snc_usds_comment</name>
+    <sequence>40</sequence>
+    <sys_id>ac85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <value>resolution</value>
+</sys_choice>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="resolved">
+    <column_label>Resolved</column_label>
+    <default_value>false</default_value>
+    <internal_type display_value="Boolean">boolean</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_usds_comment</name>
+    <sys_id>bc85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_name>Resolved</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="author">
+    <column_label>Author</column_label>
+    <internal_type display_value="Reference">reference</internal_type>
+    <max_length>32</max_length>
+    <name>x_snc_usds_comment</name>
+    <reference display_value="User" name="sys_user">6816f79cc0a8016401c5a33be04be441</reference>
+    <sys_id>cc85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_name>Author</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+</sys_dictionary>
+
+</unload>

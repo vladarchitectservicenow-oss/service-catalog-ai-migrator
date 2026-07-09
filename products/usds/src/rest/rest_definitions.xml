@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-09 07:00:00">
+
+<sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>/api/x_snc_usds</base_uri>
+    <description>USDS REST API surface for diff, review, and rollback operations.</description>
+    <name>x_snc_usds</name>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_created_by>system</sys_created_by>
+    <sys_created_on>2026-07-09 07:00:00</sys_created_on>
+    <sys_id>bc75cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_usds</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_ws_definition_x_snc_usds</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+</sys_ws_definition>
+
+<sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_customized>false</consumes_customized>
+    <description>Action-dispatch endpoint for USDS: diff, backup, rollback, export, submit_review, approve_change, reject_change.</description>
+    <enforce_acl>true</enforce_acl>
+    <name>execute</name>
+    <operation_uri>/api/x_snc_usds/execute</operation_uri>
+    <produces>application/json</produces>
+    <produces_customized>false</produces_customized>
+    <request_method>POST</request_method>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>system</sys_created_by>
+    <sys_created_on>2026-07-09 07:00:00</sys_created_on>
+    <sys_id>ac75cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>execute</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_ws_operation_x_snc_usds_execute</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <web_service_definition display_value="x_snc_usds">bc75cce01b6f4510f4e886c61a4bcb</web_service_definition>
+</sys_ws_operation>
+
+<sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_customized>false</consumes_customized>
+    <description>Query endpoint for review status, conflicts, history, and comments.</description>
+    <enforce_acl>true</enforce_acl>
+    <name>status</name>
+    <operation_uri>/api/x_snc_usds/status</operation_uri>
+    <produces>application/json</produces>
+    <produces_customized>false</produces_customized>
+    <request_method>GET</request_method>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>system</sys_created_by>
+    <sys_created_on>2026-07-09 07:00:00</sys_created_on>
+    <sys_id>bd75cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>status</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_ws_operation_x_snc_usds_status</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <web_service_definition display_value="x_snc_usds">bc75cce01b6f4510f4e886c61a4bcb</web_service_definition>
+</sys_ws_operation>
+
+</unload>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-09 07:00:00">
+  <sys_app action="INSERT_OR_UPDATE">
+    <name>Update Set Diff &amp; Review Studio</name>
+    <scope>x_snc_usds</scope>
+    <version>1.0.0</version>
+    <description>GitHub-style pull request review for ServiceNow update sets — side-by-side visual diffs, cross-stream conflict detection, approval gates, and one-click rollback.</description>
+    <active>true</active>
+    <sys_class_name>sys_app</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</sys_id>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_created_on>2026-07-09 07:00:00</sys_created_on>
+    <sys_created_by>admin</sys_created_by>
+  </sys_app>
+
+  <!-- Roles -->
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_snc_usds.admin</name>
+    <description>USDS Administrator — full CRUD on all tables, all REST endpoints, configure approval gates</description>
+    <active>true</active>
+    <sys_scope>x_snc_usds</sys_scope>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_snc_usds.reviewer</name>
+    <description>USDS Reviewer — read reviews, approve/reject changes, add comments, export reports</description>
+    <active>true</active>
+    <sys_scope>x_snc_usds</sys_scope>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_snc_usds.developer</name>
+    <description>USDS Developer — create reviews (diff + backup), read own reviews, submit for review</description>
+    <active>true</active>
+    <sys_scope>x_snc_usds</sys_scope>
+  </sys_user_role>
+
+  <!-- Cross-Scope Privileges -->
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_usds</source_scope>
+    <status>allowed</status>
+    <target_scope display_value="Global">global</target_scope>
+    <target_table>sys_update_set</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_usds</source_scope>
+    <status>allowed</status>
+    <target_scope display_value="Global">global</target_scope>
+    <target_table>sys_update_xml</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_usds</source_scope>
+    <status>allowed</status>
+    <target_scope display_value="Global">global</target_scope>
+    <target_table>sys_metadata</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_usds</source_scope>
+    <status>allowed</status>
+    <target_scope display_value="Global">global</target_scope>
+    <target_table>sys_user</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_snc_usds</source_scope>
+    <status>allowed</status>
+    <target_scope display_value="Global">global</target_scope>
+    <target_table>sys_approval_approver</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_snc_usds</source_scope>
+    <status>allowed</status>
+    <target_scope display_value="Global">global</target_scope>
+    <target_table>sys_attachment</target_table>
+  </sys_scope_privilege>
+
+  <!-- Script Includes -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <name>UsdsDiffEngine</name>
+    <api_name>x_snc_usds.UsdsDiffEngine</api_name>
+    <client_callable>false</client_callable>
+    <active>true</active>
+    <description>Core diff, conflict detection, backup/restore, and AI risk scoring engine for USDS</description>
+    <sys_scope>x_snc_usds</sys_scope>
+  </sys_script_include>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <name>UsdsReviewManager</name>
+    <api_name>x_snc_usds.UsdsReviewManager</api_name>
+    <client_callable>false</client_callable>
+    <active>true</active>
+    <description>Review workflow, approval lifecycle, comment management, and export for USDS</description>
+    <sys_scope>x_snc_usds</sys_scope>
+  </sys_script_include>
+
+  <!-- REST Endpoints -->
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <name>USDS Execute API</name>
+    <endpoint>/api/x_snc_usds/execute</endpoint>
+    <http_method>POST</http_method>
+    <active>true</active>
+    <sys_scope>x_snc_usds</sys_scope>
+  </sys_ws_definition>
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <name>USDS Status API</name>
+    <endpoint>/api/x_snc_usds/status</endpoint>
+    <http_method>GET</http_method>
+    <active>true</active>
+    <sys_scope>x_snc_usds</sys_scope>
+  </sys_ws_definition>
+</unload>

@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-09 07:00:00">
+
+<!-- Table: x_snc_usds_review -->
+<sys_db_object action="INSERT_OR_UPDATE">
+    <access_controls>true</access_controls>
+    <create_access_controls>true</create_access_controls>
+    <delete_access_controls>true</delete_access_controls>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>USDS Review</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_snc_usds_review</name>
+    <number_ref display_value="USDS REV" name="sys_number">0c55cce01b6f4510f4e886c61a4bcb</number_ref>
+    <read_access_controls>true</read_access_controls>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>system</sys_created_by>
+    <sys_created_on>2026-07-09 07:00:00</sys_created_on>
+    <sys_id>7b44c8e01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <update_access_controls>true</update_access_controls>
+    <user_role display_value="x_snc_usds.admin" name="x_snc_usds.admin">ffa448e01b6f4510f4e886c61a4bcb</user_role>
+</sys_db_object>
+
+<!-- Number field for table -->
+<sys_number action="INSERT_OR_UPDATE">
+    <category>x_snc_usds_review</category>
+    <number>1000</number>
+    <prefix>USDS REV</prefix>
+    <sys_class_name>sys_number</sys_class_name>
+    <sys_created_by>system</sys_created_by>
+    <sys_created_on>2026-07-09 07:00:00</sys_created_on>
+    <sys_id>0c55cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <table>x_snc_usds_review</table>
+</sys_number>
+
+<!-- Columns -->
+<sys_dictionary action="INSERT_OR_UPDATE" element="title">
+    <active>true</active>
+    <array>false</array>
+    <array_denormalized>false</array_denormalized>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Title</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value>USDS Review</default_value>
+    <defaultgen/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>true</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>title</element>
+    <element_reference>false</element_reference>
+    <element_reference_display/>
+    <foreign_database_set/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <knowledge_search>false</knowledge_search>
+    <mandatory>false</mandatory>
+    <max_length>200</max_length>
+    <name>x_snc_usds_review</name>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>system</sys_created_by>
+    <sys_created_on>2026-07-09 07:00:00</sys_created_on>
+    <sys_id>1c65cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Title</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_review_title</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <virtual_type/>
+    <widget/>
+    <write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="update_set_ids">
+    <active>true</active>
+    <array>false</array>
+    <array_denormalized>false</array_denormalized>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Update Set IDs</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value>[]</default_value>
+    <defaultgen/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>update_set_ids</element>
+    <element_reference>false</element_reference>
+    <element_reference_display/>
+    <foreign_database_set/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <knowledge_search>false</knowledge_search>
+    <mandatory>false</mandatory>
+    <max_length>4000</max_length>
+    <name>x_snc_usds_review</name>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>system</sys_created_by>
+    <sys_created_on>2026-07-09 07:00:00</sys_created_on>
+    <sys_id>2c65cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Update Set IDs</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_review_update_set_ids</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <unique>false</unique>
+    <virtual>false</virtual>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="diff_results">
+    <active>true</active>
+    <array>false</array>
+    <column_label>Diff Results</column_label>
+    <default_value>{}</default_value>
+    <display>false</display>
+    <element>diff_results</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_snc_usds_review</name>
+    <read_only>false</read_only>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>3c65cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Diff Results</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_review_diff_results</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <virtual>false</virtual>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="conflict_results">
+    <active>true</active>
+    <array>false</array>
+    <column_label>Conflict Results</column_label>
+    <default_value>[]</default_value>
+    <display>false</display>
+    <element>conflict_results</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_snc_usds_review</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>4c65cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Conflict Results</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_review_conflict_results</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <virtual>false</virtual>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="backup_snapshot">
+    <active>true</active>
+    <array>false</array>
+    <column_label>Backup Snapshot</column_label>
+    <default_value>{}</default_value>
+    <display>false</display>
+    <element>backup_snapshot</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_snc_usds_review</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>5c65cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Backup Snapshot</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_review_backup_snapshot</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <virtual>false</virtual>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="risk_scores">
+    <active>true</active>
+    <array>false</array>
+    <column_label>Risk Scores</column_label>
+    <default_value>[]</default_value>
+    <display>false</display>
+    <element>risk_scores</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_snc_usds_review</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>6c65cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Risk Scores</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_review_risk_scores</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <virtual>false</virtual>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="ai_summary">
+    <active>true</active>
+    <array>false</array>
+    <column_label>AI Summary</column_label>
+    <default_value></default_value>
+    <display>false</display>
+    <element>ai_summary</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_snc_usds_review</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>7c65cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>AI Summary</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_review_ai_summary</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <virtual>false</virtual>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="status">
+    <active>true</active>
+    <array>false</array>
+    <choice>3</choice>
+    <column_label>Status</column_label>
+    <default_value>draft</default_value>
+    <display>false</display>
+    <element>status</element>
+    <internal_type display_value="Choice">choice</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_usds_review</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>8c65cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Status</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_review_status</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <virtual>false</virtual>
+</sys_dictionary>
+
+<sys_choice action="INSERT_OR_UPDATE" field="status" name="x_snc_usds_review" table="x_snc_usds_review">
+    <dependent_value/>
+    <element>status</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Draft</label>
+    <language>en</language>
+    <name>x_snc_usds_review</name>
+    <sequence>10</sequence>
+    <sys_created_by>system</sys_created_by>
+    <sys_created_on>2026-07-09 07:00:00</sys_created_on>
+    <sys_domain>global</sys_domain>
+    <sys_domain_path>/</sys_domain_path>
+    <sys_id>9c65cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <value>draft</value>
+</sys_choice>
+<sys_choice action="INSERT_OR_UPDATE" field="status" name="x_snc_usds_review" table="x_snc_usds_review">
+    <element>status</element>
+    <inactive>false</inactive>
+    <label>In Review</label>
+    <language>en</language>
+    <name>x_snc_usds_review</name>
+    <sequence>20</sequence>
+    <sys_id>ac65cce01b6f4510f4e886c61a4bcba</sys_id>
+    <value>in_review</value>
+</sys_choice>
+<sys_choice action="INSERT_OR_UPDATE" field="status" name="x_snc_usds_review" table="x_snc_usds_review">
+    <element>status</element>
+    <inactive>false</inactive>
+    <label>Approved</label>
+    <language>en</language>
+    <name>x_snc_usds_review</name>
+    <sequence>30</sequence>
+    <sys_id>bc65cce01b6f4510f4e886c61a4bcbb</sys_id>
+    <value>approved</value>
+</sys_choice>
+<sys_choice action="INSERT_OR_UPDATE" field="status" name="x_snc_usds_review" table="x_snc_usds_review">
+    <element>status</element>
+    <inactive>false</inactive>
+    <label>Rejected</label>
+    <language>en</language>
+    <name>x_snc_usds_review</name>
+    <sequence>40</sequence>
+    <sys_id>cc65cce01b6f4510f4e886c61a4bcbc</sys_id>
+    <value>rejected</value>
+</sys_choice>
+<sys_choice action="INSERT_OR_UPDATE" field="status" name="x_snc_usds_review" table="x_snc_usds_review">
+    <element>status</element>
+    <inactive>false</inactive>
+    <label>Committed</label>
+    <language>en</language>
+    <name>x_snc_usds_review</name>
+    <sequence>50</sequence>
+    <sys_id>dc65cce01b6f4510f4e886c61a4bcbd</sys_id>
+    <value>committed</value>
+</sys_choice>
+<sys_choice action="INSERT_OR_UPDATE" field="status" name="x_snc_usds_review" table="x_snc_usds_review">
+    <element>status</element>
+    <inactive>false</inactive>
+    <label>Rolled Back</label>
+    <language>en</language>
+    <name>x_snc_usds_review</name>
+    <sequence>60</sequence>
+    <sys_id>ec65cce01b6f4510f4e886c61a4bcbe</sys_id>
+    <value>rolled_back</value>
+</sys_choice>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="approval_state">
+    <active>true</active>
+    <array>false</array>
+    <choice>3</choice>
+    <column_label>Approval State</column_label>
+    <default_value>not_requested</default_value>
+    <display>false</display>
+    <element>approval_state</element>
+    <internal_type display_value="Choice">choice</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_usds_review</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>fd65cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Approval State</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_review_approval_state</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <virtual>false</virtual>
+</sys_dictionary>
+
+<sys_choice action="INSERT_OR_UPDATE" field="approval_state" name="x_snc_usds_review">
+    <element>approval_state</element>
+    <inactive>false</inactive>
+    <label>Not Requested</label>
+    <language>en</language>
+    <name>x_snc_usds_review</name>
+    <sequence>10</sequence>
+    <sys_id>0d75cce01b6f4510f4e886c61a4bcb</sys_id>
+    <value>not_requested</value>
+</sys_choice>
+<sys_choice action="INSERT_OR_UPDATE" field="approval_state" name="x_snc_usds_review">
+    <element>approval_state</element>
+    <inactive>false</inactive>
+    <label>Requested</label>
+    <language>en</language>
+    <name>x_snc_usds_review</name>
+    <sequence>20</sequence>
+    <sys_id>1d75cce01b6f4510f4e886c61a4bcb</sys_id>
+    <value>requested</value>
+</sys_choice>
+<sys_choice action="INSERT_OR_UPDATE" field="approval_state" name="x_snc_usds_review">
+    <element>approval_state</element>
+    <inactive>false</inactive>
+    <label>Approved</label>
+    <language>en</language>
+    <name>x_snc_usds_review</name>
+    <sequence>30</sequence>
+    <sys_id>2d75cce01b6f4510f4e886c61a4bcb</sys_id>
+    <value>approved</value>
+</sys_choice>
+<sys_choice action="INSERT_OR_UPDATE" field="approval_state" name="x_snc_usds_review">
+    <element>approval_state</element>
+    <inactive>false</inactive>
+    <label>Rejected</label>
+    <language>en</language>
+    <name>x_snc_usds_review</name>
+    <sequence>40</sequence>
+    <sys_id>3d75cce01b6f4510f4e886c61a4bcb</sys_id>
+    <value>rejected</value>
+</sys_choice>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="reviewer">
+    <active>true</active>
+    <array>false</array>
+    <column_label>Reviewer</column_label>
+    <default_value></default_value>
+    <display>false</display>
+    <element>reviewer</element>
+    <internal_type display_value="Reference">reference</internal_type>
+    <max_length>32</max_length>
+    <name>x_snc_usds_review</name>
+    <read_only>false</read_only>
+    <reference display_value="User" name="sys_user">6816f79cc0a8016401c5a33be04be441</reference>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>4d75cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Reviewer</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_reviewer</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <virtual>false</virtual>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="source_instance">
+    <active>true</active>
+    <array>false</array>
+    <column_label>Source Instance</column_label>
+    <default_value></default_value>
+    <display>false</display>
+    <element>source_instance</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>100</max_length>
+    <name>x_snc_usds_review</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>5d75cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Source Instance</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_review_source_instance</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <virtual>false</virtual>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="committed_at">
+    <active>true</active>
+    <array>false</array>
+    <column_label>Committed At</column_label>
+    <default_value></default_value>
+    <display>false</display>
+    <element>committed_at</element>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_usds_review</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>6d75cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Committed At</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_review_committed_at</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <virtual>false</virtual>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE" element="number">
+    <active>true</active>
+    <array>false</array>
+    <column_label>Number</column_label>
+    <default_value></default_value>
+    <display>false</display>
+    <element>number</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_usds_review</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>7d75cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Number</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_usds_review_number</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <virtual>false</virtual>
+</sys_dictionary>
+
+</unload>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-09 07:00:00">
+
+<sys_properties action="INSERT_OR_UPDATE">
+    <choices/>
+    <description>When true, all reviews must be in 'approved' status before they can transition to 'committed'.</description>
+    <ignore_cache>false</ignore_cache>
+    <is_private>false</is_private>
+    <name>x_snc_usds.require_approval_before_commit</name>
+    <read_roles>x_snc_usds.admin</read_roles>
+    <suffix/>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>system</sys_created_by>
+    <sys_created_on>2026-07-09 07:00:00</sys_created_on>
+    <sys_id>7c85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_usds.require_approval_before_commit</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_properties_x_snc_usds_require_approval_before_commit</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <type>boolean</type>
+    <value>true</value>
+    <write_roles>x_snc_usds.admin</write_roles>
+</sys_properties>
+
+<sys_properties action="INSERT_OR_UPDATE">
+    <choices/>
+    <description>Changes with a risk score above this threshold block commit until explicitly approved.</description>
+    <ignore_cache>false</ignore_cache>
+    <is_private>false</is_private>
+    <name>x_snc_usds.max_auto_approve_risk</name>
+    <read_roles>x_snc_usds.admin,x_snc_usds.reviewer</read_roles>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>system</sys_created_by>
+    <sys_created_on>2026-07-09 07:00:00</sys_created_on>
+    <sys_id>8c85cce01b6f4510f4e886c61a4bcb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_usds.max_auto_approve_risk</sys_name>
+    <sys_package display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="Update Set Diff and Review Studio">8b54c8e01b6f4510f4e886c61a4bcb</sys_scope>
+    <sys_update_name>sys_properties_x_snc_usds_max_auto_approve_risk</sys_update_name>
+    <sys_updated_by>system</sys_updated_by>
+    <sys_updated_on>2026-07-09 07:00:00</sys_updated_on>
+    <type>integer</type>
+    <value>70</value>
+    <write_roles>x_snc_usds.admin</write_roles>
+</sys_properties>
+
+</unload>

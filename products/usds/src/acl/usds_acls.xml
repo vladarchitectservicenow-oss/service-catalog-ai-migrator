@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-09 07:00:00">
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_usds_review</name>
+    <operation>read</operation>
+    <type>record</type>
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <requires_roles>x_snc_usds.admin,x_snc_usds.reviewer,x_snc_usds.developer</requires_roles>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+      answer = gs.hasRole('x_snc_usds.admin') || gs.hasRole('x_snc_usds.reviewer') || gs.hasRole('x_snc_usds.developer');
+    ]]></script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_usds_review</name>
+    <operation>write</operation>
+    <type>record</type>
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <requires_roles>x_snc_usds.admin,x_snc_usds.developer</requires_roles>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+      if (gs.hasRole('x_snc_usds.admin')) {
+        answer = true;
+      } else if (gs.hasRole('x_snc_usds.developer')) {
+        answer = (current.sys_created_by == gs.getUserID() || !current.sys_created_by);
+      } else {
+        answer = false;
+      }
+    ]]></script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_usds_review</name>
+    <operation>create</operation>
+    <type>record</type>
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <requires_roles>x_snc_usds.admin,x_snc_usds.developer</requires_roles>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+      answer = gs.hasRole('x_snc_usds.admin') || gs.hasRole('x_snc_usds.developer');
+    ]]></script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_usds_review</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <requires_roles>x_snc_usds.admin</requires_roles>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+      answer = gs.hasRole('x_snc_usds.admin');
+    ]]></script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_usds_comment</name>
+    <operation>read</operation>
+    <type>record</type>
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <requires_roles>x_snc_usds.admin,x_snc_usds.reviewer,x_snc_usds.developer</requires_roles>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+      answer = gs.hasRole('x_snc_usds.admin') || gs.hasRole('x_snc_usds.reviewer') || gs.hasRole('x_snc_usds.developer');
+    ]]></script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_usds_comment</name>
+    <operation>create</operation>
+    <type>record</type>
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <requires_roles>x_snc_usds.admin,x_snc_usds.reviewer,x_snc_usds.developer</requires_roles>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+      answer = gs.hasRole('x_snc_usds.admin') || gs.hasRole('x_snc_usds.reviewer') || gs.hasRole('x_snc_usds.developer');
+    ]]></script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_usds_comment</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <requires_roles>x_snc_usds.admin</requires_roles>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+      answer = gs.hasRole('x_snc_usds.admin');
+    ]]></script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_usds_comment</name>
+    <operation>write</operation>
+    <type>record</type>
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <requires_roles>x_snc_usds.admin,x_snc_usds.reviewer,x_snc_usds.developer</requires_roles>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+      answer = gs.hasRole('x_snc_usds.admin') || gs.hasRole('x_snc_usds.reviewer') || gs.hasRole('x_snc_usds.developer');
+    ]]></script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_usds_execute_api</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <requires_roles>x_snc_usds.admin,x_snc_usds.reviewer,x_snc_usds.developer</requires_roles>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+      answer = gs.hasRole('x_snc_usds.admin') || gs.hasRole('x_snc_usds.reviewer') || gs.hasRole('x_snc_usds.developer');
+    ]]></script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_usds_status_api</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <requires_roles>x_snc_usds.admin,x_snc_usds.reviewer,x_snc_usds.developer</requires_roles>
+    <sys_scope>x_snc_usds</sys_scope>
+    <script><![CDATA[
+      answer = gs.hasRole('x_snc_usds.admin') || gs.hasRole('x_snc_usds.reviewer') || gs.hasRole('x_snc_usds.developer');
+    ]]></script>
+  </sys_security_acl>
+</unload>
