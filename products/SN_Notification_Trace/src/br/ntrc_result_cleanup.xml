@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_trigger>
+  <name>NTRC Result Cleanup</name>
+  <description>Daily cleanup of old trace results. Deletes x_ntrc_trace_result records older than retention_days (default 90). Runs daily 02:00.</description>
+  <active>true</active>
+  <trigger_type>daily</trigger_type>
+  <time>02:00:00</time>
+  <script><![CDATA[
+// NTRC Result Cleanup — Daily purge of old trace results
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function() {
+    try {
+        var analyzer = new TraceAnalyzer();
+
+        // Read retention days from config
+        var retentionDays = 90;
+        var grConfig = new GlideRecord('x_ntrc_trace_config');
+        grConfig.setLimit(1);
+        grConfig.query();
+
+        if (grConfig.next()) {
+            retentionDays = parseInt(grConfig.getValue('retention_days'), 10) || 90;
+        }
+
+        // Run cleanup
+        var deleted = analyzer.cleanupOldResults(retentionDays);
+
+        gs.info('NTRC Result Cleanup: Deleted ' + deleted + ' trace results older than ' + retentionDays + ' days');
+    } catch (e) {
+        gs.error('NTRC Result Cleanup: Execution failed: ' + e.toString());
+    }
+})();
+]]></script>
+</sys_trigger>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_trigger>
+  <name>NTRC Overlap Scanner</name>
+  <description>Weekly overlap scanner: runs detectOverlaps(), stores results, sends summary to configured recipients. Runs Sunday 03:00.</description>
+  <active>true</active>
+  <trigger_type>weekly</trigger_type>
+  <day_of_week>1</day_of_week>
+  <time>03:00:00</time>
+  <script><![CDATA[
+// NTRC Overlap Scanner — Weekly rule overlap detection
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function() {
+    try {
+        var analyzer = new TraceAnalyzer();
+
+        // Detect overlaps
+        var overlaps = analyzer.detectOverlaps();
+
+        // Store results
+        var storedSysId = analyzer.storeOverlapResults(overlaps);
+
+        // Build summary
+        var summary = 'NTRC Weekly Overlap Scan Results:\n';
+        summary += 'Total overlapping rule pairs: ' + overlaps.length + '\n';
+
+        if (overlaps.length > 0) {
+            summary += '\nTop overlaps by risk score:\n';
+            var limit = Math.min(5, overlaps.length);
+            for (var i = 0; i < limit; i++) {
+                var o = overlaps[i];
+                summary += (i + 1) + '. ' + o.rule_a.name + ' ↔ ' + o.rule_b.name;
+                summary += ' [' + o.overlap_type + ', risk: ' + o.risk_score + ']\n';
+                summary += '   Table: ' + o.table + ', Event: ' + o.event_name + '\n';
+            }
+        } else {
+            summary += 'No overlapping rules detected.';
+        }
+
+        gs.info('NTRC Overlap Scanner: ' + overlaps.length + ' overlaps found. Stored: ' + storedSysId);
+
+        // Send summary to configured recipients
+        var grConfig = new GlideRecord('x_ntrc_trace_config');
+        grConfig.setLimit(1);
+        grConfig.query();
+
+        if (grConfig.next()) {
+            var recipients = grConfig.getValue('alert_recipients') || '';
+            if (recipients) {
+                var recipientList = recipients.split(',');
+                for (var r = 0; r < recipientList.length; r++) {
+                    var userId = recipientList[r].trim();
+                    if (userId) {
+                        var grUser = new GlideRecord('sys_user');
+                        if (grUser.get(userId)) {
+                            var email = grUser.getValue('email') || '';
+                            if (email) {
+                                var mail = new GlideEmailOutbound();
+                                mail.setTo(email);
+                                mail.setSubject('NTRC Weekly Overlap Scan — ' + overlaps.length + ' overlaps found');
+                                mail.setBody(summary);
+                                mail.send();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        gs.error('NTRC Overlap Scanner: Execution failed: ' + e.toString());
+    }
+})();
+]]></script>
+</sys_trigger>

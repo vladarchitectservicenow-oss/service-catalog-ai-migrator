@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_ntrc_trace_config</name>
+  <label>Trace Configuration</label>
+  <super_class/>
+  <scope>x_ntrc</scope>
+  <access>public</access>
+  <create_access>true</create_access>
+  <read_access>true</read_access>
+  <update_access>true</update_access>
+  <delete_access>true</delete_access>
+  <is_extendable>false</is_extendable>
+  <fields>
+    <field>
+      <name>config_name</name>
+      <label>Configuration Name</label>
+      <type>string</type>
+      <max_length>100</max_length>
+      <mandatory>true</mandatory>
+      <unique>true</unique>
+    </field>
+    <field>
+      <name>table_scope</name>
+      <label>Table Scope</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <mandatory>false</mandatory>
+      <description>Comma-separated table names to include in trace scope</description>
+    </field>
+    <field>
+      <name>event_filters</name>
+      <label>Event Filters</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <mandatory>false</mandatory>
+      <description>JSON: event name whitelist/blacklist configuration</description>
+    </field>
+    <field>
+      <name>ai_enabled</name>
+      <label>AI Enabled</label>
+      <type>boolean</type>
+      <default_value>false</default_value>
+    </field>
+    <field>
+      <name>schedule</name>
+      <label>Health Monitor Schedule</label>
+      <type>string</type>
+      <max_length>100</max_length>
+      <mandatory>false</mandatory>
+      <description>Cron expression for scheduled health monitor</description>
+    </field>
+    <field>
+      <name>retention_days</name>
+      <label>Retention Days</label>
+      <type>integer</type>
+      <default_value>90</default_value>
+      <description>Auto-cleanup trace results older than this many days</description>
+    </field>
+    <field>
+      <name>alert_threshold_failure_pct</name>
+      <label>Alert Threshold — Failure %</label>
+      <type>integer</type>
+      <default_value>5</default_value>
+    </field>
+    <field>
+      <name>alert_threshold_stuck_count</name>
+      <label>Alert Threshold — Stuck Count</label>
+      <type>integer</type>
+      <default_value>10</default_value>
+    </field>
+    <field>
+      <name>alert_recipients</name>
+      <label>Alert Recipients</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <mandatory>false</mandatory>
+      <description>Comma-separated user sys_ids for alert delivery</description>
+    </field>
+  </fields>
+</sys_db_object>

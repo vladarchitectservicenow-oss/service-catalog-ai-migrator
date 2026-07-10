@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_ntrc_trace_config</name>
+  <type>record</type>
+  <operation>read</operation>
+  <description>Read access to Trace Configuration — x_ntrc.admin and x_ntrc.viewer</description>
+  <active>true</active>
+  <requires_role>true</requires_role>
+  <roles>
+    <role>x_ntrc.admin</role>
+    <role>x_ntrc.viewer</role>
+  </roles>
+  <condition/>
+  <script/>
+</sys_security_acl>

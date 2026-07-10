@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_scope_privilege>
+  <source_scope>x_ntrc</source_scope>
+  <target_scope>global</target_scope>
+  <target_table>sysevent_rule</target_table>
+  <operation>write</operation>
+  <description>Required for _deactivateRule and _cloneAndFix — modifies event rules</description>
+  <status>requested</status>
+</sys_scope_privilege>

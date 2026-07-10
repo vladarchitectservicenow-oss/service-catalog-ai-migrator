@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_ntrc_trace_result_read</name>
+  <type>record</type>
+  <operation>read</operation>
+  <description>Read access to Trace Results — x_ntrc.admin, x_ntrc.viewer, x_ntrc.remediator</description>
+  <active>true</active>
+  <requires_role>true</requires_role>
+  <roles>
+    <role>x_ntrc.admin</role>
+    <role>x_ntrc.viewer</role>
+    <role>x_ntrc.remediator</role>
+  </roles>
+  <condition/>
+  <script/>
+</sys_security_acl>

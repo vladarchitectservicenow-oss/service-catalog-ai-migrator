@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_ntrc_trace_result_create</name>
+  <type>record</type>
+  <operation>create</operation>
+  <description>Create access to Trace Results — system only (Script Includes)</description>
+  <active>true</active>
+  <requires_role>false</requires_role>
+  <condition>false</condition>
+  <script/>
+</sys_security_acl>

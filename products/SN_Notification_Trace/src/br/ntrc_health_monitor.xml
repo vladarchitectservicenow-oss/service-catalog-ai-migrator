@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_trigger>
+  <name>NTRC Health Monitor</name>
+  <description>Daily notification health monitor: runs detectSilentFailures() and computeHealth(), compares against alert thresholds, creates incident if thresholds breached.</description>
+  <active>true</active>
+  <trigger_type>daily</trigger_type>
+  <time>06:00:00</time>
+  <script><![CDATA[
+// NTRC Health Monitor — Daily notification health check
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function() {
+    try {
+        var tracer = new NotificationTracer();
+        var analyzer = new TraceAnalyzer();
+
+        // Run silent failure detection
+        var failures = tracer.detectSilentFailures(1);
+
+        // Run health computation
+        var health = analyzer.computeHealth();
+
+        // Store health snapshot
+        analyzer.storeHealthSnapshot(health);
+
+        // Check alert thresholds from config
+        var grConfig = new GlideRecord('x_ntrc_trace_config');
+        grConfig.setLimit(1);
+        grConfig.query();
+
+        var failureThreshold = 5;
+        var stuckThreshold = 10;
+        var recipients = '';
+
+        if (grConfig.next()) {
+            failureThreshold = parseInt(grConfig.getValue('alert_threshold_failure_pct'), 10) || 5;
+            stuckThreshold = parseInt(grConfig.getValue('alert_threshold_stuck_count'), 10) || 10;
+            recipients = grConfig.getValue('alert_recipients') || '';
+        }
+
+        var shouldAlert = false;
+        var alertMessage = 'NTRC Health Monitor Alert:\n';
+
+        // Check failure rate
+        if (health.delivery_stats && health.delivery_stats.sent > 0) {
+            var failureRate = (health.delivery_stats.failed / health.delivery_stats.sent) * 100;
+            if (failureRate > failureThreshold) {
+                shouldAlert = true;
+                alertMessage += '- Failure rate: ' + failureRate.toFixed(1) + '% (threshold: ' + failureThreshold + '%)\n';
+            }
+        }
+
+        // Check stuck emails
+        if (failures.stuck_emails && failures.stuck_emails.length > stuckThreshold) {
+            shouldAlert = true;
+            alertMessage += '- Stuck emails: ' + failures.stuck_emails.length + ' (threshold: ' + stuckThreshold + ')\n';
+        }
+
+        // Check dead rules
+        if (failures.dead_rules && failures.dead_rules.length > 20) {
+            shouldAlert = true;
+            alertMessage += '- Dead rules: ' + failures.dead_rules.length + ' (no executions in 30+ days)\n';
+        }
+
+        // Check overlapping rules
+        if (health.rule_stats && health.rule_stats.overlapping > 5) {
+            shouldAlert = true;
+            alertMessage += '- Overlapping rules: ' + health.rule_stats.overlapping + '\n';
+        }
+
+        if (shouldAlert) {
+            // Create incident
+            var grIncident = new GlideRecord('incident');
+            grIncident.initialize();
+            grIncident.setValue('short_description', 'NTRC: Notification Health Alert');
+            grIncident.setValue('description', alertMessage);
+            grIncident.setValue('category', 'Notification Health');
+            grIncident.setValue('impact', 3);
+            grIncident.setValue('urgency', 3);
+            grIncident.insert();
+
+            gs.info('NTRC Health Monitor: Alert incident created. ' + alertMessage.replace(/\n/g, ' | '));
+        } else {
+            gs.info('NTRC Health Monitor: All metrics within thresholds. Health score: ' + health.health_score);
+        }
+    } catch (e) {
+        gs.error('NTRC Health Monitor: Execution failed: ' + e.toString());
+    }
+})();
+]]></script>
+</sys_trigger>

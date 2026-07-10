@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_ntrc_health_endpoint_execute</name>
+  <type>rest_endpoint</type>
+  <operation>execute</operation>
+  <description>Execute access to GET /api/x_ntrc/health — all authenticated users</description>
+  <active>true</active>
+  <requires_role>false</requires_role>
+  <condition>gs.isLoggedIn()</condition>
+  <script/>
+  <path>/api/x_ntrc/health</path>
+</sys_security_acl>

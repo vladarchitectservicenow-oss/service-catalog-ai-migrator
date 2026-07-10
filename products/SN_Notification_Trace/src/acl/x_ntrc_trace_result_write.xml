@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_ntrc_trace_result_write</name>
+  <type>record</type>
+  <operation>write</operation>
+  <description>Write access to Trace Results — x_ntrc.admin only</description>
+  <active>true</active>
+  <requires_role>true</requires_role>
+  <roles>
+    <role>x_ntrc.admin</role>
+  </roles>
+  <condition/>
+  <script/>
+</sys_security_acl>

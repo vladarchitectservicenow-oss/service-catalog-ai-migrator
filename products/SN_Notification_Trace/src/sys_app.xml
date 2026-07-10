@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_app>
+  <name>Notification Trace</name>
+  <scope>x_ntrc</scope>
+  <version>1.0.0</version>
+  <description>Event &amp; Notification Diagnostic Workbench — reconstruct the full lifecycle of every notification: which events fired, which rules matched, which emails were sent, and which silently failed.</description>
+  <vendor>Vladimir Kapustin</vendor>
+  <vendor_prefix>x_ntrc</vendor_prefix>
+  <release_notes>Initial release: Record Trace, Overlap Detector, Silent Failure Monitor, Rule Health Dashboard, Remediation Workbench, AI-Powered Root Cause, Delivery Timeline.</release_notes>
+  <roles>
+    <role>
+      <name>x_ntrc.admin</name>
+      <description>Full access: trace, dashboard, remediation, config</description>
+    </role>
+    <role>
+      <name>x_ntrc.viewer</name>
+      <description>Read-only: trace, dashboard (no remediation)</description>
+    </role>
+    <role>
+      <name>x_ntrc.remediator</name>
+      <description>Trace + remediation (no config changes)</description>
+    </role>
+  </roles>
+  <dependencies>
+    <dependency>
+      <name>Now Assist</name>
+      <plugin_id>com.snc.now_assist</plugin_id>
+      <required>false</required>
+    </dependency>
+    <dependency>
+      <name>AI Agent Studio</name>
+      <plugin_id>com.snc.ai_agent_studio</plugin_id>
+      <required>false</required>
+    </dependency>
+  </dependencies>
+  <minimum_release>Utah</minimum_release>
+  <target_release>Australia</target_release>
+</sys_app>

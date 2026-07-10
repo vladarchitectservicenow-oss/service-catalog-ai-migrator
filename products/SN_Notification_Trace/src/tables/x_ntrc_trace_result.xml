@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_ntrc_trace_result</name>
+  <label>Trace Result</label>
+  <super_class/>
+  <scope>x_ntrc</scope>
+  <access>public</access>
+  <create_access>true</create_access>
+  <read_access>true</read_access>
+  <update_access>true</update_access>
+  <delete_access>true</delete_access>
+  <is_extendable>false</is_extendable>
+  <fields>
+    <field>
+      <name>source_table</name>
+      <label>Source Table</label>
+      <type>string</type>
+      <max_length>80</max_length>
+      <mandatory>true</mandatory>
+    </field>
+    <field>
+      <name>source_sys_id</name>
+      <label>Source Record Sys ID</label>
+      <type>string</type>
+      <max_length>32</max_length>
+      <mandatory>true</mandatory>
+    </field>
+    <field>
+      <name>trace_type</name>
+      <label>Trace Type</label>
+      <type>choice</type>
+      <max_length>40</max_length>
+      <mandatory>true</mandatory>
+      <choices>
+        <choice>
+          <label>Record Trace</label>
+          <value>record</value>
+        </choice>
+        <choice>
+          <label>Health Snapshot</label>
+          <value>health</value>
+        </choice>
+        <choice>
+          <label>Overlap Scan</label>
+          <value>overlap</value>
+        </choice>
+      </choices>
+    </field>
+    <field>
+      <name>trace_json</name>
+      <label>Trace Data</label>
+      <type>string</type>
+      <max_length>8000</max_length>
+      <mandatory>false</mandatory>
+      <description>Full trace data as JSON</description>
+    </field>
+    <field>
+      <name>timeline_json</name>
+      <label>Timeline Data</label>
+      <type>string</type>
+      <max_length>8000</max_length>
+      <mandatory>false</mandatory>
+      <description>Swimlane timeline as JSON</description>
+    </field>
+    <field>
+      <name>health_score</name>
+      <label>Health Score</label>
+      <type>integer</type>
+      <mandatory>false</mandatory>
+      <description>0-100 overall notification health score</description>
+    </field>
+    <field>
+      <name>overlap_count</name>
+      <label>Overlap Count</label>
+      <type>integer</type>
+      <mandatory>false</mandatory>
+    </field>
+    <field>
+      <name>failure_count</name>
+      <label>Failure Count</label>
+      <type>integer</type>
+      <mandatory>false</mandatory>
+    </field>
+    <field>
+      <name>ai_explanation</name>
+      <label>AI Explanation</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <mandatory>false</mandatory>
+      <description>Natural-language root cause explanation from Now Assist</description>
+    </field>
+    <field>
+      <name>remediation_json</name>
+      <label>Remediation Suggestions</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <mandatory>false</mandatory>
+      <description>Suggested remediation actions as JSON</description>
+    </field>
+    <field>
+      <name>executed_at</name>
+      <label>Executed At</label>
+      <type>glide_date_time</type>
+      <mandatory>true</mandatory>
+    </field>
+  </fields>
+</sys_db_object>
