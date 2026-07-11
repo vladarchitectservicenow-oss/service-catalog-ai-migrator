@@ -213,41 +213,57 @@ TestReachCoverageEngine.prototype = {
             }
         }
 
+        // Write aggregated trend snapshot
+        var trendGr = new GlideRecord('x_snc_testreach_coverage_snapshot');
+        trendGr.initialize();
+        trendGr.setValue('app_scope', appScope);
+        trendGr.setValue('snapshot_type', 'trend');
+        trendGr.setValue('snapshot_ts', snapshotTs);
+        trendGr.setValue('coverage_pct', result.stats.coverage_pct);
+        trendGr.setValue('tested_by_count', result.stats.tested);
+        trendGr.setValue('artifact_type', 'trend');
+        trendGr.setValue('artifact_name', 'Weekly Trend — ' + appScope);
+        trendGr.setValue('artifact_table', '');
+        trendGr.setValue('artifact_sys_id', 'trend_' + appScope);
+        trendGr.setValue('criticality', 1);
+        trendGr.setValue('findings_json', JSON.stringify({test_ids: [], test_names: [], last_modified: snapshotTs}));
+        trendGr.setValue('skeleton_json', JSON.stringify({generated: false, test_sys_id: null, steps: [], ai_generated: false}));
+        trendGr.setValue('trend_json', JSON.stringify({
+            weekly_snapshots: [{
+                week: this._getWeekLabel(snapshotTs),
+                pct: result.stats.coverage_pct,
+                total: result.stats.total,
+                tested: result.stats.tested,
+                untested: result.stats.untested
+            }]
+        }));
+        try {
+            trendGr.insert();
+        } catch (e) {
+            gs.error('TestReachCoverageEngine.snapshotCoverage: trend insert failed: ' + e.message);
+        }
+
         return snapshotSysId;
     },
 
     /**
-     * Reads trend snapshots and returns time-series data.
-     *
-     * @param {string} appScope - Scope prefix
-     * @param {number} weeks - Number of weeks to return (default 12)
-     * @returns {array} [{week: "2026-W27", pct: 63.5}, ...]
+     * Converts a GlideDateTime value to ISO week label (e.g., "2026-W28").
+     * @param {string} dateTimeStr - GlideDateTime value
+     * @returns {string} Week label
+     * @private
      */
-    getCoverageTrend: function(appScope, weeks) {
-        weeks = weeks || 12;
-        var trend = [];
-        var trendGr = new GlideRecord('x_snc_testreach_coverage_snapshot');
-        trendGr.addQuery('app_scope', appScope);
-        trendGr.addQuery('snapshot_type', 'trend');
-        trendGr.orderByDesc('snapshot_ts');
-        trendGr.setLimit(weeks);
-        trendGr.query();
-
-        while (trendGr.next()) {
-            var trendJson = trendGr.getValue('trend_json') || '{}';
-            try {
-                var parsed = JSON.parse(trendJson);
-                if (parsed.weekly_snapshots) {
-                    for (var i = 0; i < parsed.weekly_snapshots.length; i++) {
-                        trend.push(parsed.weekly_snapshots[i]);
-                    }
-                }
-            } catch (e) {
-                gs.warn('TestReachCoverageEngine.getCoverageTrend: JSON parse failed for ' + trendGr.getUniqueValue());
-            }
-        }
-
-        return trend;
+    _getWeekLabel: function(dateTimeStr) {
+        var dt = new GlideDateTime(dateTimeStr);
+        var gd = dt.getDate();
+        var year = gd.getByFormat('yyyy');
+        // Compute ISO week number: week 1 is the week containing Jan 4
+        var jan4 = new GlideDateTime(year + '-01-04T00:00:00');
+        var jan4Day = parseInt(jan4.getDate().getByFormat('u'), 10) || 1; // 1=Mon, 7=Sun
+        var daysSinceJan4 = GlideDateTime.subtract(dt, jan4).getDayPart();
+        var weekNum = Math.floor((daysSinceJan4 + jan4Day - 1) / 7) + 1;
+        if (weekNum < 1) weekNum = 1;
+        if (weekNum > 53) weekNum = 53;
+        return year + '-W' + (weekNum < 10 ? '0' + weekNum : weekNum);
     },
 
     /**

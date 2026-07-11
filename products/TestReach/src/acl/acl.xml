@@ -112,6 +112,34 @@
     <sys_scope>x_snc_testreach</sys_scope>
   </sys_security_acl>
 
+  <!-- ACL: REST Endpoint — POST /execute -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>/api/x_snc_testreach/execute</name>
+    <type>rest_endpoint</type>
+    <operation>execute</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.user</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.user to execute the TestReach POST /execute REST endpoint.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
+  <!-- ACL: REST Endpoint — GET /status -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>/api/x_snc_testreach/status</name>
+    <type>rest_endpoint</type>
+    <operation>execute</operation>
+    <active>true</active>
+    <requires_role>true</requires_role>
+    <role>x_snc_testreach.user</role>
+    <condition/>
+    <script/>
+    <description>Allow x_snc_testreach.user to execute the TestReach GET /status REST endpoint.</description>
+    <sys_scope>x_snc_testreach</sys_scope>
+  </sys_security_acl>
+
   <!-- ACL: x_snc_testreach_test_skeleton — Read -->
   <sys_security_acl action="INSERT_OR_UPDATE">
     <name>x_snc_testreach_test_skeleton</name>
@@ -165,34 +193,6 @@
     <condition/>
     <script/>
     <description>Allow x_snc_testreach.admin to delete test skeleton records.</description>
-    <sys_scope>x_snc_testreach</sys_scope>
-  </sys_security_acl>
-
-  <!-- ACL: REST Endpoint — POST /execute -->
-  <sys_security_acl action="INSERT_OR_UPDATE">
-    <name>TestReach Execute</name>
-    <type>rest_endpoint</type>
-    <operation>execute</operation>
-    <active>true</active>
-    <requires_role>true</requires_role>
-    <role>x_snc_testreach.user</role>
-    <condition/>
-    <script/>
-    <description>Allow x_snc_testreach.user to execute the TestReach Execute REST endpoint.</description>
-    <sys_scope>x_snc_testreach</sys_scope>
-  </sys_security_acl>
-
-  <!-- ACL: REST Endpoint — GET /status -->
-  <sys_security_acl action="INSERT_OR_UPDATE">
-    <name>TestReach Status</name>
-    <type>rest_endpoint</type>
-    <operation>execute</operation>
-    <active>true</active>
-    <requires_role>true</requires_role>
-    <role>x_snc_testreach.user</role>
-    <condition/>
-    <script/>
-    <description>Allow x_snc_testreach.user to execute the TestReach Status REST endpoint.</description>
     <sys_scope>x_snc_testreach</sys_scope>
   </sys_security_acl>
 </unload>
