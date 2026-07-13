@@ -53,6 +53,15 @@
         gs.addErrorMessage('Invalid status transition: ' + from + ' to ' + to +
                           '. Allowed: ' + allowed.join(', '));
         current.setAbortAction(true);
+        return;
+    }
+
+    if (to === 'committed' && current.approval_state !== 'approved') {
+        var requireApproval = gs.getProperty('x_snc_usds.require_approval_before_commit', 'true');
+        if (requireApproval === true || requireApproval === 'true' || requireApproval === '1') {
+            gs.addErrorMessage('Commit blocked: approval is required before commit. Set x_snc_usds.require_approval_before_commit=false to bypass.');
+            current.setAbortAction(true);
+        }
     }
 })(current, previous);
     ]]></script>

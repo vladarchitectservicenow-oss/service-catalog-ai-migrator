@@ -77,7 +77,8 @@
         gr.query();
         var history = [];
         while (gr.next()) {
-            var diff = JSON.parse(gr.getValue('diff_results') || '{}');
+            var diff;
+            try { diff = JSON.parse(gr.getValue('diff_results') || '{}'); } catch (e) { diff = {}; }
             var tableRecords = [];
             var lists = ['additions', 'modifications', 'deletions', 'unchanged'];
             for (var i = 0; i < lists.length; i++) {

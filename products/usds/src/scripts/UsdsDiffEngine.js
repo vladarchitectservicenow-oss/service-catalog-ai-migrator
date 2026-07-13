@@ -225,8 +225,8 @@ UsdsDiffEngine.prototype = {
     },
 
     scoreAllChanges: function(diffResult) {
-        var scores = [];
         var changes = [];
+        var scores = [];
         for (var i = 0; i < (diffResult && diffResult.additions ? diffResult.additions.length : 0); i++) {
             var add = diffResult.additions[i];
             if (!add.fields) continue;
@@ -248,9 +248,17 @@ UsdsDiffEngine.prototype = {
                 changes.push({ table: del.table, sys_id: del.sys_id, field: f, old_value: del.fields[f], new_value: '' });
             }
         }
+        var maxAutoRisk = parseInt(gs.getProperty('x_snc_usds.max_auto_approve_risk', '70'), 10);
+        if (isNaN(maxAutoRisk) || maxAutoRisk < 0 || maxAutoRisk > 100) maxAutoRisk = 70;
         for (var i = 0; i < changes.length; i++) {
             var risk = this.scoreRisk(changes[i]);
-            scores.push({ table: changes[i].table, sys_id: changes[i].sys_id, field: changes[i].field, score: risk.score, explanation: risk.explanation });
+            if (risk.score > maxAutoRisk) {
+                risk.explanation = 'Risk ' + risk.score + ' exceeds auto-approve threshold (' + maxAutoRisk + '); ' + risk.explanation;
+                risk.blocked = true;
+            } else {
+                risk.blocked = false;
+            }
+            scores.push({ table: changes[i].table, sys_id: changes[i].sys_id, field: changes[i].field, score: risk.score, explanation: risk.explanation, blocked: risk.blocked });
         }
         return scores;
     },

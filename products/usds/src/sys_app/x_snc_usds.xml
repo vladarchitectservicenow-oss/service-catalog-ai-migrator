@@ -57,21 +57,7 @@
     <target_table>sys_metadata</target_table>
   </sys_scope_privilege>
   <sys_scope_privilege action="INSERT_OR_UPDATE">
-    <operation>read</operation>
-    <source_scope>x_snc_usds</source_scope>
-    <status>allowed</status>
-    <target_scope display_value="Global">global</target_scope>
-    <target_table>sys_user</target_table>
-  </sys_scope_privilege>
-  <sys_scope_privilege action="INSERT_OR_UPDATE">
-    <operation>execute</operation>
-    <source_scope>x_snc_usds</source_scope>
-    <status>allowed</status>
-    <target_scope display_value="Global">global</target_scope>
-    <target_table>sys_approval_approver</target_table>
-  </sys_scope_privilege>
-  <sys_scope_privilege action="INSERT_OR_UPDATE">
-    <operation>execute</operation>
+    <operation>create</operation>
     <source_scope>x_snc_usds</source_scope>
     <status>allowed</status>
     <target_scope display_value="Global">global</target_scope>

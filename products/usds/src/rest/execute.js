@@ -116,9 +116,9 @@
             response.setBody(JSON.stringify({ error: 'review_id is required' }));
             return;
         }
-        if (format !== 'pdf' && format !== 'md') {
+        if (format !== 'md') {
             response.setStatus(400);
-            response.setBody(JSON.stringify({ error: 'format must be "pdf" or "md"' }));
+            response.setBody(JSON.stringify({ error: 'format must be "md". PDF export is not yet implemented.' }));
             return;
         }
         var result = manager.exportReport(reviewId, format);
@@ -148,7 +148,7 @@
         var reviewId = manager.submitForReview(diff, reviewerId, title, updateSetIds, conflicts, backupSnapshot);
         var status = manager.getReviewStatus(reviewId);
         response.setStatus(200);
-        response.setBody(JSON.stringify({ ok: true, review_id: reviewId, status: 'in_review', conflict_count: status.unresolved_conflicts, max_risk_score: status.max_risk_score }));
+        response.setBody(JSON.stringify({ ok: true, review_id: reviewId, status: 'in_review', conflict_count: status.unresolved_conflicts, max_risk_score: status.max_risk_score, blocked_by_risk: _checkBlockedByRisk(status.max_risk_score) }));
     }
 
     function _handleApproveChange(body, manager, response) {
@@ -158,6 +158,12 @@
             return;
         }
         manager.approveChange(body.review_id, body.field_path);
+        var status = manager.getReviewStatus(body.review_id);
+        if (status.max_risk_score > parseInt(gs.getProperty('x_snc_usds.max_auto_approve_risk', '70'), 10)) {
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ ok: true, approved: body.field_path, warning: 'High-risk review (' + status.max_risk_score + ') still requires explicit approval before commit' }));
+            return;
+        }
         response.setStatus(200);
         response.setBody(JSON.stringify({ ok: true, approved: body.field_path }));
     }
@@ -171,6 +177,12 @@
         manager.rejectChange(body.review_id, body.field_path, body.reason || '');
         response.setStatus(200);
         response.setBody(JSON.stringify({ ok: true, rejected: body.field_path }));
+    }
+
+    function _checkBlockedByRisk(maxRiskScore) {
+        var threshold = parseInt(gs.getProperty('x_snc_usds.max_auto_approve_risk', '70'), 10);
+        if (isNaN(threshold)) threshold = 70;
+        return maxRiskScore > threshold;
     }
 
 })(request, response);

@@ -111,7 +111,7 @@
   </sys_security_acl>
 
   <sys_security_acl action="INSERT_OR_UPDATE">
-    <name>x_snc_usds_execute_api</name>
+    <name>/api/x_snc_usds/execute</name>
     <operation>execute</operation>
     <type>rest_endpoint</type>
     <active>true</active>
@@ -124,7 +124,7 @@
   </sys_security_acl>
 
   <sys_security_acl action="INSERT_OR_UPDATE">
-    <name>x_snc_usds_status_api</name>
+    <name>/api/x_snc_usds/status</name>
     <operation>execute</operation>
     <type>rest_endpoint</type>
     <active>true</active>

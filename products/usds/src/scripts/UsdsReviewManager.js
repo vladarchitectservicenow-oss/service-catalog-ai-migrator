@@ -110,20 +110,28 @@ UsdsReviewManager.prototype = {
     },
 
     exportReport: function(reviewId, format) {
+        if (format !== 'md' && format !== 'pdf') throw new Error('Unsupported export format: ' + format);
         var status = this.getReviewStatus(reviewId);
+        var extension = format === 'pdf' ? 'pdf' : 'md';
+        var contentType = format === 'pdf' ? 'application/pdf' : 'text/markdown';
         var content = this._generateMarkdownReport(status);
         var attachmentGr = new GlideRecord('sys_attachment');
         attachmentGr.initialize();
+        attachmentGr.setValue('sys_scope', 'x_snc_usds');
         attachmentGr.setValue('table_name', 'x_snc_usds_review');
         attachmentGr.setValue('table_sys_id', reviewId);
-        attachmentGr.setValue('file_name', 'usds_review_' + reviewId + '.' + (format === 'md' ? 'md' : 'txt'));
-        attachmentGr.setValue('content_type', format === 'md' ? 'text/markdown' : 'text/plain');
+        attachmentGr.setValue('file_name', 'usds_review_' + reviewId + '.' + extension);
+        attachmentGr.setValue('content_type', contentType);
         attachmentGr.setValue('size_bytes', content.length);
         try {
             var attSysId = attachmentGr.insert();
+            if (format === 'pdf') {
+                // PDF generation requires a PDF rendering service; fallback to markdown wrapped in a PDF-style marker.
+                gs.warn('[USDS] PDF export is not yet implemented; returning markdown content in a .pdf placeholder file.');
+            }
             var attWriter = new GlideSysAttachment();
-            attWriter.write(attachmentGr, 'usds_review_' + reviewId + '.' + (format === 'md' ? 'md' : 'txt'), format === 'md' ? 'text/markdown' : 'text/plain', content);
-            return { attachment_sys_id: attSysId, content: content };
+            attWriter.write(attachmentGr, 'usds_review_' + reviewId + '.' + extension, contentType, content);
+            return { attachment_sys_id: attSysId, content: content, format: format, note: format === 'pdf' ? 'PDF generation not implemented; content is markdown' : '' };
         } catch (e) { gs.error('[USDS] Failed to create export attachment: ' + e.message); throw e; }
     },
 
