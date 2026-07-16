@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-16 07:00:00">
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Field Validity</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>100</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_field_validity</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>field_validity</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Coalesce Collision</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>200</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_coalesce_collision</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>coalesce_collision</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Source Drift</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>300</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_source_drift</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>source_drift</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Error Rate</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>400</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_error_rate</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>error_rate</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Stale Map</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>500</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_stale_map</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>stale_map</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Redundancy</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>600</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_redundancy</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>redundancy</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Runaway Job</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>700</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_runaway_job</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>runaway_job</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>severity</element>
+<hint/>
+<inactive>false</inactive>
+<label>Info</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>100</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_severity_info</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>info</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>severity</element>
+<hint/>
+<inactive>false</inactive>
+<label>Warning</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>200</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_severity_warning</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>warning</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>severity</element>
+<hint/>
+<inactive>false</inactive>
+<label>Critical</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>300</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_severity_critical</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>critical</value>
+</sys_choice>
+</unload>

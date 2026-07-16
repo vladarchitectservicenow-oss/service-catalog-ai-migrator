@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-16 07:00:00">
+<sys_db_object action="INSERT_OR_UPDATE">
+<access>public</access>
+<actions_access>true</actions_access>
+<alter_access>true</alter_access>
+<audit_access>false</audit_access>
+<caller_access/>
+<create_access>true</create_access>
+<create_access_controls>false</create_access_controls>
+<delete_access>false</delete_access>
+<extension_model/>
+<is_extendable>false</is_extendable>
+<label>ImportMap Medic Health Score</label>
+<live_feed_enabled>false</live_feed_enabled>
+<maintenance_off>false</maintenance_off>
+<max_active_instance/>
+<mobile>false</mobile>
+<module/>
+<name>x_snc_importmap_medic_health_score</name>
+<number_ref/>
+<provider_class/>
+<read_access>true</read_access>
+<scriptable_table>false</scriptable_table>
+<super_class display_value="Task">5f37c1b20f232000b7f0337dc047ffc6</super_class>
+<sys_class_code/>
+<sys_class_name>sys_db_object</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<update_access>true</update_access>
+<user_role display_value="x_snc_importmap_medic.user">aabbccdd-1122-3344-5566-77889900aabb</user_role>
+<ws_access>true</ws_access>
+</sys_db_object>
+
+<sys_db_object action="INSERT_OR_UPDATE">
+<access>public</access>
+<actions_access>true</actions_access>
+<alter_access>true</alter_access>
+<audit_access>false</audit_access>
+<caller_access/>
+<create_access>true</create_access>
+<create_access_controls>false</create_access_controls>
+<delete_access>false</delete_access>
+<extension_model/>
+<is_extendable>false</is_extendable>
+<label>ImportMap Medic Finding</label>
+<live_feed_enabled>false</live_feed_enabled>
+<maintenance_off>false</maintenance_off>
+<max_active_instance/>
+<mobile>false</mobile>
+<module/>
+<name>x_snc_importmap_medic_finding</name>
+<number_ref/>
+<provider_class/>
+<read_access>true</read_access>
+<scriptable_table>false</scriptable_table>
+<super_class display_value="Task">5f37c1b20f232000b7f0337dc047ffc6</super_class>
+<sys_class_code/>
+<sys_class_name>sys_db_object</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<update_access>true</update_access>
+<user_role display_value="x_snc_importmap_medic.user">aabbccdd-1122-3344-5566-77889900aabb</user_role>
+<ws_access>true</ws_access>
+</sys_db_object>
+
+<sys_db_object action="INSERT_OR_UPDATE">
+<access>public</access>
+<actions_access>true</actions_access>
+<alter_access>true</alter_access>
+<audit_access>false</audit_access>
+<caller_access/>
+<create_access>true</create_access>
+<create_access_controls>false</create_access_controls>
+<delete_access>false</delete_access>
+<extension_model/>
+<is_extendable>false</is_extendable>
+<label>ImportMap Medic Health Trend</label>
+<live_feed_enabled>false</live_feed_enabled>
+<maintenance_off>false</maintenance_off>
+<max_active_instance/>
+<mobile>false</mobile>
+<module/>
+<name>x_snc_importmap_medic_health_trend</name>
+<number_ref/>
+<provider_class/>
+<read_access>true</read_access>
+<scriptable_table>false</scriptable_table>
+<super_class display_value="Task">5f37c1b20f232000b7f0337dc047ffc6</super_class>
+<sys_class_code/>
+<sys_class_name>sys_db_object</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>d1e2e3f4a5b6c7d8e9f0a1b2c3d4e5f7</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<update_access>true</update_access>
+<user_role display_value="x_snc_importmap_medic.user">aabbccdd-1122-3344-5566-77889900aabb</user_role>
+<ws_access>true</ws_access>
+</sys_db_object>
+
+<sys_db_object action="INSERT_OR_UPDATE">
+<access>public</access>
+<actions_access>true</actions_access>
+<alter_access>true</alter_access>
+<audit_access>false</audit_access>
+<caller_access/>
+<create_access>true</create_access>
+<create_access_controls>false</create_access_controls>
+<delete_access>false</delete_access>
+<extension_model/>
+<is_extendable>false</is_extendable>
+<label>ImportMap Medic Drift Event</label>
+<live_feed_enabled>false</live_feed_enabled>
+<maintenance_off>false</maintenance_off>
+<max_active_instance/>
+<mobile>false</mobile>
+<module/>
+<name>x_snc_importmap_medic_drift_event</name>
+<number_ref/>
+<provider_class/>
+<read_access>true</read_access>
+<scriptable_table>false</scriptable_table>
+<super_class display_value="Task">5f37c1b20f232000b7f0337dc047ffc6</super_class>
+<sys_class_code/>
+<sys_class_name>sys_db_object</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>e2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a8</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<update_access>true</update_access>
+<user_role display_value="x_snc_importmap_medic.user">aabbccdd-1122-3344-5566-77889900aabb</user_role>
+<ws_access>true</ws_access>
+</sys_db_object>
+</unload>

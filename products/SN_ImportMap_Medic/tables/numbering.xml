@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-16 07:00:00">
+<sys_number action="INSERT_OR_UPDATE">
+<category>x_snc_importmap_medic_health_score</category>
+<maximum_digits>7</maximum_digits>
+<number>1000</number>
+<prefix>IMH</prefix>
+<sys_class_name>sys_number</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>number_health_score_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>IMH</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_number>
+
+<sys_number action="INSERT_OR_UPDATE">
+<category>x_snc_importmap_medic_finding</category>
+<maximum_digits>7</maximum_digits>
+<number>1000</number>
+<prefix>IMF</prefix>
+<sys_class_name>sys_number</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>number_finding_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>IMF</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_number>
+</unload>

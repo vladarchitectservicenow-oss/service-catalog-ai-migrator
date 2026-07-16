@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-16 07:00:00">
+<sys_script action="INSERT_OR_UPDATE">
+<active>true</active>
+<description>Daily scheduled audit of all active transform maps.</description>
+<name>ImportMap Medic Daily Audit</name>
+<run_as display_value="System Administrator">6816f79cc0a8016401c5a33be04be441</run_as>
+<run_as_tz/>
+<run_conditional>false</run_conditional>
+<run_start>2026-07-16 02:00:00</run_start>
+<run_time>1970-01-01 02:00:00</run_time>
+<run_type>daily</run_type>
+<script><![CDATA[
+var engine = new ImportMapMedicEngine();
+var result = engine.auditInstance({ mode: 'incremental' });
+gs.info('ImportMap Medic daily audit complete. Maps audited: ' + result.mapsAudited +
+        ', instance score: ' + result.instanceScore +
+        ', findings created: ' + result.findingsCreated);
+]]></script>
+<sys_class_name>sys_script</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>scheduled_job_daily_audit_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>ImportMap Medic Daily Audit</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_script_ImportMap_Medic_Daily_Audit</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<upgrade_safe>true</upgrade_safe>
+</sys_script>
+</unload>

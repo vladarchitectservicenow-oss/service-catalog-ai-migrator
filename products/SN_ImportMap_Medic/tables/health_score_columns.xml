@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-16 07:00:00">
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Transform Map</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>transform_map</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>transform_map</field_name>
+<field_type>Reference</field_type>
+<internal_type display_value="Reference">Reference</internal_type>
+<max_length>32</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference>sys_transform_map</reference>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key>sys_id</reference_key>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_transform_map</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Transform Map</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_transform_map</sys_update_name>
+<table_reference>true</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Data Source</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>data_source</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>data_source</field_name>
+<field_type>Reference</field_type>
+<internal_type display_value="Reference">Reference</internal_type>
+<max_length>32</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference>sys_data_source</reference>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key>sys_id</reference_key>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_data_source</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Data Source</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_data_source</sys_update_name>
+<table_reference>true</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Health Score</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>health_score</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>health_score</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_score</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Health Score</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_health_score</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Name</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>true</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>name</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>name</field_name>
+<field_type display_value="String">String</field_type>
+<internal_type display_value="String">String</internal_type>
+<max_length>200</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_name</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Name</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_name</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Last Run</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>last_run</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>last_run</field_name>
+<field_type display_value="GlideDateTime">GlideDateTime</field_type>
+<internal_type display_value="GlideDateTime">GlideDateTime</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_last_run</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Last Run</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_last_run</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Audited At</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>audited_at</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>audited_at</field_name>
+<field_type display_value="GlideDateTime">GlideDateTime</field_type>
+<internal_type display_value="GlideDateTime">GlideDateTime</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_audited_at</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Audited At</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_audited_at</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Field Error Count</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>field_error_count</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>field_error_count</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_field_error_count</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Field Error Count</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_field_error_count</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Collision Count</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>collision_count</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>collision_count</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_collision_count</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Collision Count</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_collision_count</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Drift Event Count</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>drift_event_count</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>drift_event_count</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_drift_event_count</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Drift Event Count</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_drift_event_count</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Error Rate 30d</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>error_rate_30d</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>error_rate_30d</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_error_rate_30d</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Error Rate 30d</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_error_rate_30d</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Stale Penalty</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>stale_penalty</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>stale_penalty</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_stale_penalty</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Stale Penalty</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_stale_penalty</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+</unload>

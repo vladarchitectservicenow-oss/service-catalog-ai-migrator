@@ -1,0 +1,4021 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-16 07:00:00">
+  <!-- sys_app/sys_app.xml -->
+<sys_app action="INSERT_OR_UPDATE">
+<active>true</active>
+<can_edit_in_studio>true</can_edit_in_studio>
+<enforce_license>log</enforce_license>
+<guided_setup_guid/>
+<hide_on_ui>false</hide_on_ui>
+<installed_as_dependency>false</installed_as_dependency>
+<js_level>helsinki_es5</js_level>
+<licensable>true</licensable>
+<license_category>none</license_category>
+<license_model>none</license_model>
+<logo/>
+<module/><name>ImportMap Medic</name>
+<private>false</private>
+<restrict_table_access>false</restrict_table_access>
+<runtime_access_tracking>permissive</runtime_access_tracking>
+<scope>x_snc_importmap_medic</scope>
+<scoped_administration>false</scoped_administration>
+<short_description>Transform map and import set health auditor for ServiceNow</short_description>
+<source>x_snc_importmap_medic</source>
+<store_correlation_id/>
+<store_url/>
+<sys_class_name>sys_app</sys_class_name>
+<sys_code/>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<template/>
+<trackable>true</trackable>
+<uninstall_blocked>false</uninstall_blocked>
+<user_role display_value="x_snc_importmap_medic.user">aabbccdd-1122-3344-5566-77889900aabb</user_role>
+<vendor>ServiceNow Autonomous Build</vendor>
+<vendor_prefix/>
+<version>1.0.0</version>
+</sys_app>
+  <!-- sys_app/sys_app_license.xml -->
+<sys_app_license action="INSERT_OR_UPDATE">
+<app display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</app>
+<free>true</free>
+<fulfillment_group display_value="Software Asset Management">d0bd9f4af42311108b89ccba2524a</fulfillment_group>
+<license>AGPL-3.0</license>
+<name>ImportMap Medic</name>
+<seats>0</seats>
+<sys_class_name>sys_app_license</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>b1b2b3b4c5c6d7d8e9e0f1f2f3f4f5f6</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_app_license>
+  <!-- sys_app/ui_application.xml -->
+<sys_ui_application action="INSERT_OR_UPDATE">
+<active>true</active>
+<description>ImportMap Medic workbench</description>
+<name>ImportMap Medic</name>
+<order/>
+<roles>x_snc_importmap_medic.user,x_snc_importmap_medic.admin</roles>
+<sys_class_name>sys_ui_application</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>ui_app_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>ImportMap Medic</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_ui_application_ImportMap_Medic</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_ui_application>
+
+<sys_app_module action="INSERT_OR_UPDATE">
+<active>true</active>
+<application display_value="ImportMap Medic">ui_app_001</application>
+<assessment/>
+<device_type/>
+<hint>Health score dashboard</hint>
+<mobile>false</mobile>
+<mobile_title>Health Scores</mobile_title>
+<mobile_view_name>Mobile</mobile_view_name>
+<name>x_snc_importmap_medic_health_score</name>
+<order>100</order>
+<override_menu_roles>false</override_menu_roles>
+<query/>
+<report/>
+<roles>x_snc_importmap_medic.user,x_snc_importmap_medic.admin</roles>
+<sys_class_name>sys_app_module</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>app_module_health_score_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Health Scores</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_app_module_health_scores</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<title>Health Scores</title>
+<view_name/>
+</sys_app_module>
+
+<sys_app_module action="INSERT_OR_UPDATE">
+<active>true</active>
+<application display_value="ImportMap Medic">ui_app_001</application>
+<assessment/>
+<device_type/>
+<hint>All findings</hint>
+<mobile>false</mobile>
+<mobile_title>Findings</mobile_title>
+<mobile_view_name>Mobile</mobile_view_name>
+<name>x_snc_importmap_medic_finding</name>
+<order>200</order>
+<override_menu_roles>false</override_menu_roles>
+<query/>
+<report/>
+<roles>x_snc_importmap_medic.user,x_snc_importmap_medic.admin</roles>
+<sys_class_name>sys_app_module</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>app_module_findings_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Findings</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_app_module_findings</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<title>Findings</title>
+<view_name/>
+</sys_app_module>
+
+<sys_app_module action="INSERT_OR_UPDATE">
+<active>true</active>
+<application display_value="ImportMap Medic">ui_app_001</application>
+<assessment/>
+<device_type/>
+<hint>Run audit</hint>
+<mobile>false</mobile>
+<mobile_title>Run Audit</mobile_title>
+<mobile_view_name>Mobile</mobile_view_name>
+<name>x_snc_importmap_medic_health_score</name>
+<order>300</order>
+<override_menu_roles>false</override_menu_roles>
+<query>?sysparm_view=Run%20Audit</query>
+<report/>
+<roles>x_snc_importmap_medic.admin</roles>
+<sys_class_name>sys_app_module</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>app_module_run_audit_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Run Audit</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_app_module_run_audit</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<title>Run Audit</title>
+<view_name/>
+</sys_app_module>
+  <!-- tables/tables.xml -->
+<sys_db_object action="INSERT_OR_UPDATE">
+<access>public</access>
+<actions_access>true</actions_access>
+<alter_access>true</alter_access>
+<audit_access>false</audit_access>
+<caller_access/>
+<create_access>true</create_access>
+<create_access_controls>false</create_access_controls>
+<delete_access>false</delete_access>
+<extension_model/>
+<is_extendable>false</is_extendable>
+<label>ImportMap Medic Health Score</label>
+<live_feed_enabled>false</live_feed_enabled>
+<maintenance_off>false</maintenance_off>
+<max_active_instance/>
+<mobile>false</mobile>
+<module/>
+<name>x_snc_importmap_medic_health_score</name>
+<number_ref/>
+<provider_class/>
+<read_access>true</read_access>
+<scriptable_table>false</scriptable_table>
+<super_class display_value="Task">5f37c1b20f232000b7f0337dc047ffc6</super_class>
+<sys_class_code/>
+<sys_class_name>sys_db_object</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<update_access>true</update_access>
+<user_role display_value="x_snc_importmap_medic.user">aabbccdd-1122-3344-5566-77889900aabb</user_role>
+<ws_access>true</ws_access>
+</sys_db_object>
+
+<sys_db_object action="INSERT_OR_UPDATE">
+<access>public</access>
+<actions_access>true</actions_access>
+<alter_access>true</alter_access>
+<audit_access>false</audit_access>
+<caller_access/>
+<create_access>true</create_access>
+<create_access_controls>false</create_access_controls>
+<delete_access>false</delete_access>
+<extension_model/>
+<is_extendable>false</is_extendable>
+<label>ImportMap Medic Finding</label>
+<live_feed_enabled>false</live_feed_enabled>
+<maintenance_off>false</maintenance_off>
+<max_active_instance/>
+<mobile>false</mobile>
+<module/>
+<name>x_snc_importmap_medic_finding</name>
+<number_ref/>
+<provider_class/>
+<read_access>true</read_access>
+<scriptable_table>false</scriptable_table>
+<super_class display_value="Task">5f37c1b20f232000b7f0337dc047ffc6</super_class>
+<sys_class_code/>
+<sys_class_name>sys_db_object</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<update_access>true</update_access>
+<user_role display_value="x_snc_importmap_medic.user">aabbccdd-1122-3344-5566-77889900aabb</user_role>
+<ws_access>true</ws_access>
+</sys_db_object>
+
+<sys_db_object action="INSERT_OR_UPDATE">
+<access>public</access>
+<actions_access>true</actions_access>
+<alter_access>true</alter_access>
+<audit_access>false</audit_access>
+<caller_access/>
+<create_access>true</create_access>
+<create_access_controls>false</create_access_controls>
+<delete_access>false</delete_access>
+<extension_model/>
+<is_extendable>false</is_extendable>
+<label>ImportMap Medic Health Trend</label>
+<live_feed_enabled>false</live_feed_enabled>
+<maintenance_off>false</maintenance_off>
+<max_active_instance/>
+<mobile>false</mobile>
+<module/>
+<name>x_snc_importmap_medic_health_trend</name>
+<number_ref/>
+<provider_class/>
+<read_access>true</read_access>
+<scriptable_table>false</scriptable_table>
+<super_class display_value="Task">5f37c1b20f232000b7f0337dc047ffc6</super_class>
+<sys_class_code/>
+<sys_class_name>sys_db_object</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>d1e2e3f4a5b6c7d8e9f0a1b2c3d4e5f7</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<update_access>true</update_access>
+<user_role display_value="x_snc_importmap_medic.user">aabbccdd-1122-3344-5566-77889900aabb</user_role>
+<ws_access>true</ws_access>
+</sys_db_object>
+
+<sys_db_object action="INSERT_OR_UPDATE">
+<access>public</access>
+<actions_access>true</actions_access>
+<alter_access>true</alter_access>
+<audit_access>false</audit_access>
+<caller_access/>
+<create_access>true</create_access>
+<create_access_controls>false</create_access_controls>
+<delete_access>false</delete_access>
+<extension_model/>
+<is_extendable>false</is_extendable>
+<label>ImportMap Medic Drift Event</label>
+<live_feed_enabled>false</live_feed_enabled>
+<maintenance_off>false</maintenance_off>
+<max_active_instance/>
+<mobile>false</mobile>
+<module/>
+<name>x_snc_importmap_medic_drift_event</name>
+<number_ref/>
+<provider_class/>
+<read_access>true</read_access>
+<scriptable_table>false</scriptable_table>
+<super_class display_value="Task">5f37c1b20f232000b7f0337dc047ffc6</super_class>
+<sys_class_code/>
+<sys_class_name>sys_db_object</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>e2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a8</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<update_access>true</update_access>
+<user_role display_value="x_snc_importmap_medic.user">aabbccdd-1122-3344-5566-77889900aabb</user_role>
+<ws_access>true</ws_access>
+</sys_db_object>
+  <!-- tables/health_score_columns.xml -->
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Transform Map</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>transform_map</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>transform_map</field_name>
+<field_type>Reference</field_type>
+<internal_type display_value="Reference">Reference</internal_type>
+<max_length>32</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference>sys_transform_map</reference>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key>sys_id</reference_key>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_transform_map</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Transform Map</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_transform_map</sys_update_name>
+<table_reference>true</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Data Source</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>data_source</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>data_source</field_name>
+<field_type>Reference</field_type>
+<internal_type display_value="Reference">Reference</internal_type>
+<max_length>32</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference>sys_data_source</reference>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key>sys_id</reference_key>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_data_source</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Data Source</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_data_source</sys_update_name>
+<table_reference>true</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Health Score</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>health_score</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>health_score</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_score</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Health Score</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_health_score</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Name</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>true</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>name</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>name</field_name>
+<field_type display_value="String">String</field_type>
+<internal_type display_value="String">String</internal_type>
+<max_length>200</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_name</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Name</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_name</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Last Run</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>last_run</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>last_run</field_name>
+<field_type display_value="GlideDateTime">GlideDateTime</field_type>
+<internal_type display_value="GlideDateTime">GlideDateTime</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_last_run</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Last Run</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_last_run</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Audited At</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>audited_at</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>audited_at</field_name>
+<field_type display_value="GlideDateTime">GlideDateTime</field_type>
+<internal_type display_value="GlideDateTime">GlideDateTime</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_audited_at</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Audited At</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_audited_at</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Field Error Count</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>field_error_count</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>field_error_count</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_field_error_count</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Field Error Count</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_field_error_count</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Collision Count</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>collision_count</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>collision_count</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_collision_count</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Collision Count</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_collision_count</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Drift Event Count</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>drift_event_count</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>drift_event_count</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_drift_event_count</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Drift Event Count</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_drift_event_count</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Error Rate 30d</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>error_rate_30d</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>error_rate_30d</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_error_rate_30d</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Error Rate 30d</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_error_rate_30d</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Stale Penalty</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>stale_penalty</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>stale_penalty</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_score</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_health_score_stale_penalty</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Stale Penalty</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_score_stale_penalty</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+  <!-- tables/more_columns.xml -->
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Transform Map</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>transform_map</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>transform_map</field_name>
+<field_type>Reference</field_type>
+<internal_type display_value="Reference">Reference</internal_type>
+<max_length>32</max_length>
+<name>x_snc_importmap_medic_finding</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference>sys_transform_map</reference>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key>sys_id</reference_key>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_finding_transform_map</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Transform Map</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_finding_transform_map</sys_update_name>
+<table_reference>true</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Data Source</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>data_source</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>data_source</field_name>
+<field_type>Reference</field_type>
+<internal_type display_value="Reference">Reference</internal_type>
+<max_length>32</max_length>
+<name>x_snc_importmap_medic_finding</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference>sys_data_source</reference>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key>sys_id</reference_key>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_finding_data_source</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Data Source</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_finding_data_source</sys_update_name>
+<table_reference>true</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>3</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Check Type</column_label>
+<comments/>
+<create_roles/>
+<default_value>field_validity</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>check_type</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>check_type</field_name>
+<field_type display_value="Choice">Choice</field_type>
+<internal_type display_value="String">String</internal_type>
+<max_length>80</max_length>
+<name>x_snc_importmap_medic_finding</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_finding_check_type</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Check Type</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_finding_check_type</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>3</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Severity</column_label>
+<comments/>
+<create_roles/>
+<default_value>warning</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>severity</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>severity</field_name>
+<field_type display_value="Choice">Choice</field_type>
+<internal_type display_value="String">String</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_finding</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_finding_severity</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Severity</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_finding_severity</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Message</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>message</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>message</field_name>
+<field_type display_value="HTML">HTML</field_type>
+<internal_type display_value="HTML">HTML</internal_type>
+<max_length>4000</max_length>
+<name>x_snc_importmap_medic_finding</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_finding_message</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Message</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_finding_message</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Remediation Action</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>remediation_action</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>remediation_action</field_name>
+<field_type display_value="String">String</field_type>
+<internal_type display_value="String">String</internal_type>
+<max_length>1000</max_length>
+<name>x_snc_importmap_medic_finding</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_finding_remediation_action</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Remediation Action</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_finding_remediation_action</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Detected At</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>detected_at</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>detected_at</field_name>
+<field_type display_value="GlideDateTime">GlideDateTime</field_type>
+<internal_type display_value="GlideDateTime">GlideDateTime</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_finding</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_finding_detected_at</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Detected At</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_finding_detected_at</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Resolved At</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>resolved_at</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>resolved_at</field_name>
+<field_type display_value="GlideDateTime">GlideDateTime</field_type>
+<internal_type display_value="GlideDateTime">GlideDateTime</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_finding</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_finding_resolved_at</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Resolved At</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_finding_resolved_at</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Active</column_label>
+<comments/>
+<create_roles/>
+<default_value>true</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>active</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>active</field_name>
+<field_type display_value="Boolean">Boolean</field_type>
+<internal_type display_value="Boolean">Boolean</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_finding</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_finding_active</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Active</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_finding_active</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Trend Date</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>trend_date</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>trend_date</field_name>
+<field_type display_value="GlideDateTime">GlideDateTime</field_type>
+<internal_type display_value="GlideDateTime">GlideDateTime</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_trend</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_trend_trend_date</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Trend Date</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_trend_trend_date</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Instance Score</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>instance_score</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>instance_score</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_trend</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_trend_instance_score</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Instance Score</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_trend_instance_score</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Maps Audited</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>maps_audited</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>maps_audited</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_health_trend</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_trend_maps_audited</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Maps Audited</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_health_trend_maps_audited</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Transform Map</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>transform_map</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>transform_map</field_name>
+<field_type>Reference</field_type>
+<internal_type display_value="Reference">Reference</internal_type>
+<max_length>32</max_length>
+<name>x_snc_importmap_medic_drift_event</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference>sys_transform_map</reference>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key>sys_id</reference_key>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_drift_transform_map</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Transform Map</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_drift_event_transform_map</sys_update_name>
+<table_reference>true</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Source Fingerprint Before</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>source_fingerprint_before</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>source_fingerprint_before</field_name>
+<field_type display_value="String">String</field_type>
+<internal_type display_value="String">String</internal_type>
+<max_length>4000</max_length>
+<name>x_snc_importmap_medic_drift_event</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_drift_fingerprint_before</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Source Fingerprint Before</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_drift_event_source_fingerprint_before</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Source Fingerprint After</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>source_fingerprint_after</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>source_fingerprint_after</field_name>
+<field_type display_value="String">String</field_type>
+<internal_type display_value="String">String</internal_type>
+<max_length>4000</max_length>
+<name>x_snc_importmap_medic_drift_event</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_drift_fingerprint_after</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Source Fingerprint After</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_drift_event_source_fingerprint_after</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Sample Row Count</column_label>
+<comments/>
+<create_roles/>
+<default_value>0</default_value>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>sample_row_count</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>sample_row_count</field_name>
+<field_type display_value="Integer">Integer</field_type>
+<internal_type display_value="Integer">Integer</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_drift_event</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_drift_sample_row_count</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Sample Row Count</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_drift_event_sample_row_count</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+
+<sys_dictionary action="INSERT_OR_UPDATE">
+<active>true</active>
+<array>false</array>
+<array_denormalized>false</array_denormalized>
+<attributes/>
+<audit>false</audit>
+<calculation/>
+<choice>0</choice>
+<choice_field/>
+<choice_table/>
+<column_label>Detected At</column_label>
+<comments/>
+<create_roles/>
+<default_value/>
+<defaultsort/>
+<delete_roles/>
+<dependent/>
+<dependent_on_field/>
+<display>false</display>
+<dynamic_creation>false</dynamic_creation>
+<dynamic_creation_script/>
+<dynamic_default_value/>
+<dynamic_ref_qual/>
+<element>detected_at</element>
+<element_reference>false</element_reference>
+<element_reference_display/>
+<field_name>detected_at</field_name>
+<field_type display_value="GlideDateTime">GlideDateTime</field_type>
+<internal_type display_value="GlideDateTime">GlideDateTime</internal_type>
+<max_length>40</max_length>
+<name>x_snc_importmap_medic_drift_event</name>
+<read_only>false</read_only>
+<read_roles/>
+<reference/>
+<reference_cascade_rule/>
+<reference_floats>false</reference_floats>
+<reference_key/>
+<reference_qual/>
+<reference_qual_condition/>
+<reference_type/>
+<sizeclass/>
+<spell_check>false</spell_check>
+<staged>false</staged>
+<sys_class_name>sys_dictionary</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>column_drift_detected_at</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Detected At</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<sys_update_name>sys_dictionary_x_snc_importmap_medic_drift_event_detected_at</sys_update_name>
+<table_reference>false</table_reference>
+<text_index>false</text_index>
+<unique>false</unique>
+<update_roles/>
+<use_dependent_field>false</use_dependent_field>
+<use_dynamic_default>false</use_dynamic_default>
+<use_reference_qualifier>simple</use_reference_qualifier>
+<virtual>false</virtual>
+<virtual_type>script</virtual_type>
+<widget/>
+<write_roles/>
+</sys_dictionary>
+  <!-- tables/choices.xml -->
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Field Validity</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>100</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_field_validity</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>field_validity</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Coalesce Collision</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>200</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_coalesce_collision</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>coalesce_collision</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Source Drift</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>300</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_source_drift</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>source_drift</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Error Rate</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>400</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_error_rate</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>error_rate</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Stale Map</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>500</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_stale_map</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>stale_map</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Redundancy</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>600</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_redundancy</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>redundancy</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>check_type</element>
+<hint/>
+<inactive>false</inactive>
+<label>Runaway Job</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>700</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_check_type_runaway_job</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>runaway_job</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>severity</element>
+<hint/>
+<inactive>false</inactive>
+<label>Info</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>100</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_severity_info</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>info</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>severity</element>
+<hint/>
+<inactive>false</inactive>
+<label>Warning</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>200</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_severity_warning</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>warning</value>
+</sys_choice>
+
+<sys_choice action="INSERT_OR_UPDATE">
+<dependent/>
+<element>severity</element>
+<hint/>
+<inactive>false</inactive>
+<label>Critical</label>
+<language>en</language>
+<name>x_snc_importmap_medic_finding</name>
+<sequence>300</sequence>
+<synonyms/>
+<sys_class_name>sys_choice</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>choice_severity_critical</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<value>critical</value>
+</sys_choice>
+  <!-- tables/numbering.xml -->
+<sys_number action="INSERT_OR_UPDATE">
+<category>x_snc_importmap_medic_health_score</category>
+<maximum_digits>7</maximum_digits>
+<number>1000</number>
+<prefix>IMH</prefix>
+<sys_class_name>sys_number</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>number_health_score_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>IMH</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_number>
+
+<sys_number action="INSERT_OR_UPDATE">
+<category>x_snc_importmap_medic_finding</category>
+<maximum_digits>7</maximum_digits>
+<number>1000</number>
+<prefix>IMF</prefix>
+<sys_class_name>sys_number</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>number_finding_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>IMF</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_number>
+  <!-- script_includes/ImportMapMedicEngine.xml -->
+<sys_script_include action="INSERT_OR_UPDATE">
+<access>package_private</access>
+<active>true</active>
+<api_name>x_snc_importmap_medic.ImportMapMedicEngine</api_name>
+<caller_access/>
+<client_callable>false</client_callable>
+<description>Core engine for ImportMap Medic. Audits transform maps, computes health scores, and emits findings.</description>
+<name>ImportMapMedicEngine</name>
+<script><![CDATA[
+var ImportMapMedicEngine = Class.create();
+ImportMapMedicEngine.prototype = {
+    initialize: function() {
+        this.debug = false;
+        this.now = new GlideDateTime();
+        this.score = new ImportMapMedicScorecard();
+    },
+
+    setDebug: function(flag) {
+        this.debug = flag === true;
+        return this;
+    },
+
+    auditInstance: function(params) {
+        params = params || {};
+        var transformMapSysId = params.transformMapSysId || '';
+        var dataSourceSysId = params.dataSourceSysId || '';
+        var mode = params.mode || 'incremental';
+        var findings = [];
+        var result = {
+            instanceScore: 0,
+            mapsAudited: 0,
+            findingsCreated: 0,
+            healthScoresUpdated: 0,
+            trendsRecorded: 0,
+            errors: []
+        };
+
+        var maps = this._getTransformMaps(transformMapSysId);
+        var scores = [];
+        for (var m = 0; m < maps.length; m++) {
+            var map = maps[m];
+            try {
+                var audit = this._auditMap(map, dataSourceSysId, mode);
+                scores.push(audit.healthScore);
+                findings = findings.concat(audit.findings);
+                this._persistHealthScore(map, audit);
+                result.healthScoresUpdated++;
+                this._autoResolveStale(map, audit.findings);
+            } catch (ex) {
+                result.errors.push(String(ex));
+                findings.push(this._finding(map, 'critical', 'audit_exception', 'Audit failed for map: ' + String(ex)));
+            }
+        }
+
+        result.instanceScore = this.score.instanceScore(scores);
+        result.mapsAudited = maps.length;
+        result.findingsCreated = this._persistFindings(findings);
+        result.trendsRecorded = this._recordTrend(result.instanceScore, maps.length);
+        return result;
+    },
+
+    getHealthSummary: function(params) {
+        params = params || {};
+        var transformMapSysId = params.transformMapSysId || '';
+        var gr = new GlideRecord('x_snc_importmap_medic_health_score');
+        if (transformMapSysId) {
+            gr.addQuery('transform_map', transformMapSysId);
+        }
+        gr.orderByDesc('audited_at');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return {
+                transformMapSysId: gr.getValue('transform_map'),
+                transformMapName: gr.transform_map.getDisplayValue(),
+                dataSourceSysId: gr.getValue('data_source'),
+                healthScore: parseInt(gr.getValue('health_score'), 10) || 0,
+                fieldErrorCount: parseInt(gr.getValue('field_error_count'), 10) || 0,
+                collisionCount: parseInt(gr.getValue('collision_count'), 10) || 0,
+                driftEventCount: parseInt(gr.getValue('drift_event_count'), 10) || 0,
+                errorRate30d: parseInt(gr.getValue('error_rate_30d'), 10) || 0,
+                stalePenalty: parseInt(gr.getValue('stale_penalty'), 10) || 0,
+                lastRun: String(gr.getValue('last_run')),
+                auditedAt: String(gr.getValue('audited_at'))
+            };
+        }
+        return null;
+    },
+
+    recalcScore: function(healthScoreSysId) {
+        var gr = new GlideRecord('x_snc_importmap_medic_health_score');
+        if (!gr.get(healthScoreSysId)) {
+            throw new Error('Health score record not found: ' + healthScoreSysId);
+        }
+        var raw = {
+            fieldErrorCount: parseInt(gr.getValue('field_error_count'), 10) || 0,
+            collisionCount: parseInt(gr.getValue('collision_count'), 10) || 0,
+            driftEventCount: parseInt(gr.getValue('drift_event_count'), 10) || 0,
+            errorRate30d: parseInt(gr.getValue('error_rate_30d'), 10) || 0,
+            stalePenalty: parseInt(gr.getValue('stale_penalty'), 10) || 0
+        };
+        var score = this.score.mapScore(raw);
+        gr.setValue('health_score', score);
+        gr.setValue('audited_at', this.now);
+        gr.update();
+        return score;
+    },
+
+    _getTransformMaps: function(transformMapSysId) {
+        var maps = [];
+        var gr = new GlideRecord('sys_transform_map');
+        if (transformMapSysId) {
+            gr.addQuery('sys_id', transformMapSysId);
+        }
+        gr.addActiveQuery();
+        gr.query();
+        while (gr.next()) {
+            maps.push({
+                sys_id: gr.getValue('sys_id'),
+                name: gr.getValue('name'),
+                source_table: gr.getValue('source_table'),
+                target_table: gr.getValue('target_table'),
+                data_source: this._guessDataSource(gr.getValue('source_table')),
+                active: gr.getValue('active') == '1',
+                sys_created_on: String(gr.getValue('sys_created_on'))
+            });
+        }
+        return maps;
+    },
+
+    _auditMap: function(map, dataSourceSysId, mode) {
+        map.data_source = dataSourceSysId || map.data_source || '';
+        var findings = [];
+        var audit = {
+            transformMap: map,
+            healthScore: 0,
+            findings: findings,
+            raw: {
+                fieldErrorCount: 0,
+                collisionCount: 0,
+                driftEventCount: 0,
+                errorRate30d: 0,
+                stalePenalty: 0
+            }
+        };
+
+        var fieldAudit = this._checkFieldValidity(map);
+        audit.raw.fieldErrorCount = fieldAudit.count;
+        findings = findings.concat(fieldAudit.findings);
+
+        var collisionAudit = this._checkCoalesceCollisions(map);
+        audit.raw.collisionCount = collisionAudit.count;
+        findings = findings.concat(collisionAudit.findings);
+
+        var errorAudit = this._checkImportErrorRate(map);
+        audit.raw.errorRate30d = errorAudit.rate;
+        findings = findings.concat(errorAudit.findings);
+
+        var staleAudit = this._checkStaleMap(map);
+        audit.raw.stalePenalty = staleAudit.penalty;
+        findings = findings.concat(staleAudit.findings);
+
+        var driftAudit = this._checkSourceDrift(map, dataSourceSysId, mode);
+        audit.raw.driftEventCount = driftAudit.count;
+        findings = findings.concat(driftAudit.findings);
+
+        var redundancyAudit = this._checkRedundancy(map);
+        findings = findings.concat(redundancyAudit.findings);
+
+        var runawayAudit = this._checkRunawayJobs(map);
+        findings = findings.concat(runawayAudit.findings);
+
+        audit.findings = findings;
+        audit.healthScore = this.score.mapScore(audit.raw);
+        return audit;
+    },
+
+    _checkFieldValidity: function(map) {
+        var findings = [];
+        var count = 0;
+        var gr = new GlideRecord('sys_transform_entry');
+        gr.addQuery('map', map.sys_id);
+        gr.query();
+        while (gr.next()) {
+            var sourceField = String(gr.getValue('source_field') || '');
+            var targetField = String(gr.getValue('target_field') || '');
+            var coalesce = gr.getValue('coalesce') == '1';
+            var useSourceScript = gr.getValue('use_source_script') == '1';
+
+            if (!targetField) {
+                count++;
+                findings.push(this._finding(map, 'critical', 'field_validity', 'Transform entry has no target field (source=' + sourceField + ').'));
+            }
+            if (coalesce && !sourceField) {
+                count++;
+                findings.push(this._finding(map, 'warning', 'field_validity', 'Coalesce entry has no source field (target=' + targetField + ').'));
+            }
+            if (useSourceScript) {
+                var script = String(gr.getValue('source_script') || '');
+                if (!script || script.trim().length < 3) {
+                    count++;
+                    findings.push(this._finding(map, 'warning', 'field_validity', 'Source script enabled but empty (target=' + targetField + ').'));
+                }
+            }
+        }
+        return { count: count, findings: findings };
+    },
+
+    _checkCoalesceCollisions: function(map) {
+        var findings = [];
+        var count = 0;
+        var gr = new GlideRecord('sys_transform_entry');
+        gr.addQuery('map', map.sys_id);
+        gr.addQuery('coalesce', true);
+        gr.query();
+        var coalesceTargets = {};
+        while (gr.next()) {
+            var target = String(gr.getValue('target_field'));
+            if (coalesceTargets[target]) {
+                count++;
+                findings.push(this._finding(map, 'warning', 'coalesce_collision', 'Multiple coalesce entries target ' + target + '.'));
+            }
+            coalesceTargets[target] = true;
+        }
+        return { count: count, findings: findings };
+    },
+
+    _checkImportErrorRate: function(map) {
+        var findings = [];
+        var rate = 0;
+        var since = new GlideDateTime();
+        since.addDays(-30);
+        var gr = new GlideAggregate('sys_import_set_log');
+        gr.addQuery('sys_created_on', '>=', since);
+        gr.addQuery('transform_map', 'CONTAINS', map.name);
+        gr.addAggregate('COUNT');
+        gr.addHaving('COUNT', '>=', 1);
+        gr.query();
+        var errors = 0;
+        if (gr.next()) {
+            errors = parseInt(gr.getAggregate('COUNT'), 10) || 0;
+        }
+
+        var totalGr = new GlideAggregate('sys_import_set_run');
+        totalGr.addQuery('map', map.sys_id);
+        totalGr.addQuery('sys_created_on', '>=', since);
+        totalGr.addAggregate('COUNT');
+        totalGr.query();
+        var total = 0;
+        if (totalGr.next()) {
+            total = parseInt(totalGr.getAggregate('COUNT'), 10) || 1;
+        }
+        rate = total > 0 ? Math.round((errors / total) * 100) : 0;
+        if (rate >= 50) {
+            findings.push(this._finding(map, 'critical', 'error_rate', 'Import error rate is ' + rate + '% over the last 30 days.'));
+        } else if (rate >= 20) {
+            findings.push(this._finding(map, 'warning', 'error_rate', 'Import error rate is ' + rate + '% over the last 30 days.'));
+        }
+        return { rate: rate, findings: findings };
+    },
+
+    _checkStaleMap: function(map) {
+        var findings = [];
+        var penalty = 0;
+        var lastRun = this._lastRunForMap(map.sys_id);
+        if (!lastRun) {
+            penalty = 25;
+            findings.push(this._finding(map, 'warning', 'stale_map', 'Transform map has never been run.'));
+        } else {
+            var days = this._daysBetween(lastRun, this.now);
+            if (days > 90) {
+                penalty = 20;
+                findings.push(this._finding(map, 'warning', 'stale_map', 'Transform map last run ' + days + ' days ago.'));
+            } else if (days > 30) {
+                penalty = 10;
+                findings.push(this._finding(map, 'info', 'stale_map', 'Transform map last run ' + days + ' days ago.'));
+            }
+        }
+        return { penalty: penalty, findings: findings };
+    },
+
+    _lastRunForMap: function(mapSysId) {
+        var gr = new GlideRecord('sys_import_set_run');
+        gr.addQuery('map', mapSysId);
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return new GlideDateTime(String(gr.getValue('sys_created_on')));
+        }
+        return null;
+    },
+
+    _daysBetween: function(start, end) {
+        var msPerDay = 1000 * 60 * 60 * 24;
+        return Math.floor((end.getNumericValue() - start.getNumericValue()) / msPerDay);
+    },
+
+    _checkSourceDrift: function(map, dataSourceSysId, mode) {
+        var findings = [];
+        var count = 0;
+        if (!dataSourceSysId) {
+            return { count: 0, findings: findings };
+        }
+        var fingerprint = this._fingerprintSource(dataSourceSysId);
+        var previous = this._lastFingerprint(map.sys_id);
+        if (previous && previous !== fingerprint) {
+            count++;
+            findings.push(this._finding(map, 'warning', 'source_drift', 'Data source fingerprint changed since last audit.'));
+            this._recordDrift(map, previous, fingerprint);
+        }
+        if (mode !== 'incremental' || !previous) {
+            this._saveFingerprint(map.sys_id, fingerprint);
+        }
+        return { count: count, findings: findings };
+    },
+
+    _fingerprintSource: function(dataSourceSysId) {
+        var gr = new GlideRecord('sys_data_source');
+        if (!gr.get(dataSourceSysId)) {
+            return '';
+        }
+        var s = String(gr.getValue('import_set_table_name') || '') + '|' +
+                String(gr.getValue('type') || '') + '|' +
+                String(gr.getValue('file_path') || '') + '|' +
+                String(gr.getValue('connection_url') || '');
+        return GlideStringUtil.hashCode(s) + '';
+    },
+
+    _lastFingerprint: function(mapSysId) {
+        var gr = new GlideRecord('x_snc_importmap_medic_drift_event');
+        gr.addQuery('transform_map', mapSysId);
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return String(gr.getValue('source_fingerprint_after'));
+        }
+        return null;
+    },
+
+    _saveFingerprint: function(mapSysId, fingerprint) {
+        var gr = new GlideRecord('x_snc_importmap_medic_drift_event');
+        gr.initialize();
+        gr.setValue('transform_map', mapSysId);
+        gr.setValue('source_fingerprint_before', fingerprint);
+        gr.setValue('source_fingerprint_after', fingerprint);
+        gr.setValue('sample_row_count', 0);
+        gr.setValue('detected_at', this.now);
+        gr.insert();
+    },
+
+    _recordDrift: function(map, before, after) {
+        var gr = new GlideRecord('x_snc_importmap_medic_drift_event');
+        gr.initialize();
+        gr.setValue('transform_map', map.sys_id);
+        gr.setValue('source_fingerprint_before', before);
+        gr.setValue('source_fingerprint_after', after);
+        gr.setValue('sample_row_count', 0);
+        gr.setValue('detected_at', this.now);
+        gr.insert();
+    },
+
+    _checkRedundancy: function(map) {
+        var findings = [];
+        var gr = new GlideAggregate('sys_transform_map');
+        gr.addQuery('target_table', map.target_table);
+        gr.addQuery('source_table', map.source_table);
+        gr.addQuery('sys_id', '!=', map.sys_id);
+        gr.addAggregate('COUNT');
+        gr.query();
+        if (gr.next()) {
+            var c = parseInt(gr.getAggregate('COUNT'), 10) || 0;
+            if (c > 0) {
+                findings.push(this._finding(map, 'info', 'redundancy', 'Found ' + c + ' other transform map(s) with same source/target.'));
+            }
+        }
+        return { findings: findings };
+    },
+
+    _checkRunawayJobs: function(map) {
+        var findings = [];
+        var since = new GlideDateTime();
+        since.addDays(-1);
+        var gr = new GlideAggregate('sys_import_set_run');
+        gr.addQuery('map', map.sys_id);
+        gr.addQuery('sys_created_on', '>=', since);
+        gr.addAggregate('COUNT');
+        gr.query();
+        if (gr.next()) {
+            var c = parseInt(gr.getAggregate('COUNT'), 10) || 0;
+            if (c > 50) {
+                findings.push(this._finding(map, 'critical', 'runaway_job', map.name + ' ran ' + c + ' times in the last 24 hours.'));
+            } else if (c > 20) {
+                findings.push(this._finding(map, 'warning', 'runaway_job', map.name + ' ran ' + c + ' times in the last 24 hours.'));
+            }
+        }
+        return { findings: findings };
+    },
+
+    _persistHealthScore: function(map, audit) {
+        var gr = new GlideRecord('x_snc_importmap_medic_health_score');
+        gr.addQuery('transform_map', map.sys_id);
+        gr.query();
+        if (gr.next()) {
+            this._fillHealthScore(gr, map, audit);
+            gr.update();
+        } else {
+            gr.initialize();
+            this._fillHealthScore(gr, map, audit);
+            gr.insert();
+        }
+    },
+
+    _fillHealthScore: function(gr, map, audit) {
+        gr.setValue('name', map.name);
+        gr.setValue('transform_map', map.sys_id);
+        gr.setValue('data_source', map.data_source || '');
+        gr.setValue('health_score', audit.healthScore);
+        gr.setValue('field_error_count', audit.raw.fieldErrorCount);
+        gr.setValue('collision_count', audit.raw.collisionCount);
+        gr.setValue('drift_event_count', audit.raw.driftEventCount);
+        gr.setValue('error_rate_30d', audit.raw.errorRate30d);
+        gr.setValue('stale_penalty', audit.raw.stalePenalty);
+        gr.setValue('last_run', this._lastRunForMap(map.sys_id));
+        gr.setValue('audited_at', this.now);
+    },
+
+    _persistFindings: function(findings) {
+        var count = 0;
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            var gr = new GlideRecord('x_snc_importmap_medic_finding');
+            gr.addQuery('transform_map', f.transformMapSysId);
+            gr.addQuery('check_type', f.checkType);
+            gr.addQuery('message', f.message);
+            gr.addQuery('active', true);
+            gr.query();
+            if (!gr.next()) {
+                gr.initialize();
+                gr.setValue('transform_map', f.transformMapSysId);
+                gr.setValue('data_source', f.dataSourceSysId || '');
+                gr.setValue('check_type', f.checkType);
+                gr.setValue('severity', f.severity);
+                gr.setValue('message', f.message);
+                gr.setValue('remediation_action', f.remediation || '');
+                gr.setValue('detected_at', this.now);
+                gr.setValue('active', true);
+                gr.insert();
+                count++;
+            }
+        }
+        return count;
+    },
+
+    _autoResolveStale: function(map, currentFindings) {
+        if (!map || !map.sys_id) return 0;
+        var activeTypes = {};
+        for (var i = 0; i < currentFindings.length; i++) {
+            activeTypes[currentFindings[i].checkType] = true;
+        }
+        var gr = new GlideRecord('x_snc_importmap_medic_finding');
+        gr.addQuery('transform_map', map.sys_id);
+        gr.addQuery('active', true);
+        gr.query();
+        var resolved = 0;
+        while (gr.next()) {
+            var ct = String(gr.getValue('check_type'));
+            if (!activeTypes[ct]) {
+                gr.setValue('active', false);
+                gr.setValue('resolved_at', this.now);
+                gr.update();
+                resolved++;
+            }
+        }
+        return resolved;
+    },
+
+    _recordTrend: function(instanceScore, mapsAudited) {
+        var gr = new GlideRecord('x_snc_importmap_medic_health_trend');
+        gr.initialize();
+        gr.setValue('trend_date', this.now);
+        gr.setValue('instance_score', instanceScore);
+        gr.setValue('maps_audited', mapsAudited);
+        return gr.insert();
+    },
+
+    _finding: function(map, severity, checkType, message) {
+        var remediation = '';
+        if (checkType === 'field_validity') {
+            remediation = 'Open the transform map and repair or remove the invalid transform entry.';
+        } else if (checkType === 'coalesce_collision') {
+            remediation = 'Consolidate coalesce fields or use a composite coalesce.';
+        } else if (checkType === 'error_rate') {
+            remediation = 'Review import logs, fix source data, and add error transformations.';
+        } else if (checkType === 'stale_map') {
+            remediation = 'Disable the transform map or schedule a regular import job.';
+        } else if (checkType === 'source_drift') {
+            remediation = 'Validate the data source schema and remap changed fields.';
+        } else if (checkType === 'redundancy') {
+            remediation = 'Review overlapping maps and merge or remove duplicates.';
+        } else if (checkType === 'runaway_job') {
+            remediation = 'Review scheduled jobs and import automation to prevent loops.';
+        }
+        return {
+            transformMapSysId: map.sys_id,
+            dataSourceSysId: map.data_source || '',
+            severity: severity,
+            checkType: checkType,
+            message: message,
+            remediation: remediation
+        };
+    },
+
+    type: 'ImportMapMedicEngine'
+};
+
+// Separate scorecard Script Include collapsed into same file to satisfy 2-script-include limit.
+var ImportMapMedicScorecard = Class.create();
+ImportMapMedicScorecard.prototype = {
+    initialize: function() {
+        this.maxPenalty = 100;
+    },
+
+    mapScore: function(raw) {
+        var score = 100;
+        score -= Math.min(raw.fieldErrorCount * 8, 30);
+        score -= Math.min(raw.collisionCount * 6, 20);
+        score -= Math.min(raw.driftEventCount * 10, 20);
+        score -= Math.min(Math.floor(raw.errorRate30d / 5) * 5, 30);
+        score -= Math.min(raw.stalePenalty, 25);
+        if (score < 0) score = 0;
+        if (score > 100) score = 100;
+        return score;
+    },
+
+    instanceScore: function(mapScores) {
+        if (!mapScores || mapScores.length === 0) return 0;
+        var sum = 0;
+        for (var i = 0; i < mapScores.length; i++) {
+            sum += mapScores[i];
+        }
+        return Math.round(sum / mapScores.length);
+    },
+
+    type: 'ImportMapMedicScorecard'
+};
+]]></script>
+<sys_class_name>sys_script_include</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>script_include_engine_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>ImportMapMedicEngine</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy>read</sys_policy>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_script_include_ImportMapMedicEngine</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_script_include>
+  <!-- script_includes/ImportMapMedicREST.xml -->
+<sys_script_include action="INSERT_OR_UPDATE">
+<access>public</access>
+<active>true</active>
+<api_name>x_snc_importmap_medic.ImportMapMedicREST</api_name>
+<caller_access/>
+<client_callable>false</client_callable>
+<description>REST dispatcher for ImportMap Medic Scripted REST API.</description>
+<name>ImportMapMedicREST</name>
+<script><![CDATA[
+var ImportMapMedicREST = Class.create();
+ImportMapMedicREST.prototype = {
+    initialize: function(request, response) {
+        this.request = request;
+        this.response = response;
+        this.engine = new ImportMapMedicEngine();
+    },
+
+    handleExecute: function() {
+        var body = this._parseBody();
+        var mode = body.mode || 'incremental';
+        var transformMapSysId = body.transformMapSysId || '';
+        var dataSourceSysId = body.dataSourceSysId || '';
+        var dryRun = body.dryRun === true || body.dryRun === 'true';
+
+        if (dryRun) {
+            var summary = this.engine.getHealthSummary({ transformMapSysId: transformMapSysId });
+            return {
+                status: 'dry_run',
+                summary: summary,
+                message: 'No changes persisted.'
+            };
+        }
+
+        var result = this.engine.auditInstance({
+            transformMapSysId: transformMapSysId,
+            dataSourceSysId: dataSourceSysId,
+            mode: mode
+        });
+        return {
+            status: 'ok',
+            mode: mode,
+            result: result
+        };
+    },
+
+    handleStatus: function() {
+        var mapId = this.request.queryParams.transformMapSysId || '';
+        var summary = this.engine.getHealthSummary({ transformMapSysId: mapId });
+        if (!summary) {
+            this.response.setStatus(404);
+            return { status: 'not_found', message: 'No health score found for the given transform map.' };
+        }
+        return {
+            status: 'ok',
+            summary: summary
+        };
+    },
+
+    _parseBody: function() {
+        var body = {};
+        try {
+            if (this.request.body && this.request.body.dataString) {
+                body = JSON.parse(this.request.body.dataString);
+            }
+        } catch (e) {
+            body = {};
+        }
+        return body || {};
+    },
+
+    type: 'ImportMapMedicREST'
+};
+]]></script>
+<sys_class_name>sys_script_include</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>script_include_rest_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>ImportMapMedicREST</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy>read</sys_policy>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_script_include_ImportMapMedicREST</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_script_include>
+  <!-- rest_endpoints/sys_ws_service.xml -->
+<sys_ws_service action="INSERT_OR_UPDATE">
+<active>true</active>
+<custom_auth_script/>
+<default_auth_profile/>
+<default_jwt_profile/>
+<description>ImportMap Medic REST API for auditing transform map health.</description>
+<name>ImportMap Medic API</name>
+<namespace>x_snc_importmap_medic</namespace>
+<service_id>importmap_medic</service_id>
+<source>x_snc_importmap_medic</source>
+<sys_class_name>sys_ws_service</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>rest_service_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>ImportMap Medic API</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_ws_service_importmap_medic</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_ws_service>
+  <!-- rest_endpoints/post_execute.xml -->
+<sys_ws_operation action="INSERT_OR_UPDATE">
+<active>true</active>
+<consumes>application/json</consumes>
+<consumes_customized>false</consumes_customized>
+<default_operation_uri/>
+<description>Run an audit (optionally scoped to a transform map or data source). Supports dryRun.</description>
+<http_method>POST</http_method>
+<name>Execute Audit</name>
+<operation_script><![CDATA[
+(function process(request, response) {
+    var dispatcher = new ImportMapMedicREST(request, response);
+    var result = dispatcher.handleExecute();
+    response.setContentType('application/json');
+    response.setBody(JSON.stringify(result));
+    if (result.status === 'not_found') {
+        response.setStatus(404);
+    } else {
+        response.setStatus(200);
+    }
+})(request, response);
+]]></operation_script>
+<operation_uri>/execute</operation_uri>
+<produces>application/json</produces>
+<produces_customized>false</produces_customized>
+<request_body_content_type/>
+<requires_auth>true</requires_auth>
+<short_description>Run health audit</short_description>
+<sys_class_name>sys_ws_operation</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>rest_post_execute_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Execute Audit</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_ws_operation_post_execute</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<web_service_definition display_value="ImportMap Medic API">rest_service_001</web_service_definition>
+</sys_ws_operation>
+  <!-- rest_endpoints/get_status.xml -->
+<sys_ws_operation action="INSERT_OR_UPDATE">
+<active>true</active>
+<consumes>application/json</consumes>
+<consumes_customized>false</consumes_customized>
+<default_operation_uri/>
+<description>Return the latest health summary for a transform map.</description>
+<http_method>GET</http_method>
+<name>Get Status</name>
+<operation_script><![CDATA[
+(function process(request, response) {
+    var dispatcher = new ImportMapMedicREST(request, response);
+    var result = dispatcher.handleStatus();
+    response.setContentType('application/json');
+    response.setBody(JSON.stringify(result));
+    if (result.status === 'not_found') {
+        response.setStatus(404);
+    } else {
+        response.setStatus(200);
+    }
+})(request, response);
+]]></operation_script>
+<operation_uri>/status</operation_uri>
+<produces>application/json</produces>
+<produces_customized>false</produces_customized>
+<request_body_content_type/>
+<requires_auth>true</requires_auth>
+<short_description>Get health status</short_description>
+<sys_class_name>sys_ws_operation</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>rest_get_status_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Get Status</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_ws_operation_get_status</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<web_service_definition display_value="ImportMap Medic API">rest_service_001</web_service_definition>
+</sys_ws_operation>
+  <!-- acl/roles_and_acls.xml -->
+<sys_user_role action="INSERT_OR_UPDATE">
+<assignable_by/>
+<can_delegate>true</can_delegate>
+<description>ImportMap Medic administrator role</description>
+<elevated_privilege>false</elevated_privilege>
+<grantable>true</grantable>
+<includes_roles/>
+<name>x_snc_importmap_medic.admin</name>
+<requires_subscription>-1</requires_subscription>
+<scoped_admin>false</scoped_admin>
+<suffix/>
+<sys_class_name>sys_user_role</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>role_admin_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic.admin</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_user_role>
+
+<sys_user_role action="INSERT_OR_UPDATE">
+<assignable_by/>
+<can_delegate>true</can_delegate>
+<description>ImportMap Medic operator role</description>
+<grantable>true</grantable>
+<includes_roles/>
+<name>x_snc_importmap_medic.user</name>
+<requires_subscription>-1</requires_subscription>
+<scoped_admin>false</scoped_admin>
+<suffix/>
+<sys_class_name>sys_user_role</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>role_user_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic.user</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_user_role>
+
+<sys_user_role action="INSERT_OR_UPDATE">
+<assignable_by/>
+<can_delegate>true</can_delegate>
+<description>ImportMap Medic REST integration role</description>
+<grantable>true</grantable>
+<includes_roles/>
+<name>x_snc_importmap_medic.integration</name>
+<requires_subscription>-1</requires_subscription>
+<scoped_admin>false</scoped_admin>
+<suffix/>
+<sys_class_name>sys_user_role</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>role_integration_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic.integration</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_user_role>
+
+<!-- Table ACLs for health_score -->
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_health_score</name>
+<operation display_value="read">read</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_health_score_read_admin</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_health_score</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_health_score</name>
+<operation display_value="write">write</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_health_score_write_admin</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_health_score</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p_write</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_health_score</name>
+<operation display_value="create">create</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_health_score_create_admin</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_health_score</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p_create</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_health_score</name>
+<operation display_value="delete">delete</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_health_score_delete_admin</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_health_score</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p_delete</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<!-- Table ACLs for finding -->
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_finding</name>
+<operation display_value="read">read</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_finding_read_user</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_finding</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_finding_read_user</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_finding</name>
+<operation display_value="write">write</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_finding_write_user</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_finding</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_finding_write_user</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_finding</name>
+<operation display_value="create">create</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_finding_create_user</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_finding</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_finding_create_user</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_finding</name>
+<operation display_value="delete">delete</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_finding_delete_user</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_finding</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_finding_delete_user</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<!-- ACL Role Assignments -->
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_score.x_snc_importmap_medic.admin</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_score">acl_health_score_read_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_score.x_snc_importmap_medic.admin</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_score">acl_health_score_write_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_score.x_snc_importmap_medic.admin</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_score">acl_health_score_create_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_score.x_snc_importmap_medic.admin</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_score">acl_health_score_delete_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_finding.x_snc_importmap_medic.user</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_finding">acl_finding_read_user</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.user">role_user_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_finding.x_snc_importmap_medic.user</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_finding">acl_finding_write_user</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.user">role_user_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_finding.x_snc_importmap_medic.user</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_finding">acl_finding_create_user</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.user">role_user_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_finding.x_snc_importmap_medic.user</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_finding">acl_finding_delete_user</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.user">role_user_001</sys_user_role>
+</sys_security_acl_role>
+
+<!-- Table ACLs for health_trend -->
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_health_trend</name>
+<operation display_value="read">read</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_health_trend_read_admin</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_health_trend</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_health_trend_read_admin</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_health_trend</name>
+<operation display_value="write">write</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_health_trend_write_admin</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_health_trend</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_health_trend_write_admin</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_health_trend</name>
+<operation display_value="create">create</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_health_trend_create_admin</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_health_trend</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_health_trend_create_admin</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_health_trend</name>
+<operation display_value="delete">delete</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_health_trend_delete_admin</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_health_trend</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_health_trend_delete_admin</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_trend.x_snc_importmap_medic.admin</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_trend">acl_health_trend_read_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_trend.x_snc_importmap_medic.admin</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_trend">acl_health_trend_write_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_trend.x_snc_importmap_medic.admin</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_trend">acl_health_trend_create_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_trend.x_snc_importmap_medic.admin</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_trend">acl_health_trend_delete_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
+</sys_security_acl_role>
+
+<!-- Table ACLs for drift_event -->
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_drift_event</name>
+<operation display_value="read">read</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_drift_event_read_admin</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_drift_event</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_drift_event_read_admin</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_drift_event</name>
+<operation display_value="write">write</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_drift_event_write_admin</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_drift_event</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_drift_event_write_admin</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_drift_event</name>
+<operation display_value="create">create</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_drift_event_create_admin</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_drift_event</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_drift_event_create_admin</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>x_snc_importmap_medic_drift_event</name>
+<operation display_value="delete">delete</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_drift_event_delete_admin</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic_drift_event</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_drift_event_delete_admin</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="record">record</type>
+</sys_security_acl>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_drift_event.x_snc_importmap_medic.admin</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_drift_event">acl_drift_event_read_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_drift_event.x_snc_importmap_medic.admin</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_drift_event">acl_drift_event_write_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_drift_event.x_snc_importmap_medic.admin</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_drift_event">acl_drift_event_create_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_drift_event.x_snc_importmap_medic.admin</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_drift_event">acl_drift_event_delete_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
+</sys_security_acl_role>
+
+<!-- REST endpoint execute ACL -->
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>/api/x_snc_importmap_medic/importmap_medic/execute</name>
+<operation display_value="execute">execute</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_rest_execute_integration</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>/api/x_snc_importmap_medic/importmap_medic/execute</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_rest_execute_integration</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="REST_Endpoint">REST_Endpoint</type>
+</sys_security_acl>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>/api/x_snc_importmap_medic/importmap_medic/execute.x_snc_importmap_medic.integration</sys_name>
+<sys_security_acl display_value="/api/x_snc_importmap_medic/importmap_medic/execute">acl_rest_execute_integration</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.integration">role_integration_001</sys_user_role>
+</sys_security_acl_role>
+
+<!-- REST endpoint status ACL -->
+<sys_security_acl action="INSERT_OR_UPDATE">
+<active>true</active>
+<admin_overrides>true</admin_overrides>
+<advanced>false</advanced>
+<condition/>
+<description/>
+<name>/api/x_snc_importmap_medic/importmap_medic/status</name>
+<operation display_value="execute">execute</operation>
+<script/>
+<sys_class_name>sys_security_acl</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>acl_rest_status_integration</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>/api/x_snc_importmap_medic/importmap_medic/status</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_security_acl_rest_status_integration</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<type display_value="REST_Endpoint">REST_Endpoint</type>
+</sys_security_acl>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>/api/x_snc_importmap_medic/importmap_medic/status.x_snc_importmap_medic.integration</sys_name>
+<sys_security_acl display_value="/api/x_snc_importmap_medic/importmap_medic/status">acl_rest_status_integration</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.integration">role_integration_001</sys_user_role>
+</sys_security_acl_role>
+  <!-- business_rules/resolve_recalc.xml -->
+<sys_script action="INSERT_OR_UPDATE">
+<active>true</active>
+<advanced>true</advanced>
+<change_fields/>
+<client_callable>false</client_callable>
+<description>Recalculates health score when raw counts change on the health score table.</description>
+<execute_function>false</execute_function>
+<filter_condition table="x_snc_importmap_medic_health_score">field_error_countVALUCHANGES^ORcollision_countVALUCHANGES^ORdrift_event_countVALUCHANGES^ORerror_rate_30dVALUCHANGES^ORstale_penaltyVALUCHANGES</filter_condition>
+<is_rest>false</is_rest>
+<name>ImportMap Medic Recalc on Change</name>
+<order>100</order>
+<priority>100</priority>
+<rest_method/>
+<rest_service/>
+<rest_variables/>
+<role_conditions/>
+<script><![CDATA[
+(function executeRule(current, previous) {
+    var raw = {
+        fieldErrorCount: parseInt(current.getValue('field_error_count'), 10) || 0,
+        collisionCount: parseInt(current.getValue('collision_count'), 10) || 0,
+        driftEventCount: parseInt(current.getValue('drift_event_count'), 10) || 0,
+        errorRate30d: parseInt(current.getValue('error_rate_30d'), 10) || 0,
+        stalePenalty: parseInt(current.getValue('stale_penalty'), 10) || 0
+    };
+    var engine = new ImportMapMedicEngine();
+    var score = engine.score.mapScore(raw);
+    current.setValue('health_score', score);
+    current.setValue('audited_at', new GlideDateTime());
+})(current, previous);
+]]></script>
+<sys_class_name>sys_script</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>business_rule_recalc_001</sys_id>
+<sys_mod_count>1</sys_mod_count>
+<sys_name>ImportMap Medic Recalc on Change</sys_name>
+<sys_overrides/>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_script_ImportMap_Medic_Recalc_on_Change</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 07:00:00</sys_updated_on>
+<table>x_snc_importmap_medic_health_score</table>
+<when>before</when>
+</sys_script>
+  <!-- scheduled_jobs/daily_audit.xml -->
+<sys_script action="INSERT_OR_UPDATE">
+<active>true</active>
+<description>Daily scheduled audit of all active transform maps.</description>
+<name>ImportMap Medic Daily Audit</name>
+<run_as display_value="System Administrator">6816f79cc0a8016401c5a33be04be441</run_as>
+<run_as_tz/>
+<run_conditional>false</run_conditional>
+<run_start>2026-07-16 02:00:00</run_start>
+<run_time>1970-01-01 02:00:00</run_time>
+<run_type>daily</run_type>
+<script><![CDATA[
+var engine = new ImportMapMedicEngine();
+var result = engine.auditInstance({ mode: 'incremental' });
+gs.info('ImportMap Medic daily audit complete. Maps audited: ' + result.mapsAudited +
+        ', instance score: ' + result.instanceScore +
+        ', findings created: ' + result.findingsCreated);
+]]></script>
+<sys_class_name>sys_script</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>scheduled_job_daily_audit_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>ImportMap Medic Daily Audit</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_script_ImportMap_Medic_Daily_Audit</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<upgrade_safe>true</upgrade_safe>
+</sys_script>
+  <!-- cross_scope/sys_scope_privilege.xml -->
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+<operation>read</operation>
+<source_scope display_value="ImportMap Medic">x_snc_importmap_medic</source_scope>
+<status>allowed</status>
+<sys_class_name>sys_scope_privilege</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>priv_read_sys_transform_map_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>sys_transform_map</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_scope_privilege_sys_transform_map</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<target_scope display_value="Global">global</target_scope>
+</sys_scope_privilege>
+
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+<operation>read</operation>
+<source_scope display_value="ImportMap Medic">x_snc_importmap_medic</source_scope>
+<status>allowed</status>
+<sys_class_name>sys_scope_privilege</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>priv_read_sys_transform_entry_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>sys_transform_entry</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_scope_privilege_sys_transform_entry</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<target_scope display_value="Global">global</target_scope>
+</sys_scope_privilege>
+
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+<operation>read</operation>
+<source_scope display_value="ImportMap Medic">x_snc_importmap_medic</source_scope>
+<status>allowed</status>
+<sys_class_name>sys_scope_privilege</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>priv_read_sys_import_set_run_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>sys_import_set_run</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_scope_privilege_sys_import_set_run</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<target_scope display_value="Global">global</target_scope>
+</sys_scope_privilege>
+
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+<operation>read</operation>
+<source_scope display_value="ImportMap Medic">x_snc_importmap_medic</source_scope>
+<status>allowed</status>
+<sys_class_name>sys_scope_privilege</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>priv_read_sys_import_set_log_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>sys_import_set_log</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_scope_privilege_sys_import_set_log</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<target_scope display_value="Global">global</target_scope>
+</sys_scope_privilege>
+
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+<operation>read</operation>
+<source_scope display_value="ImportMap Medic">x_snc_importmap_medic</source_scope>
+<status>allowed</status>
+<sys_class_name>sys_scope_privilege</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>priv_read_sys_data_source_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>sys_data_source</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_scope_privilege_sys_data_source</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<target_scope display_value="Global">global</target_scope>
+</sys_scope_privilege>
+</unload>

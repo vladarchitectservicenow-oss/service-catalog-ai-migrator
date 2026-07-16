@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-16 07:00:00">
+<sys_ws_operation action="INSERT_OR_UPDATE">
+<active>true</active>
+<consumes>application/json</consumes>
+<consumes_customized>false</consumes_customized>
+<default_operation_uri/>
+<description>Run an audit (optionally scoped to a transform map or data source). Supports dryRun.</description>
+<http_method>POST</http_method>
+<name>Execute Audit</name>
+<operation_script><![CDATA[
+(function process(request, response) {
+    var dispatcher = new ImportMapMedicREST(request, response);
+    var result = dispatcher.handleExecute();
+    response.setContentType('application/json');
+    response.setBody(JSON.stringify(result));
+    if (result.status === 'not_found') {
+        response.setStatus(404);
+    } else {
+        response.setStatus(200);
+    }
+})(request, response);
+]]></operation_script>
+<operation_uri>/execute</operation_uri>
+<produces>application/json</produces>
+<produces_customized>false</produces_customized>
+<request_body_content_type/>
+<requires_auth>true</requires_auth>
+<short_description>Run health audit</short_description>
+<sys_class_name>sys_ws_operation</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>rest_post_execute_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Execute Audit</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_ws_operation_post_execute</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<web_service_definition display_value="ImportMap Medic API">rest_service_001</web_service_definition>
+</sys_ws_operation>
+</unload>

@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-16 07:00:00">
+<sys_script_include action="INSERT_OR_UPDATE">
+<access>package_private</access>
+<active>true</active>
+<api_name>x_snc_importmap_medic.ImportMapMedicEngine</api_name>
+<caller_access/>
+<client_callable>false</client_callable>
+<description>Core engine for ImportMap Medic. Audits transform maps, computes health scores, and emits findings.</description>
+<name>ImportMapMedicEngine</name>
+<script><![CDATA[
+var ImportMapMedicEngine = Class.create();
+ImportMapMedicEngine.prototype = {
+    initialize: function() {
+        this.debug = false;
+        this.now = new GlideDateTime();
+        this.score = new ImportMapMedicScorecard();
+    },
+
+    setDebug: function(flag) {
+        this.debug = flag === true;
+        return this;
+    },
+
+    auditInstance: function(params) {
+        params = params || {};
+        var transformMapSysId = params.transformMapSysId || '';
+        var dataSourceSysId = params.dataSourceSysId || '';
+        var mode = params.mode || 'incremental';
+        var findings = [];
+        var result = {
+            instanceScore: 0,
+            mapsAudited: 0,
+            findingsCreated: 0,
+            healthScoresUpdated: 0,
+            trendsRecorded: 0,
+            errors: []
+        };
+
+        var maps = this._getTransformMaps(transformMapSysId);
+        var scores = [];
+        for (var m = 0; m < maps.length; m++) {
+            var map = maps[m];
+            try {
+                var audit = this._auditMap(map, dataSourceSysId, mode);
+                scores.push(audit.healthScore);
+                findings = findings.concat(audit.findings);
+                this._persistHealthScore(map, audit);
+                result.healthScoresUpdated++;
+                this._autoResolveStale(map, audit.findings);
+            } catch (ex) {
+                result.errors.push(String(ex));
+                findings.push(this._finding(map, 'critical', 'audit_exception', 'Audit failed for map: ' + String(ex)));
+            }
+        }
+
+        result.instanceScore = this.score.instanceScore(scores);
+        result.mapsAudited = maps.length;
+        result.findingsCreated = this._persistFindings(findings);
+        result.trendsRecorded = this._recordTrend(result.instanceScore, maps.length);
+        return result;
+    },
+
+    getHealthSummary: function(params) {
+        params = params || {};
+        var transformMapSysId = params.transformMapSysId || '';
+        var gr = new GlideRecord('x_snc_importmap_medic_health_score');
+        if (transformMapSysId) {
+            gr.addQuery('transform_map', transformMapSysId);
+        }
+        gr.orderByDesc('audited_at');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return {
+                transformMapSysId: gr.getValue('transform_map'),
+                transformMapName: gr.transform_map.getDisplayValue(),
+                dataSourceSysId: gr.getValue('data_source'),
+                healthScore: parseInt(gr.getValue('health_score'), 10) || 0,
+                fieldErrorCount: parseInt(gr.getValue('field_error_count'), 10) || 0,
+                collisionCount: parseInt(gr.getValue('collision_count'), 10) || 0,
+                driftEventCount: parseInt(gr.getValue('drift_event_count'), 10) || 0,
+                errorRate30d: parseInt(gr.getValue('error_rate_30d'), 10) || 0,
+                stalePenalty: parseInt(gr.getValue('stale_penalty'), 10) || 0,
+                lastRun: String(gr.getValue('last_run')),
+                auditedAt: String(gr.getValue('audited_at'))
+            };
+        }
+        return null;
+    },
+
+    recalcScore: function(healthScoreSysId) {
+        var gr = new GlideRecord('x_snc_importmap_medic_health_score');
+        if (!gr.get(healthScoreSysId)) {
+            throw new Error('Health score record not found: ' + healthScoreSysId);
+        }
+        var raw = {
+            fieldErrorCount: parseInt(gr.getValue('field_error_count'), 10) || 0,
+            collisionCount: parseInt(gr.getValue('collision_count'), 10) || 0,
+            driftEventCount: parseInt(gr.getValue('drift_event_count'), 10) || 0,
+            errorRate30d: parseInt(gr.getValue('error_rate_30d'), 10) || 0,
+            stalePenalty: parseInt(gr.getValue('stale_penalty'), 10) || 0
+        };
+        var score = this.score.mapScore(raw);
+        gr.setValue('health_score', score);
+        gr.setValue('audited_at', this.now);
+        gr.update();
+        return score;
+    },
+
+    _getTransformMaps: function(transformMapSysId) {
+        var maps = [];
+        var gr = new GlideRecord('sys_transform_map');
+        if (transformMapSysId) {
+            gr.addQuery('sys_id', transformMapSysId);
+        }
+        gr.addActiveQuery();
+        gr.query();
+        while (gr.next()) {
+            maps.push({
+                sys_id: gr.getValue('sys_id'),
+                name: gr.getValue('name'),
+                source_table: gr.getValue('source_table'),
+                target_table: gr.getValue('target_table'),
+                data_source: this._guessDataSource(gr.getValue('source_table')),
+                active: gr.getValue('active') == '1',
+                sys_created_on: String(gr.getValue('sys_created_on'))
+            });
+        }
+        return maps;
+    },
+
+    _auditMap: function(map, dataSourceSysId, mode) {
+        map.data_source = dataSourceSysId || map.data_source || '';
+        var findings = [];
+        var audit = {
+            transformMap: map,
+            healthScore: 0,
+            findings: findings,
+            raw: {
+                fieldErrorCount: 0,
+                collisionCount: 0,
+                driftEventCount: 0,
+                errorRate30d: 0,
+                stalePenalty: 0
+            }
+        };
+
+        var fieldAudit = this._checkFieldValidity(map);
+        audit.raw.fieldErrorCount = fieldAudit.count;
+        findings = findings.concat(fieldAudit.findings);
+
+        var collisionAudit = this._checkCoalesceCollisions(map);
+        audit.raw.collisionCount = collisionAudit.count;
+        findings = findings.concat(collisionAudit.findings);
+
+        var errorAudit = this._checkImportErrorRate(map);
+        audit.raw.errorRate30d = errorAudit.rate;
+        findings = findings.concat(errorAudit.findings);
+
+        var staleAudit = this._checkStaleMap(map);
+        audit.raw.stalePenalty = staleAudit.penalty;
+        findings = findings.concat(staleAudit.findings);
+
+        var driftAudit = this._checkSourceDrift(map, dataSourceSysId, mode);
+        audit.raw.driftEventCount = driftAudit.count;
+        findings = findings.concat(driftAudit.findings);
+
+        var redundancyAudit = this._checkRedundancy(map);
+        findings = findings.concat(redundancyAudit.findings);
+
+        var runawayAudit = this._checkRunawayJobs(map);
+        findings = findings.concat(runawayAudit.findings);
+
+        audit.findings = findings;
+        audit.healthScore = this.score.mapScore(audit.raw);
+        return audit;
+    },
+
+    _checkFieldValidity: function(map) {
+        var findings = [];
+        var count = 0;
+        var gr = new GlideRecord('sys_transform_entry');
+        gr.addQuery('map', map.sys_id);
+        gr.query();
+        while (gr.next()) {
+            var sourceField = String(gr.getValue('source_field') || '');
+            var targetField = String(gr.getValue('target_field') || '');
+            var coalesce = gr.getValue('coalesce') == '1';
+            var useSourceScript = gr.getValue('use_source_script') == '1';
+
+            if (!targetField) {
+                count++;
+                findings.push(this._finding(map, 'critical', 'field_validity', 'Transform entry has no target field (source=' + sourceField + ').'));
+            }
+            if (coalesce && !sourceField) {
+                count++;
+                findings.push(this._finding(map, 'warning', 'field_validity', 'Coalesce entry has no source field (target=' + targetField + ').'));
+            }
+            if (useSourceScript) {
+                var script = String(gr.getValue('source_script') || '');
+                if (!script || script.trim().length < 3) {
+                    count++;
+                    findings.push(this._finding(map, 'warning', 'field_validity', 'Source script enabled but empty (target=' + targetField + ').'));
+                }
+            }
+        }
+        return { count: count, findings: findings };
+    },
+
+    _checkCoalesceCollisions: function(map) {
+        var findings = [];
+        var count = 0;
+        var gr = new GlideRecord('sys_transform_entry');
+        gr.addQuery('map', map.sys_id);
+        gr.addQuery('coalesce', true);
+        gr.query();
+        var coalesceTargets = {};
+        while (gr.next()) {
+            var target = String(gr.getValue('target_field'));
+            if (coalesceTargets[target]) {
+                count++;
+                findings.push(this._finding(map, 'warning', 'coalesce_collision', 'Multiple coalesce entries target ' + target + '.'));
+            }
+            coalesceTargets[target] = true;
+        }
+        return { count: count, findings: findings };
+    },
+
+    _checkImportErrorRate: function(map) {
+        var findings = [];
+        var rate = 0;
+        var since = new GlideDateTime();
+        since.addDays(-30);
+        var gr = new GlideAggregate('sys_import_set_log');
+        gr.addQuery('sys_created_on', '>=', since);
+        gr.addQuery('transform_map', 'CONTAINS', map.name);
+        gr.addAggregate('COUNT');
+        gr.addHaving('COUNT', '>=', 1);
+        gr.query();
+        var errors = 0;
+        if (gr.next()) {
+            errors = parseInt(gr.getAggregate('COUNT'), 10) || 0;
+        }
+
+        var totalGr = new GlideAggregate('sys_import_set_run');
+        totalGr.addQuery('map', map.sys_id);
+        totalGr.addQuery('sys_created_on', '>=', since);
+        totalGr.addAggregate('COUNT');
+        totalGr.query();
+        var total = 0;
+        if (totalGr.next()) {
+            total = parseInt(totalGr.getAggregate('COUNT'), 10) || 1;
+        }
+        rate = total > 0 ? Math.round((errors / total) * 100) : 0;
+        if (rate >= 50) {
+            findings.push(this._finding(map, 'critical', 'error_rate', 'Import error rate is ' + rate + '% over the last 30 days.'));
+        } else if (rate >= 20) {
+            findings.push(this._finding(map, 'warning', 'error_rate', 'Import error rate is ' + rate + '% over the last 30 days.'));
+        }
+        return { rate: rate, findings: findings };
+    },
+
+    _checkStaleMap: function(map) {
+        var findings = [];
+        var penalty = 0;
+        var lastRun = this._lastRunForMap(map.sys_id);
+        if (!lastRun) {
+            penalty = 25;
+            findings.push(this._finding(map, 'warning', 'stale_map', 'Transform map has never been run.'));
+        } else {
+            var days = this._daysBetween(lastRun, this.now);
+            if (days > 90) {
+                penalty = 20;
+                findings.push(this._finding(map, 'warning', 'stale_map', 'Transform map last run ' + days + ' days ago.'));
+            } else if (days > 30) {
+                penalty = 10;
+                findings.push(this._finding(map, 'info', 'stale_map', 'Transform map last run ' + days + ' days ago.'));
+            }
+        }
+        return { penalty: penalty, findings: findings };
+    },
+
+    _lastRunForMap: function(mapSysId) {
+        var gr = new GlideRecord('sys_import_set_run');
+        gr.addQuery('map', mapSysId);
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return new GlideDateTime(String(gr.getValue('sys_created_on')));
+        }
+        return null;
+    },
+
+    _daysBetween: function(start, end) {
+        var msPerDay = 1000 * 60 * 60 * 24;
+        return Math.floor((end.getNumericValue() - start.getNumericValue()) / msPerDay);
+    },
+
+    _checkSourceDrift: function(map, dataSourceSysId, mode) {
+        var findings = [];
+        var count = 0;
+        if (!dataSourceSysId) {
+            return { count: 0, findings: findings };
+        }
+        var fingerprint = this._fingerprintSource(dataSourceSysId);
+        var previous = this._lastFingerprint(map.sys_id);
+        if (previous && previous !== fingerprint) {
+            count++;
+            findings.push(this._finding(map, 'warning', 'source_drift', 'Data source fingerprint changed since last audit.'));
+            this._recordDrift(map, previous, fingerprint);
+        }
+        if (mode !== 'incremental' || !previous) {
+            this._saveFingerprint(map.sys_id, fingerprint);
+        }
+        return { count: count, findings: findings };
+    },
+
+    _fingerprintSource: function(dataSourceSysId) {
+        var gr = new GlideRecord('sys_data_source');
+        if (!gr.get(dataSourceSysId)) {
+            return '';
+        }
+        var s = String(gr.getValue('import_set_table_name') || '') + '|' +
+                String(gr.getValue('type') || '') + '|' +
+                String(gr.getValue('file_path') || '') + '|' +
+                String(gr.getValue('connection_url') || '');
+        return GlideStringUtil.hashCode(s) + '';
+    },
+
+    _lastFingerprint: function(mapSysId) {
+        var gr = new GlideRecord('x_snc_importmap_medic_drift_event');
+        gr.addQuery('transform_map', mapSysId);
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return String(gr.getValue('source_fingerprint_after'));
+        }
+        return null;
+    },
+
+    _saveFingerprint: function(mapSysId, fingerprint) {
+        var gr = new GlideRecord('x_snc_importmap_medic_drift_event');
+        gr.initialize();
+        gr.setValue('transform_map', mapSysId);
+        gr.setValue('source_fingerprint_before', fingerprint);
+        gr.setValue('source_fingerprint_after', fingerprint);
+        gr.setValue('sample_row_count', 0);
+        gr.setValue('detected_at', this.now);
+        gr.insert();
+    },
+
+    _recordDrift: function(map, before, after) {
+        var gr = new GlideRecord('x_snc_importmap_medic_drift_event');
+        gr.initialize();
+        gr.setValue('transform_map', map.sys_id);
+        gr.setValue('source_fingerprint_before', before);
+        gr.setValue('source_fingerprint_after', after);
+        gr.setValue('sample_row_count', 0);
+        gr.setValue('detected_at', this.now);
+        gr.insert();
+    },
+
+    _checkRedundancy: function(map) {
+        var findings = [];
+        var gr = new GlideAggregate('sys_transform_map');
+        gr.addQuery('target_table', map.target_table);
+        gr.addQuery('source_table', map.source_table);
+        gr.addQuery('sys_id', '!=', map.sys_id);
+        gr.addAggregate('COUNT');
+        gr.query();
+        if (gr.next()) {
+            var c = parseInt(gr.getAggregate('COUNT'), 10) || 0;
+            if (c > 0) {
+                findings.push(this._finding(map, 'info', 'redundancy', 'Found ' + c + ' other transform map(s) with same source/target.'));
+            }
+        }
+        return { findings: findings };
+    },
+
+    _checkRunawayJobs: function(map) {
+        var findings = [];
+        var since = new GlideDateTime();
+        since.addDays(-1);
+        var gr = new GlideAggregate('sys_import_set_run');
+        gr.addQuery('map', map.sys_id);
+        gr.addQuery('sys_created_on', '>=', since);
+        gr.addAggregate('COUNT');
+        gr.query();
+        if (gr.next()) {
+            var c = parseInt(gr.getAggregate('COUNT'), 10) || 0;
+            if (c > 50) {
+                findings.push(this._finding(map, 'critical', 'runaway_job', map.name + ' ran ' + c + ' times in the last 24 hours.'));
+            } else if (c > 20) {
+                findings.push(this._finding(map, 'warning', 'runaway_job', map.name + ' ran ' + c + ' times in the last 24 hours.'));
+            }
+        }
+        return { findings: findings };
+    },
+
+    _persistHealthScore: function(map, audit) {
+        var gr = new GlideRecord('x_snc_importmap_medic_health_score');
+        gr.addQuery('transform_map', map.sys_id);
+        gr.query();
+        if (gr.next()) {
+            this._fillHealthScore(gr, map, audit);
+            gr.update();
+        } else {
+            gr.initialize();
+            this._fillHealthScore(gr, map, audit);
+            gr.insert();
+        }
+    },
+
+    _fillHealthScore: function(gr, map, audit) {
+        gr.setValue('name', map.name);
+        gr.setValue('transform_map', map.sys_id);
+        gr.setValue('data_source', map.data_source || '');
+        gr.setValue('health_score', audit.healthScore);
+        gr.setValue('field_error_count', audit.raw.fieldErrorCount);
+        gr.setValue('collision_count', audit.raw.collisionCount);
+        gr.setValue('drift_event_count', audit.raw.driftEventCount);
+        gr.setValue('error_rate_30d', audit.raw.errorRate30d);
+        gr.setValue('stale_penalty', audit.raw.stalePenalty);
+        gr.setValue('last_run', this._lastRunForMap(map.sys_id));
+        gr.setValue('audited_at', this.now);
+    },
+
+    _persistFindings: function(findings) {
+        var count = 0;
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            var gr = new GlideRecord('x_snc_importmap_medic_finding');
+            gr.addQuery('transform_map', f.transformMapSysId);
+            gr.addQuery('check_type', f.checkType);
+            gr.addQuery('message', f.message);
+            gr.addQuery('active', true);
+            gr.query();
+            if (!gr.next()) {
+                gr.initialize();
+                gr.setValue('transform_map', f.transformMapSysId);
+                gr.setValue('data_source', f.dataSourceSysId || '');
+                gr.setValue('check_type', f.checkType);
+                gr.setValue('severity', f.severity);
+                gr.setValue('message', f.message);
+                gr.setValue('remediation_action', f.remediation || '');
+                gr.setValue('detected_at', this.now);
+                gr.setValue('active', true);
+                gr.insert();
+                count++;
+            }
+        }
+        return count;
+    },
+
+    _autoResolveStale: function(map, currentFindings) {
+        if (!map || !map.sys_id) return 0;
+        var activeTypes = {};
+        for (var i = 0; i < currentFindings.length; i++) {
+            activeTypes[currentFindings[i].checkType] = true;
+        }
+        var gr = new GlideRecord('x_snc_importmap_medic_finding');
+        gr.addQuery('transform_map', map.sys_id);
+        gr.addQuery('active', true);
+        gr.query();
+        var resolved = 0;
+        while (gr.next()) {
+            var ct = String(gr.getValue('check_type'));
+            if (!activeTypes[ct]) {
+                gr.setValue('active', false);
+                gr.setValue('resolved_at', this.now);
+                gr.update();
+                resolved++;
+            }
+        }
+        return resolved;
+    },
+
+    _recordTrend: function(instanceScore, mapsAudited) {
+        var gr = new GlideRecord('x_snc_importmap_medic_health_trend');
+        gr.initialize();
+        gr.setValue('trend_date', this.now);
+        gr.setValue('instance_score', instanceScore);
+        gr.setValue('maps_audited', mapsAudited);
+        return gr.insert();
+    },
+
+    _finding: function(map, severity, checkType, message) {
+        var remediation = '';
+        if (checkType === 'field_validity') {
+            remediation = 'Open the transform map and repair or remove the invalid transform entry.';
+        } else if (checkType === 'coalesce_collision') {
+            remediation = 'Consolidate coalesce fields or use a composite coalesce.';
+        } else if (checkType === 'error_rate') {
+            remediation = 'Review import logs, fix source data, and add error transformations.';
+        } else if (checkType === 'stale_map') {
+            remediation = 'Disable the transform map or schedule a regular import job.';
+        } else if (checkType === 'source_drift') {
+            remediation = 'Validate the data source schema and remap changed fields.';
+        } else if (checkType === 'redundancy') {
+            remediation = 'Review overlapping maps and merge or remove duplicates.';
+        } else if (checkType === 'runaway_job') {
+            remediation = 'Review scheduled jobs and import automation to prevent loops.';
+        }
+        return {
+            transformMapSysId: map.sys_id,
+            dataSourceSysId: map.data_source || '',
+            severity: severity,
+            checkType: checkType,
+            message: message,
+            remediation: remediation
+        };
+    },
+
+    type: 'ImportMapMedicEngine'
+};
+
+// Separate scorecard Script Include collapsed into same file to satisfy 2-script-include limit.
+var ImportMapMedicScorecard = Class.create();
+ImportMapMedicScorecard.prototype = {
+    initialize: function() {
+        this.maxPenalty = 100;
+    },
+
+    mapScore: function(raw) {
+        var score = 100;
+        score -= Math.min(raw.fieldErrorCount * 8, 30);
+        score -= Math.min(raw.collisionCount * 6, 20);
+        score -= Math.min(raw.driftEventCount * 10, 20);
+        score -= Math.min(Math.floor(raw.errorRate30d / 5) * 5, 30);
+        score -= Math.min(raw.stalePenalty, 25);
+        if (score < 0) score = 0;
+        if (score > 100) score = 100;
+        return score;
+    },
+
+    instanceScore: function(mapScores) {
+        if (!mapScores || mapScores.length === 0) return 0;
+        var sum = 0;
+        for (var i = 0; i < mapScores.length; i++) {
+            sum += mapScores[i];
+        }
+        return Math.round(sum / mapScores.length);
+    },
+
+    type: 'ImportMapMedicScorecard'
+};
+]]></script>
+<sys_class_name>sys_script_include</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>script_include_engine_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>ImportMapMedicEngine</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy>read</sys_policy>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_script_include_ImportMapMedicEngine</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_script_include>
+</unload>

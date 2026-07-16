@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-16 07:00:00">
+<sys_ui_application action="INSERT_OR_UPDATE">
+<active>true</active>
+<description>ImportMap Medic workbench</description>
+<name>ImportMap Medic</name>
+<order/>
+<roles>x_snc_importmap_medic.user,x_snc_importmap_medic.admin</roles>
+<sys_class_name>sys_ui_application</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>ui_app_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>ImportMap Medic</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_ui_application_ImportMap_Medic</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_ui_application>
+
+<sys_app_module action="INSERT_OR_UPDATE">
+<active>true</active>
+<application display_value="ImportMap Medic">ui_app_001</application>
+<assessment/>
+<device_type/>
+<hint>Health score dashboard</hint>
+<mobile>false</mobile>
+<mobile_title>Health Scores</mobile_title>
+<mobile_view_name>Mobile</mobile_view_name>
+<name>x_snc_importmap_medic_health_score</name>
+<order>100</order>
+<override_menu_roles>false</override_menu_roles>
+<query/>
+<report/>
+<roles>x_snc_importmap_medic.user,x_snc_importmap_medic.admin</roles>
+<sys_class_name>sys_app_module</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>app_module_health_score_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Health Scores</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_app_module_health_scores</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<title>Health Scores</title>
+<view_name/>
+</sys_app_module>
+
+<sys_app_module action="INSERT_OR_UPDATE">
+<active>true</active>
+<application display_value="ImportMap Medic">ui_app_001</application>
+<assessment/>
+<device_type/>
+<hint>All findings</hint>
+<mobile>false</mobile>
+<mobile_title>Findings</mobile_title>
+<mobile_view_name>Mobile</mobile_view_name>
+<name>x_snc_importmap_medic_finding</name>
+<order>200</order>
+<override_menu_roles>false</override_menu_roles>
+<query/>
+<report/>
+<roles>x_snc_importmap_medic.user,x_snc_importmap_medic.admin</roles>
+<sys_class_name>sys_app_module</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>app_module_findings_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Findings</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_app_module_findings</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<title>Findings</title>
+<view_name/>
+</sys_app_module>
+
+<sys_app_module action="INSERT_OR_UPDATE">
+<active>true</active>
+<application display_value="ImportMap Medic">ui_app_001</application>
+<assessment/>
+<device_type/>
+<hint>Run audit</hint>
+<mobile>false</mobile>
+<mobile_title>Run Audit</mobile_title>
+<mobile_view_name>Mobile</mobile_view_name>
+<name>x_snc_importmap_medic_health_score</name>
+<order>300</order>
+<override_menu_roles>false</override_menu_roles>
+<query>?sysparm_view=Run%20Audit</query>
+<report/>
+<roles>x_snc_importmap_medic.admin</roles>
+<sys_class_name>sys_app_module</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>app_module_run_audit_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Run Audit</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_app_module_run_audit</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<title>Run Audit</title>
+<view_name/>
+</sys_app_module>
+</unload>

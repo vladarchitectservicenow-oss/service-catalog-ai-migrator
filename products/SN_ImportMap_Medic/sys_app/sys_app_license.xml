@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-16 07:00:00">
+<sys_app_license action="INSERT_OR_UPDATE">
+<app display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</app>
+<free>true</free>
+<fulfillment_group display_value="Software Asset Management">d0bd9f4af42311108b89ccba2524a</fulfillment_group>
+<license>AGPL-3.0</license>
+<name>ImportMap Medic</name>
+<seats>0</seats>
+<sys_class_name>sys_app_license</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>b1b2b3b4c5c6d7d8e9e0f1f2f3f4f5f6</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_app_license>
+</unload>
