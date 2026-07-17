@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_jbpls_rest_status</name>
+  <type>rest_endpoint</type>
+  <operation>execute</operation>
+  <description>Allow authenticated users to call GET /api/x_jbpls/status</description>
+  <active>true</active>
+  <requires_role>x_jbpls.user</requires_role>
+  <script><![CDATA[answer = true;]]></script>
+</sys_security_acl>

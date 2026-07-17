@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_jbpls_cross_scope_sys_trigger_write</name>
+  <type>record</type>
+  <operation>write</operation>
+  <description>Cross-scope write access to sys_trigger for JobPulse disable/reschedule actions</description>
+  <active>true</active>
+  <requires_role>x_jbpls.cross_scope</requires_role>
+  <script><![CDATA[answer = true;]]></script>
+</sys_security_acl>

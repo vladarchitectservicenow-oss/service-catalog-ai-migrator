@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_app>
+  <name>JobPulse</name>
+  <scope>x_jbpls</scope>
+  <version>1.0.0</version>
+  <description>Scheduled Job Health &amp; Overlap Monitor — inventory, score, and remediate every scheduled job in your instance before the next missed SLA.</description>
+  <vendor>Vladimir Kapustin</vendor>
+  <vendor_prefix>x_jbpls</vendor_prefix>
+  <compatibility>
+    <min_version>Utah</min_version>
+    <max_version>Australia</max_version>
+  </compatibility>
+  <roles>
+    <role>
+      <name>x_jbpls.user</name>
+      <description>Can view health data, run scans, and export reports.</description>
+    </role>
+    <role>
+      <name>x_jbpls.admin</name>
+      <description>Full access: configure, disable/reschedule jobs, manage settings.</description>
+      <contains>x_jbpls.user</contains>
+      <contains>x_jbpls.cross_scope</contains>
+    </role>
+    <role>
+      <name>x_jbpls.cross_scope</name>
+      <description>Read-only access to OOTB tables (sys_trigger, sys_trigger_job, syslog, sys_scope, sys_db_object).</description>
+    </role>
+  </roles>
+  <dependencies>
+    <plugin>
+      <id>com.glide.scheduled_jobs</id>
+      <min_version>1.0.0</min_version>
+    </plugin>
+  </dependencies>
+</sys_app>

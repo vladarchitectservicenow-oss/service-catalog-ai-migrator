@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_jbpls_cross_scope_sys_db_object_read</name>
+  <type>record</type>
+  <operation>read</operation>
+  <description>Cross-scope read access to sys_db_object for JobPulse abandoned-job detection</description>
+  <active>true</active>
+  <requires_role>x_jbpls.cross_scope</requires_role>
+  <script><![CDATA[answer = true;]]></script>
+</sys_security_acl>

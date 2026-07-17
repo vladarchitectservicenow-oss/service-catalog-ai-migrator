@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_jbpls_jobpulse_health</name>
+  <label>JobPulse Health</label>
+  <super_class>sys_metadata</super_class>
+  <access>
+    <create>true</create>
+    <read>true</read>
+    <update>true</update>
+    <delete>true</delete>
+  </access>
+  <fields>
+    <field>
+      <name>trigger_sys_id</name>
+      <label>Trigger Sys ID</label>
+      <type>string</type>
+      <max_length>32</max_length>
+      <mandatory>true</mandatory>
+      <reference>sys_trigger</reference>
+    </field>
+    <field>
+      <name>job_name</name>
+      <label>Job Name</label>
+      <type>string</type>
+      <max_length>255</max_length>
+    </field>
+    <field>
+      <name>job_type</name>
+      <label>Job Type</label>
+      <type>choice</type>
+      <max_length>40</max_length>
+      <choices>
+        <choice><value>scheduled</value><label>Scheduled</label></choice>
+        <choice><value>on_demand</value><label>On Demand</label></choice>
+        <choice><value>run_once</value><label>Run Once</label></choice>
+      </choices>
+    </field>
+    <field>
+      <name>owning_scope</name>
+      <label>Owning Scope</label>
+      <type>string</type>
+      <max_length>100</max_length>
+    </field>
+    <field>
+      <name>target_table</name>
+      <label>Target Table</label>
+      <type>string</type>
+      <max_length>80</max_length>
+    </field>
+    <field>
+      <name>schedule_window</name>
+      <label>Schedule Window</label>
+      <type>string</type>
+      <max_length>255</max_length>
+    </field>
+    <field>
+      <name>last_run</name>
+      <label>Last Run</label>
+      <type>glide_date_time</type>
+    </field>
+    <field>
+      <name>last_duration_ms</name>
+      <label>Last Duration (ms)</label>
+      <type>integer</type>
+    </field>
+    <field>
+      <name>avg_duration_ms</name>
+      <label>Avg Duration (ms)</label>
+      <type>integer</type>
+    </field>
+    <field>
+      <name>failure_rate_7d</name>
+      <label>Failure Rate (7d)</label>
+      <type>float</type>
+    </field>
+    <field>
+      <name>failure_rate_30d</name>
+      <label>Failure Rate (30d)</label>
+      <type>float</type>
+    </field>
+    <field>
+      <name>consecutive_fails</name>
+      <label>Consecutive Failures</label>
+      <type>integer</type>
+    </field>
+    <field>
+      <name>is_runaway</name>
+      <label>Is Runaway</label>
+      <type>boolean</type>
+      <default_value>false</default_value>
+    </field>
+    <field>
+      <name>is_stale</name>
+      <label>Is Stale</label>
+      <type>boolean</type>
+      <default_value>false</default_value>
+    </field>
+    <field>
+      <name>is_abandoned</name>
+      <label>Is Abandoned</label>
+      <type>boolean</type>
+      <default_value>false</default_value>
+    </field>
+    <field>
+      <name>overlap_count</name>
+      <label>Overlap Count</label>
+      <type>integer</type>
+    </field>
+    <field>
+      <name>duplicate_of</name>
+      <label>Duplicate Of</label>
+      <type>string</type>
+      <max_length>32</max_length>
+      <reference>x_jbpls_jobpulse_health</reference>
+    </field>
+    <field>
+      <name>health_score</name>
+      <label>Health Score</label>
+      <type>integer</type>
+    </field>
+    <field>
+      <name>findings_json</name>
+      <label>Findings (JSON)</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>recommendations_json</name>
+      <label>Recommendations (JSON)</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>last_scan</name>
+      <label>Last Scan</label>
+      <type>glide_date_time</type>
+    </field>
+    <field>
+      <name>scan_status</name>
+      <label>Scan Status</label>
+      <type>choice</type>
+      <max_length>40</max_length>
+      <choices>
+        <choice><value>pending</value><label>Pending</label></choice>
+        <choice><value>running</value><label>Running</label></choice>
+        <choice><value>done</value><label>Done</label></choice>
+        <choice><value>error</value><label>Error</label></choice>
+      </choices>
+    </field>
+  </fields>
+</sys_db_object>

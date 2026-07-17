@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_trigger>
+  <name>JobPulse Daily Scan</name>
+  <description>Daily health scan of all scheduled jobs. Runs at 03:00 instance time. Calls JobPulseScanner.scanAll() then JobPulseEngine.computeAllScores().</description>
+  <active>true</active>
+  <trigger_type>0</trigger_type>
+  <schedule>0 3 * * *</schedule>
+  <script><![CDATA[
+// JobPulse — Scheduled Job Health & Overlap Monitor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Daily scan: inventory all scheduled jobs, compute health scores,
+// detect overlaps, and generate remediation recommendations.
+
+(function() {
+    try {
+        gs.info('JobPulse Daily Scan: starting');
+        var scanner = new JobPulseScanner();
+        var scanResult = scanner.scanAll();
+        gs.info('JobPulse Daily Scan: scanned ' + scanResult.scanned + ' of ' + scanResult.total + ' jobs (' + scanResult.errors + ' errors, ' + scanResult.duration_ms + 'ms)');
+        var engine = new JobPulseEngine();
+        var scoreResult = engine.computeAllScores();
+        gs.info('JobPulse Daily Scan: scored ' + scoreResult.updated + ' health records (' + scoreResult.errors + ' errors)');
+        var digestRecipients = _getConfig('digest_recipients', '');
+        if (digestRecipients && scanResult.scanned > 0) _sendDigest(digestRecipients, scanResult, scoreResult);
+        gs.info('JobPulse Daily Scan: complete');
+    } catch (e) { gs.error('JobPulse Daily Scan: fatal error: ' + e.message); }
+
+    function _getConfig(key, defaultValue) {
+        var gr = new GlideRecord('x_jbpls_jobpulse_config');
+        gr.addQuery('config_key', '=', key);
+        gr.query();
+        if (gr.next()) return gr.getValue('config_value');
+        return defaultValue;
+    }
+
+    function _sendDigest(recipients, scanResult, scoreResult) {
+        var grHealth = new GlideRecord('x_jbpls_jobpulse_health');
+        grHealth.addQuery('health_score', '<', 50);
+        grHealth.orderBy('health_score');
+        grHealth.setLimit(5);
+        grHealth.query();
+        var criticalJobs = [];
+        while (grHealth.next()) criticalJobs.push({name: grHealth.getValue('job_name'), score: grHealth.getValue('health_score'), scope: grHealth.getValue('owning_scope')});
+        var body = 'JobPulse Daily Digest\n\nScan summary: ' + scanResult.scanned + ' jobs scanned, ' + scoreResult.updated + ' scored.\n\n';
+        if (criticalJobs.length > 0) { body += 'Top ' + criticalJobs.length + ' Critical Jobs:\n'; for (var i = 0; i < criticalJobs.length; i++) body += '  - ' + criticalJobs[i].name + ' (Score: ' + criticalJobs[i].score + ', Scope: ' + criticalJobs[i].scope + ')\n'; }
+        else body += 'No critical jobs detected.\n';
+        body += '\nView full report: /x_jbpls_dashboard.do\n';
+        try {
+            var mail = new GlideEmailOutbound();
+            mail.setTo(recipients);
+            mail.setSubject('JobPulse Daily Digest — ' + new GlideDateTime().getDate().getValue());
+            mail.setBody(body);
+            mail.send();
+        } catch (e) { gs.error('JobPulse Daily Scan: digest email failed: ' + e.message); }
+    }
+})();
+  ]]></script>
+</sys_trigger>

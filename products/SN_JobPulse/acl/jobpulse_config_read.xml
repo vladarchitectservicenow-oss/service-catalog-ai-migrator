@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_jbpls_jobpulse_config_read</name>
+  <type>record</type>
+  <operation>read</operation>
+  <description>Allow x_jbpls.user to read jobpulse_config records</description>
+  <active>true</active>
+  <requires_role>x_jbpls.user</requires_role>
+  <script><![CDATA[answer = true;]]></script>
+</sys_security_acl>

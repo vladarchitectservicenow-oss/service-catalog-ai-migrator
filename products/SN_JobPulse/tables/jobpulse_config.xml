@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_jbpls_jobpulse_config</name>
+  <label>JobPulse Config</label>
+  <super_class>sys_metadata</super_class>
+  <access>
+    <create>true</create>
+    <read>true</read>
+    <update>true</update>
+    <delete>true</delete>
+  </access>
+  <fields>
+    <field>
+      <name>config_key</name>
+      <label>Config Key</label>
+      <type>string</type>
+      <max_length>100</max_length>
+      <mandatory>true</mandatory>
+      <unique>true</unique>
+    </field>
+    <field>
+      <name>config_value</name>
+      <label>Config Value</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+    </field>
+    <field>
+      <name>description</name>
+      <label>Description</label>
+      <type>string</type>
+      <max_length>1000</max_length>
+    </field>
+  </fields>
+</sys_db_object>
