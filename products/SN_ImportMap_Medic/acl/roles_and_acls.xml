@@ -555,6 +555,58 @@
 <sys_user_role display_value="x_snc_importmap_medic.admin">role_admin_001</sys_user_role>
 </sys_security_acl_role>
 
+<!-- Integration role: read/write/create on health_score -->
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_score.x_snc_importmap_medic.integration</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_score">acl_health_score_read_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.integration">role_integration_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_score.x_snc_importmap_medic.integration</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_score">acl_health_score_write_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.integration">role_integration_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_score.x_snc_importmap_medic.integration</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_score">acl_health_score_create_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.integration">role_integration_001</sys_user_role>
+</sys_security_acl_role>
+
+<!-- User role: read on health_score -->
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_score.x_snc_importmap_medic.user</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_score">acl_health_score_read_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.user">role_user_001</sys_user_role>
+</sys_security_acl_role>
+
+<!-- Integration role: write/create on finding -->
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_finding.x_snc_importmap_medic.integration</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_finding">acl_finding_write_user</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.integration">role_integration_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_finding.x_snc_importmap_medic.integration</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_finding">acl_finding_create_user</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.integration">role_integration_001</sys_user_role>
+</sys_security_acl_role>
+
+<!-- Integration role: read on health_trend, drift_event -->
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_health_trend.x_snc_importmap_medic.integration</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_health_trend">acl_health_trend_read_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.integration">role_integration_001</sys_user_role>
+</sys_security_acl_role>
+
+<sys_security_acl_role action="INSERT_OR_UPDATE">
+<sys_name>x_snc_importmap_medic_drift_event.x_snc_importmap_medic.integration</sys_name>
+<sys_security_acl display_value="x_snc_importmap_medic_drift_event">acl_drift_event_read_admin</sys_security_acl>
+<sys_user_role display_value="x_snc_importmap_medic.integration">role_integration_001</sys_user_role>
+</sys_security_acl_role>
+
 <!-- REST endpoint execute ACL -->
 <sys_security_acl action="INSERT_OR_UPDATE">
 <active>true</active>
@@ -562,7 +614,7 @@
 <advanced>false</advanced>
 <condition/>
 <description/>
-<name>/api/x_snc_importmap_medic/importmap_medic/execute</name>
+<name>/api/now/x_snc_importmap_medic/importmap_medic/execute</name>
 <operation display_value="execute">execute</operation>
 <script/>
 <sys_class_name>sys_security_acl</sys_class_name>
@@ -570,7 +622,7 @@
 <sys_created_on>2026-07-16 00:00:00</sys_created_on>
 <sys_id>acl_rest_execute_integration</sys_id>
 <sys_mod_count>0</sys_mod_count>
-<sys_name>/api/x_snc_importmap_medic/importmap_medic/execute</sys_name>
+<sys_name>/api/now/x_snc_importmap_medic/importmap_medic/execute</sys_name>
 <sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
 <sys_policy/>
 <sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
@@ -581,8 +633,8 @@
 </sys_security_acl>
 
 <sys_security_acl_role action="INSERT_OR_UPDATE">
-<sys_name>/api/x_snc_importmap_medic/importmap_medic/execute.x_snc_importmap_medic.integration</sys_name>
-<sys_security_acl display_value="/api/x_snc_importmap_medic/importmap_medic/execute">acl_rest_execute_integration</sys_security_acl>
+<sys_name>/api/now/x_snc_importmap_medic/importmap_medic/execute.x_snc_importmap_medic.integration</sys_name>
+<sys_security_acl display_value="/api/now/x_snc_importmap_medic/importmap_medic/execute">acl_rest_execute_integration</sys_security_acl>
 <sys_user_role display_value="x_snc_importmap_medic.integration">role_integration_001</sys_user_role>
 </sys_security_acl_role>
 
@@ -593,7 +645,7 @@
 <advanced>false</advanced>
 <condition/>
 <description/>
-<name>/api/x_snc_importmap_medic/importmap_medic/status</name>
+<name>/api/now/x_snc_importmap_medic/importmap_medic/status</name>
 <operation display_value="execute">execute</operation>
 <script/>
 <sys_class_name>sys_security_acl</sys_class_name>
@@ -601,7 +653,7 @@
 <sys_created_on>2026-07-16 00:00:00</sys_created_on>
 <sys_id>acl_rest_status_integration</sys_id>
 <sys_mod_count>0</sys_mod_count>
-<sys_name>/api/x_snc_importmap_medic/importmap_medic/status</sys_name>
+<sys_name>/api/now/x_snc_importmap_medic/importmap_medic/status</sys_name>
 <sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
 <sys_policy/>
 <sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
@@ -612,8 +664,8 @@
 </sys_security_acl>
 
 <sys_security_acl_role action="INSERT_OR_UPDATE">
-<sys_name>/api/x_snc_importmap_medic/importmap_medic/status.x_snc_importmap_medic.integration</sys_name>
-<sys_security_acl display_value="/api/x_snc_importmap_medic/importmap_medic/status">acl_rest_status_integration</sys_security_acl>
+<sys_name>/api/now/x_snc_importmap_medic/importmap_medic/status.x_snc_importmap_medic.integration</sys_name>
+<sys_security_acl display_value="/api/now/x_snc_importmap_medic/importmap_medic/status">acl_rest_status_integration</sys_security_acl>
 <sys_user_role display_value="x_snc_importmap_medic.integration">role_integration_001</sys_user_role>
 </sys_security_acl_role>
 </unload>

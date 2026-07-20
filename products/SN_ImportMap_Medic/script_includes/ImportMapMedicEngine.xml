@@ -108,6 +108,20 @@ ImportMapMedicEngine.prototype = {
         return score;
     },
 
+    _guessDataSource: function(sourceTable) {
+        if (!sourceTable) return '';
+        var dsGr = new GlideRecord('sys_data_source');
+        dsGr.addQuery('import_set_table_name', sourceTable);
+        dsGr.addActiveQuery();
+        dsGr.orderByDesc('sys_updated_on');
+        dsGr.setLimit(1);
+        dsGr.query();
+        if (dsGr.next()) {
+            return String(dsGr.getValue('sys_id'));
+        }
+        return '';
+    },
+
     _getTransformMaps: function(transformMapSysId) {
         var maps = [];
         var gr = new GlideRecord('sys_transform_map');
@@ -181,7 +195,7 @@ ImportMapMedicEngine.prototype = {
         var findings = [];
         var count = 0;
         var gr = new GlideRecord('sys_transform_entry');
-        gr.addQuery('map', map.sys_id);
+        gr.addQuery('transform_map', map.sys_id);
         gr.query();
         while (gr.next()) {
             var sourceField = String(gr.getValue('source_field') || '');
@@ -212,7 +226,7 @@ ImportMapMedicEngine.prototype = {
         var findings = [];
         var count = 0;
         var gr = new GlideRecord('sys_transform_entry');
-        gr.addQuery('map', map.sys_id);
+        gr.addQuery('transform_map', map.sys_id);
         gr.addQuery('coalesce', true);
         gr.query();
         var coalesceTargets = {};
@@ -232,26 +246,31 @@ ImportMapMedicEngine.prototype = {
         var rate = 0;
         var since = new GlideDateTime();
         since.addDays(-30);
-        var gr = new GlideAggregate('sys_import_set_log');
-        gr.addQuery('sys_created_on', '>=', since);
-        gr.addQuery('transform_map', 'CONTAINS', map.name);
-        gr.addAggregate('COUNT');
-        gr.addHaving('COUNT', '>=', 1);
-        gr.query();
-        var errors = 0;
-        if (gr.next()) {
-            errors = parseInt(gr.getAggregate('COUNT'), 10) || 0;
+
+        // Count recent runs for this transform map
+        var total = 0;
+        var runIDs = [];
+        var runGr = new GlideRecord('sys_import_set_run');
+        runGr.addQuery('transform_map', map.sys_id);
+        runGr.addQuery('sys_created_on', '>=', since);
+        runGr.query();
+        while (runGr.next()) {
+            total++;
+            runIDs.push(String(runGr.getValue('sys_id')));
         }
 
-        var totalGr = new GlideAggregate('sys_import_set_run');
-        totalGr.addQuery('map', map.sys_id);
-        totalGr.addQuery('sys_created_on', '>=', since);
-        totalGr.addAggregate('COUNT');
-        totalGr.query();
-        var total = 0;
-        if (totalGr.next()) {
-            total = parseInt(totalGr.getAggregate('COUNT'), 10) || 1;
+        // Count error logs linked to those runs
+        var errors = 0;
+        if (runIDs.length > 0) {
+            var errorsGr = new GlideAggregate('sys_import_set_log');
+            errorsGr.addQuery('import_set_run', 'IN', runIDs.join(','));
+            errorsGr.addAggregate('COUNT');
+            errorsGr.query();
+            if (errorsGr.next()) {
+                errors = parseInt(errorsGr.getAggregate('COUNT'), 10) || 0;
+            }
         }
+
         rate = total > 0 ? Math.round((errors / total) * 100) : 0;
         if (rate >= 50) {
             findings.push(this._finding(map, 'critical', 'error_rate', 'Import error rate is ' + rate + '% over the last 30 days.'));
@@ -283,7 +302,7 @@ ImportMapMedicEngine.prototype = {
 
     _lastRunForMap: function(mapSysId) {
         var gr = new GlideRecord('sys_import_set_run');
-        gr.addQuery('map', mapSysId);
+        gr.addQuery('transform_map', mapSysId);
         gr.orderByDesc('sys_created_on');
         gr.setLimit(1);
         gr.query();
@@ -326,7 +345,17 @@ ImportMapMedicEngine.prototype = {
                 String(gr.getValue('type') || '') + '|' +
                 String(gr.getValue('file_path') || '') + '|' +
                 String(gr.getValue('connection_url') || '');
-        return GlideStringUtil.hashCode(s) + '';
+        return this._hashString(s);
+    },
+
+    _hashString: function(str) {
+        var hash = 0;
+        for (var i = 0; i < str.length; i++) {
+            var chr = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + chr;
+            hash = hash & hash;
+        }
+        return String(hash);
     },
 
     _lastFingerprint: function(mapSysId) {
@@ -385,7 +414,7 @@ ImportMapMedicEngine.prototype = {
         var since = new GlideDateTime();
         since.addDays(-1);
         var gr = new GlideAggregate('sys_import_set_run');
-        gr.addQuery('map', map.sys_id);
+        gr.addQuery('transform_map', map.sys_id);
         gr.addQuery('sys_created_on', '>=', since);
         gr.addAggregate('COUNT');
         gr.query();

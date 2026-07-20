@@ -4,7 +4,7 @@
 <active>true</active>
 <description>ImportMap Medic workbench</description>
 <name>ImportMap Medic</name>
-<order/>
+<order>100</order>
 <roles>x_snc_importmap_medic.user,x_snc_importmap_medic.admin</roles>
 <sys_class_name>sys_ui_application</sys_class_name>
 <sys_created_by>admin</sys_created_by>
@@ -91,7 +91,7 @@
 <mobile>false</mobile>
 <mobile_title>Run Audit</mobile_title>
 <mobile_view_name>Mobile</mobile_view_name>
-<name>x_snc_importmap_medic_health_score</name>
+<name>x_snc_importmap_medic_run_audit</name>
 <order>300</order>
 <override_menu_roles>false</override_menu_roles>
 <query>?sysparm_view=Run%20Audit</query>
