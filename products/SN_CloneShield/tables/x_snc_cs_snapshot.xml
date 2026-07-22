@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_snc_cs_snapshot</name>
+  <label>Snapshot</label>
+  <super_class/>
+  <is_extendable>false</is_extendable>
+  <access_count>0</access_count>
+  <user_role>x_snc_cs.user</user_role>
+  <create_role>snc_internal</create_role>
+  <write_role>snc_internal</write_role>
+  <delete_role>x_snc_cs.admin</delete_role>
+  <read_access>true</read_access>
+  <create_access>true</create_access>
+  <update_access>true</update_access>
+  <delete_access>true</delete_access>
+  <fields>
+    <field>
+      <name>name</name>
+      <label>Name</label>
+      <type>string</type>
+      <max_length>255</max_length>
+      <mandatory>true</mandatory>
+      <read_only>false</read_only>
+    </field>
+    <field>
+      <name>artifact_type</name>
+      <label>Artifact Type</label>
+      <type>choice</type>
+      <max_length>40</max_length>
+      <mandatory>true</mandatory>
+      <read_only>false</read_only>
+      <choices>
+        <choice>
+          <label>Update Set</label>
+          <value>update_set</value>
+        </choice>
+        <choice>
+          <label>Flow Designer</label>
+          <value>flow_designer</value>
+        </choice>
+        <choice>
+          <label>Script Include</label>
+          <value>script_include</value>
+        </choice>
+        <choice>
+          <label>UI Policy</label>
+          <value>ui_policy</value>
+        </choice>
+        <choice>
+          <label>Business Rule</label>
+          <value>business_rule</value>
+        </choice>
+        <choice>
+          <label>UI Builder Page</label>
+          <value>ui_builder_page</value>
+        </choice>
+        <choice>
+          <label>UI Builder Widget</label>
+          <value>ui_builder_widget</value>
+        </choice>
+      </choices>
+    </field>
+    <field>
+      <name>source_table</name>
+      <label>Source Table</label>
+      <type>string</type>
+      <max_length>80</max_length>
+      <mandatory>true</mandatory>
+      <read_only>false</read_only>
+    </field>
+    <field>
+      <name>source_sys_id</name>
+      <label>Source Sys ID</label>
+      <type>string</type>
+      <max_length>32</max_length>
+      <mandatory>true</mandatory>
+      <read_only>false</read_only>
+    </field>
+    <field>
+      <name>content_xml</name>
+      <label>Content XML</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <mandatory>false</mandatory>
+      <read_only>false</read_only>
+    </field>
+    <field>
+      <name>content_json</name>
+      <label>Content JSON</label>
+      <type>string</type>
+      <max_length>4000</max_length>
+      <mandatory>false</mandatory>
+      <read_only>false</read_only>
+    </field>
+    <field>
+      <name>clone_event</name>
+      <label>Clone Event</label>
+      <type>reference</type>
+      <reference>x_snc_cs_clone_event</reference>
+      <mandatory>false</mandatory>
+      <read_only>false</read_only>
+    </field>
+    <field>
+      <name>status</name>
+      <label>Status</label>
+      <type>choice</type>
+      <max_length>40</max_length>
+      <mandatory>true</mandatory>
+      <read_only>false</read_only>
+      <default_value>active</default_value>
+      <choices>
+        <choice>
+          <label>Active</label>
+          <value>active</value>
+        </choice>
+        <choice>
+          <label>Restored</label>
+          <value>restored</value>
+        </choice>
+        <choice>
+          <label>Expired</label>
+          <value>expired</value>
+        </choice>
+        <choice>
+          <label>Exported</label>
+          <value>exported</value>
+        </choice>
+      </choices>
+    </field>
+    <field>
+      <name>created_by</name>
+      <label>Created By</label>
+      <type>string</type>
+      <max_length>100</max_length>
+      <mandatory>false</mandatory>
+      <read_only>true</read_only>
+    </field>
+    <field>
+      <name>restored_on</name>
+      <label>Restored On</label>
+      <type>glide_date_time</type>
+      <mandatory>false</mandatory>
+      <read_only>true</read_only>
+    </field>
+    <field>
+      <name>checksum</name>
+      <label>Checksum</label>
+      <type>string</type>
+      <max_length>64</max_length>
+      <mandatory>false</mandatory>
+      <read_only>true</read_only>
+    </field>
+    <field>
+      <name>size_bytes</name>
+      <label>Size (bytes)</label>
+      <type>integer</type>
+      <mandatory>false</mandatory>
+      <read_only>true</read_only>
+    </field>
+  </fields>
+</sys_db_object>

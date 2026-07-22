@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_snc_cs_clone_event</name>
+  <label>Clone Event</label>
+  <super_class/>
+  <is_extendable>false</is_extendable>
+  <access_count>0</access_count>
+  <user_role>x_snc_cs.user</user_role>
+  <create_role>snc_internal</create_role>
+  <write_role>snc_internal</write_role>
+  <delete_role>x_snc_cs.admin</delete_role>
+  <read_access>true</read_access>
+  <create_access>true</create_access>
+  <update_access>true</update_access>
+  <delete_access>true</delete_access>
+  <fields>
+    <field>
+      <name>detected_on</name>
+      <label>Detected On</label>
+      <type>glide_date_time</type>
+      <mandatory>true</mandatory>
+      <read_only>true</read_only>
+    </field>
+    <field>
+      <name>clone_type</name>
+      <label>Clone Type</label>
+      <type>choice</type>
+      <max_length>40</max_length>
+      <mandatory>true</mandatory>
+      <read_only>true</read_only>
+      <choices>
+        <choice>
+          <label>Full</label>
+          <value>full</value>
+        </choice>
+        <choice>
+          <label>Preserve Data</label>
+          <value>preserve_data</value>
+        </choice>
+        <choice>
+          <label>Exclude Tables</label>
+          <value>exclude_tables</value>
+        </choice>
+      </choices>
+    </field>
+    <field>
+      <name>status</name>
+      <label>Status</label>
+      <type>choice</type>
+      <max_length>40</max_length>
+      <mandatory>true</mandatory>
+      <read_only>false</read_only>
+      <default_value>detected</default_value>
+      <choices>
+        <choice>
+          <label>Detected</label>
+          <value>detected</value>
+        </choice>
+        <choice>
+          <label>Snapshotting</label>
+          <value>snapshotting</value>
+        </choice>
+        <choice>
+          <label>Completed</label>
+          <value>completed</value>
+        </choice>
+        <choice>
+          <label>Failed</label>
+          <value>failed</value>
+        </choice>
+      </choices>
+    </field>
+    <field>
+      <name>instance_name</name>
+      <label>Instance Name</label>
+      <type>string</type>
+      <max_length>100</max_length>
+      <mandatory>false</mandatory>
+      <read_only>true</read_only>
+    </field>
+    <field>
+      <name>snapshot_count</name>
+      <label>Snapshot Count</label>
+      <type>integer</type>
+      <mandatory>false</mandatory>
+      <read_only>false</read_only>
+      <default_value>0</default_value>
+    </field>
+    <field>
+      <name>completed_on</name>
+      <label>Completed On</label>
+      <type>glide_date_time</type>
+      <mandatory>false</mandatory>
+      <read_only>false</read_only>
+    </field>
+  </fields>
+</sys_db_object>

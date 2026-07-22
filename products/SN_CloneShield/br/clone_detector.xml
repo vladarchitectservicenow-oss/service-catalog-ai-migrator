@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sysauto_script>
+  <name>CloneDetector</name>
+  <active>true</active>
+  <description>Polls sys_clone_history every 5 minutes for new clone events. Triggers CloneSafetyNet.snapshotAll() when a clone is detected.</description>
+  <run_type>periodically</run_type>
+  <run_period>300</run_period>
+  <run_dayofweek/>
+  <run_dayofmonth/>
+  <run_start>1970-01-01 00:00:00</run_start>
+  <condition/>
+  <script><![CDATA[
+// CloneShield — CloneDetector Scheduled Job
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Polls sys_clone_history every 5 minutes. When a clone is detected
+// (status='In Progress' within the last 5 minutes), triggers the full
+// snapshot sequence via CloneSafetyNet.snapshotAll().
+
+(function() {
+    try {
+        var csn = new CloneSafetyNet();
+        var result = csn.snapshotAll();
+        if (result.detected) {
+            gs.info('CloneShield: Clone detected. Snapshot complete. ' +
+                'Event: ' + result.event_id +
+                ', Artifacts: ' + result.snapshot_count);
+        }
+    } catch (e) {
+        gs.error('CloneShield CloneDetector failed: ' + e.message);
+    }
+})();
+]]></script>
+  <sys_scope>x_snc_cs</sys_scope>
+</sysauto_script>

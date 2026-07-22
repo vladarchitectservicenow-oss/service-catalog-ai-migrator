@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_snc_cs_clone_event</name>
+  <type>record</type>
+  <operation>write</operation>
+  <description>Only system (snc_internal) can create/write clone event records</description>
+  <active>true</active>
+  <script><![CDATA[
+answer = false;
+]]></script>
+  <condition/>
+  <requires_roles>snc_internal</requires_roles>
+</sys_security_acl>

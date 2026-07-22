@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_app>
+  <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</sys_id>
+  <name>CloneShield</name>
+  <scope>x_snc_cs</scope>
+  <short_description>Instance Clone Safety Net — automatic pre-clone artifact snapshot and one-click restore</short_description>
+  <version>1.0.0</version>
+  <active>true</active>
+  <enforce_acl>true</enforce_acl>
+  <tracking_code>clone_shield_2026</tracking_code>
+  <roles>
+    <role>
+      <name>x_snc_cs.user</name>
+      <description>Can view snapshots, restore artifacts, and access the dashboard</description>
+    </role>
+    <role>
+      <name>x_snc_cs.admin</name>
+      <description>Can manage snapshots, configure settings, and trigger manual snapshots</description>
+    </role>
+  </roles>
+  <dependencies/>
+  <cross_scope_access>
+    <target name="sys_update_xml" operation="read"/>
+    <target name="sys_update_xml" operation="write"/>
+    <target name="sys_update_set" operation="read"/>
+    <target name="sys_hub_flow" operation="read"/>
+    <target name="sys_hub_flow" operation="write"/>
+    <target name="sys_hub_flow_version" operation="read"/>
+    <target name="sys_script_include" operation="read"/>
+    <target name="sys_script_include" operation="write"/>
+    <target name="sys_ui_policy" operation="read"/>
+    <target name="sys_ui_policy_action" operation="read"/>
+    <target name="sys_script" operation="read"/>
+    <target name="sys_ux_page" operation="read"/>
+    <target name="sys_clone_history" operation="read"/>
+    <target name="sys_clone_schedule" operation="read"/>
+  </cross_scope_access>
+</sys_app>

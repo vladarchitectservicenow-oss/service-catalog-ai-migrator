@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_snc_cs_clone_event</name>
+  <type>record</type>
+  <operation>read</operation>
+  <description>Allow x_snc_cs.user and admin to read clone event records</description>
+  <active>true</active>
+  <script><![CDATA[
+answer = gs.hasRole('x_snc_cs.user') || gs.hasRole('admin');
+]]></script>
+  <condition/>
+  <requires_roles/>
+</sys_security_acl>
