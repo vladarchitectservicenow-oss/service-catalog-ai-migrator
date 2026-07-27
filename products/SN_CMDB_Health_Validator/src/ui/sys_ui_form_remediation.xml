@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_ui_form>
+  <name>x_snc_cah_remediation</name>
+  <table>x_snc_cah_remediation</table>
+  <view>Default view</view>
+  <active>true</active>
+  <form_sections>
+    <section caption="Task Details" order="10">
+      <field name="scan"/>
+      <field name="type"/>
+      <field name="severity"/>
+      <field name="dimension"/>
+      <field name="status"/>
+    </section>
+    <section caption="Target" order="20">
+      <field name="ci_class"/>
+      <field name="ci_sys_id"/>
+    </section>
+    <section caption="Description &amp; Resolution" order="30">
+      <field name="finding_description"/>
+      <field name="remediation_action"/>
+      <field name="effort_estimate"/>
+      <field name="resolution_notes"/>
+      <field name="resolved_at"/>
+    </section>
+  </form_sections>
+</sys_ui_form>

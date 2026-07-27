@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_properties>
+  <name>x_snc_cah.enable_scheduled_scan</name>
+  <description>Enable the daily 02:00 automated CMDB health scan. Set to 'false' to disable scheduled scanning.</description>
+  <type>boolean</type>
+  <value>true</value>
+  <choices>true,false</choices>
+  <ignore_cache>false</ignore_cache>
+  <private>false</private>
+  <sys_scope>x_snc_cah</sys_scope>
+</sys_properties>

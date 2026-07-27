@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_user_role>
+  <name>x_snc_cah.user</name>
+  <description>CMDB Health Validator — User. Read scan results, run scans, view remediation plans.</description>
+  <elevated_privilege>false</elevated_privilege>
+  <assignable_by>admin</assignable_by>
+  <suffix>cah_user</suffix>
+</sys_user_role>

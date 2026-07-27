@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_ws_operation>
+  <web_service_definition>CMDB Health API</web_service_definition>
+  <name>Status</name>
+  <relative_path>/status</relative_path>
+  <http_method>GET</http_method>
+  <active>true</active>
+  <requires_authentication>true</requires_authentication>
+  <requires_acl>true</requires_acl>
+  <operation_script>get_status.js</operation_script>
+  <description>Query-parameter dispatch: scan detail, history, summary, remediation status, current health</description>
+</sys_ws_operation>

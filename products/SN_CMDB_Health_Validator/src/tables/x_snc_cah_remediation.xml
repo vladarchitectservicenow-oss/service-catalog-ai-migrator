@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_snc_cah_remediation</name>
+  <label>CMDB Remediation Task</label>
+  <super_class/>
+  <access>
+    <create role="x_snc_cah.admin"/>
+    <read role="x_snc_cah.user"/>
+    <write role="x_snc_cah.admin"/>
+    <delete role="x_snc_cah.admin"/>
+  </access>
+  <fields>
+    <field name="scan" type="reference" label="Health Scan" mandatory="true" reference="x_snc_cah_health_scan"/>
+    <field name="type" type="string" max_length="40" label="Task Type" mandatory="true" default="manual_task" choice="1">
+      <choice value="auto_fix" label="Auto Fix"/>
+      <choice value="manual_task" label="Manual Task"/>
+      <choice value="review" label="Review"/>
+    </field>
+    <field name="severity" type="string" max_length="10" label="Severity" mandatory="true" default="P2" choice="1">
+      <choice value="P0" label="P0 - Critical"/>
+      <choice value="P1" label="P1 - High"/>
+      <choice value="P2" label="P2 - Medium"/>
+      <choice value="P3" label="P3 - Low"/>
+    </field>
+    <field name="dimension" type="string" max_length="40" label="Dimension" mandatory="true" choice="1">
+      <choice value="completeness" label="Completeness"/>
+      <choice value="staleness" label="Staleness"/>
+      <choice value="relationship" label="Relationship"/>
+      <choice value="duplicate" label="Duplicate"/>
+      <choice value="coverage" label="Coverage"/>
+    </field>
+    <field name="ci_class" type="string" max_length="80" label="CI Class"/>
+    <field name="ci_sys_id" type="string" max_length="32" label="CI Sys ID"/>
+    <field name="finding_description" type="string" max_length="4000" label="Finding Description" mandatory="true"/>
+    <field name="remediation_action" type="string" max_length="4000" label="Remediation Action" mandatory="true"/>
+    <field name="effort_estimate" type="string" max_length="40" label="Effort Estimate" choice="1">
+      <choice value="low" label="Low"/>
+      <choice value="medium" label="Medium"/>
+      <choice value="high" label="High"/>
+      <choice value="critical" label="Critical"/>
+    </field>
+    <field name="status" type="string" max_length="40" label="Status" mandatory="true" default="open" choice="1">
+      <choice value="open" label="Open"/>
+      <choice value="in_progress" label="In Progress"/>
+      <choice value="resolved" label="Resolved"/>
+      <choice value="dismissed" label="Dismissed"/>
+    </field>
+    <field name="resolved_at" type="glide_date_time" label="Resolved At"/>
+    <field name="resolution_notes" type="string" max_length="2000" label="Resolution Notes"/>
+  </fields>
+</sys_db_object>

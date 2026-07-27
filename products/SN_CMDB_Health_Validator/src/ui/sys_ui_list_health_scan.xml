@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_ui_list>
+  <name>x_snc_cah_health_scan</name>
+  <table>x_snc_cah_health_scan</table>
+  <view>Default view</view>
+  <active>true</active>
+  <list_elements>
+    <element column="scan_date" order="10"/>
+    <element column="ai_readiness_score" order="20"/>
+    <element column="status" order="30"/>
+    <element column="completeness_score" order="40"/>
+    <element column="staleness_score" order="50"/>
+    <element column="relationship_score" order="60"/>
+    <element column="duplicate_score" order="70"/>
+    <element column="coverage_score" order="80"/>
+    <element column="total_cis_scanned" order="90"/>
+    <element column="scan_duration_seconds" order="100"/>
+  </list_elements>
+</sys_ui_list>

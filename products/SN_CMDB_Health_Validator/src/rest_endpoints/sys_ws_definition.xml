@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_ws_definition>
+  <name>CMDB Health API</name>
+  <description>Scripted REST API for CMDB Health Validator — scan execution, status queries, remediation, and AI impact prediction</description>
+  <active>true</active>
+  <base_path>/api/x_snc_cah/v1</base_path>
+  <requires_authentication>true</requires_authentication>
+  <requires_snc_internal>false</requires_snc_internal>
+  <version>v1</version>
+</sys_ws_definition>

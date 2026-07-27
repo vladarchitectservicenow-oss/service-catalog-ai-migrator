@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_app_module>
+  <title>Remediation Tasks</title>
+  <name>Remediation Tasks</name>
+  <application>x_snc_cah</application>
+  <active>true</active>
+  <order>200</order>
+  <roles>x_snc_cah.user</roles>
+  <link_type>DIRECT</link_type>
+  <path>/x_snc_cah_remediation_list.do</path>
+  <description>View and manage CMDB remediation tasks generated from health scans.</description>
+</sys_app_module>

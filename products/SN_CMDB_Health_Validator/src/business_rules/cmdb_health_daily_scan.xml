@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_trigger>
+  <name>CMDB Health Daily Scan</name>
+  <description>Runs full CMDB health scan daily at 02:00 across all CI classes</description>
+  <active>true</active>
+  <trigger_type>daily</trigger_type>
+  <time>02:00:00</time>
+  <condition><![CDATA[
+    // Only run if explicitly enabled via system property
+    gs.getProperty('x_snc_cah.enable_scheduled_scan', 'true') === 'true'
+  ]]></condition>
+  <script><![CDATA[
+    (function() {
+        try {
+            var scanner = new CmdbHealthScanner();
+            var result = scanner.scanAll('');
+            var scanId = '';
+            if (typeof result === 'object' && result.already_running) {
+                gs.info('CMDB Health Daily Scan skipped — scan already in progress. Scan ID: ' + result.scan_id);
+                return;
+            }
+            scanId = result;
+            gs.info('CMDB Health Daily Scan completed. Scan ID: ' + scanId);
+        } catch (e) {
+            gs.error('CMDB Health Daily Scan failed: ' + e.message);
+        }
+    })();
+  ]]></script>
+</sys_trigger>

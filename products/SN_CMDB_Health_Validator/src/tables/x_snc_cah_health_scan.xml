@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_snc_cah_health_scan</name>
+  <label>CMDB Health Scan</label>
+  <super_class/>
+  <access>
+    <create role="x_snc_cah.admin"/>
+    <read role="x_snc_cah.user"/>
+    <write role="x_snc_cah.admin"/>
+    <delete role="x_snc_cah.admin"/>
+  </access>
+  <fields>
+    <field name="ai_readiness_score" type="integer" label="AI Readiness Score" mandatory="true" default="0"/>
+    <field name="completeness_score" type="integer" label="Completeness Score" mandatory="true" default="0"/>
+    <field name="staleness_score" type="integer" label="Staleness Score" mandatory="true" default="0"/>
+    <field name="relationship_score" type="integer" label="Relationship Score" mandatory="true" default="0"/>
+    <field name="duplicate_score" type="integer" label="Duplicate Score" mandatory="true" default="0"/>
+    <field name="coverage_score" type="integer" label="Coverage Score" mandatory="true" default="0"/>
+    <field name="total_cis_scanned" type="integer" label="Total CIs Scanned" mandatory="true" default="0"/>
+    <field name="ci_classes_scanned" type="integer" label="CI Classes Scanned" mandatory="true" default="0"/>
+    <field name="findings_json" type="string" max_length="4000" label="Findings (JSON)"/>
+    <field name="recommendations_json" type="string" max_length="4000" label="Recommendations (JSON)"/>
+    <field name="ai_impact_json" type="string" max_length="4000" label="AI Impact Assessment (JSON)"/>
+    <field name="scan_duration_seconds" type="integer" label="Scan Duration (seconds)"/>
+    <field name="status" type="string" max_length="40" label="Status" mandatory="true" default="in_progress" choice="1">
+      <choice value="in_progress" label="In Progress"/>
+      <choice value="completed" label="Completed"/>
+      <choice value="failed" label="Failed"/>
+    </field>
+    <field name="scan_date" type="glide_date_time" label="Scan Date" mandatory="true"/>
+  </fields>
+</sys_db_object>

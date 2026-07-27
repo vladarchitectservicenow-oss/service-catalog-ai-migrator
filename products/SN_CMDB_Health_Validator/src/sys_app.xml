@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_app>
+  <name>CMDB Health Validator for AI Readiness</name>
+  <scope>x_snc_cah</scope>
+  <version>1.0.0</version>
+  <description>Audits CMDB data quality for AI/automation readiness. Produces AI Readiness Score (0-100) across completeness, staleness, relationship integrity, duplicate detection, and class coverage dimensions. Generates prioritized remediation plans with Now Assist integration.</description>
+  <vendor>Vladimir Kapustin</vendor>
+  <vendor_prefix>x_snc_cah</vendor_prefix>
+  <release>Zurich</release>
+  <roles>
+    <role name="x_snc_cah.admin" description="Full access to CMDB Health Validator configuration and administration"/>
+    <role name="x_snc_cah.user" description="Read access to health scans and remediation tasks; can execute REST API"/>
+  </roles>
+  <cross_scope_access>
+    <table name="cmdb_ci" operation="read" description="Read CI records for health scanning"/>
+    <table name="cmdb_rel_ci" operation="read" description="Read CI relationships for integrity scanning"/>
+    <table name="sys_db_object" operation="read" description="Read CI class definitions for coverage analysis"/>
+    <table name="sys_dictionary" operation="read" description="Read field definitions for completeness analysis"/>
+  </cross_scope_access>
+</sys_app>

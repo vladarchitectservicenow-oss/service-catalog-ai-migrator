@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_snc_cah_remediation</name>
+  <operation>write</operation>
+  <type>record</type>
+  <description>Allow x_snc_cah.admin to create/update remediation task records</description>
+  <active>true</active>
+  <requires_role>true</requires_role>
+  <roles>
+    <role name="x_snc_cah.user"/>
+    <role name="x_snc_cah.admin"/>
+  </roles>
+  <script><![CDATA[
+    answer = true;
+  ]]></script>
+</sys_security_acl>

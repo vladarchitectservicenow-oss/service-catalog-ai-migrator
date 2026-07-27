@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_ui_form>
+  <name>x_snc_cah_health_scan</name>
+  <table>x_snc_cah_health_scan</table>
+  <view>Default view</view>
+  <active>true</active>
+  <form_sections>
+    <section caption="Scan Summary" order="10">
+      <field name="ai_readiness_score"/>
+      <field name="status"/>
+      <field name="scan_date"/>
+      <field name="scan_duration_seconds"/>
+      <field name="total_cis_scanned"/>
+      <field name="ci_classes_scanned"/>
+    </section>
+    <section caption="Dimension Scores" order="20">
+      <field name="completeness_score"/>
+      <field name="staleness_score"/>
+      <field name="relationship_score"/>
+      <field name="duplicate_score"/>
+      <field name="coverage_score"/>
+    </section>
+    <section caption="Findings &amp; Recommendations" order="30">
+      <field name="findings_json"/>
+      <field name="recommendations_json"/>
+      <field name="ai_impact_json"/>
+    </section>
+  </form_sections>
+</sys_ui_form>
