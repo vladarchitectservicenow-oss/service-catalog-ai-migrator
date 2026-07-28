@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-28 06:00:00">
+  <sys_db_object>
+    <name>x_sn_ara_session</name>
+    <label>Session</label>
+    <super_class/>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+    <is_extendable>false</is_extendable>
+    <audit>false</audit>
+    <access_count>0</access_count>
+    <element id="type" type="string" max_length="40" label="Session Type" mandatory="true" choice="1">
+      <choice value="simulation" label="Simulation"/>
+      <choice value="baseline" label="Baseline"/>
+    </element>
+    <element id="table_name" type="string" max_length="80" label="Table Name"/>
+    <element id="name" type="string" max_length="255" label="Name"/>
+    <element id="status" type="string" max_length="40" label="Status" choice="1">
+      <choice value="active" label="Active"/>
+      <choice value="completed" label="Completed"/>
+      <choice value="archived" label="Archived"/>
+    </element>
+    <element id="data_json" type="string" max_length="4000" label="Data (JSON)"/>
+    <element id="summary_json" type="string" max_length="4000" label="Summary (JSON)"/>
+    <element id="created_by" type="string" max_length="32" label="Created By"/>
+    <element id="created_at" type="glide_date_time" label="Created At" mandatory="true"/>
+    <element id="active" type="boolean" label="Active" default_value="true"/>
+  </sys_db_object>
+</unload>

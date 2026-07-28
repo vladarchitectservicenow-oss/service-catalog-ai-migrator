@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-28 06:00:00">
+  <sys_ws_definition>
+    <name>Assignment Rule Auditor API</name>
+    <id>sn_ara_api</id>
+    <endpoint>/api/x_sn_ara</endpoint>
+    <active>true</active>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_ws_definition>
+  <sys_ws_operation>
+    <name>Execute</name>
+    <path>/execute</path>
+    <method>POST</method>
+    <script><![CDATA[
+// SN Assignment Rule Auditor — REST API: POST /api/x_sn_ara/execute
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function process(request, response) {
+    var body = request.body ? request.body.data : {};
+    var action = body.action || '';
+
+    var helper = new AssignmentRuleHelper();
+    var engine = new AssignmentRuleEngine();
+    var result;
+
+    switch (action) {
+        case 'scan':
+            result = engine.scanAll(body.table_name || null);
+            break;
+        case 'simulate':
+            if (!body.table_name || !body.field_values) {
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ error: 'table_name and field_values are required for simulation' }));
+                return;
+            }
+            result = engine.simulate(body.table_name, body.field_values);
+            if (body.save_scenario) {
+                helper.saveSimulation(body.table_name, body.field_values, result, body.scenario_name || null);
+            }
+            break;
+        case 'explain':
+            if (!body.conflict_id) {
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ error: 'conflict_id is required for explanation' }));
+                return;
+            }
+            result = { explanation: helper.explainConflict(body.conflict_id) };
+            break;
+        case 'create_baseline':
+            if (!body.name) {
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ error: 'name is required for baseline creation' }));
+                return;
+            }
+            var baselineId = helper.createBaseline(body.name, body.created_by || null);
+            result = { baseline_id: baselineId, status: baselineId ? 'created' : 'failed' };
+            break;
+        case 'compare_baseline':
+            if (!body.baseline_id) {
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ error: 'baseline_id is required for comparison' }));
+                return;
+            }
+            result = helper.compareBaseline(body.baseline_id);
+            break;
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown action: ' + action,
+                valid_actions: ['scan', 'simulate', 'explain', 'create_baseline', 'compare_baseline']
+            }));
+            return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+})(request, response);
+]]></script>
+    <active>true</active>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_ws_operation>
+  <sys_ws_operation>
+    <name>Status</name>
+    <path>/status</path>
+    <method>GET</method>
+    <script><![CDATA[
+// SN Assignment Rule Auditor — REST API: GET /api/x_sn_ara/status
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function process(request, response) {
+    var q = request.queryParams || {};
+    var tableName = q.table || '';
+    var type = q.type || 'health';
+    var limit = parseInt(q.limit || '20', 10);
+    if (limit !== limit || limit < 1) limit = 20;
+
+    var helper = new AssignmentRuleHelper();
+    var result;
+
+    switch (type) {
+        case 'health':
+            result = helper.getHealthSummary(tableName || null);
+            break;
+        case 'conflicts':
+            if (!tableName) {
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ error: 'table parameter is required for conflicts query' }));
+                return;
+            }
+            result = { table: tableName, conflicts: helper.getConflicts(tableName) };
+            break;
+        case 'dead_rules':
+            if (!tableName) {
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ error: 'table parameter is required for dead_rules query' }));
+                return;
+            }
+            result = { table: tableName, dead_rules: helper.getDeadRules(tableName) };
+            break;
+        case 'stale_conditions':
+            if (!tableName) {
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ error: 'table parameter is required for stale_conditions query' }));
+                return;
+            }
+            result = { table: tableName, stale_conditions: helper.getStaleConditions(tableName) };
+            break;
+        case 'simulations':
+            result = { simulations: helper.getSimulationHistory(tableName || null, limit) };
+            break;
+        case 'baselines':
+            result = { baselines: helper.getBaselines(limit) };
+            break;
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown type: ' + type,
+                valid_types: ['health', 'conflicts', 'dead_rules', 'stale_conditions', 'simulations', 'baselines']
+            }));
+            return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+})(request, response);
+]]></script>
+    <active>true</active>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_ws_operation>
+</unload>
