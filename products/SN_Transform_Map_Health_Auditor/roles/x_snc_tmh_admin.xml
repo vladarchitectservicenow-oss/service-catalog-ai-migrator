@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_user_role action="INSERT_OR_UPDATE">
+  <name>x_snc_tmh.admin</name>
+  <description>Full access to Transform Map Health Auditor — scan, configure, view results</description>
+  <elevated_privilege>false</elevated_privilege>
+  <assignable_by>admin</assignable_by>
+</sys_user_role>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_ws_definition action="INSERT_OR_UPDATE">
+  <active>true</active>
+  <name>TMH Status</name>
+  <path>/status</path>
+  <base_path>/api/x_snc_tmh</base_path>
+  <consumes>application/json</consumes>
+  <produces>application/json</produces>
+  <relative_path>/status</relative_path>
+  <requires_authentication>true</requires_authentication>
+  <requires_acl>true</requires_acl>
+  <is_default>false</is_default>
+  <service_id>tmh_status</service_id>
+  <operations>
+    <operation>
+      <name>status</name>
+      <method>GET</method>
+      <path>/status</path>
+      <script><![CDATA[(function process(request, response) {
+    var api = new x_snc_tmh.TransformMapHealthAPI();
+    api.process(request, response);
+})(request, response);]]></script>
+    </operation>
+  </operations>
+</sys_ws_definition>

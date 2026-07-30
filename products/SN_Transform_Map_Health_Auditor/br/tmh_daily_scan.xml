@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_trigger action="INSERT_OR_UPDATE">
+  <active>true</active>
+  <condition>gs.isInteractive() == false</condition>
+  <name>TMH Daily Health Scan</name>
+  <job_type>scheduled</job_type>
+  <script><![CDATA[// SN Transform Map Health Auditor — Daily Health Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Scheduled job: runs daily at 03:00 UTC, scans all transform maps,
+// computes health scores, and generates alerts for scores below threshold.
+
+(function() {
+    try {
+        var engine = new x_snc_tmh.TransformMapHealthEngine();
+        var resultId = engine.scanAll();
+
+        if (resultId) {
+            gs.info('TMH Daily Scan completed. Summary result: ' + resultId);
+        } else {
+            gs.warn('TMH Daily Scan completed but produced no results. No transform maps found or scan failed.');
+        }
+    } catch (e) {
+        gs.error('TMH Daily Scan failed: ' + e.message);
+    }
+})();]]></script>
+  <run_dayofweek>all</run_dayofweek>
+  <run_period>daily</run_period>
+  <run_start>2026-07-30 03:00:00</run_start>
+  <timezone>UTC</timezone>
+  <trigger_type>daily</trigger_type>
+</sys_trigger>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_app action="INSERT_OR_UPDATE">
+  <active>true</active>
+  <enforce_acl>true</enforce_acl>
+  <name>SN Transform Map Health Auditor</name>
+  <scope>x_snc_tmh</scope>
+  <short_description>Proactive import set health monitoring — scan, score, and remediate broken transform maps before users notice missing data.</short_description>
+  <version>1.0.0</version>
+  <vendor>Vladimir Kapustin</vendor>
+  <vendor_prefix>x_snc</vendor_prefix>
+  <sys_class_name>sys_app</sys_class_name>
+  <sys_created_on>2026-07-30 05:00:00</sys_created_on>
+  <sys_updated_on>2026-07-30 05:00:00</sys_updated_on>
+  <sys_policy/>
+  <cross_scope_privileges>
+    <sys_scope_privilege>
+      <source_scope>x_snc_tmh</source_scope>
+      <target_scope>global</target_scope>
+      <target_name>sys_transform_map</target_name>
+      <operation>read</operation>
+      <status>allowed</status>
+    </sys_scope_privilege>
+    <sys_scope_privilege>
+      <source_scope>x_snc_tmh</source_scope>
+      <target_scope>global</target_scope>
+      <target_name>sys_transform_entry</target_name>
+      <operation>read</operation>
+      <status>allowed</status>
+    </sys_scope_privilege>
+    <sys_scope_privilege>
+      <source_scope>x_snc_tmh</source_scope>
+      <target_scope>global</target_scope>
+      <target_name>sys_transform_script</target_name>
+      <operation>read</operation>
+      <status>allowed</status>
+    </sys_scope_privilege>
+    <sys_scope_privilege>
+      <source_scope>x_snc_tmh</source_scope>
+      <target_scope>global</target_scope>
+      <target_name>sys_import_set_row</target_name>
+      <operation>read</operation>
+      <status>allowed</status>
+    </sys_scope_privilege>
+    <sys_scope_privilege>
+      <source_scope>x_snc_tmh</source_scope>
+      <target_scope>global</target_scope>
+      <target_name>sys_import_set_run</target_name>
+      <operation>read</operation>
+      <status>allowed</status>
+    </sys_scope_privilege>
+    <sys_scope_privilege>
+      <source_scope>x_snc_tmh</source_scope>
+      <target_scope>global</target_scope>
+      <target_name>sys_dictionary</target_name>
+      <operation>read</operation>
+      <status>allowed</status>
+    </sys_scope_privilege>
+  </cross_scope_privileges>
+  <roles>
+    <role>
+      <name>x_snc_tmh.admin</name>
+      <description>Full access to Transform Map Health Auditor — scan, configure, view results</description>
+    </role>
+    <role>
+      <name>x_snc_tmh.viewer</name>
+      <description>Read-only access to scan results and status</description>
+    </role>
+  </roles>
+</sys_app>

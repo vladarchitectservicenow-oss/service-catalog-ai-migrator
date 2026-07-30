@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl action="INSERT_OR_UPDATE">
+  <active>true</active>
+  <name>x_snc_tmh_config</name>
+  <operation>
+    <name>read</name>
+    <type>record</type>
+  </operation>
+  <requires_role>true</requires_role>
+  <script><![CDATA[answer = gs.hasRole('x_snc_tmh.admin');]]></script>
+  <type>record</type>
+</sys_security_acl>
