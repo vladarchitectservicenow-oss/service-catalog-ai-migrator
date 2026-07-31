@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-28 06:00:00">
+  <!-- Scheduled Job: Nightly Health Scan — runs daily at 02:00 -->
+  <sys_trigger>
+    <name>Nightly Health Scan</name>
+    <script><![CDATA[
+// SN Assignment Rule Auditor — Nightly Health Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function() {
+    try {
+        var engine = new AssignmentRuleEngine();
+        var result = engine.scanAll(null);
+        gs.info('AssignmentRuleAuditor: Nightly scan complete. ' +
+                'Tables scanned: ' + Object.keys(result.tables).length +
+                ', Conflicts: ' + Object.values(result.tables).reduce(function(s, t) { return s + t.conflicts; }, 0) +
+                ', Dead rules: ' + Object.values(result.tables).reduce(function(s, t) { return s + t.dead_rules; }, 0) +
+                ', Stale conditions: ' + Object.values(result.tables).reduce(function(s, t) { return s + t.stale_conditions; }, 0));
+    } catch (e) {
+        gs.error('AssignmentRuleAuditor: Nightly scan failed: ' + e.message);
+    }
+})();
+]]></script>
+    <trigger_type>daily</trigger_type>
+    <time>02:00:00</time>
+    <active>true</active>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_trigger>
+
+  <!-- Scheduled Job: Weekly Baseline — runs Monday at 03:00 -->
+  <sys_trigger>
+    <name>Weekly Baseline Snapshot</name>
+    <script><![CDATA[
+// SN Assignment Rule Auditor — Weekly Baseline Snapshot
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function() {
+    try {
+        var helper = new AssignmentRuleHelper();
+        var weekLabel = 'Baseline ' + new GlideDateTime().getDate().getValue();
+        var baselineId = helper.createBaseline(weekLabel, null);
+        if (baselineId) {
+            gs.info('AssignmentRuleAuditor: Weekly baseline created: ' + baselineId);
+        } else {
+            gs.warn('AssignmentRuleAuditor: Weekly baseline creation failed');
+        }
+    } catch (e) {
+        gs.error('AssignmentRuleAuditor: Weekly baseline failed: ' + e.message);
+    }
+})();
+]]></script>
+    <trigger_type>weekly</trigger_type>
+    <day_of_week>Monday</day_of_week>
+    <time>03:00:00</time>
+    <active>true</active>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_trigger>
+
+  <!-- Scheduled Job: Cleanup Old Snapshots — runs Sunday at 04:00 -->
+  <sys_trigger>
+    <name>Cleanup Old Scan Results</name>
+    <script><![CDATA[
+// SN Assignment Rule Auditor — Cleanup Old Scan Results
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function() {
+    try {
+        var helper = new AssignmentRuleHelper();
+        var deleted = helper.purgeOldResults(90);
+        gs.info('AssignmentRuleAuditor: Cleanup complete. Deleted ' + deleted + ' old scan results.');
+    } catch (e) {
+        gs.error('AssignmentRuleAuditor: Cleanup failed: ' + e.message);
+    }
+})();
+]]></script>
+    <trigger_type>weekly</trigger_type>
+    <day_of_week>Sunday</day_of_week>
+    <time>04:00:00</time>
+    <active>true</active>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_trigger>
+
+  <!-- Business Rule: x_sn_ara_scan_result — auto-set scanned_at on insert -->
+  <sys_script>
+    <name>Set Scanned At</name>
+    <collection>x_sn_ara_scan_result</collection>
+    <when>before</when>
+    <order>100</order>
+    <active>true</active>
+    <condition><![CDATA[current.isNewRecord()]]></condition>
+    <script><![CDATA[
+// SN Assignment Rule Auditor — Auto-set scanned_at on insert
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function executeRule(current, previous /*null when async*/) {
+    if (!current.scanned_at) {
+        current.scanned_at = new GlideDateTime();
+    }
+})(current, previous);
+]]></script>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_script>
+
+  <!-- Business Rule: x_sn_ara_session — auto-set created_at on insert -->
+  <sys_script>
+    <name>Set Created At</name>
+    <collection>x_sn_ara_session</collection>
+    <when>before</when>
+    <order>100</order>
+    <active>true</active>
+    <condition><![CDATA[current.isNewRecord()]]></condition>
+    <script><![CDATA[
+// SN Assignment Rule Auditor — Auto-set created_at on insert
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function executeRule(current, previous /*null when async*/) {
+    if (!current.created_at) {
+        current.created_at = new GlideDateTime();
+    }
+})(current, previous);
+]]></script>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_script>
+</unload>

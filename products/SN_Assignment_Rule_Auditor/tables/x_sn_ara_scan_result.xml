@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-28 06:00:00">
+  <sys_db_object>
+    <name>x_sn_ara_scan_result</name>
+    <label>Scan Result</label>
+    <super_class/>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+    <is_extendable>false</is_extendable>
+    <audit>false</audit>
+    <access_count>0</access_count>
+    <element id="type" type="string" max_length="40" label="Result Type" mandatory="true" choice="1">
+      <choice value="health_snapshot" label="Health Snapshot"/>
+      <choice value="conflict" label="Conflict"/>
+      <choice value="dead_rule" label="Dead Rule"/>
+      <choice value="stale_condition" label="Stale Condition"/>
+    </element>
+    <element id="table_name" type="string" max_length="80" label="Table Name" mandatory="true"/>
+    <element id="rule_sys_id" type="string" max_length="32" label="Rule Sys ID"/>
+    <element id="rule_name" type="string" max_length="255" label="Rule Name"/>
+    <element id="severity" type="string" max_length="20" label="Severity" choice="1">
+      <choice value="critical" label="Critical"/>
+      <choice value="high" label="High"/>
+      <choice value="medium" label="Medium"/>
+      <choice value="low" label="Low"/>
+      <choice value="info" label="Info"/>
+    </element>
+    <element id="score" type="integer" label="Score"/>
+    <element id="detail_json" type="string" max_length="4000" label="Detail (JSON)"/>
+    <element id="explanation" type="string" max_length="4000" label="AI Explanation"/>
+    <element id="scanned_at" type="glide_date_time" label="Scanned At" mandatory="true"/>
+    <element id="scan_run_id" type="string" max_length="32" label="Scan Run ID"/>
+    <element id="active" type="boolean" label="Active" default_value="true"/>
+  </sys_db_object>
+</unload>

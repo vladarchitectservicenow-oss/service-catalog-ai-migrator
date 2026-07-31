@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-28 06:00:00">
+  <sys_scope>
+    <name>Assignment Rule Auditor</name>
+    <scope>sn_assignment_rule_auditor</scope>
+    <short_description>Detect conflicting assignment rules, dead rules, and stale conditions across your ServiceNow instance</short_description>
+    <version>1.0.0</version>
+    <release>Zurich</release>
+    <auto_discover>true</auto_discover>
+    <vendor>Vladimir Kapustin</vendor>
+    <vendor_prefix>sn_ara</vendor_prefix>
+  </sys_scope>
+  <sys_scope_privilege>
+    <operation>read</operation>
+    <source_scope>sn_assignment_rule_auditor</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_rule_assignment</target_name>
+    <type>table</type>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <operation>read</operation>
+    <source_scope>sn_assignment_rule_auditor</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_user_group</target_name>
+    <type>table</type>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <operation>read</operation>
+    <source_scope>sn_assignment_rule_auditor</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_choice</target_name>
+    <type>table</type>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <operation>read</operation>
+    <source_scope>sn_assignment_rule_auditor</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_dictionary</target_name>
+    <type>table</type>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <operation>read</operation>
+    <source_scope>sn_assignment_rule_auditor</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_script_include</target_name>
+    <type>table</type>
+  </sys_scope_privilege>
+  <sys_scope_privilege>
+    <operation>read</operation>
+    <source_scope>sn_assignment_rule_auditor</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_user</target_name>
+    <type>table</type>
+  </sys_scope_privilege>
+  <sys_role>
+    <name>sn_ara_admin</name>
+    <description>Full access to Assignment Rule Auditor: run scans, view all results, manage baselines</description>
+  </sys_role>
+  <sys_role>
+    <name>sn_ara_viewer</name>
+    <description>Read-only access to Assignment Rule Auditor scan results and health dashboards</description>
+  </sys_role>
+</unload>

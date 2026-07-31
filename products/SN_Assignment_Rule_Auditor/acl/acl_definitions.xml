@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-07-28 06:00:00">
+  <!-- x_sn_ara_scan_result — Read ACLs -->
+  <sys_security_acl>
+    <name>x_sn_ara_scan_result</name>
+    <operation>
+      <name>read</name>
+      <type>record</type>
+      <script><![CDATA[
+answer = gs.hasRole('sn_ara_admin') || gs.hasRole('sn_ara_viewer');
+]]></script>
+      <requires_roles>sn_ara_admin,sn_ara_viewer</requires_roles>
+    </operation>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_security_acl>
+
+  <!-- x_sn_ara_scan_result — Create ACL -->
+  <sys_security_acl>
+    <name>x_sn_ara_scan_result</name>
+    <operation>
+      <name>create</name>
+      <type>record</type>
+      <script><![CDATA[
+answer = gs.hasRole('sn_ara_admin');
+]]></script>
+      <requires_roles>sn_ara_admin</requires_roles>
+    </operation>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_security_acl>
+
+  <!-- x_sn_ara_scan_result — Write ACL -->
+  <sys_security_acl>
+    <name>x_sn_ara_scan_result</name>
+    <operation>
+      <name>write</name>
+      <type>record</type>
+      <script><![CDATA[
+answer = gs.hasRole('sn_ara_admin');
+]]></script>
+      <requires_roles>sn_ara_admin</requires_roles>
+    </operation>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_security_acl>
+
+  <!-- x_sn_ara_scan_result — Delete ACL -->
+  <sys_security_acl>
+    <name>x_sn_ara_scan_result</name>
+    <operation>
+      <name>delete</name>
+      <type>record</type>
+      <script><![CDATA[
+answer = gs.hasRole('sn_ara_admin');
+]]></script>
+      <requires_roles>sn_ara_admin</requires_roles>
+    </operation>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_security_acl>
+
+  <!-- x_sn_ara_session — Read ACLs -->
+  <sys_security_acl>
+    <name>x_sn_ara_session</name>
+    <operation>
+      <name>read</name>
+      <type>record</type>
+      <script><![CDATA[
+answer = gs.hasRole('sn_ara_admin') || gs.hasRole('sn_ara_viewer');
+]]></script>
+      <requires_roles>sn_ara_admin,sn_ara_viewer</requires_roles>
+    </operation>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_security_acl>
+
+  <!-- x_sn_ara_session — Create ACL -->
+  <sys_security_acl>
+    <name>x_sn_ara_session</name>
+    <operation>
+      <name>create</name>
+      <type>record</type>
+      <script><![CDATA[
+answer = gs.hasRole('sn_ara_admin');
+]]></script>
+      <requires_roles>sn_ara_admin</requires_roles>
+    </operation>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_security_acl>
+
+  <!-- x_sn_ara_session — Write ACL -->
+  <sys_security_acl>
+    <name>x_sn_ara_session</name>
+    <operation>
+      <name>write</name>
+      <type>record</type>
+      <script><![CDATA[
+answer = gs.hasRole('sn_ara_admin');
+]]></script>
+      <requires_roles>sn_ara_admin</requires_roles>
+    </operation>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_security_acl>
+
+  <!-- x_sn_ara_session — Delete ACL -->
+  <sys_security_acl>
+    <name>x_sn_ara_session</name>
+    <operation>
+      <name>delete</name>
+      <type>record</type>
+      <script><![CDATA[
+answer = gs.hasRole('sn_ara_admin');
+]]></script>
+      <requires_roles>sn_ara_admin</requires_roles>
+    </operation>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_security_acl>
+
+  <!-- REST API — Execute ACL -->
+  <sys_security_acl>
+    <name>sn_ara_api_execute</name>
+    <operation>
+      <name>execute</name>
+      <type>rest_endpoint</type>
+      <path>/api/x_sn_ara/execute</path>
+      <script><![CDATA[
+answer = gs.hasRole('sn_ara_admin');
+]]></script>
+      <requires_roles>sn_ara_admin</requires_roles>
+    </operation>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_security_acl>
+
+  <!-- REST API — Status ACL -->
+  <sys_security_acl>
+    <name>sn_ara_api_status</name>
+    <operation>
+      <name>execute</name>
+      <type>rest_endpoint</type>
+      <path>/api/x_sn_ara/status</path>
+      <script><![CDATA[
+answer = gs.hasRole('sn_ara_admin') || gs.hasRole('sn_ara_viewer');
+]]></script>
+      <requires_roles>sn_ara_admin,sn_ara_viewer</requires_roles>
+    </operation>
+    <sys_scope>sn_assignment_rule_auditor</sys_scope>
+  </sys_security_acl>
+</unload>
