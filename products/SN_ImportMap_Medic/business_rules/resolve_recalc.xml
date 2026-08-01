@@ -6,8 +6,10 @@
 <change_fields/>
 <client_callable>false</client_callable>
 <description>Recalculates health score when raw counts change on the health score table.</description>
-<execute_function>false</execute_function>
-<filter_condition table="x_snc_importmap_medic_health_score">field_error_count^VALUECHANGES^ORcollision_count^VALUECHANGES^ORdrift_event_count^VALUECHANGES^ORerror_rate_30d^VALUECHANGES^ORstale_penalty^VALUECHANGES</filter_condition>
+<execute_function>true</execute_function>
+<filter_condition table="x_snc_importmap_medic_health_score">field_error_countCHANGES^ORcollision_countCHANGES^ORdrift_event_countCHANGES^ORerror_rate_30dCHANGES^ORstale_penaltyCHANGES</filter_condition>
+<action_insert>true</action_insert>
+<action_update>true</action_update>
 <is_rest>false</is_rest>
 <name>ImportMap Medic Recalc on Change</name>
 <order>100</order>

@@ -8,7 +8,7 @@
 <caller_access/>
 <create_access>true</create_access>
 <create_access_controls>false</create_access_controls>
-<delete_access>false</delete_access>
+<delete_access>true</delete_access>
 <extension_model/>
 <is_extendable>false</is_extendable>
 <label>ImportMap Medic Health Score</label>
@@ -22,7 +22,7 @@
 <provider_class/>
 <read_access>true</read_access>
 <scriptable_table>false</scriptable_table>
-<super_class display_value="Task">5f37c1b20f232000b7f0337dc047ffc6</super_class>
+<super_class/>
 <sys_class_code/>
 <sys_class_name>sys_db_object</sys_class_name>
 <sys_created_by>admin</sys_created_by>
@@ -44,7 +44,7 @@
 <caller_access/>
 <create_access>true</create_access>
 <create_access_controls>false</create_access_controls>
-<delete_access>false</delete_access>
+<delete_access>true</delete_access>
 <extension_model/>
 <is_extendable>false</is_extendable>
 <label>ImportMap Medic Finding</label>
@@ -58,7 +58,7 @@
 <provider_class/>
 <read_access>true</read_access>
 <scriptable_table>false</scriptable_table>
-<super_class display_value="Task">5f37c1b20f232000b7f0337dc047ffc6</super_class>
+<super_class/>
 <sys_class_code/>
 <sys_class_name>sys_db_object</sys_class_name>
 <sys_created_by>admin</sys_created_by>
@@ -80,7 +80,7 @@
 <caller_access/>
 <create_access>true</create_access>
 <create_access_controls>false</create_access_controls>
-<delete_access>false</delete_access>
+<delete_access>true</delete_access>
 <extension_model/>
 <is_extendable>false</is_extendable>
 <label>ImportMap Medic Health Trend</label>
@@ -94,7 +94,7 @@
 <provider_class/>
 <read_access>true</read_access>
 <scriptable_table>false</scriptable_table>
-<super_class display_value="Task">5f37c1b20f232000b7f0337dc047ffc6</super_class>
+<super_class/>
 <sys_class_code/>
 <sys_class_name>sys_db_object</sys_class_name>
 <sys_created_by>admin</sys_created_by>
@@ -116,7 +116,7 @@
 <caller_access/>
 <create_access>true</create_access>
 <create_access_controls>false</create_access_controls>
-<delete_access>false</delete_access>
+<delete_access>true</delete_access>
 <extension_model/>
 <is_extendable>false</is_extendable>
 <label>ImportMap Medic Drift Event</label>
@@ -130,7 +130,7 @@
 <provider_class/>
 <read_access>true</read_access>
 <scriptable_table>false</scriptable_table>
-<super_class display_value="Task">5f37c1b20f232000b7f0337dc047ffc6</super_class>
+<super_class/>
 <sys_class_code/>
 <sys_class_name>sys_db_object</sys_class_name>
 <sys_created_by>admin</sys_created_by>

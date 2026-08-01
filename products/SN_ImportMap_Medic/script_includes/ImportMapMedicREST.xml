@@ -9,6 +9,9 @@
 <description>REST dispatcher for ImportMap Medic Scripted REST API.</description>
 <name>ImportMapMedicREST</name>
 <script><![CDATA[
+// ImportMap Medic — REST Dispatcher
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
 var ImportMapMedicREST = Class.create();
 ImportMapMedicREST.prototype = {
     initialize: function(request, response) {

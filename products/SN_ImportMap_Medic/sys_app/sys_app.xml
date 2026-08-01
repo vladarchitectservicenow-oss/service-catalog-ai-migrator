@@ -38,4 +38,278 @@
 <vendor_prefix/>
 <version>1.0.0</version>
 </sys_app>
+
+<!-- Roles -->
+<sys_user_role action="INSERT_OR_UPDATE">
+<assignable_by/>
+<can_delegate>true</can_delegate>
+<description>ImportMap Medic administrator role</description>
+<elevated_privilege>false</elevated_privilege>
+<grantable>true</grantable>
+<includes_roles/>
+<name>x_snc_importmap_medic.admin</name>
+<requires_subscription>-1</requires_subscription>
+<scoped_admin>false</scoped_admin>
+<suffix/>
+<sys_class_name>sys_user_role</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>role_admin_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic.admin</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_user_role>
+
+<sys_user_role action="INSERT_OR_UPDATE">
+<assignable_by/>
+<can_delegate>true</can_delegate>
+<description>ImportMap Medic operator role</description>
+<grantable>true</grantable>
+<includes_roles/>
+<name>x_snc_importmap_medic.user</name>
+<requires_subscription>-1</requires_subscription>
+<scoped_admin>false</scoped_admin>
+<suffix/>
+<sys_class_name>sys_user_role</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>role_user_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic.user</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_user_role>
+
+<sys_user_role action="INSERT_OR_UPDATE">
+<assignable_by/>
+<can_delegate>true</can_delegate>
+<description>ImportMap Medic REST integration role</description>
+<grantable>true</grantable>
+<includes_roles/>
+<name>x_snc_importmap_medic.integration</name>
+<requires_subscription>-1</requires_subscription>
+<scoped_admin>false</scoped_admin>
+<suffix/>
+<sys_class_name>sys_user_role</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>role_integration_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>x_snc_importmap_medic.integration</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_user_role>
+
+<!-- Cross-Scope Privileges -->
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+<operation>read</operation>
+<source_scope display_value="ImportMap Medic">x_snc_importmap_medic</source_scope>
+<status>allowed</status>
+<sys_class_name>sys_scope_privilege</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>priv_read_sys_transform_map_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>sys_transform_map</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_scope_privilege_sys_transform_map</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<target_scope display_value="Global">global</target_scope>
+</sys_scope_privilege>
+
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+<operation>read</operation>
+<source_scope display_value="ImportMap Medic">x_snc_importmap_medic</source_scope>
+<status>allowed</status>
+<sys_class_name>sys_scope_privilege</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>priv_read_sys_transform_entry_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>sys_transform_entry</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_scope_privilege_sys_transform_entry</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<target_scope display_value="Global">global</target_scope>
+</sys_scope_privilege>
+
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+<operation>read</operation>
+<source_scope display_value="ImportMap Medic">x_snc_importmap_medic</source_scope>
+<status>allowed</status>
+<sys_class_name>sys_scope_privilege</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>priv_read_sys_import_set_run_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>sys_import_set_run</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_scope_privilege_sys_import_set_run</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<target_scope display_value="Global">global</target_scope>
+</sys_scope_privilege>
+
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+<operation>read</operation>
+<source_scope display_value="ImportMap Medic">x_snc_importmap_medic</source_scope>
+<status>allowed</status>
+<sys_class_name>sys_scope_privilege</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>priv_read_sys_import_set_log_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>sys_import_set_log</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_scope_privilege_sys_import_set_log</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<target_scope display_value="Global">global</target_scope>
+</sys_scope_privilege>
+
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+<operation>read</operation>
+<source_scope display_value="ImportMap Medic">x_snc_importmap_medic</source_scope>
+<status>allowed</status>
+<sys_class_name>sys_scope_privilege</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>priv_read_sys_data_source_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>sys_data_source</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_scope_privilege_sys_data_source</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+<target_scope display_value="Global">global</target_scope>
+</sys_scope_privilege>
+
+<!-- Script Includes -->
+<sys_script_include action="INSERT_OR_UPDATE">
+<access>public</access>
+<active>true</active>
+<api_name>x_snc_importmap_medic.ImportMapMedicEngine</api_name>
+<caller_access/>
+<client_callable>false</client_callable>
+<description>Core engine for ImportMap Medic. Audits transform maps, computes health scores, and emits findings.</description>
+<name>ImportMapMedicEngine</name>
+<sys_class_name>sys_script_include</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>si_engine_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>ImportMapMedicEngine</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_script_include_ImportMapMedicEngine</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_script_include>
+
+<sys_script_include action="INSERT_OR_UPDATE">
+<access>public</access>
+<active>true</active>
+<api_name>x_snc_importmap_medic.ImportMapMedicREST</api_name>
+<caller_access/>
+<client_callable>false</client_callable>
+<description>REST dispatcher for ImportMap Medic Scripted REST API.</description>
+<name>ImportMapMedicREST</name>
+<sys_class_name>sys_script_include</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>si_rest_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>ImportMapMedicREST</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_script_include_ImportMapMedicREST</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_script_include>
+
+<!-- REST Operations -->
+<sys_ws_service action="INSERT_OR_UPDATE">
+<active>true</active>
+<custom_auth_script/>
+<default_auth_profile/>
+<default_jwt_profile/>
+<description>ImportMap Medic REST API for auditing transform map health.</description>
+<name>ImportMap Medic API</name>
+<namespace>x_snc_importmap_medic</namespace>
+<service_id>importmap_medic</service_id>
+<source>x_snc_importmap_medic</source>
+<sys_class_name>sys_ws_service</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>rest_service_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>ImportMap Medic API</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_ws_service_importmap_medic</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_ws_service>
+
+<sys_ws_operation action="INSERT_OR_UPDATE">
+<active>true</active>
+<consumes>application/json</consumes>
+<http_method>POST</http_method>
+<name>Execute Audit</name>
+<produces>application/json</produces>
+<operation_uri>/execute</operation_uri>
+<sys_class_name>sys_ws_operation</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>ws_op_post_execute_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Execute Audit</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_ws_operation_post_execute</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_ws_operation>
+
+<sys_ws_operation action="INSERT_OR_UPDATE">
+<active>true</active>
+<consumes>application/json</consumes>
+<http_method>GET</http_method>
+<name>Get Status</name>
+<produces>application/json</produces>
+<operation_uri>/status</operation_uri>
+<sys_class_name>sys_ws_operation</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-07-16 00:00:00</sys_created_on>
+<sys_id>ws_op_get_status_001</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_name>Get Status</sys_name>
+<sys_package display_value="ImportMap Medic">1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p</sys_package>
+<sys_policy/>
+<sys_scope display_value="ImportMap Medic">x_snc_importmap_medic</sys_scope>
+<sys_update_name>sys_ws_operation_get_status</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-07-16 00:00:00</sys_updated_on>
+</sys_ws_operation>
 </unload>

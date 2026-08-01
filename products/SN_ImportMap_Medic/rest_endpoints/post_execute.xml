@@ -9,6 +9,9 @@
 <http_method>POST</http_method>
 <name>Execute Audit</name>
 <operation_script><![CDATA[
+// ImportMap Medic — POST /execute REST Endpoint
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
 (function process(request, response) {
     var dispatcher = new ImportMapMedicREST(request, response);
     var result = dispatcher.handleExecute();
