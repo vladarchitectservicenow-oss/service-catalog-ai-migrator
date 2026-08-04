@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-04 05:00:00">
+  <!-- ConfigSync Daily Scan — runs at 02:00 daily -->
+  <sys_trigger action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Daily configuration fingerprint and drift comparison. Runs at 02:00 to capture the previous day's changes.</description>
+    <job_context display_value="ConfigSync">x_csync</job_context>
+    <name>ConfigSync Daily Scan</name>
+    <next_action>2026-08-05 02:00:00</next_action>
+    <repeat_type>daily</repeat_type>
+    <run_dayofweek/>
+    <run_period/>
+    <run_start>2026-08-04 02:00:00</run_start>
+    <run_time>02:00:00</run_time>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// ConfigSync Daily Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function() {
+    try {
+        var engine = new x_csync.ConfigSyncEngine();
+        var instanceName = gs.getProperty('instance_name', '');
+        var now = new GlideDateTime();
+        var snapshotName = 'Daily Scan ' + now.getDate().getByFormat('yyyy-MM-dd');
+
+        var snapId = engine.fingerprintInstance(instanceName, snapshotName, 'scheduled');
+        if (!snapId) {
+            gs.error('ConfigSync Daily Scan: fingerprintInstance returned empty sys_id');
+            return;
+        }
+
+        // Compare against the previous snapshot
+        var prevSnap = new GlideRecord('x_csync_snapshot');
+        prevSnap.addQuery('sys_id', '!=', snapId);
+        prevSnap.orderByDesc('sys_created_on');
+        prevSnap.setLimit(1);
+        prevSnap.query();
+
+        if (prevSnap.next()) {
+            var report = engine.compareSnapshots(prevSnap.getUniqueValue(), snapId);
+            gs.info('ConfigSync Daily Scan: Drift Score=' + report.drift_score +
+                    ', Gate=' + report.gate + ', Items=' + report.drift_count);
+        } else {
+            gs.info('ConfigSync Daily Scan: First snapshot created (no previous to compare). ID=' + snapId);
+        }
+    } catch (e) {
+        gs.error('ConfigSync Daily Scan failed: ' + e.message);
+    }
+})();
+]]></script>
+    <sys_class_name>sys_trigger</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_sj_daily</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ConfigSync Daily Scan</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <trigger_type>0</trigger_type>
+  </sys_trigger>
+</unload>

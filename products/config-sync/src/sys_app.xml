@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-04 05:00:00">
+  <sys_scope action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>Continuous configuration drift detection across ServiceNow instances. Fingerprint, compare, and score configuration changes before clones and upgrades break.</description>
+    <name>ConfigSync</name>
+    <scope>x_csync</scope>
+    <short_description>Instance Configuration Drift Auditor</short_description>
+    <vendor>Vladimir Kapustin</vendor>
+    <vendor_prefix>x_csync</vendor_prefix>
+    <version>1.0.0</version>
+  </sys_scope>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_properties</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_script</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_security_acl</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_script_client</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_ui_policy</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_dictionary</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_trigger</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_script_include</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_clone_history</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>sn_generative_ai</target_scope>
+    <target_table/>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>sn_now_assist</target_scope>
+    <target_table/>
+  </sys_scope_privilege>
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_csync</application>
+    <name>Drift Dashboard</name>
+    <order>100</order>
+    <path>dashboard.do</path>
+    <title>ConfigSync Drift Dashboard</title>
+  </sys_app_module>
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_csync</application>
+    <name>Diff Viewer</name>
+    <order>200</order>
+    <path>diff_viewer.do</path>
+    <title>ConfigSync Diff Viewer</title>
+  </sys_app_module>
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_csync</application>
+    <name>Drift Timeline</name>
+    <order>300</order>
+    <path>timeline.do</path>
+    <title>ConfigSync Drift Timeline</title>
+  </sys_app_module>
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_csync</application>
+    <name>Snapshots</name>
+    <order>400</order>
+    <path>table/x_csync_snapshot</path>
+    <title>ConfigSync Snapshots</title>
+  </sys_app_module>
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_csync</application>
+    <name>Drift Items</name>
+    <order>500</order>
+    <path>table/x_csync_drift_item</path>
+    <title>ConfigSync Drift Items</title>
+  </sys_app_module>
+  <sys_role action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>Full access to ConfigSync: create snapshots, run comparisons, view all drift data, configure settings</description>
+    <name>x_csync_admin</name>
+  </sys_role>
+  <sys_role action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>Read-only access to ConfigSync: view dashboards, drift reports, and snapshots</description>
+    <name>x_csync_user</name>
+  </sys_role>
+</unload>

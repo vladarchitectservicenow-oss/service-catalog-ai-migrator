@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-04 05:00:00">
+  <!-- x_csync_snapshot: Admin CRUD -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to create snapshot records</description>
+    <name>x_csync_snapshot</name>
+    <operation display_value="create">create</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_snap_create</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_snapshot.create</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to read snapshot records</description>
+    <name>x_csync_snapshot</name>
+    <operation display_value="read">read</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin') || gs.hasRole('x_csync_user');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_snap_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_snapshot.read</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to write snapshot records</description>
+    <name>x_csync_snapshot</name>
+    <operation display_value="write">write</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_snap_write</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_snapshot.write</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to delete snapshot records</description>
+    <name>x_csync_snapshot</name>
+    <operation display_value="delete">delete</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_snap_delete</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_snapshot.delete</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+
+  <!-- x_csync_drift_item: Admin CRUD -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to create drift item records</description>
+    <name>x_csync_drift_item</name>
+    <operation display_value="create">create</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_drift_create</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_drift_item.create</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin and x_csync_user to read drift item records</description>
+    <name>x_csync_drift_item</name>
+    <operation display_value="read">read</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin') || gs.hasRole('x_csync_user');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_drift_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_drift_item.read</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to write drift item records</description>
+    <name>x_csync_drift_item</name>
+    <operation display_value="write">write</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_drift_write</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_drift_item.write</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to delete drift item records</description>
+    <name>x_csync_drift_item</name>
+    <operation display_value="delete">delete</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_drift_delete</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_drift_item.delete</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+
+  <!-- REST endpoint: execute access for x_csync_user and x_csync_admin -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_user and x_csync_admin to execute the DriftCheck REST API</description>
+    <name>x_csync.DriftCheckAPI</name>
+    <operation display_value="execute">execute</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin') || gs.hasRole('x_csync_user');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_rest_exec</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync.DriftCheckAPI.execute</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+
+  <!-- Field-level ACL: restrict artifacts_json read to x_csync_admin only -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Restrict artifacts_json field read to x_csync_admin only</description>
+    <name>x_csync_snapshot.artifacts_json</name>
+    <operation display_value="read">read</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_field_artifacts</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_snapshot.artifacts_json.read</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+</unload>
