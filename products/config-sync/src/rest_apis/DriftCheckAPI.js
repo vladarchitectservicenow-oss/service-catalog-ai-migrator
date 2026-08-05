@@ -18,7 +18,7 @@
 
     if (method === 'POST') {
         try {
-            bodyData = request.body ? request.body.data : {};
+            bodyData = request.body || {};
             if (!bodyData || typeof bodyData !== 'object') {
                 bodyData = {};
             }

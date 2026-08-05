@@ -116,14 +116,42 @@
     <path>table/x_csync_drift_item</path>
     <title>ConfigSync Drift Items</title>
   </sys_app_module>
-  <sys_role action="INSERT_OR_UPDATE">
+  <sys_user_role action="INSERT_OR_UPDATE">
     <active>true</active>
     <description>Full access to ConfigSync: create snapshots, run comparisons, view all drift data, configure settings</description>
     <name>x_csync_admin</name>
-  </sys_role>
-  <sys_role action="INSERT_OR_UPDATE">
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
     <active>true</active>
     <description>Read-only access to ConfigSync: view dashboards, drift reports, and snapshots</description>
     <name>x_csync_user</name>
-  </sys_role>
+  </sys_user_role>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_csync.ConfigSyncEngine</api_name>
+    <description>Core engine for configuration fingerprinting, comparison, and risk scoring.</description>
+    <name>ConfigSyncEngine</name>
+  </sys_script_include>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_csync.ConfigSyncAI</api_name>
+    <description>AI-powered drift analysis using Now Assist and GenAI Controller.</description>
+    <name>ConfigSyncAI</name>
+  </sys_script_include>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>Check</name>
+    <operation_uri>/api/x_csync/drift/check</operation_uri>
+    <request_method>POST</request_method>
+    <short_description>CI/CD gate check — compares two snapshots and returns drift score</short_description>
+  </sys_ws_operation>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>Status</name>
+    <operation_uri>/api/x_csync/drift/status</operation_uri>
+    <request_method>GET</request_method>
+    <short_description>Current drift status — returns latest snapshot, drift score, and timeline</short_description>
+  </sys_ws_operation>
 </unload>

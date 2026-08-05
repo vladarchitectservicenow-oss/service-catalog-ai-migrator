@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-05 05:00:00">
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_csync.ConfigSyncAI</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>AI-powered drift analysis using Now Assist and GenAI Controller.</description>
+    <name>ConfigSyncAI</name>
+    <script><![CDATA[// ConfigSync — Instance Configuration Drift Auditor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// AI-powered drift analysis using Now Assist and GenAI Controller.
+// @class ConfigSyncAI @namespace x_csync
+
+var ConfigSyncAI = Class.create();
+ConfigSyncAI.prototype = {
+    initialize: function() {
+        this.AI_ENABLED_PROP = 'x_csync.ai.enabled';
+        this.AI_CACHE_TTL_DAYS = 7;
+    },
+
+    analyzeImpact: function(driftItemId) {
+        if (!this._isAIEnabled()) {
+            return '';
+        }
+
+        try {
+            var di = new GlideRecord('x_csync_drift_item');
+            if (!di.get(driftItemId)) {
+                return '';
+            }
+
+            var existingAnalysis = di.getValue('ai_analysis') || '';
+            if (existingAnalysis && this._isCacheFresh(di)) {
+                return existingAnalysis;
+            }
+
+            var prompt = this._buildImpactPrompt(di);
+            var analysis = this._callNowAssist(prompt);
+
+            if (analysis) {
+                di.setValue('ai_analysis', analysis);
+                di.setWorkflow(false);
+                di.update();
+            }
+
+            return analysis || '';
+        } catch (e) {
+            gs.error('ConfigSyncAI.analyzeImpact failed: ' + e.message);
+            return '';
+        }
+    },
+
+    suggestRemediation: function(driftItemId) {
+        var result = { action: 'none', description: '', risk_level: 'unknown' };
+
+        if (!this._isAIEnabled()) {
+            result.description = 'AI analysis is disabled. Enable via x_csync.ai.enabled system property.';
+            return result;
+        }
+
+        try {
+            var di = new GlideRecord('x_csync_drift_item');
+            if (!di.get(driftItemId)) {
+                result.description = 'Drift item not found.';
+                return result;
+            }
+
+            var prompt = this._buildRemediationPrompt(di);
+            var suggestion = this._callNowAssist(prompt);
+
+            if (suggestion) {
+                result = this._parseRemediationResponse(suggestion);
+            }
+            return result;
+        } catch (e) {
+            gs.error('ConfigSyncAI.suggestRemediation failed: ' + e.message);
+            return result;
+        }
+    },
+
+    generateSummary: function(driftReport) {
+        if (!this._isAIEnabled()) {
+            return 'Drift Score: ' + (driftReport.drift_score || 0) +
+                   '. Gate: ' + (driftReport.gate || 'UNKNOWN') +
+                   '. Items: ' + (driftReport.drift_count || 0) + '.';
+        }
+
+        try {
+            var prompt = 'Summarize this ServiceNow configuration drift report in 2-3 sentences for a platform administrator:\n' +
+                         'Drift Score: ' + (driftReport.drift_score || 0) + '/100\n' +
+                         'Gate: ' + (driftReport.gate || 'UNKNOWN') + '\n' +
+                         'Total Artifacts: ' + (driftReport.total_artifacts || 0) + '\n' +
+                         'Drift Items: ' + (driftReport.drift_count || 0) + '\n' +
+                         'High-Risk Items: ' + this._countHighRisk(driftReport.items) + '\n\n' +
+                         'Top drift items by risk:\n' + this._formatTopItems(driftReport.items, 5);
+
+            return this._callNowAssist(prompt) || this._fallbackSummary(driftReport);
+        } catch (e) {
+            gs.error('ConfigSyncAI.generateSummary failed: ' + e.message);
+            return this._fallbackSummary(driftReport);
+        }
+    },
+
+    _isAIEnabled: function() {
+        var prop = gs.getProperty(this.AI_ENABLED_PROP, 'true');
+        return prop === 'true';
+    },
+
+    _isCacheFresh: function(driftItemGr) {
+        var updated = driftItemGr.getValue('sys_updated_on');
+        if (!updated) return false;
+        var updatedGdt = new GlideDateTime(updated);
+        var cutoff = new GlideDateTime();
+        cutoff.addDays(-1 * this.AI_CACHE_TTL_DAYS);
+        return updatedGdt.after(cutoff);
+    },
+
+    _buildImpactPrompt: function(driftItemGr) {
+        var artifactType = driftItemGr.getValue('artifact_type') || 'unknown';
+        var artifactName = driftItemGr.getValue('artifact_name') || 'unknown';
+        var changeType = driftItemGr.getValue('change_type') || 'unknown';
+        var diffSummary = driftItemGr.getValue('diff_summary') || '{}';
+
+        return 'You are a ServiceNow platform architect. Analyze the impact of this configuration drift:\n' +
+               'Artifact Type: ' + artifactType + '\n' +
+               'Artifact Name: ' + artifactName + '\n' +
+               'Change Type: ' + changeType + '\n' +
+               'Diff: ' + diffSummary + '\n\n' +
+               'Explain in 2-3 sentences what could break, which modules are affected, and the blast radius. ' +
+               'Be specific about ServiceNow platform components.';
+    },
+
+    _buildRemediationPrompt: function(driftItemGr) {
+        var artifactType = driftItemGr.getValue('artifact_type') || 'unknown';
+        var artifactName = driftItemGr.getValue('artifact_name') || 'unknown';
+        var changeType = driftItemGr.getValue('change_type') || 'unknown';
+        var riskScore = driftItemGr.getValue('risk_score') || '0';
+
+        return 'You are a ServiceNow platform architect. Suggest a remediation action for this drift:\n' +
+               'Artifact Type: ' + artifactType + '\n' +
+               'Artifact Name: ' + artifactName + '\n' +
+               'Change Type: ' + changeType + '\n' +
+               'Risk Score: ' + riskScore + '/100\n\n' +
+               'Respond with exactly one line in this format:\n' +
+               'ACTION: <promote|revert|review|ignore>\n' +
+               'DESCRIPTION: <one sentence explaining the action>\n' +
+               'RISK: <low|medium|high>';
+    },
+
+    _callNowAssist: function(prompt) {
+        try {
+            var genAI = new sn_generative_ai.GlideGenerativeAI();
+            var response = genAI.generate(prompt, { max_tokens: 500, temperature: 0.3 });
+            return response || '';
+        } catch (e) {
+            try {
+                var nowAssist = new sn_now_assist.NowAssistAPI();
+                var result = nowAssist.generateText(prompt, { maxTokens: 500 });
+                return result || '';
+            } catch (e2) {
+                gs.warn('ConfigSyncAI: Both GenAI Controller and Now Assist unavailable. ' + e2.message);
+                return '';
+            }
+        }
+    },
+
+    _parseRemediationResponse: function(response) {
+        var result = { action: 'review', description: response, risk_level: 'medium' };
+        var lines = response.split('\n');
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (line.indexOf('ACTION:') === 0) {
+                var action = line.substring(7).trim().toLowerCase();
+                if (action === 'promote' || action === 'revert' || action === 'review' || action === 'ignore') {
+                    result.action = action;
+                }
+            } else if (line.indexOf('DESCRIPTION:') === 0) {
+                result.description = line.substring(12).trim();
+            } else if (line.indexOf('RISK:') === 0) {
+                var risk = line.substring(5).trim().toLowerCase();
+                if (risk === 'low' || risk === 'medium' || risk === 'high') {
+                    result.risk_level = risk;
+                }
+            }
+        }
+        return result;
+    },
+
+    _countHighRisk: function(items) {
+        if (!items) return 0;
+        var count = 0;
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].risk_score >= 70) count++;
+        }
+        return count;
+    },
+
+    _formatTopItems: function(items, limit) {
+        if (!items || items.length === 0) return '(none)';
+        var sorted = items.slice().sort(function(a, b) { return b.risk_score - a.risk_score; });
+        var result = '';
+        var max = Math.min(sorted.length, limit || 5);
+        for (var i = 0; i < max; i++) {
+            result += '- [' + sorted[i].risk_score + '/100] ' + sorted[i].artifact_type + ' :: ' + sorted[i].artifact_name + ' (' + sorted[i].change_type + ')\n';
+        }
+        return result;
+    },
+
+    _fallbackSummary: function(driftReport) {
+        return 'Drift Score: ' + (driftReport.drift_score || 0) + '/100. ' +
+               'Gate: ' + (driftReport.gate || 'UNKNOWN') + '. ' +
+               (driftReport.drift_count || 0) + ' drift items detected out of ' +
+               (driftReport.total_artifacts || 0) + ' total artifacts.';
+    },
+
+    type: 'ConfigSyncAI'
+};]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_si_ai</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ConfigSyncAI</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+  </sys_script_include>
+</unload>

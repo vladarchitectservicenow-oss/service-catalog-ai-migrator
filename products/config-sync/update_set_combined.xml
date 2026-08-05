@@ -1,0 +1,2674 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-05 05:00:00">
+<!-- x_csync_snapshot: Admin CRUD -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to create snapshot records</description>
+    <name>x_csync_snapshot</name>
+    <operation display_value="create">create</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_snap_create</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_snapshot.create</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to read snapshot records</description>
+    <name>x_csync_snapshot</name>
+    <operation display_value="read">read</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin') || gs.hasRole('x_csync_user');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_snap_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_snapshot.read</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to write snapshot records</description>
+    <name>x_csync_snapshot</name>
+    <operation display_value="write">write</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_snap_write</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_snapshot.write</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to delete snapshot records</description>
+    <name>x_csync_snapshot</name>
+    <operation display_value="delete">delete</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_snap_delete</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_snapshot.delete</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+
+  <!-- x_csync_drift_item: Admin CRUD -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to create drift item records</description>
+    <name>x_csync_drift_item</name>
+    <operation display_value="create">create</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_drift_create</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_drift_item.create</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin and x_csync_user to read drift item records</description>
+    <name>x_csync_drift_item</name>
+    <operation display_value="read">read</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin') || gs.hasRole('x_csync_user');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_drift_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_drift_item.read</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to write drift item records</description>
+    <name>x_csync_drift_item</name>
+    <operation display_value="write">write</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_drift_write</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_drift_item.write</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_admin to delete drift item records</description>
+    <name>x_csync_drift_item</name>
+    <operation display_value="delete">delete</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_drift_delete</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_drift_item.delete</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+
+  <!-- REST endpoint: execute access for x_csync_user and x_csync_admin -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Allow x_csync_user and x_csync_admin to execute the DriftCheck REST API</description>
+    <name>x_csync.DriftCheckAPI</name>
+    <operation display_value="execute">execute</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin') || gs.hasRole('x_csync_user');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_rest_exec</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync.DriftCheckAPI.execute</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+
+  <!-- Field-level ACL: restrict artifacts_json read to x_csync_admin only -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>true</advanced>
+    <condition/>
+    <description>Restrict artifacts_json field read to x_csync_admin only</description>
+    <name>x_csync_snapshot.artifacts_json</name>
+    <operation display_value="read">read</operation>
+    <script><![CDATA[answer = gs.hasRole('x_csync_admin');]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_acl_field_artifacts</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_snapshot.artifacts_json.read</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+<!-- Pre-Clone Gate: triggers on sys_clone_history insert to run drift check before clone -->
+  <sys_script action="INSERT_OR_UPDATE">
+    <abort_action>false</abort_action>
+    <access>package_private</access>
+    <action_insert>true</action_insert>
+    <action_update>false</action_update>
+    <action_delete>false</action_delete>
+    <active>true</active>
+    <add_message>false</add_message>
+    <advanced>true</advanced>
+    <condition><![CDATA[(function() {
+    // Only trigger when a clone is about to start (state = 'ready' or 'in_progress')
+    var state = current.getValue('state') || '';
+    return state === 'ready' || state === 'in_progress';
+})();]]></condition>
+    <description>Runs a drift check before a clone operation begins. Creates a pre-clone snapshot and compares against the latest baseline. If drift score is below 50, logs a critical warning.</description>
+    <name>ConfigSync Pre-Clone Gate</name>
+    <order>100</order>
+    <script><![CDATA[
+// ConfigSync Pre-Clone Gate
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function executeRule(current, previous /*null when async*/) {
+    try {
+        var engine = new x_csync.ConfigSyncEngine();
+        var instanceName = gs.getProperty('instance_name', '');
+        var now = new GlideDateTime();
+        var snapshotName = 'Pre-Clone ' + now.getDate().getByFormat('yyyy-MM-dd HH:mm');
+
+        // Create a pre-clone snapshot
+        var snapId = engine.fingerprintInstance(instanceName, snapshotName, 'pre_clone');
+        if (!snapId) {
+            gs.error('ConfigSync Pre-Clone Gate: Failed to create pre-clone snapshot');
+            return;
+        }
+
+        // Find the most recent baseline snapshot (not this one)
+        var baseline = new GlideRecord('x_csync_snapshot');
+        baseline.addQuery('sys_id', '!=', snapId);
+        baseline.addQuery('snapshot_type', '!=', 'pre_clone');
+        baseline.orderByDesc('sys_created_on');
+        baseline.setLimit(1);
+        baseline.query();
+
+        if (!baseline.next()) {
+            gs.warn('ConfigSync Pre-Clone Gate: No baseline snapshot found for comparison. Skipping gate check.');
+            return;
+        }
+
+        var gateReport = engine.checkGate(baseline.getUniqueValue(), snapId);
+
+        if (gateReport.gate === 'FAIL') {
+            gs.error('ConfigSync Pre-Clone Gate: CRITICAL — Drift score ' + gateReport.drift_score +
+                     '/100. ' + gateReport.risk_items.length + ' high-risk items detected. ' +
+                     'Clone may introduce configuration inconsistencies.');
+        } else if (gateReport.gate === 'WARN') {
+            gs.warn('ConfigSync Pre-Clone Gate: WARNING — Drift score ' + gateReport.drift_score +
+                    '/100. ' + gateReport.risk_items.length + ' high-risk items. Review before proceeding.');
+        } else {
+            gs.info('ConfigSync Pre-Clone Gate: PASS — Drift score ' + gateReport.drift_score +
+                    '/100. No high-risk items. Safe to clone.');
+        }
+    } catch (e) {
+        gs.error('ConfigSync Pre-Clone Gate failed: ' + e.message);
+    }
+})(current, previous);
+]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_domain>global</sys_domain>
+    <sys_domain_path>/</sys_domain_path>
+    <sys_id>csync_br_preclone</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ConfigSync Pre-Clone Gate</sys_name>
+    <sys_overrides/>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table>sys_clone_history</table>
+    <when>before</when>
+  </sys_script>
+<sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_customized>false</consumes_customized>
+    <default>false</default>
+    <doc_link/>
+    <name>Check</name>
+    <operation_uri>/api/x_csync/drift/check</operation_uri>
+    <order>100</order>
+    <path>/check</path>
+    <produces>application/json</produces>
+    <produces_customized>false</produces_customized>
+    <relative_path>/check</relative_path>
+    <request_method>POST</request_method>
+    <requires_acl_authorization>true</requires_acl_authorization>
+    <requires_authentication>true</requires_authentication>
+    <requires_snc_internal_role>false</requires_snc_internal_role>
+    <short_description>CI/CD gate check — compares two snapshots and returns drift score</short_description>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_ws_check</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Check</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <web_service_definition display_value="DriftCheckAPI">csync_ws_def</web_service_definition>
+    <web_service_version/>
+  </sys_ws_operation>
+<sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_customized>false</consumes_customized>
+    <default>false</default>
+    <doc_link/>
+    <name>Status</name>
+    <operation_uri>/api/x_csync/drift/status</operation_uri>
+    <order>200</order>
+    <path>/status</path>
+    <produces>application/json</produces>
+    <produces_customized>false</produces_customized>
+    <relative_path>/status</relative_path>
+    <request_method>GET</request_method>
+    <requires_acl_authorization>true</requires_acl_authorization>
+    <requires_authentication>true</requires_authentication>
+    <requires_snc_internal_role>false</requires_snc_internal_role>
+    <short_description>Current drift status — returns latest snapshot, drift score, and timeline</short_description>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_ws_status</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Status</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <web_service_definition display_value="DriftCheckAPI">csync_ws_def</web_service_definition>
+    <web_service_version/>
+  </sys_ws_operation>
+<sys_user_role action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>Full access to ConfigSync: create snapshots, run comparisons, view all drift data, configure settings</description>
+    <name>x_csync_admin</name>
+  </sys_user_role>
+<sys_user_role action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>Read-only access to ConfigSync: view dashboards, drift reports, and snapshots</description>
+    <name>x_csync_user</name>
+  </sys_user_role>
+<!-- ConfigSync Daily Scan — runs at 02:00 daily -->
+  <sys_trigger action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Daily configuration fingerprint and drift comparison. Runs at 02:00 to capture the previous day's changes.</description>
+    <job_context display_value="ConfigSync">x_csync</job_context>
+    <name>ConfigSync Daily Scan</name>
+    <next_action>2026-08-05 02:00:00</next_action>
+    <repeat_type>daily</repeat_type>
+    <run_dayofweek/>
+    <run_period/>
+    <run_start>2026-08-04 02:00:00</run_start>
+    <run_time>02:00:00</run_time>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// ConfigSync Daily Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function() {
+    try {
+        var engine = new x_csync.ConfigSyncEngine();
+        var instanceName = gs.getProperty('instance_name', '');
+        var now = new GlideDateTime();
+        var snapshotName = 'Daily Scan ' + now.getDate().getByFormat('yyyy-MM-dd');
+
+        var snapId = engine.fingerprintInstance(instanceName, snapshotName, 'scheduled');
+        if (!snapId) {
+            gs.error('ConfigSync Daily Scan: fingerprintInstance returned empty sys_id');
+            return;
+        }
+
+        // Compare against the previous snapshot
+        var prevSnap = new GlideRecord('x_csync_snapshot');
+        prevSnap.addQuery('sys_id', '!=', snapId);
+        prevSnap.orderByDesc('sys_created_on');
+        prevSnap.setLimit(1);
+        prevSnap.query();
+
+        if (prevSnap.next()) {
+            var report = engine.compareSnapshots(prevSnap.getUniqueValue(), snapId);
+            gs.info('ConfigSync Daily Scan: Drift Score=' + report.drift_score +
+                    ', Gate=' + report.gate + ', Items=' + report.drift_count);
+        } else {
+            gs.info('ConfigSync Daily Scan: First snapshot created (no previous to compare). ID=' + snapId);
+        }
+    } catch (e) {
+        gs.error('ConfigSync Daily Scan failed: ' + e.message);
+    }
+})();
+]]></script>
+    <sys_class_name>sys_trigger</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_sj_daily</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ConfigSync Daily Scan</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <trigger_type>0</trigger_type>
+  </sys_trigger>
+<sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_csync.ConfigSyncAI</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>AI-powered drift analysis using Now Assist and GenAI Controller.</description>
+    <name>ConfigSyncAI</name>
+    <script><![CDATA[// ConfigSync — Instance Configuration Drift Auditor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// AI-powered drift analysis using Now Assist and GenAI Controller.
+// @class ConfigSyncAI @namespace x_csync
+
+var ConfigSyncAI = Class.create();
+ConfigSyncAI.prototype = {
+    initialize: function() {
+        this.AI_ENABLED_PROP = 'x_csync.ai.enabled';
+        this.AI_CACHE_TTL_DAYS = 7;
+    },
+
+    analyzeImpact: function(driftItemId) {
+        if (!this._isAIEnabled()) {
+            return '';
+        }
+
+        try {
+            var di = new GlideRecord('x_csync_drift_item');
+            if (!di.get(driftItemId)) {
+                return '';
+            }
+
+            var existingAnalysis = di.getValue('ai_analysis') || '';
+            if (existingAnalysis && this._isCacheFresh(di)) {
+                return existingAnalysis;
+            }
+
+            var prompt = this._buildImpactPrompt(di);
+            var analysis = this._callNowAssist(prompt);
+
+            if (analysis) {
+                di.setValue('ai_analysis', analysis);
+                di.setWorkflow(false);
+                di.update();
+            }
+
+            return analysis || '';
+        } catch (e) {
+            gs.error('ConfigSyncAI.analyzeImpact failed: ' + e.message);
+            return '';
+        }
+    },
+
+    suggestRemediation: function(driftItemId) {
+        var result = { action: 'none', description: '', risk_level: 'unknown' };
+
+        if (!this._isAIEnabled()) {
+            result.description = 'AI analysis is disabled. Enable via x_csync.ai.enabled system property.';
+            return result;
+        }
+
+        try {
+            var di = new GlideRecord('x_csync_drift_item');
+            if (!di.get(driftItemId)) {
+                result.description = 'Drift item not found.';
+                return result;
+            }
+
+            var prompt = this._buildRemediationPrompt(di);
+            var suggestion = this._callNowAssist(prompt);
+
+            if (suggestion) {
+                result = this._parseRemediationResponse(suggestion);
+            }
+            return result;
+        } catch (e) {
+            gs.error('ConfigSyncAI.suggestRemediation failed: ' + e.message);
+            return result;
+        }
+    },
+
+    generateSummary: function(driftReport) {
+        if (!this._isAIEnabled()) {
+            return 'Drift Score: ' + (driftReport.drift_score || 0) +
+                   '. Gate: ' + (driftReport.gate || 'UNKNOWN') +
+                   '. Items: ' + (driftReport.drift_count || 0) + '.';
+        }
+
+        try {
+            var prompt = 'Summarize this ServiceNow configuration drift report in 2-3 sentences for a platform administrator:\n' +
+                         'Drift Score: ' + (driftReport.drift_score || 0) + '/100\n' +
+                         'Gate: ' + (driftReport.gate || 'UNKNOWN') + '\n' +
+                         'Total Artifacts: ' + (driftReport.total_artifacts || 0) + '\n' +
+                         'Drift Items: ' + (driftReport.drift_count || 0) + '\n' +
+                         'High-Risk Items: ' + this._countHighRisk(driftReport.items) + '\n\n' +
+                         'Top drift items by risk:\n' + this._formatTopItems(driftReport.items, 5);
+
+            return this._callNowAssist(prompt) || this._fallbackSummary(driftReport);
+        } catch (e) {
+            gs.error('ConfigSyncAI.generateSummary failed: ' + e.message);
+            return this._fallbackSummary(driftReport);
+        }
+    },
+
+    _isAIEnabled: function() {
+        var prop = gs.getProperty(this.AI_ENABLED_PROP, 'true');
+        return prop === 'true';
+    },
+
+    _isCacheFresh: function(driftItemGr) {
+        var updated = driftItemGr.getValue('sys_updated_on');
+        if (!updated) return false;
+        var updatedGdt = new GlideDateTime(updated);
+        var cutoff = new GlideDateTime();
+        cutoff.addDays(-1 * this.AI_CACHE_TTL_DAYS);
+        return updatedGdt.after(cutoff);
+    },
+
+    _buildImpactPrompt: function(driftItemGr) {
+        var artifactType = driftItemGr.getValue('artifact_type') || 'unknown';
+        var artifactName = driftItemGr.getValue('artifact_name') || 'unknown';
+        var changeType = driftItemGr.getValue('change_type') || 'unknown';
+        var diffSummary = driftItemGr.getValue('diff_summary') || '{}';
+
+        return 'You are a ServiceNow platform architect. Analyze the impact of this configuration drift:\n' +
+               'Artifact Type: ' + artifactType + '\n' +
+               'Artifact Name: ' + artifactName + '\n' +
+               'Change Type: ' + changeType + '\n' +
+               'Diff: ' + diffSummary + '\n\n' +
+               'Explain in 2-3 sentences what could break, which modules are affected, and the blast radius. ' +
+               'Be specific about ServiceNow platform components.';
+    },
+
+    _buildRemediationPrompt: function(driftItemGr) {
+        var artifactType = driftItemGr.getValue('artifact_type') || 'unknown';
+        var artifactName = driftItemGr.getValue('artifact_name') || 'unknown';
+        var changeType = driftItemGr.getValue('change_type') || 'unknown';
+        var riskScore = driftItemGr.getValue('risk_score') || '0';
+
+        return 'You are a ServiceNow platform architect. Suggest a remediation action for this drift:\n' +
+               'Artifact Type: ' + artifactType + '\n' +
+               'Artifact Name: ' + artifactName + '\n' +
+               'Change Type: ' + changeType + '\n' +
+               'Risk Score: ' + riskScore + '/100\n\n' +
+               'Respond with exactly one line in this format:\n' +
+               'ACTION: <promote|revert|review|ignore>\n' +
+               'DESCRIPTION: <one sentence explaining the action>\n' +
+               'RISK: <low|medium|high>';
+    },
+
+    _callNowAssist: function(prompt) {
+        try {
+            var genAI = new sn_generative_ai.GlideGenerativeAI();
+            var response = genAI.generate(prompt, { max_tokens: 500, temperature: 0.3 });
+            return response || '';
+        } catch (e) {
+            try {
+                var nowAssist = new sn_now_assist.NowAssistAPI();
+                var result = nowAssist.generateText(prompt, { maxTokens: 500 });
+                return result || '';
+            } catch (e2) {
+                gs.warn('ConfigSyncAI: Both GenAI Controller and Now Assist unavailable. ' + e2.message);
+                return '';
+            }
+        }
+    },
+
+    _parseRemediationResponse: function(response) {
+        var result = { action: 'review', description: response, risk_level: 'medium' };
+        var lines = response.split('\n');
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (line.indexOf('ACTION:') === 0) {
+                var action = line.substring(7).trim().toLowerCase();
+                if (action === 'promote' || action === 'revert' || action === 'review' || action === 'ignore') {
+                    result.action = action;
+                }
+            } else if (line.indexOf('DESCRIPTION:') === 0) {
+                result.description = line.substring(12).trim();
+            } else if (line.indexOf('RISK:') === 0) {
+                var risk = line.substring(5).trim().toLowerCase();
+                if (risk === 'low' || risk === 'medium' || risk === 'high') {
+                    result.risk_level = risk;
+                }
+            }
+        }
+        return result;
+    },
+
+    _countHighRisk: function(items) {
+        if (!items) return 0;
+        var count = 0;
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].risk_score >= 70) count++;
+        }
+        return count;
+    },
+
+    _formatTopItems: function(items, limit) {
+        if (!items || items.length === 0) return '(none)';
+        var sorted = items.slice().sort(function(a, b) { return b.risk_score - a.risk_score; });
+        var result = '';
+        var max = Math.min(sorted.length, limit || 5);
+        for (var i = 0; i < max; i++) {
+            result += '- [' + sorted[i].risk_score + '/100] ' + sorted[i].artifact_type + ' :: ' + sorted[i].artifact_name + ' (' + sorted[i].change_type + ')\n';
+        }
+        return result;
+    },
+
+    _fallbackSummary: function(driftReport) {
+        return 'Drift Score: ' + (driftReport.drift_score || 0) + '/100. ' +
+               'Gate: ' + (driftReport.gate || 'UNKNOWN') + '. ' +
+               (driftReport.drift_count || 0) + ' drift items detected out of ' +
+               (driftReport.total_artifacts || 0) + ' total artifacts.';
+    },
+
+    type: 'ConfigSyncAI'
+};]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_si_ai</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ConfigSyncAI</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+  </sys_script_include>
+<sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_csync.ConfigSyncEngine</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Core engine for configuration fingerprinting, comparison, and risk scoring.</description>
+    <name>ConfigSyncEngine</name>
+    <script><![CDATA[// ConfigSync — Instance Configuration Drift Auditor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Core engine for configuration fingerprinting, comparison, and risk scoring.
+// @class ConfigSyncEngine @namespace x_csync
+
+var ConfigSyncEngine = Class.create();
+ConfigSyncEngine.prototype = {
+    initialize: function() {
+        this.ARTIFACT_TYPES = [
+            { table: 'sys_properties',     field: 'value',  nameField: 'name',  riskWeight: 0.4, label: 'sys_properties' },
+            { table: 'sys_script',          field: 'script', nameField: 'name',  riskWeight: 0.8, label: 'sys_script' },
+            { table: 'sys_security_acl',    field: 'script', nameField: 'name',  riskWeight: 0.9, label: 'sys_security_acl' },
+            { table: 'sys_script_client',   field: 'script', nameField: 'name',  riskWeight: 0.5, label: 'sys_script_client' },
+            { table: 'sys_ui_policy',       field: 'script_true', nameField: 'name', riskWeight: 0.5, label: 'sys_ui_policy' },
+            { table: 'sys_dictionary',      field: 'default_value', nameField: 'element', riskWeight: 0.6, label: 'sys_dictionary' },
+            { table: 'sys_trigger',         field: 'script', nameField: 'name',  riskWeight: 0.7, label: 'sys_trigger' },
+            { table: 'sys_script_include',  field: 'script', nameField: 'name',  riskWeight: 0.7, label: 'sys_script_include' }
+        ];
+    },
+
+    fingerprintInstance: function(instanceName, snapshotName, snapshotType) {
+        try {
+            var artifacts = [];
+            for (var i = 0; i < this.ARTIFACT_TYPES.length; i++) {
+                var at = this.ARTIFACT_TYPES[i];
+                var gr = new GlideRecord(at.table);
+                gr.addQuery('sys_scope', 'global');
+                gr.setLimit(500);
+                gr.query();
+                while (gr.next()) {
+                    var payload = this._normalizePayload(gr, at);
+                    var hash = this._sha256(payload);
+                    artifacts.push({
+                        type: at.label,
+                        name: gr.getValue(at.nameField) || '',
+                        sys_id: gr.getUniqueValue() || '',
+                        hash: hash,
+                        fields_summary: this._summarizeFields(gr, at)
+                    });
+                }
+            }
+
+            var snap = new GlideRecord('x_csync_snapshot');
+            snap.initialize();
+            snap.setValue('name', snapshotName);
+            snap.setValue('instance', instanceName);
+            snap.setValue('snapshot_type', snapshotType);
+            snap.setValue('artifact_count', artifacts.length);
+            snap.setValue('artifacts_json', JSON.stringify(artifacts));
+            var snapId = snap.insert();
+            return snapId || '';
+        } catch (e) {
+            gs.error('ConfigSyncEngine.fingerprintInstance failed: ' + e.message);
+            return '';
+        }
+    },
+
+    compareSnapshots: function(baselineId, targetId) {
+        var report = { drift_score: 100, items: [], gate: 'PASS', total_artifacts: 0, drift_count: 0 };
+
+        try {
+            var baseline = this._loadSnapshot(baselineId);
+            var target = this._loadSnapshot(targetId);
+            if (!baseline || !target) {
+                report.gate = 'FAIL';
+                report.drift_score = 0;
+                return report;
+            }
+
+            var baselineMap = this._buildArtifactMap(baseline.artifacts);
+            var targetMap = this._buildArtifactMap(target.artifacts);
+            report.total_artifacts = baseline.artifacts.length;
+
+            for (var key in baselineMap) {
+                if (!baselineMap.hasOwnProperty(key)) continue;
+                if (!targetMap[key]) {
+                    var item = this._createDriftItem(baselineMap[key], null, 'removed', baselineId, targetId);
+                    report.items.push(item);
+                }
+            }
+
+            for (var tKey in targetMap) {
+                if (!targetMap.hasOwnProperty(tKey)) continue;
+                if (!baselineMap[tKey]) {
+                    var addedItem = this._createDriftItem(null, targetMap[tKey], 'added', baselineId, targetId);
+                    report.items.push(addedItem);
+                } else if (baselineMap[tKey].hash !== targetMap[tKey].hash) {
+                    var modItem = this._createDriftItem(baselineMap[tKey], targetMap[tKey], 'modified', baselineId, targetId);
+                    report.items.push(modItem);
+                }
+            }
+
+            report.drift_count = report.items.length;
+
+            if (report.items.length > 0) {
+                var totalRisk = 0;
+                for (var j = 0; j < report.items.length; j++) {
+                    totalRisk += report.items[j].risk_score;
+                }
+                var avgRisk = totalRisk / report.items.length;
+                report.drift_score = Math.max(0, Math.round(100 - avgRisk));
+            }
+
+            if (report.drift_score < 50) {
+                report.gate = 'FAIL';
+            } else if (report.drift_score < 80) {
+                report.gate = 'WARN';
+            } else {
+                report.gate = 'PASS';
+            }
+
+            for (var k = 0; k < report.items.length; k++) {
+                this._saveDriftItem(report.items[k]);
+            }
+
+            return report;
+        } catch (e) {
+            gs.error('ConfigSyncEngine.compareSnapshots failed: ' + e.message);
+            report.gate = 'FAIL';
+            report.drift_score = 0;
+            return report;
+        }
+    },
+
+    calculateRiskScore: function(driftItem) {
+        var baseWeight = 0.5;
+        for (var i = 0; i < this.ARTIFACT_TYPES.length; i++) {
+            if (this.ARTIFACT_TYPES[i].label === driftItem.artifact_type) {
+                baseWeight = this.ARTIFACT_TYPES[i].riskWeight;
+                break;
+            }
+        }
+
+        var changeMultiplier = 1.0;
+        if (driftItem.change_type === 'removed') {
+            changeMultiplier = 1.2;
+        } else if (driftItem.change_type === 'added') {
+            changeMultiplier = 0.8;
+        }
+
+        return Math.min(100, Math.round(baseWeight * changeMultiplier * 100));
+    },
+
+    generateDiff: function(artifactA, artifactB) {
+        var result = { type: 'identical', fields_diff: {}, summary: '' };
+        if (!artifactA && artifactB) {
+            result.type = 'added';
+            result.summary = 'New artifact: ' + (artifactB.name || 'unknown');
+            return result;
+        }
+        if (artifactA && !artifactB) {
+            result.type = 'removed';
+            result.summary = 'Removed artifact: ' + (artifactA.name || 'unknown');
+            return result;
+        }
+        if (!artifactA || !artifactB) {
+            return result;
+        }
+
+        var diffFields = {};
+        var allKeys = {};
+        for (var k in artifactA.fields_summary) {
+            if (artifactA.fields_summary.hasOwnProperty(k)) allKeys[k] = true;
+        }
+        for (var k2 in artifactB.fields_summary) {
+            if (artifactB.fields_summary.hasOwnProperty(k2)) allKeys[k2] = true;
+        }
+
+        var hasDiff = false;
+        for (var key in allKeys) {
+            if (!allKeys.hasOwnProperty(key)) continue;
+            var valA = artifactA.fields_summary[key] || '';
+            var valB = artifactB.fields_summary[key] || '';
+            if (valA !== valB) {
+                diffFields[key] = { before: valA, after: valB };
+                hasDiff = true;
+            }
+        }
+
+        if (hasDiff) {
+            result.type = 'modified';
+            result.fields_diff = diffFields;
+            var changedFields = [];
+            for (var fk in diffFields) {
+                if (diffFields.hasOwnProperty(fk)) changedFields.push(fk);
+            }
+            result.summary = 'Changed fields: ' + changedFields.join(', ');
+        }
+
+        return result;
+    },
+
+    getDriftTimeline: function(instanceName, days) {
+        var timeline = { points: [] };
+        try {
+            var cutoff = new GlideDateTime();
+            cutoff.addDays(-1 * (days || 30));
+
+            var snap = new GlideRecord('x_csync_snapshot');
+            snap.addQuery('instance', instanceName);
+            snap.addQuery('sys_created_on', '>=', cutoff);
+            snap.orderBy('sys_created_on');
+            snap.query();
+
+            while (snap.next()) {
+                var driftCount = this._countDriftItems(snap.getUniqueValue());
+                timeline.points.push({
+                    snapshot_id: snap.getUniqueValue(),
+                    name: snap.getValue('name') || '',
+                    created_at: snap.getValue('sys_created_on') || '',
+                    artifact_count: parseInt(snap.getValue('artifact_count') || '0', 10),
+                    drift_count: driftCount
+                });
+            }
+            return timeline;
+        } catch (e) {
+            gs.error('ConfigSyncEngine.getDriftTimeline failed: ' + e.message);
+            return timeline;
+        }
+    },
+
+    checkGate: function(baselineId, targetId) {
+        var report = this.compareSnapshots(baselineId, targetId);
+        var highRiskItems = [];
+        for (var i = 0; i < report.items.length; i++) {
+            if (report.items[i].risk_score >= 70) {
+                highRiskItems.push(report.items[i]);
+            }
+        }
+        return {
+            drift_score: report.drift_score,
+            gate: report.gate,
+            risk_items: highRiskItems,
+            deployable: report.gate === 'PASS',
+            total_drift: report.drift_count,
+            total_artifacts: report.total_artifacts
+        };
+    },
+
+    _normalizePayload: function(gr, artifactType) {
+        var fields = {};
+        var keyFields = this._getKeyFields();
+        for (var i = 0; i < keyFields.length; i++) {
+            var name = keyFields[i];
+            if (name === 'sys_created_on' || name === 'sys_updated_on' ||
+                name === 'sys_created_by' || name === 'sys_updated_by' ||
+                name === 'sys_mod_count' || name === 'sys_id') {
+                continue;
+            }
+            var val = gr.getValue(name);
+            if (val !== null && val !== undefined) {
+                fields[name] = val;
+            }
+        }
+        var sortedKeys = Object.keys(fields).sort();
+        var normalized = '';
+        for (var j = 0; j < sortedKeys.length; j++) {
+            normalized += sortedKeys[j] + '=' + fields[sortedKeys[j]] + '\n';
+        }
+        return normalized;
+    },
+
+    _sha256: function(input) {
+        var digest = new GlideDigest();
+        return digest.sha256_digest(input);
+    },
+
+    _summarizeFields: function(gr, artifactType) {
+        var summary = {};
+        var keyFields = this._getKeyFields();
+        for (var i = 0; i < keyFields.length; i++) {
+            var val = gr.getValue(keyFields[i]);
+            if (val !== null && val !== undefined && val !== '') {
+                summary[keyFields[i]] = val;
+            }
+        }
+        return summary;
+    },
+
+    _getKeyFields: function() {
+        var prop = gs.getProperty('x_csync.key_fields', '');
+        if (prop) {
+            return prop.split(',').map(function(f) { return f.trim(); });
+        }
+        return ['name', 'active', 'script', 'condition', 'order', 'type',
+                'value', 'description', 'access', 'when', 'action_insert',
+                'action_update', 'action_delete', 'operation', 'element',
+                'mandatory', 'read_only', 'default_value', 'trigger_type',
+                'next_action', 'reverse_if_false'];
+    },
+
+    _loadSnapshot: function(snapshotId) {
+        var snap = new GlideRecord('x_csync_snapshot');
+        if (!snap.get(snapshotId)) {
+            return null;
+        }
+        var artifactsJson = snap.getValue('artifacts_json') || '[]';
+        var artifacts = JSON.parse(artifactsJson);
+        return {
+            sys_id: snapshotId,
+            name: snap.getValue('name') || '',
+            instance: snap.getValue('instance') || '',
+            artifacts: artifacts
+        };
+    },
+
+    _buildArtifactMap: function(artifacts) {
+        var map = {};
+        for (var i = 0; i < artifacts.length; i++) {
+            var a = artifacts[i];
+            var key = a.type + '::' + (a.sys_id || a.name);
+            map[key] = a;
+        }
+        return map;
+    },
+
+    _createDriftItem: function(baselineArtifact, targetArtifact, changeType, baselineId, targetId) {
+        var artifact = baselineArtifact || targetArtifact;
+        var diff = this.generateDiff(baselineArtifact, targetArtifact);
+        var riskScore = this.calculateRiskScore({
+            artifact_type: artifact.type,
+            change_type: changeType
+        });
+
+        return {
+            snapshot_baseline: baselineId,
+            snapshot_target: targetId,
+            artifact_type: artifact.type,
+            artifact_name: artifact.name || '',
+            artifact_sys_id: artifact.sys_id || '',
+            risk_score: riskScore,
+            change_type: changeType,
+            diff_summary: JSON.stringify(diff),
+            ai_analysis: '',
+            remediation_status: 'pending',
+            detected_at: new GlideDateTime().toString()
+        };
+    },
+
+    _saveDriftItem: function(item) {
+        try {
+            var existing = new GlideRecord('x_csync_drift_item');
+            existing.addQuery('snapshot_baseline', item.snapshot_baseline);
+            existing.addQuery('snapshot_target', item.snapshot_target);
+            existing.addQuery('artifact_type', item.artifact_type);
+            existing.addQuery('artifact_name', item.artifact_name);
+            existing.setLimit(1);
+            existing.query();
+            if (existing.next()) {
+                return;
+            }
+
+            var di = new GlideRecord('x_csync_drift_item');
+            di.initialize();
+            di.setValue('snapshot_baseline', item.snapshot_baseline);
+            di.setValue('snapshot_target', item.snapshot_target);
+            di.setValue('artifact_type', item.artifact_type);
+            di.setValue('artifact_name', item.artifact_name);
+            di.setValue('artifact_sys_id', item.artifact_sys_id);
+            di.setValue('risk_score', item.risk_score);
+            di.setValue('change_type', item.change_type);
+            di.setValue('diff_summary', item.diff_summary);
+            di.setValue('ai_analysis', item.ai_analysis || '');
+            di.setValue('remediation_status', item.remediation_status);
+            di.setValue('detected_at', item.detected_at || '');
+            di.setWorkflow(false);
+            di.insert();
+        } catch (e) {
+            gs.error('ConfigSyncEngine._saveDriftItem failed: ' + e.message);
+        }
+    },
+
+    _countDriftItems: function(snapshotId) {
+        var di = new GlideRecord('x_csync_drift_item');
+        di.addQuery('snapshot_baseline', snapshotId);
+        di.addOrCondition('snapshot_target', snapshotId);
+        di.query();
+        return di.getRowCount();
+    },
+
+    type: 'ConfigSyncEngine'
+};]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_si_engine</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ConfigSyncEngine</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+  </sys_script_include>
+<sys_scope action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>Continuous configuration drift detection across ServiceNow instances. Fingerprint, compare, and score configuration changes before clones and upgrades break.</description>
+    <name>ConfigSync</name>
+    <scope>x_csync</scope>
+    <short_description>Instance Configuration Drift Auditor</short_description>
+    <vendor>Vladimir Kapustin</vendor>
+    <vendor_prefix>x_csync</vendor_prefix>
+    <version>1.0.0</version>
+  </sys_scope>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_properties</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_script</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_security_acl</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_script_client</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_ui_policy</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_dictionary</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_trigger</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_script_include</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>global</target_scope>
+    <target_table>sys_clone_history</target_table>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>sn_generative_ai</target_scope>
+    <target_table/>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_csync</source_scope>
+    <target_scope>sn_now_assist</target_scope>
+    <target_table/>
+  </sys_scope_privilege>
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_csync</application>
+    <name>Drift Dashboard</name>
+    <order>100</order>
+    <path>dashboard.do</path>
+    <title>ConfigSync Drift Dashboard</title>
+  </sys_app_module>
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_csync</application>
+    <name>Diff Viewer</name>
+    <order>200</order>
+    <path>diff_viewer.do</path>
+    <title>ConfigSync Diff Viewer</title>
+  </sys_app_module>
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_csync</application>
+    <name>Drift Timeline</name>
+    <order>300</order>
+    <path>timeline.do</path>
+    <title>ConfigSync Drift Timeline</title>
+  </sys_app_module>
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_csync</application>
+    <name>Snapshots</name>
+    <order>400</order>
+    <path>table/x_csync_snapshot</path>
+    <title>ConfigSync Snapshots</title>
+  </sys_app_module>
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_csync</application>
+    <name>Drift Items</name>
+    <order>500</order>
+    <path>table/x_csync_drift_item</path>
+    <title>ConfigSync Drift Items</title>
+  </sys_app_module>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>Full access to ConfigSync: create snapshots, run comparisons, view all drift data, configure settings</description>
+    <name>x_csync_admin</name>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>Read-only access to ConfigSync: view dashboards, drift reports, and snapshots</description>
+    <name>x_csync_user</name>
+  </sys_user_role>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_csync.ConfigSyncEngine</api_name>
+    <description>Core engine for configuration fingerprinting, comparison, and risk scoring.</description>
+    <name>ConfigSyncEngine</name>
+  </sys_script_include>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_csync.ConfigSyncAI</api_name>
+    <description>AI-powered drift analysis using Now Assist and GenAI Controller.</description>
+    <name>ConfigSyncAI</name>
+  </sys_script_include>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>Check</name>
+    <operation_uri>/api/x_csync/drift/check</operation_uri>
+    <request_method>POST</request_method>
+    <short_description>CI/CD gate check — compares two snapshots and returns drift score</short_description>
+  </sys_ws_operation>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>Status</name>
+    <operation_uri>/api/x_csync/drift/status</operation_uri>
+    <request_method>GET</request_method>
+    <short_description>Current drift status — returns latest snapshot, drift score, and timeline</short_description>
+  </sys_ws_operation>
+<sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <actions_access>false</actions_access>
+    <alter_access>false</alter_access>
+    <caller_access>false</caller_access>
+    <client_scripts_access>false</client_scripts_access>
+    <configuration_access>false</configuration_access>
+    <create_access>false</create_access>
+    <create_access_controls>true</create_access_controls>
+    <delete_access>false</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>Drift Item</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_csync_drift_item</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_drift_table</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_drift_item</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_db_object_x_csync_drift_item</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <update_access>false</update_access>
+    <user_role display_value="x_csync_admin">x_csync_admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Baseline Snapshot</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>snapshot_baseline</element>
+    <element_reference>true</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Reference">reference</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>32</max_length>
+    <name>x_csync_drift_item</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference>x_csync_snapshot</reference>
+    <reference_cascade_rule>restrict</reference_cascade_rule>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_drift_baseline</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>snapshot_baseline</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_drift_item_snapshot_baseline</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Target Snapshot</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>snapshot_target</element>
+    <element_reference>true</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Reference">reference</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>32</max_length>
+    <name>x_csync_drift_item</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference>x_csync_snapshot</reference>
+    <reference_cascade_rule>restrict</reference_cascade_rule>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_drift_target</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>snapshot_target</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_drift_item_snapshot_target</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>1</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Artifact Type</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>true</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>artifact_type</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Choice">choice</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_csync_drift_item</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_drift_art_type</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>artifact_type</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_drift_item_artifact_type</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>artifact_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>System Property</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>1</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_prop</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>sys_properties</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>artifact_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Business Rule</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>2</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_br</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>sys_script</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>artifact_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>ACL</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>3</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_acl</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>sys_security_acl</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>artifact_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Client Script</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>4</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_client</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>sys_script_client</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>artifact_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>UI Policy</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>5</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_uip</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>sys_ui_policy</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>artifact_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Dictionary Override</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>6</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_dict</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>sys_dictionary</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>artifact_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Scheduled Job</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>7</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_sj</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>sys_trigger</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>artifact_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Script Include</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>8</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_si</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>sys_script_include</value>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Artifact Name</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>true</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>artifact_name</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>200</max_length>
+    <name>x_csync_drift_item</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_drift_name</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>artifact_name</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_drift_item_artifact_name</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Artifact Sys ID</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>artifact_sys_id</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>32</max_length>
+    <name>x_csync_drift_item</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_drift_sysid</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>artifact_sys_id</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_drift_item_artifact_sys_id</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Risk Score</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>true</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>risk_score</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Integer">integer</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_csync_drift_item</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_drift_risk</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>risk_score</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_drift_item_risk_score</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>1</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Change Type</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>true</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>change_type</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Choice">choice</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_csync_drift_item</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_drift_change</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>change_type</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_drift_item_change_type</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>change_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Added</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>1</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_added</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>added</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>change_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Removed</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>2</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_removed</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>removed</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>change_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Modified</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>3</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_modified</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>modified</value>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Diff Summary</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>diff_summary</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>4000</max_length>
+    <name>x_csync_drift_item</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_drift_diff</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>diff_summary</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_drift_item_diff_summary</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>AI Analysis</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>ai_analysis</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>4000</max_length>
+    <name>x_csync_drift_item</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_drift_ai</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ai_analysis</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_drift_item_ai_analysis</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>1</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Remediation Status</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value>pending</default_value>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>true</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>remediation_status</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Choice">choice</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_csync_drift_item</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_drift_remediation</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>remediation_status</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_drift_item_remediation_status</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>remediation_status</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Pending</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>1</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_pending</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>pending</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>remediation_status</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Approved</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>2</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_approved</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>approved</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>remediation_status</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Done</label>
+    <language>en</language>
+    <name>x_csync_drift_item</name>
+    <sequence>3</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_done</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>done</value>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Detected At</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>detected_at</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_csync_drift_item</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>true</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_drift_detected</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>detected_at</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_drift_item_detected_at</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+<sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <actions_access>false</actions_access>
+    <alter_access>false</alter_access>
+    <caller_access>false</caller_access>
+    <client_scripts_access>false</client_scripts_access>
+    <configuration_access>false</configuration_access>
+    <create_access>false</create_access>
+    <create_access_controls>true</create_access_controls>
+    <delete_access>false</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>Config Snapshot</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_csync_snapshot</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_snapshot_table</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_csync_snapshot</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_db_object_x_csync_snapshot</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <update_access>false</update_access>
+    <user_role display_value="x_csync_admin">x_csync_admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Name</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>true</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>name</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>100</max_length>
+    <name>x_csync_snapshot</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_snap_name</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>name</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_snapshot_name</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Instance</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>instance</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>100</max_length>
+    <name>x_csync_snapshot</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_snap_instance</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>instance</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_snapshot_instance</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>1</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Snapshot Type</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value>manual</default_value>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>snapshot_type</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Choice">choice</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_csync_snapshot</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_snap_type</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>snapshot_type</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_snapshot_snapshot_type</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>snapshot_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Manual</label>
+    <language>en</language>
+    <name>x_csync_snapshot</name>
+    <sequence>1</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_manual</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>manual</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>snapshot_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Scheduled</label>
+    <language>en</language>
+    <name>x_csync_snapshot</name>
+    <sequence>2</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_scheduled</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>scheduled</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>snapshot_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Pre-Clone</label>
+    <language>en</language>
+    <name>x_csync_snapshot</name>
+    <sequence>3</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_choice_preclone</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <value>pre_clone</value>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Artifact Count</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>artifact_count</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Integer">integer</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_csync_snapshot</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>true</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_snap_count</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>artifact_count</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_snapshot_artifact_count</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Artifacts JSON</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>artifacts_json</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String (Full)">string_full</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>8000</max_length>
+    <name>x_csync_snapshot</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-04 05:00:00</sys_created_on>
+    <sys_id>csync_snap_artifacts</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>artifacts_json</sys_name>
+    <sys_package display_value="ConfigSync" source="x_csync">x_csync</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ConfigSync">x_csync</sys_scope>
+    <sys_update_name>sys_dictionary_x_csync_snapshot_artifacts_json</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-04 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+</unload>
