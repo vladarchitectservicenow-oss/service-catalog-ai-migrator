@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>REST Execute Endpoint</name>
+  <operation>execute</operation>
+  <type>rest_endpoint</type>
+  <path>/api/x_sn_demo_data_gen/execute</path>
+  <requires_role>true</requires_role>
+  <role>x_sn_demo_data_gen.user</role>
+  <script><![CDATA[
+    // User role: read-only actions only (preview, estimate, load_profile)
+    var body = request.body || {};
+    var action = body.action || '';
+    var readOnlyActions = ['preview', 'estimate', 'load_profile'];
+    answer = (readOnlyActions.indexOf(action) !== -1);
+  ]]></script>
+</sys_security_acl>

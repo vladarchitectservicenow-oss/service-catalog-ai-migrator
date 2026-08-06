@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_sn_demo_data_gen_config.config_json</name>
+  <operation>read</operation>
+  <type>record</type>
+  <field>config_json</field>
+  <requires_role>true</requires_role>
+  <role>x_sn_demo_data_gen.admin</role>
+  <script><![CDATA[answer = true;]]></script>
+</sys_security_acl>

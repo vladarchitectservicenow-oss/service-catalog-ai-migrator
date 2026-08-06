@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_sn_demo_data_gen_run</name>
+  <label>Demo Data Run</label>
+  <super_class/>
+  <element id="run_id" type="string" max_length="64" label="Run ID" mandatory="true"/>
+  <element id="status" type="string" max_length="40" label="Status" mandatory="true" choice="1">
+    <choice value="preview" label="Preview"/>
+    <choice value="running" label="Running"/>
+    <choice value="complete" label="Complete"/>
+    <choice value="failed" label="Failed"/>
+    <choice value="rolled_back" label="Rolled Back"/>
+  </element>
+  <element id="records_generated" type="integer" label="Records Generated"/>
+  <element id="records_failed" type="integer" label="Records Failed"/>
+  <element id="started_at" type="glide_date_time" label="Started At"/>
+  <element id="completed_at" type="glide_date_time" label="Completed At"/>
+  <element id="config" type="string" max_length="32" label="Config Reference"/>
+  <element id="error_message" type="string" max_length="4000" label="Error Message"/>
+</sys_db_object>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_sn_demo_data_gen_config</name>
+  <operation>read</operation>
+  <type>record</type>
+  <requires_role>true</requires_role>
+  <role>x_sn_demo_data_gen.user</role>
+  <script><![CDATA[
+    // Users can read their own profiles or shared profiles
+    answer = (gs.getUserID() === current.created_by || current.is_shared === 'true');
+  ]]></script>
+</sys_security_acl>

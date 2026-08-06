@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_script_include>
+  <name>PADataScanner</name>
+  <api_name>x_sn_demo_data_gen.PADataScanner</api_name>
+  <client_callable>false</client_callable>
+  <access>public</access>
+  <active>true</active>
+  <description>Scans PA dashboards, indicators, breakdowns, and resolves dependencies.</description>
+  <script><![CDATA[// SN Demo Data Generator — PADataScanner
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Scans PA dashboards, indicators, breakdowns, and resolves dependencies.
+// @class PADataScanner @namespace x_sn_demo_data_gen
+
+var PADataScanner = Class.create();
+PADataScanner.prototype = {
+    initialize: function() {
+        this._indicatorCache = {};
+        this._breakdownCache = {};
+        this._widgetCache = {};
+    },
+
+    scanDashboard: function(dashboardSysId) {
+        var result = {
+            dashboard: null,
+            indicators: [],
+            breakdowns: [],
+            widgets: []
+        };
+
+        var dashGr = new GlideRecord('pa_dashboards');
+        if (!dashGr.get(dashboardSysId)) {
+            return result;
+        }
+        result.dashboard = {
+            sys_id: dashGr.getUniqueValue(),
+            name: dashGr.getValue('name') || '',
+            description: dashGr.getValue('description') || ''
+        };
+
+        result.widgets = this._scanWidgets(dashboardSysId);
+        result.indicators = this._scanIndicators(dashboardSysId);
+        result.breakdowns = this._scanBreakdowns(dashboardSysId);
+
+        return result;
+    },
+
+    _scanIndicators: function(dashboardSysId) {
+        var indicators = [];
+        var seen = {};
+
+        var widgetGr = new GlideRecord('pa_widgets');
+        widgetGr.addQuery('dashboard', dashboardSysId);
+        widgetGr.query();
+        while (widgetGr.next()) {
+            var indicatorId = widgetGr.getValue('indicator') || '';
+            if (indicatorId && !seen[indicatorId]) {
+                seen[indicatorId] = true;
+                var ind = this._getIndicator(indicatorId);
+                if (ind) {
+                    indicators.push(ind);
+                }
+            }
+        }
+        return indicators;
+    },
+
+    _scanBreakdowns: function(dashboardSysId) {
+        var breakdowns = [];
+        var seen = {};
+
+        var widgetGr = new GlideRecord('pa_widgets');
+        widgetGr.addQuery('dashboard', dashboardSysId);
+        widgetGr.query();
+        while (widgetGr.next()) {
+            var bdId = widgetGr.getValue('breakdown') || '';
+            if (bdId && !seen[bdId]) {
+                seen[bdId] = true;
+                var bd = this._getBreakdown(bdId);
+                if (bd) {
+                    breakdowns.push(bd);
+                }
+            }
+        }
+        return breakdowns;
+    },
+
+    _scanWidgets: function(dashboardSysId) {
+        var widgets = [];
+        var widgetGr = new GlideRecord('pa_widgets');
+        widgetGr.addQuery('dashboard', dashboardSysId);
+        widgetGr.query();
+        while (widgetGr.next()) {
+            widgets.push({
+                sys_id: widgetGr.getUniqueValue(),
+                name: widgetGr.getValue('name') || '',
+                indicator: widgetGr.getValue('indicator') || '',
+                breakdown: widgetGr.getValue('breakdown') || '',
+                widget_type: widgetGr.getValue('type') || ''
+            });
+        }
+        return widgets;
+    },
+
+    _getIndicator: function(indicatorId) {
+        if (this._indicatorCache[indicatorId]) {
+            return this._indicatorCache[indicatorId];
+        }
+        var gr = new GlideRecord('pa_indicators');
+        if (!gr.get(indicatorId)) {
+            return null;
+        }
+        var ind = {
+            sys_id: gr.getUniqueValue(),
+            name: gr.getValue('name') || '',
+            description: gr.getValue('description') || '',
+            unit: gr.getValue('unit') || '',
+            frequency: gr.getValue('frequency') || 'daily',
+            direction: gr.getValue('direction') || 'maximize',
+            automated: gr.getValue('automated') === '1' || gr.getValue('automated') === true
+        };
+        this._indicatorCache[indicatorId] = ind;
+        return ind;
+    },
+
+    _getBreakdown: function(breakdownId) {
+        if (this._breakdownCache[breakdownId]) {
+            return this._breakdownCache[breakdownId];
+        }
+        var gr = new GlideRecord('pa_breakdowns');
+        if (!gr.get(breakdownId)) {
+            return null;
+        }
+        var bd = {
+            sys_id: gr.getUniqueValue(),
+            name: gr.getValue('name') || '',
+            type: gr.getValue('type') || '',
+            element: gr.getValue('element') || ''
+        };
+        this._breakdownCache[breakdownId] = bd;
+        return bd;
+    },
+
+    resolveBreakdownElements: function(breakdownId) {
+        var elements = [];
+        var bd = this._getBreakdown(breakdownId);
+        if (!bd || !bd.element) {
+            return elements;
+        }
+
+        var elemGr = new GlideRecord('sys_choice');
+        elemGr.addQuery('name', bd.element);
+        elemGr.addQuery('inactive', false);
+        elemGr.query();
+        while (elemGr.next()) {
+            elements.push({
+                value: elemGr.getValue('value') || '',
+                label: elemGr.getValue('label') || ''
+            });
+        }
+        return elements;
+    },
+
+    resolveDependencies: function(dashboardSysId) {
+        var scan = this.scanDashboard(dashboardSysId);
+        var result = {
+            dashboard: scan.dashboard,
+            indicators: scan.indicators,
+            breakdowns: [],
+            widgets: scan.widgets
+        };
+
+        for (var i = 0; i < scan.breakdowns.length; i++) {
+            var bd = scan.breakdowns[i];
+            bd.elements = this.resolveBreakdownElements(bd.sys_id);
+            result.breakdowns.push(bd);
+        }
+
+        return result;
+    },
+
+    type: 'PADataScanner'
+};]]></script>
+</sys_script_include>

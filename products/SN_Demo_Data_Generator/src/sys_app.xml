@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_app>
+  <name>SN Demo Data Generator</name>
+  <scope>x_sn_demo_data_gen</scope>
+  <version>1.0.0</version>
+  <description>Make Platform Analytics look alive in 60 seconds. Populate PA indicators, breakdowns, and dashboards with realistic seed data — configurable volume, date ranges, and data patterns.</description>
+  <roles>
+    <role name="x_sn_demo_data_gen.admin" description="Full access to Demo Data Generator"/>
+    <role name="x_sn_demo_data_gen.user" description="Can generate and preview demo data"/>
+  </roles>
+  <cross_scope_access>
+    <access target_name="pa_dashboards" target_type="table" operation="read"/>
+    <access target_name="pa_widgets" target_type="table" operation="read"/>
+    <access target_name="pa_indicators" target_type="table" operation="read"/>
+    <access target_name="pa_breakdowns" target_type="table" operation="read"/>
+    <access target_name="sys_choice" target_type="table" operation="read"/>
+    <access target_name="pa_scores" target_type="table" operation="create"/>
+    <access target_name="pa_scores" target_type="table" operation="read"/>
+    <access target_name="pa_scores" target_type="table" operation="delete"/>
+    <access target_name="pa_breakdown_scores" target_type="table" operation="create"/>
+    <access target_name="pa_breakdown_scores" target_type="table" operation="read"/>
+    <access target_name="pa_breakdown_scores" target_type="table" operation="delete"/>
+  </cross_scope_access>
+</sys_app>

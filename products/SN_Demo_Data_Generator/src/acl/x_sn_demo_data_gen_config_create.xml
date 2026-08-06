@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_security_acl>
+  <name>x_sn_demo_data_gen_config</name>
+  <operation>create</operation>
+  <type>record</type>
+  <requires_role>true</requires_role>
+  <role>x_sn_demo_data_gen.admin</role>
+  <script><![CDATA[answer = true;]]></script>
+</sys_security_acl>

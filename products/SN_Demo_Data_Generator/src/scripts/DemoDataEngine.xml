@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_script_include>
+  <name>DemoDataEngine</name>
+  <api_name>x_sn_demo_data_gen.DemoDataEngine</api_name>
+  <client_callable>false</client_callable>
+  <access>public</access>
+  <active>true</active>
+  <description>Core engine: generates demo data for PA indicators, manages profiles, handles preview, cleanup, and volume estimation.</description>
+  <script><![CDATA[// SN Demo Data Generator — DemoDataEngine
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Core engine: generates demo data for PA indicators, manages profiles,
+// handles preview, cleanup, and volume estimation.
+// @class DemoDataEngine @namespace x_sn_demo_data_gen
+
+var DemoDataEngine = Class.create();
+DemoDataEngine.prototype = {
+    initialize: function() {
+        this._scanner = new PADataScanner();
+        this._runId = '';
+        this._generatedCount = 0;
+        this._failedCount = 0;
+    },
+
+    // ── Volume Estimation ──────────────────────────────────────────
+
+    estimate: function(dashboardSysId, dateStart, dateEnd, multiplier) {
+        var deps = this._scanner.resolveDependencies(dashboardSysId);
+        var days = this._daysBetween(dateStart, dateEnd);
+        var total = 0;
+        var perIndicator = {};
+
+        for (var i = 0; i < deps.indicators.length; i++) {
+            var ind = deps.indicators[i];
+            var freq = this._frequencyToDays(ind.frequency);
+            var periods = Math.ceil(days / freq);
+            var bdCount = this._countBreakdownsForIndicator(ind.sys_id, deps.breakdowns, deps.widgets);
+            var count = periods * Math.max(bdCount, 1) * multiplier;
+            perIndicator[ind.name] = count;
+            total += count;
+        }
+
+        return {
+            total: total,
+            perIndicator: perIndicator,
+            warning: total > 50000,
+            critical: total > 100000
+        };
+    },
+
+    // ── Preview ─────────────────────────────────────────────────────
+
+    preview: function(dashboardSysId, pattern, overrides) {
+        var deps = this._scanner.resolveDependencies(dashboardSysId);
+        var result = { indicators: {}, breakdowns: {}, count: 0 };
+        var today = new GlideDate();
+        today.setValue(this._todayStr());
+        var start = new GlideDate();
+        start.setValue(this._daysAgoStr(7));
+
+        for (var i = 0; i < deps.indicators.length; i++) {
+            var ind = deps.indicators[i];
+            var override = overrides ? (overrides[ind.sys_id] || {}) : {};
+            var minVal = override.min || 0;
+            var maxVal = override.max || 100;
+            var scores = this._generateScores(pattern, 7, minVal, maxVal, ind.direction);
+            result.indicators[ind.sys_id] = {
+                name: ind.name,
+                scores: scores,
+                unit: ind.unit
+            };
+            result.count += 7;
+        }
+
+        for (var j = 0; j < deps.breakdowns.length; j++) {
+            var bd = deps.breakdowns[j];
+            if (bd.elements && bd.elements.length > 0) {
+                result.breakdowns[bd.sys_id] = {
+                    name: bd.name,
+                    elements: bd.elements,
+                    distribution: this._distributeAcrossElements(bd.elements.length, 7)
+                };
+            }
+        }
+
+        return result;
+    },
+
+    // ── Generate ────────────────────────────────────────────────────
+
+    generate: function(dashboardSysId, dateStart, dateEnd, pattern, multiplier, overrides) {
+        this._runId = this._generateUUID();
+        this._generatedCount = 0;
+        this._failedCount = 0;
+
+        var runGr = new GlideRecord('x_sn_demo_data_gen_run');
+        runGr.initialize();
+        runGr.setValue('run_id', this._runId);
+        runGr.setValue('status', 'running');
+        runGr.setValue('started_at', new GlideDateTime().getValue());
+        try {
+            runGr.insert();
+        } catch (e) {
+            return { error: 'Failed to create run record: ' + e.message };
+        }
+
+        try {
+            var deps = this._scanner.resolveDependencies(dashboardSysId);
+            var days = this._daysBetween(dateStart, dateEnd);
+
+            for (var i = 0; i < deps.indicators.length; i++) {
+                var ind = deps.indicators[i];
+                var override = overrides ? (overrides[ind.sys_id] || {}) : {};
+                var minVal = override.min || 0;
+                var maxVal = override.max || 100;
+                var freq = this._frequencyToDays(ind.frequency);
+                var periods = Math.ceil(days / freq);
+                var scores = this._generateScores(pattern, periods, minVal, maxVal, ind.direction);
+
+                for (var p = 0; p < periods; p++) {
+                    var scoreDate = this._addDays(dateStart, p * freq);
+                    this._insertScore(ind.sys_id, scores[p], scoreDate, this._runId);
+                }
+
+                // Generate breakdown scores
+                var bdWidgets = this._findBreakdownWidgets(ind.sys_id, deps.widgets);
+                for (var b = 0; b < bdWidgets.length; b++) {
+                    var bdId = bdWidgets[b];
+                    var bd = this._findBreakdown(bdId, deps.breakdowns);
+                    if (bd && bd.elements && bd.elements.length > 0) {
+                        for (var p2 = 0; p2 < periods; p2++) {
+                            var bdDate = this._addDays(dateStart, p2 * freq);
+                            var dist = this._distributeAcrossElements(bd.elements.length, scores[p2]);
+                            for (var e = 0; e < bd.elements.length; e++) {
+                                this._insertBreakdownScore(
+                                    ind.sys_id, bdId, bd.elements[e].value,
+                                    dist[e], bdDate, this._runId
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+
+            runGr.setValue('status', 'complete');
+            runGr.setValue('records_generated', this._generatedCount);
+            runGr.setValue('records_failed', this._failedCount);
+            runGr.setValue('completed_at', new GlideDateTime().getValue());
+            runGr.update();
+
+            return {
+                run_id: this._runId,
+                records_generated: this._generatedCount,
+                records_failed: this._failedCount,
+                status: 'complete'
+            };
+        } catch (e) {
+            runGr.setValue('status', 'failed');
+            runGr.setValue('error_message', e.message || String(e));
+            runGr.setValue('completed_at', new GlideDateTime().getValue());
+            runGr.update();
+            return {
+                run_id: this._runId,
+                records_generated: this._generatedCount,
+                records_failed: this._failedCount,
+                status: 'failed',
+                error: e.message || String(e)
+            };
+        }
+    },
+
+    // ── Cleanup ─────────────────────────────────────────────────────
+
+    cleanup: function(runId, dryRun) {
+        var deleted = 0;
+
+        // Count/delete pa_scores
+        var scoreGr = new GlideRecord('pa_scores');
+        scoreGr.addQuery('description', 'CONTAINS', 'sn_demo_data_gen:' + runId);
+        if (dryRun) {
+            scoreGr.query();
+            deleted += scoreGr.getRowCount();
+        } else {
+            scoreGr.query();
+            while (scoreGr.next()) {
+                scoreGr.deleteRecord();
+                deleted++;
+            }
+        }
+
+        // Count/delete pa_breakdown_scores
+        var bdGr = new GlideRecord('pa_breakdown_scores');
+        bdGr.addQuery('description', 'CONTAINS', 'sn_demo_data_gen:' + runId);
+        if (dryRun) {
+            bdGr.query();
+            deleted += bdGr.getRowCount();
+        } else {
+            bdGr.query();
+            while (bdGr.next()) {
+                bdGr.deleteRecord();
+                deleted++;
+            }
+        }
+
+        // Update run record
+        if (!dryRun) {
+            var runGr = new GlideRecord('x_sn_demo_data_gen_run');
+            runGr.addQuery('run_id', runId);
+            runGr.query();
+            if (runGr.next()) {
+                runGr.setValue('status', 'rolled_back');
+                runGr.update();
+            }
+        }
+
+        return { deleted: deleted, dry_run: dryRun };
+    },
+
+    // ── Profiles ────────────────────────────────────────────────────
+
+    saveProfile: function(name, description, config, userId, isShared) {
+        var gr = new GlideRecord('x_sn_demo_data_gen_config');
+        gr.initialize();
+        gr.setValue('type', 'profile');
+        gr.setValue('name', name);
+        gr.setValue('description', description || '');
+        gr.setValue('config_json', JSON.stringify(config));
+        gr.setValue('created_by', userId);
+        gr.setValue('is_shared', isShared ? 'true' : 'false');
+        gr.setValue('updated_at', new GlideDateTime().getValue());
+        try {
+            return gr.insert();
+        } catch (e) {
+            return '';
+        }
+    },
+
+    loadProfile: function(profileId) {
+        var gr = new GlideRecord('x_sn_demo_data_gen_config');
+        if (!gr.get(profileId) || gr.getValue('type') !== 'profile') {
+            return null;
+        }
+        var json = gr.getValue('config_json') || '{}';
+        try {
+            return JSON.parse(json);
+        } catch (e) {
+            return null;
+        }
+    },
+
+    listProfiles: function(userId) {
+        var profiles = [];
+        var gr = new GlideRecord('x_sn_demo_data_gen_config');
+        gr.addQuery('type', 'profile');
+        var qc = gr.addQuery('is_shared', 'true');
+        if (userId) {
+            qc.addOrCondition('created_by', userId);
+        }
+        gr.orderByDesc('updated_at');
+        gr.query();
+        while (gr.next()) {
+            profiles.push({
+                sys_id: gr.getUniqueValue(),
+                name: gr.getValue('name') || '',
+                description: gr.getValue('description') || '',
+                is_shared: gr.getValue('is_shared') === 'true',
+                updated_at: gr.getValue('updated_at') || ''
+            });
+        }
+        return profiles;
+    },
+
+    exportJSON: function(profileId) {
+        var config = this.loadProfile(profileId);
+        if (!config) {
+            return '';
+        }
+        return JSON.stringify(config, null, 2);
+    },
+
+    importJSON: function(jsonStr, userId) {
+        try {
+            var config = JSON.parse(jsonStr);
+            var name = config.name || 'Imported Profile';
+            var desc = config.description || 'Imported from JSON';
+            return this.saveProfile(name, desc, config, userId, false);
+        } catch (e) {
+            return '';
+        }
+    },
+
+    // ── Run History ─────────────────────────────────────────────────
+
+    getRunHistory: function(status, limit) {
+        var runs = [];
+        var gr = new GlideRecord('x_sn_demo_data_gen_run');
+        if (status) {
+            gr.addQuery('status', status);
+        }
+        gr.orderByDesc('started_at');
+        gr.setLimit(limit || 20);
+        gr.query();
+        while (gr.next()) {
+            runs.push({
+                run_id: gr.getValue('run_id') || '',
+                status: gr.getValue('status') || '',
+                records_generated: parseInt(gr.getValue('records_generated') || '0', 10),
+                records_failed: parseInt(gr.getValue('records_failed') || '0', 10),
+                started_at: gr.getValue('started_at') || '',
+                completed_at: gr.getValue('completed_at') || '',
+                error_message: gr.getValue('error_message') || ''
+            });
+        }
+        return runs;
+    },
+
+    // ── Pattern Engine (private) ────────────────────────────────────
+
+    _generateScores: function(pattern, count, min, max, direction) {
+        switch (pattern) {
+            case 'linear':
+                return this._linear(count, min, max, direction);
+            case 'seasonal':
+                return this._seasonal(count, min, max);
+            case 'random_walk':
+                return this._randomWalk(count, min, max);
+            case 'spike':
+                return this._spikeEvents(count, min, max);
+            default:
+                return this._randomWalk(count, min, max);
+        }
+    },
+
+    _linear: function(count, min, max, direction) {
+        var scores = [];
+        var range = max - min;
+        var step = range / Math.max(count - 1, 1);
+        for (var i = 0; i < count; i++) {
+            var val = direction === 'minimize'
+                ? max - (step * i)
+                : min + (step * i);
+            scores.push(Math.round(val * 100) / 100);
+        }
+        return scores;
+    },
+
+    _seasonal: function(count, min, max) {
+        var scores = [];
+        var mid = (min + max) / 2;
+        var amplitude = (max - min) / 2;
+        for (var i = 0; i < count; i++) {
+            var val = mid + amplitude * Math.sin((i / 7) * 2 * Math.PI);
+            scores.push(Math.round(val * 100) / 100);
+        }
+        return scores;
+    },
+
+    _randomWalk: function(count, min, max) {
+        var scores = [];
+        var mid = (min + max) / 2;
+        var current = mid;
+        var stepMax = (max - min) / 10;
+        for (var i = 0; i < count; i++) {
+            var delta = (Math.random() - 0.5) * 2 * stepMax;
+            current = Math.max(min, Math.min(max, current + delta));
+            scores.push(Math.round(current * 100) / 100);
+        }
+        return scores;
+    },
+
+    _spikeEvents: function(count, min, max) {
+        var scores = [];
+        var baseline = (min + max) / 2;
+        for (var i = 0; i < count; i++) {
+            if (Math.random() < 0.15) {
+                var spike = baseline + (Math.random() * (max - baseline) * 0.8);
+                scores.push(Math.round(spike * 100) / 100);
+            } else {
+                var noise = (Math.random() - 0.5) * (max - min) * 0.1;
+                scores.push(Math.round((baseline + noise) * 100) / 100);
+            }
+        }
+        return scores;
+    },
+
+    // ── Helpers (private) ───────────────────────────────────────────
+
+    _insertScore: function(indicatorId, value, date, runId) {
+        var gr = new GlideRecord('pa_scores');
+        gr.initialize();
+        gr.setValue('indicator', indicatorId);
+        gr.setValue('score', value);
+        gr.setValue('date', date);
+        // Store generation metadata in description field (OOTB field)
+        gr.setValue('description', 'sn_demo_data_gen:' + runId);
+        try {
+            gr.insert();
+            this._generatedCount++;
+        } catch (e) {
+            this._failedCount++;
+            gs.error('DemoDataEngine: failed to insert pa_scores for indicator ' + indicatorId + ': ' + e.message);
+        }
+    },
+
+    _insertBreakdownScore: function(indicatorId, breakdownId, elementValue, value, date, runId) {
+        var gr = new GlideRecord('pa_breakdown_scores');
+        gr.initialize();
+        gr.setValue('indicator', indicatorId);
+        gr.setValue('breakdown', breakdownId);
+        gr.setValue('element', elementValue);
+        gr.setValue('score', value);
+        gr.setValue('date', date);
+        // Store generation metadata in description field (OOTB field)
+        gr.setValue('description', 'sn_demo_data_gen:' + runId);
+        try {
+            gr.insert();
+            this._generatedCount++;
+        } catch (e) {
+            this._failedCount++;
+            gs.error('DemoDataEngine: failed to insert pa_breakdown_scores: ' + e.message);
+        }
+    },
+
+    _daysBetween: function(startStr, endStr) {
+        var start = new GlideDateTime();
+        start.setValue(startStr + ' 00:00:00');
+        var end = new GlideDateTime();
+        end.setValue(endStr + ' 00:00:00');
+        var diff = GlideDateTime.subtract(start, end);
+        return Math.abs(Math.ceil(diff.getDayPart()));
+    },
+
+    _frequencyToDays: function(frequency) {
+        switch (frequency) {
+            case 'hourly': return 1;
+            case 'weekly': return 7;
+            case 'monthly': return 30;
+            case 'quarterly': return 90;
+            default: return 1; // daily
+        }
+    },
+
+    _countBreakdownsForIndicator: function(indicatorId, breakdowns, widgets) {
+        var count = 0;
+        for (var i = 0; i < widgets.length; i++) {
+            if (widgets[i].indicator === indicatorId && widgets[i].breakdown) {
+                count++;
+            }
+        }
+        return count;
+    },
+
+    _findBreakdownWidgets: function(indicatorId, widgets) {
+        var bdIds = [];
+        var seen = {};
+        for (var i = 0; i < widgets.length; i++) {
+            if (widgets[i].indicator === indicatorId && widgets[i].breakdown && !seen[widgets[i].breakdown]) {
+                seen[widgets[i].breakdown] = true;
+                bdIds.push(widgets[i].breakdown);
+            }
+        }
+        return bdIds;
+    },
+
+    _findBreakdown: function(bdId, breakdowns) {
+        for (var i = 0; i < breakdowns.length; i++) {
+            if (breakdowns[i].sys_id === bdId) {
+                return breakdowns[i];
+            }
+        }
+        return null;
+    },
+
+    _distributeAcrossElements: function(elementCount, total) {
+        var dist = [];
+        var remaining = total;
+        for (var i = 0; i < elementCount; i++) {
+            if (i === elementCount - 1) {
+                dist.push(Math.round(remaining * 100) / 100);
+            } else {
+                var share = Math.random() * remaining * 0.7;
+                dist.push(Math.round(share * 100) / 100);
+                remaining -= share;
+            }
+        }
+        return dist;
+    },
+
+    _addDays: function(dateStr, days) {
+        var gd = new GlideDateTime();
+        gd.setValue(dateStr + ' 00:00:00');
+        gd.addDays(days);
+        return gd.getDate().getValue();
+    },
+
+    _todayStr: function() {
+        var gd = new GlideDate();
+        return gd.getValue();
+    },
+
+    _daysAgoStr: function(days) {
+        var gd = new GlideDateTime();
+        gd.addDays(-days);
+        return gd.getDate().getValue();
+    },
+
+    _generateUUID: function() {
+        var d = new GlideDateTime().getNumericValue();
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+    },
+
+    type: 'DemoDataEngine'
+};]]></script>
+</sys_script_include>

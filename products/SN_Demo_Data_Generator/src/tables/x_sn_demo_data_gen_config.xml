@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sys_db_object>
+  <name>x_sn_demo_data_gen_config</name>
+  <label>Demo Data Config</label>
+  <super_class/>
+  <element id="type" type="string" max_length="40" label="Config Type" mandatory="true" choice="1">
+    <choice value="config" label="Generation Config"/>
+    <choice value="profile" label="Saved Profile"/>
+  </element>
+  <element id="name" type="string" max_length="100" label="Name"/>
+  <element id="description" type="string" max_length="1000" label="Description"/>
+  <element id="dashboard" type="string" max_length="32" label="Dashboard Sys ID"/>
+  <element id="date_start" type="glide_date" label="Start Date"/>
+  <element id="date_end" type="glide_date" label="End Date"/>
+  <element id="pattern" type="string" max_length="40" label="Data Pattern" choice="1">
+    <choice value="linear" label="Linear Growth"/>
+    <choice value="seasonal" label="Seasonal"/>
+    <choice value="random_walk" label="Random Walk"/>
+    <choice value="spike" label="Spike Events"/>
+    <choice value="custom" label="Custom Formula"/>
+  </element>
+  <element id="volume_multiplier" type="integer" label="Volume Multiplier"/>
+  <element id="indicator_overrides" type="string" max_length="4000" label="Indicator Overrides (JSON)"/>
+  <element id="config_json" type="string" max_length="4000" label="Full Config (JSON)"/>
+  <element id="is_shared" type="boolean" label="Shared" default="false"/>
+  <element id="created_by" type="string" max_length="32" label="Created By"/>
+  <element id="updated_at" type="glide_date_time" label="Updated At"/>
+</sys_db_object>
