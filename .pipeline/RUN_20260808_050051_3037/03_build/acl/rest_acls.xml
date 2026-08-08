@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-08 05:00:00">
+  <!-- Execute ACL: POST /api/x_sn_flow_test/execute -->
+  <sys_security_acl>
+    <name>x_sn_flow_test.execute.post</name>
+    <operation>execute</operation>
+    <type>rest_service</type>
+    <description>Allow authenticated users to execute FlowTest operations</description>
+    <active>true</active>
+    <requires_roles>false</requires_roles>
+    <script><![CDATA[
+answer = gs.hasRole('x_sn_flow_test.user') || gs.hasRole('admin');
+]]></script>
+    <condition/>
+  </sys_security_acl>
+
+  <!-- Execute ACL: GET /api/x_sn_flow_test/status -->
+  <sys_security_acl>
+    <name>x_sn_flow_test.status.get</name>
+    <operation>execute</operation>
+    <type>rest_service</type>
+    <description>Allow authenticated users to query FlowTest status</description>
+    <active>true</active>
+    <requires_roles>false</requires_roles>
+    <script><![CDATA[
+answer = gs.hasRole('x_sn_flow_test.user') || gs.hasRole('admin');
+]]></script>
+    <condition/>
+  </sys_security_acl>
+</unload>

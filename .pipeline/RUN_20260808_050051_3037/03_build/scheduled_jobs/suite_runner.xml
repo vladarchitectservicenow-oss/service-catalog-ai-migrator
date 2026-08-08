@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-08 05:00:00">
+  <sys_trigger>
+    <name>FlowTest Suite Runner</name>
+    <trigger_type>0</trigger_type>
+    <job_type>script</job_type>
+    <active>true</active>
+    <run_type>periodically</run_type>
+    <repeat_interval>86400</repeat_interval>
+    <start_time>2026-08-09 02:00:00</start_time>
+    <description>Runs all scheduled FlowTest suites daily at 02:00. Executes each suite's traces, compares against expected outputs, and triggers AI triage for failures.</description>
+    <script><![CDATA[
+// FlowTest — Automated Regression Testing for Flow Designer
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Scheduled Job: FlowTest Suite Runner
+// Runs all suites with a configured schedule.
+
+(function() {
+    var engine = new FlowTestReplayEngine();
+    var result = engine.runScheduledSuites();
+
+    gs.info('FlowTest Suite Runner: ' + result.suites_run + ' suites executed, ' +
+            result.total_failures + ' total failures');
+
+    if (result.total_failures > 0) {
+        // Trigger AI triage for each failed suite
+        for (var i = 0; i < result.summaries.length; i++) {
+            var summary = result.summaries[i];
+            if (summary.fail > 0 && summary.results) {
+                for (var j = 0; j < summary.results.length; j++) {
+                    var r = summary.results[j];
+                    if (r.status === 'FAIL' && r.trace_id) {
+                        engine.triageWithAI(r.trace_id, r);
+                    }
+                }
+            }
+        }
+
+        // Send notification via event
+        gs.eventQueueScheduled('x_sn_flow_test.suite.failure', null,
+            result.total_failures,
+            JSON.stringify({
+                suites_run: result.suites_run,
+                total_failures: result.total_failures,
+                completed_at: result.completed_at
+            })
+        );
+    }
+})();
+]]></script>
+  </sys_trigger>
+</unload>

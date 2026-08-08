@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-08 05:00:00">
+  <sys_script_include>
+    <name>FlowTestRecorder</name>
+    <api_name>x_sn_flow_test.FlowTestRecorder</api_name>
+    <client_callable>false</client_callable>
+    <description>Captures flow execution traces for regression testing. Intercepts flow step inputs/outputs and stores them as versioned snapshots.</description>
+    <active>true</active>
+    <script><![CDATA[
+// FlowTest — Automated Regression Testing for Flow Designer
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// FlowTestRecorder — Captures flow execution traces for regression testing.
+// Intercepts flow step inputs/outputs and stores them as versioned snapshots.
+// @class FlowTestRecorder @namespace x_sn_flow_test
+
+var FlowTestRecorder = Class.create();
+FlowTestRecorder.prototype = {
+    initialize: function() {
+        this.recording = false;
+        this.traceId = null;
+        this.steps = [];
+        this.startTime = null;
+    },
+
+    /**
+     * Start recording a flow execution trace.
+     * @param {string} flowId - sys_id of the sys_hub_flow record
+     * @param {string} traceName - human-readable name for this trace
+     * @param {string} flowTags - comma-separated tags (e.g. "hr,onboarding,critical")
+     * @return {string} traceId - sys_id of the created trace record
+     */
+    startRecording: function(flowId, traceName, flowTags) {
+        this.recording = true;
+        this.steps = [];
+        this.startTime = new GlideDateTime();
+
+        var gr = new GlideRecord('x_sn_flow_test_trace');
+        gr.initialize();
+        gr.setValue('flow_id', flowId);
+        gr.setValue('trace_name', traceName || 'Untitled Trace');
+        gr.setValue('flow_tags', flowTags || '');
+        gr.setValue('recorded_on', this.startTime);
+        gr.setValue('recorded_by', gs.getUserID());
+        gr.setValue('execution_path', '[]');
+        gr.setValue('input_payload', '{}');
+        gr.setValue('output_payload', '{}');
+        gr.setValue('execution_time', 0);
+        gr.setValue('results_json', '[]');
+
+        try {
+            this.traceId = gr.insert();
+        } catch (e) {
+            gs.error('FlowTestRecorder: Failed to create trace record: ' + e.message);
+            this.recording = false;
+            return null;
+        }
+
+        return this.traceId;
+    },
+
+    /**
+     * Capture a single step's inputs and outputs during flow execution.
+     * @param {string} stepName - name of the flow step
+     * @param {string} actionName - action/subflow being executed
+     * @param {object} inputs - input parameters to the step
+     * @param {object} outputs - output values from the step
+     * @param {number} duration - step execution time in ms
+     */
+    captureStep: function(stepName, actionName, inputs, outputs, duration) {
+        if (!this.recording) {
+            return;
+        }
+
+        var step = {
+            step: this.steps.length + 1,
+            step_name: stepName || '',
+            action: actionName || '',
+            inputs: inputs || {},
+            outputs: outputs || {},
+            duration_ms: duration || 0,
+            captured_at: new GlideDateTime().getValue()
+        };
+
+        this.steps.push(step);
+    },
+
+    /**
+     * Stop recording and persist the full execution trace.
+     * @param {object} triggerInputs - the original trigger inputs for the flow
+     * @param {object} finalOutput - the final output of the flow execution
+     * @return {boolean} success
+     */
+    stopRecording: function(triggerInputs, finalOutput) {
+        if (!this.recording || !this.traceId) {
+            return false;
+        }
+
+        this.recording = false;
+        var endTime = new GlideDateTime();
+        var duration = this.startTime.subtract(endTime);
+        var durationMs = duration ? duration.getNumericValue() : 0;
+
+        var gr = new GlideRecord('x_sn_flow_test_trace');
+        if (!gr.get(this.traceId)) {
+            gs.error('FlowTestRecorder: Trace record not found: ' + this.traceId);
+            return false;
+        }
+
+        gr.setValue('execution_path', JSON.stringify(this.steps));
+        gr.setValue('input_payload', JSON.stringify(triggerInputs || {}));
+        gr.setValue('output_payload', JSON.stringify(finalOutput || {}));
+        gr.setValue('execution_time', durationMs);
+
+        try {
+            gr.update();
+        } catch (e) {
+            gs.error('FlowTestRecorder: Failed to update trace: ' + e.message);
+            return false;
+        }
+
+        gs.info('FlowTestRecorder: Trace ' + this.traceId + ' saved with ' + this.steps.length + ' steps');
+        return true;
+    },
+
+    /**
+     * Serialize the current recording context for inspection.
+     * @return {object} current recording state
+     */
+    serializeContext: function() {
+        return {
+            recording: this.recording,
+            trace_id: this.traceId,
+            step_count: this.steps.length,
+            started_at: this.startTime ? this.startTime.getValue() : null
+        };
+    },
+
+    /**
+     * Get a recorded trace by ID.
+     * @param {string} traceId - sys_id of the trace record
+     * @return {object|null} trace data or null if not found
+     */
+    getTrace: function(traceId) {
+        var gr = new GlideRecord('x_sn_flow_test_trace');
+        if (!gr.get(traceId)) {
+            return null;
+        }
+
+        return {
+            sys_id: gr.getUniqueValue(),
+            flow_id: gr.getValue('flow_id'),
+            trace_name: gr.getValue('trace_name'),
+            execution_path: this._safeParse(gr.getValue('execution_path')),
+            input_payload: this._safeParse(gr.getValue('input_payload'), {}),
+            output_payload: this._safeParse(gr.getValue('output_payload'), {}),
+            execution_time: parseInt(gr.getValue('execution_time'), 10) || 0,
+            flow_tags: gr.getValue('flow_tags'),
+            recorded_by: gr.getValue('recorded_by'),
+            recorded_on: gr.getValue('recorded_on')
+        };
+    },
+
+    /**
+     * List all traces, optionally filtered by flow_id or tags.
+     * @param {string} flowId - optional flow sys_id filter
+     * @param {string} tagFilter - optional tag substring filter
+     * @param {number} limit - max results (default 50)
+     * @return {array} list of trace summaries
+     */
+    listTraces: function(flowId, tagFilter, limit) {
+        var gr = new GlideRecord('x_sn_flow_test_trace');
+        if (flowId) {
+            gr.addQuery('flow_id', flowId);
+        }
+        if (tagFilter) {
+            gr.addQuery('flow_tags', 'CONTAINS', tagFilter);
+        }
+        gr.orderByDesc('recorded_on');
+        gr.setLimit(limit || 50);
+        gr.query();
+
+        var traces = [];
+        while (gr.next()) {
+            traces.push({
+                sys_id: gr.getUniqueValue(),
+                flow_id: gr.getValue('flow_id'),
+                trace_name: gr.getValue('trace_name'),
+                step_count: this._safeParse(gr.getValue('execution_path')).length,
+                execution_time: parseInt(gr.getValue('execution_time'), 10) || 0,
+                flow_tags: gr.getValue('flow_tags'),
+                recorded_on: gr.getValue('recorded_on')
+            });
+        }
+        return traces;
+    },
+
+    /**
+     * Delete a trace and its associated results.
+     * @param {string} traceId - sys_id of the trace to delete
+     * @return {boolean} success
+     */
+    deleteTrace: function(traceId) {
+        var gr = new GlideRecord('x_sn_flow_test_trace');
+        if (!gr.get(traceId)) {
+            return false;
+        }
+        return gr.deleteRecord();
+    },
+
+    /**
+     * Safely parse JSON, returning a default on failure.
+     * @param {string} jsonStr - JSON string to parse
+     * @param {*} defaultValue - value to return on parse failure (default: [])
+     * @return {*} parsed object or default
+     * @private
+     */
+    _safeParse: function(jsonStr, defaultValue) {
+        if (!jsonStr) {
+            return defaultValue !== undefined ? defaultValue : [];
+        }
+        try {
+            var parsed = JSON.parse(jsonStr);
+            return parsed;
+        } catch (e) {
+            return defaultValue !== undefined ? defaultValue : [];
+        }
+    },
+
+    type: 'FlowTestRecorder'
+};
+]]></script>
+  </sys_script_include>
+</unload>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-08 05:00:00">
+  <sys_ws_operation>
+    <name>GET /status</name>
+    <web_service_definition>FlowTest Status API</web_service_definition>
+    <web_service_version>v1</web_service_version>
+    <relative_path>/api/x_sn_flow_test/status</relative_path>
+    <request_method>GET</request_method>
+    <active>true</active>
+    <function_name>process</function_name>
+    <script_name>get_status</script_name>
+  </sys_ws_operation>
+</unload>

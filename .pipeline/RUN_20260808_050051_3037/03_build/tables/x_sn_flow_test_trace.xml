@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-08 05:00:00">
+  <sys_db_object>
+    <name>x_sn_flow_test_trace</name>
+    <label>Flow Test Trace</label>
+    <super_class/>
+    <access>public</access>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <is_extendable>false</is_extendable>
+    <audit>false</audit>
+    <user_role>x_sn_flow_test.user</user_role>
+    <element id="flow_id" type="string" max_length="32" label="Flow Sys ID" mandatory="true"/>
+    <element id="flow_version" type="string" max_length="40" label="Flow Version"/>
+    <element id="trace_name" type="string" max_length="200" label="Trace Name" mandatory="true"/>
+    <element id="execution_path" type="string" max_length="8000" label="Execution Path (JSON)"/>
+    <element id="input_payload" type="string" max_length="4000" label="Input Payload (JSON)"/>
+    <element id="output_payload" type="string" max_length="4000" label="Output Payload (JSON)"/>
+    <element id="execution_time" type="integer" label="Execution Time (ms)"/>
+    <element id="flow_tags" type="string" max_length="1000" label="Flow Tags"/>
+    <element id="results_json" type="string" max_length="8000" label="Replay Results (JSON)"/>
+    <element id="recorded_by" type="string" max_length="32" label="Recorded By"/>
+    <element id="recorded_on" type="glide_date_time" label="Recorded On"/>
+  </sys_db_object>
+</unload>

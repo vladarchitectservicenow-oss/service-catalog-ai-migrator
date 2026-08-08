@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-08 05:00:00">
+  <!-- Read ACL: x_sn_flow_test_trace — users can read traces -->
+  <sys_security_acl>
+    <name>x_sn_flow_test_trace.read</name>
+    <operation>read</operation>
+    <type>record</type>
+    <description>Allow users with FlowTest user role to read flow test traces</description>
+    <active>true</active>
+    <requires_roles>false</requires_roles>
+    <script><![CDATA[
+answer = gs.hasRole('x_sn_flow_test.user') || gs.hasRole('admin');
+]]></script>
+    <condition/>
+  </sys_security_acl>
+
+  <!-- Write ACL: x_sn_flow_test_trace — users can create/update traces -->
+  <sys_security_acl>
+    <name>x_sn_flow_test_trace.write</name>
+    <operation>write</operation>
+    <type>record</type>
+    <description>Allow users with FlowTest user role to create and update flow test traces</description>
+    <active>true</active>
+    <requires_roles>false</requires_roles>
+    <script><![CDATA[
+answer = gs.hasRole('x_sn_flow_test.user') || gs.hasRole('admin');
+]]></script>
+    <condition/>
+  </sys_security_acl>
+
+  <!-- Create ACL: x_sn_flow_test_trace — users can create traces -->
+  <sys_security_acl>
+    <name>x_sn_flow_test_trace.create</name>
+    <operation>create</operation>
+    <type>record</type>
+    <description>Allow users with FlowTest user role to create flow test traces</description>
+    <active>true</active>
+    <requires_roles>false</requires_roles>
+    <script><![CDATA[
+answer = gs.hasRole('x_sn_flow_test.user') || gs.hasRole('admin');
+]]></script>
+    <condition/>
+  </sys_security_acl>
+
+  <!-- Delete ACL: x_sn_flow_test_trace — users can delete traces -->
+  <sys_security_acl>
+    <name>x_sn_flow_test_trace.delete</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <description>Allow users with FlowTest user role to delete flow test traces</description>
+    <active>true</active>
+    <requires_roles>false</requires_roles>
+    <script><![CDATA[
+answer = gs.hasRole('x_sn_flow_test.user') || gs.hasRole('admin');
+]]></script>
+    <condition/>
+  </sys_security_acl>
+
+  <!-- Read ACL: x_sn_flow_test_suite — users can read suites -->
+  <sys_security_acl>
+    <name>x_sn_flow_test_suite.read</name>
+    <operation>read</operation>
+    <type>record</type>
+    <description>Allow users with FlowTest user role to read test suites</description>
+    <active>true</active>
+    <requires_roles>false</requires_roles>
+    <script><![CDATA[
+answer = gs.hasRole('x_sn_flow_test.user') || gs.hasRole('admin');
+]]></script>
+    <condition/>
+  </sys_security_acl>
+
+  <!-- Write ACL: x_sn_flow_test_suite — users can create/update suites -->
+  <sys_security_acl>
+    <name>x_sn_flow_test_suite.write</name>
+    <operation>write</operation>
+    <type>record</type>
+    <description>Allow users with FlowTest user role to create and update test suites</description>
+    <active>true</active>
+    <requires_roles>false</requires_roles>
+    <script><![CDATA[
+answer = gs.hasRole('x_sn_flow_test.user') || gs.hasRole('admin');
+]]></script>
+    <condition/>
+  </sys_security_acl>
+
+  <!-- Create ACL: x_sn_flow_test_suite — users can create suites -->
+  <sys_security_acl>
+    <name>x_sn_flow_test_suite.create</name>
+    <operation>create</operation>
+    <type>record</type>
+    <description>Allow users with FlowTest user role to create test suites</description>
+    <active>true</active>
+    <requires_roles>false</requires_roles>
+    <script><![CDATA[
+answer = gs.hasRole('x_sn_flow_test.user') || gs.hasRole('admin');
+]]></script>
+    <condition/>
+  </sys_security_acl>
+
+  <!-- Delete ACL: x_sn_flow_test_suite — users can delete suites -->
+  <sys_security_acl>
+    <name>x_sn_flow_test_suite.delete</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <description>Allow users with FlowTest user role to delete test suites</description>
+    <active>true</active>
+    <requires_roles>false</requires_roles>
+    <script><![CDATA[
+answer = gs.hasRole('x_sn_flow_test.user') || gs.hasRole('admin');
+]]></script>
+    <condition/>
+  </sys_security_acl>
+</unload>

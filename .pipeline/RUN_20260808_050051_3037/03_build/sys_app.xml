@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-08 05:00:00">
+  <sys_scope>
+    <scope>x_sn_flow_test</scope>
+    <name>FlowTest — Automated Regression Testing for Flow Designer</name>
+    <description>Record, replay, and compare Flow Designer executions. Detect regressions after upgrades, migrations, and changes. AI-powered triage classifies diffs as BREAKING, COSMETIC, or INTENTIONAL.</description>
+    <version>1.0.0</version>
+    <vendor>Vladimir Kapustin</vendor>
+    <vendor_prefix>x_sn_flow_test</vendor_prefix>
+    <active>true</active>
+    <accessibility>public</accessibility>
+    <runtime_access_tracking>false</runtime_access_tracking>
+    <restrict_table_access>false</restrict_table_access>
+    <restrict_cross_scope_access>false</restrict_cross_scope_access>
+    <tracking_code>FLOWTEST</tracking_code>
+  </sys_scope>
+
+  <!-- Script Includes -->
+  <sys_script_include>
+    <name>FlowTestRecorder</name>
+    <api_name>x_sn_flow_test.FlowTestRecorder</api_name>
+    <client_callable>false</client_callable>
+    <description>Captures flow execution traces for regression testing. Intercepts flow step inputs/outputs and stores them as versioned snapshots.</description>
+    <active>true</active>
+    <script_name>FlowTestRecorder</script_name>
+  </sys_script_include>
+
+  <sys_script_include>
+    <name>FlowTestReplayEngine</name>
+    <api_name>x_sn_flow_test.FlowTestReplayEngine</api_name>
+    <client_callable>false</client_callable>
+    <description>Replays recorded flow traces and detects regressions. Performs deep JSON diff, suite execution, and AI triage integration.</description>
+    <active>true</active>
+    <script_name>FlowTestReplayEngine</script_name>
+  </sys_script_include>
+
+  <!-- REST Web Service Operations -->
+  <sys_ws_operation>
+    <name>POST /execute</name>
+    <web_service_definition>FlowTest Execute API</web_service_definition>
+    <web_service_version>v1</web_service_version>
+    <relative_path>/api/x_sn_flow_test/execute</relative_path>
+    <request_method>POST</request_method>
+    <active>true</active>
+    <function_name>process</function_name>
+    <script_name>post_execute</script_name>
+  </sys_ws_operation>
+
+  <sys_ws_operation>
+    <name>GET /status</name>
+    <web_service_definition>FlowTest Status API</web_service_definition>
+    <web_service_version>v1</web_service_version>
+    <relative_path>/api/x_sn_flow_test/status</relative_path>
+    <request_method>GET</request_method>
+    <active>true</active>
+    <function_name>process</function_name>
+    <script_name>get_status</script_name>
+  </sys_ws_operation>
+
+  <!-- User Roles -->
+  <sys_user_role>
+    <name>x_sn_flow_test.user</name>
+    <description>FlowTest User — can record, replay, and view traces and suites</description>
+    <active>true</active>
+    <elevated_privilege>false</elevated_privilege>
+  </sys_user_role>
+
+  <!-- Cross-Scope Privileges -->
+  <sys_scope_privilege>
+    <source_scope>x_sn_flow_test</source_scope>
+    <target_scope>global</target_scope>
+    <target_name>sys_hub_flow</target_name>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <!-- Table Definitions -->
+  <sys_db_object>
+    <name>x_sn_flow_test_trace</name>
+    <label>Flow Test Trace</label>
+    <super_class/>
+    <access>public</access>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <is_extendable>false</is_extendable>
+    <audit>false</audit>
+    <user_role>x_sn_flow_test.user</user_role>
+  </sys_db_object>
+
+  <sys_db_object>
+    <name>x_sn_flow_test_suite</name>
+    <label>Flow Test Suite</label>
+    <super_class/>
+    <access>public</access>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <is_extendable>false</is_extendable>
+    <audit>false</audit>
+    <user_role>x_sn_flow_test.user</user_role>
+  </sys_db_object>
+</unload>

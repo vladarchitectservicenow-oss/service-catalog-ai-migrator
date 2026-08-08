@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-08 05:00:00">
+  <sys_db_object>
+    <name>x_sn_flow_test_suite</name>
+    <label>Flow Test Suite</label>
+    <super_class/>
+    <access>public</access>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <is_extendable>false</is_extendable>
+    <audit>false</audit>
+    <user_role>x_sn_flow_test.user</user_role>
+    <element id="name" type="string" max_length="200" label="Suite Name" mandatory="true"/>
+    <element id="description" type="string" max_length="4000" label="Description"/>
+    <element id="flow_ids" type="string" max_length="4000" label="Flow IDs (JSON)"/>
+    <element id="schedule" type="string" max_length="100" label="Schedule (cron)"/>
+    <element id="last_run" type="glide_date_time" label="Last Run"/>
+    <element id="pass_count" type="integer" label="Pass Count"/>
+    <element id="fail_count" type="integer" label="Fail Count"/>
+    <element id="config_json" type="string" max_length="4000" label="Configuration (JSON)"/>
+    <element id="created_by" type="string" max_length="32" label="Created By"/>
+  </sys_db_object>
+</unload>

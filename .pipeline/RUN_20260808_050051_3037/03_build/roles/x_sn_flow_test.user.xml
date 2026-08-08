@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-08 05:00:00">
+  <sys_user_role>
+    <name>x_sn_flow_test.user</name>
+    <description>FlowTest User — can record, replay, and view traces and suites</description>
+    <active>true</active>
+    <elevated_privilege>false</elevated_privilege>
+  </sys_user_role>
+</unload>
