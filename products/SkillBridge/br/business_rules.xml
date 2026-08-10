@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-10 05:00:00">
+  <!-- Business Rule: SKB Set Scanned At -->
+  <sys_script action="INSERT_OR_UPDATE">
+    <abort_action>false</abort_action>
+    <access>package_private</access>
+    <action_delete>false</action_delete>
+    <action_insert>true</action_insert>
+    <action_query>false</action_query>
+    <action_update>false</action_update>
+    <active>true</active>
+    <add_message>false</add_message>
+    <advanced>true</advanced>
+    <change_fields>false</change_fields>
+    <client_callable>false</client_callable>
+    <collection>x_snc_skb_skill_snapshot</collection>
+    <condition/>
+    <description>Auto-set scanned_at to current time if empty on insert</description>
+    <execute_function>false</execute_function>
+    <filter_condition/>
+    <is_rest>false</is_rest>
+    <message/>
+    <name>SKB Set Scanned At</name>
+    <order>100</order>
+    <priority>100</priority>
+    <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+    if (!current.scanned_at) {
+        current.scanned_at = new GlideDateTime().getValue();
+    }
+})(current, previous);]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-10 05:00:00</sys_created_on>
+    <sys_domain>global</sys_domain>
+    <sys_domain_path>/</sys_domain_path>
+    <sys_id>skb_br_set_scanned_at</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>SKB Set Scanned At</sys_name>
+    <sys_overrides/>
+    <sys_package display_value="SkillBridge" source="x_snc_skb">a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SkillBridge">a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</sys_scope>
+    <sys_update_name>sys_script_skb_set_scanned_at</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-10 05:00:00</sys_updated_on>
+    <template/>
+    <when>before</when>
+  </sys_script>
+
+  <!-- Business Rule: SKB Validate Config -->
+  <sys_script action="INSERT_OR_UPDATE">
+    <abort_action>true</abort_action>
+    <access>package_private</access>
+    <action_delete>false</action_delete>
+    <action_insert>true</action_insert>
+    <action_query>false</action_query>
+    <action_update>true</action_update>
+    <active>true</active>
+    <add_message>true</add_message>
+    <advanced>true</advanced>
+    <change_fields>false</change_fields>
+    <client_callable>false</client_callable>
+    <collection>x_snc_skb_scan_config</collection>
+    <condition/>
+    <description>Validate artifact_types contains only valid types</description>
+    <execute_function>false</execute_function>
+    <filter_condition/>
+    <is_rest>false</is_rest>
+    <message>Invalid artifact type in configuration. Valid types: sys_script, sys_script_include, sys_ui_action, sys_ui_client_script, sys_ui_policy, sys_security_acl, sys_rest_message, sys_ws_definition, sysauto_script, sys_hub_flow</message>
+    <name>SKB Validate Config</name>
+    <order>100</order>
+    <priority>100</priority>
+    <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+    var validTypes = [
+        'sys_script', 'sys_script_include', 'sys_ui_action',
+        'sys_ui_client_script', 'sys_ui_policy', 'sys_security_acl',
+        'sys_rest_message', 'sys_ws_definition', 'sysauto_script',
+        'sys_hub_flow'
+    ];
+
+    var types = (current.artifact_types || '').split(',').map(function(t) {
+        return t.trim();
+    });
+
+    for (var i = 0; i < types.length; i++) {
+        if (types[i] && validTypes.indexOf(types[i]) === -1) {
+            gs.addErrorMessage('Invalid artifact type: ' + types[i]);
+            current.setAbortAction(true);
+            return;
+        }
+    }
+})(current, previous);]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-10 05:00:00</sys_created_on>
+    <sys_domain>global</sys_domain>
+    <sys_domain_path>/</sys_domain_path>
+    <sys_id>skb_br_validate_config</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>SKB Validate Config</sys_name>
+    <sys_overrides/>
+    <sys_package display_value="SkillBridge" source="x_snc_skb">a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SkillBridge">a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</sys_scope>
+    <sys_update_name>sys_script_skb_validate_config</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-10 05:00:00</sys_updated_on>
+    <template/>
+    <when>before</when>
+  </sys_script>
+
+  <!-- Business Rule: SKB Snapshot Name Unique -->
+  <sys_script action="INSERT_OR_UPDATE">
+    <abort_action>true</abort_action>
+    <access>package_private</access>
+    <action_delete>false</action_delete>
+    <action_insert>true</action_insert>
+    <action_query>false</action_query>
+    <action_update>false</action_update>
+    <active>true</active>
+    <add_message>true</add_message>
+    <advanced>true</advanced>
+    <change_fields>false</change_fields>
+    <client_callable>false</client_callable>
+    <collection>x_snc_skb_skill_snapshot</collection>
+    <condition/>
+    <description>Ensure snapshot_name is unique per user</description>
+    <execute_function>false</execute_function>
+    <filter_condition/>
+    <is_rest>false</is_rest>
+    <message>A snapshot with this name already exists. Please choose a different name.</message>
+    <name>SKB Snapshot Name Unique</name>
+    <order>100</order>
+    <priority>100</priority>
+    <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+    var gr = new GlideRecord('x_snc_skb_skill_snapshot');
+    gr.addQuery('snapshot_name', current.snapshot_name);
+    gr.addQuery('scanned_by', gs.getUserName());
+    gr.setLimit(1);
+    gr.query();
+    if (gr.next()) {
+        gs.addErrorMessage('A snapshot named "' + current.snapshot_name + '" already exists. Please choose a different name.');
+        current.setAbortAction(true);
+    }
+})(current, previous);]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-10 05:00:00</sys_created_on>
+    <sys_domain>global</sys_domain>
+    <sys_domain_path>/</sys_domain_path>
+    <sys_id>skb_br_unique_name</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>SKB Snapshot Name Unique</sys_name>
+    <sys_overrides/>
+    <sys_package display_value="SkillBridge" source="x_snc_skb">a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SkillBridge">a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</sys_scope>
+    <sys_update_name>sys_script_skb_unique_name</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-10 05:00:00</sys_updated_on>
+    <template/>
+    <when>before</when>
+  </sys_script>
+</unload>
