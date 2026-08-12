@@ -1,0 +1,11 @@
+{
+  "name": "ServiceNow Script Debt Analyzer",
+  "scope": "x_snc_sda",
+  "short_description": "AI-powered AST analysis of script includes and business rules — detects vulnerabilities, dead code, hardcoded values, and generates Now Assist Skills + Workflow Studio actions.",
+  "active": "true",
+  "vendor": "VladArchitect ServiceNow OSS",
+  "version": "1.0.0",
+  "license": "AGPL-3.0",
+  "enforce_license": "none",
+  "sys_class_name": "sys_app"
+}

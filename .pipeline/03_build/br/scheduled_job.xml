@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-11 07:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Daily REST Medic scan — discovers all Scripted REST API endpoints, runs integrity and runtime checks, scores health, and sends alerts for endpoints below threshold.</description>
+    <name>REST Medic — Daily Health Scan</name>
+    <run_dayofweek>all</run_dayofweek>
+    <run_period>daily</run_period>
+    <run_start>02:00:00</run_start>
+    <run_type>periodically</run_type>
+    <script><![CDATA[// REST Medic — Daily Health Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function() {
+    try {
+        var engine = new RESTMedicEngine();
+        var alerter = new RESTMedicAlerter();
+
+        var scanResult = engine.scanAll();
+        gs.info('REST Medic daily scan complete: ' + scanResult.endpoint_count + ' endpoints, ' +
+                scanResult.healthy + ' healthy, ' + scanResult.warning + ' warning, ' +
+                scanResult.critical + ' critical, avg score: ' + scanResult.avg_score);
+
+        var alertResult = alerter.checkThresholds();
+        if (alertResult.alerts_sent > 0) {
+            gs.info('REST Medic: ' + alertResult.alerts_sent + ' alerts sent for ' + alertResult.endpoints_checked + ' endpoints checked.');
+        }
+    } catch (e) {
+        gs.error('REST Medic daily scan failed: ' + e.toString());
+    }
+})();]]></script>
+    <sys_scope>x_vlad_rest_medic</sys_scope>
+  </sysauto_script>
+</unload>

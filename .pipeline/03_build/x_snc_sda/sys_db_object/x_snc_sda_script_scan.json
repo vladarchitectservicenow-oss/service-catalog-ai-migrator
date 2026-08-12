@@ -1,0 +1,9 @@
+{
+  "name": "x_snc_sda_script_scan",
+  "label": "SDA Script Scan",
+  "active": "true",
+  "super_class": "task",
+  "create_access_controls": "true",
+  "is_extendable": "false",
+  "mobile_interface": "false"
+}

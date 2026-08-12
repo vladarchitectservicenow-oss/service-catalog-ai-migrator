@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-11 07:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <create_access>true</create_access>
+    <delete_access>true</delete_access>
+    <label>REST Medic Endpoint</label>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_access>true</read_access>
+    <super_class/>
+    <update_access>true</update_access>
+    <user_role>x_vlad_rest_medic.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="endpoint_name" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Endpoint Name</label>
+    <max_length>200</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>string</type>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="endpoint_path" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Endpoint Path</label>
+    <max_length>500</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>string</type>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="http_method" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <choice>1</choice>
+    <choice_field>http_method</choice_field>
+    <internal_type>string</internal_type>
+    <label>HTTP Method</label>
+    <max_length>10</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>string</type>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" element="http_method" name="x_vlad_rest_medic_endpoint" table="x_vlad_rest_medic_endpoint">
+    <label>GET</label>
+    <value>GET</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="http_method" name="x_vlad_rest_medic_endpoint" table="x_vlad_rest_medic_endpoint">
+    <label>POST</label>
+    <value>POST</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="http_method" name="x_vlad_rest_medic_endpoint" table="x_vlad_rest_medic_endpoint">
+    <label>PUT</label>
+    <value>PUT</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="http_method" name="x_vlad_rest_medic_endpoint" table="x_vlad_rest_medic_endpoint">
+    <label>DELETE</label>
+    <value>DELETE</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="http_method" name="x_vlad_rest_medic_endpoint" table="x_vlad_rest_medic_endpoint">
+    <label>PATCH</label>
+    <value>PATCH</value>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="scope" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Scope</label>
+    <max_length>100</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>string</type>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="script_include" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Script Include</label>
+    <max_length>200</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>string</type>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="auth_profile" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Auth Profile</label>
+    <max_length>200</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>string</type>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="health_score" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Health Score</label>
+    <max_length>3</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>integer</type>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="integrity_score" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Integrity Score</label>
+    <max_length>3</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>integer</type>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="runtime_score" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Runtime Score</label>
+    <max_length>3</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>integer</type>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="issues_json" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Issues</label>
+    <max_length>4000</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>string</type>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="score_history_json" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Score History</label>
+    <max_length>4000</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>string</type>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="last_scan" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>glide_date_time</internal_type>
+    <label>Last Scan</label>
+    <max_length>40</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>glide_date_time</type>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="status" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <choice>1</choice>
+    <choice_field>status</choice_field>
+    <internal_type>string</internal_type>
+    <label>Status</label>
+    <max_length>20</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>string</type>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_vlad_rest_medic_endpoint" table="x_vlad_rest_medic_endpoint">
+    <label>Healthy</label>
+    <value>healthy</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_vlad_rest_medic_endpoint" table="x_vlad_rest_medic_endpoint">
+    <label>Warning</label>
+    <value>warning</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_vlad_rest_medic_endpoint" table="x_vlad_rest_medic_endpoint">
+    <label>Critical</label>
+    <value>critical</value>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="error_count_24h" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Error Count (24h)</label>
+    <max_length>10</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>integer</type>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="avg_response_ms" table="x_vlad_rest_medic_endpoint">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Avg Response (ms)</label>
+    <max_length>10</max_length>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_only>false</read_only>
+    <type>integer</type>
+  </sys_dictionary>
+</unload>

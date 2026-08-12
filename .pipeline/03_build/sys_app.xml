@@ -1,0 +1,1204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-12 05:00:00">
+  <!-- Scope definition -->
+  <sys_scope action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>REST Medic — Proactive health monitor for ServiceNow Scripted REST APIs. Discovers every endpoint across all scopes, validates integrity (script references, auth profiles, ACLs), monitors runtime health (error rates, response times, traffic anomalies), and scores each endpoint 0–100.</description>
+    <name>REST Medic</name>
+    <scope>x_vlad_rest_medic</scope>
+    <short_description>Scripted REST API Health Auditor</short_description>
+    <vendor>Vladimir Kapustin</vendor>
+    <vendor_prefix>x_vlad</vendor_prefix>
+    <version>1.0.0</version>
+  </sys_scope>
+
+  <!-- Roles -->
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_vlad_rest_medic.admin</name>
+    <description>REST Medic Administrator — full access to scan, configure, and manage endpoints</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <suffix>admin</suffix>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_vlad_rest_medic.user</name>
+    <description>REST Medic User — read-only access to health dashboard and endpoint data</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <suffix>user</suffix>
+  </sys_user_role>
+
+  <!-- Script Includes -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <access>public</access>
+    <api_name>x_vlad_rest_medic.RESTMedicEngine</api_name>
+    <client_callable>false</client_callable>
+    <description>Core engine for REST Medic — endpoint discovery, integrity validation, runtime monitoring, and composite health scoring.</description>
+    <name>RESTMedicEngine</name>
+    <script><![CDATA[// REST Medic — Scripted REST API Health Auditor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// RESTMedicEngine — Core engine for endpoint discovery, integrity validation,
+// runtime monitoring, and composite health scoring.
+// @class RESTMedicEngine @namespace x_vlad_rest_medic
+
+var RESTMedicEngine = Class.create();
+RESTMedicEngine.prototype = {
+    initialize: function() {
+        this.TABLE_ENDPOINT = 'x_vlad_rest_medic_endpoint';
+        this.TABLE_CONFIG = 'x_vlad_rest_medic_config';
+        this.INTEGRITY_WEIGHT = 0.6;
+        this.RUNTIME_WEIGHT = 0.4;
+        this.REST_LOG_HOURS = 24;
+        this.REST_LOG_LIMIT = 10000;
+    },
+
+    scanAll: function() {
+        var endpoints = this.discoverEndpoints();
+        var results = { endpoint_count: 0, healthy: 0, warning: 0, critical: 0, avg_score: 0 };
+        var totalScore = 0;
+
+        for (var i = 0; i < endpoints.length; i++) {
+            var ep = endpoints[i];
+            var integrityResult = this.checkIntegrity(ep);
+            var runtimeResult = this.monitorRuntime(ep);
+            var score = this.calculateScore(integrityResult, runtimeResult);
+            var status = this._scoreToStatus(score);
+
+            this._persistEndpoint(ep, integrityResult, runtimeResult, score, status);
+            results.endpoint_count++;
+            totalScore += score;
+            if (status === 'healthy') { results.healthy++; }
+            else if (status === 'warning') { results.warning++; }
+            else { results.critical++; }
+        }
+
+        if (results.endpoint_count > 0) {
+            results.avg_score = Math.round(totalScore / results.endpoint_count);
+        }
+        return results;
+    },
+
+    scanOne: function(endpointId) {
+        var gr = new GlideRecord(this.TABLE_ENDPOINT);
+        if (!gr.get(endpointId)) {
+            return { error: 'Endpoint not found: ' + endpointId };
+        }
+
+        var ep = {
+            sys_id: gr.getUniqueValue(),
+            endpoint_name: gr.getValue('endpoint_name'),
+            endpoint_path: gr.getValue('endpoint_path'),
+            http_method: gr.getValue('http_method'),
+            scope: gr.getValue('scope'),
+            script_include: gr.getValue('script_include'),
+            auth_profile: gr.getValue('auth_profile')
+        };
+
+        var integrityResult = this.checkIntegrity(ep);
+        var runtimeResult = this.monitorRuntime(ep);
+        var score = this.calculateScore(integrityResult, runtimeResult);
+        var status = this._scoreToStatus(score);
+
+        this._persistEndpoint(ep, integrityResult, runtimeResult, score, status);
+
+        return {
+            endpoint: ep,
+            integrity: integrityResult,
+            runtime: runtimeResult,
+            health_score: score,
+            status: status
+        };
+    },
+
+    discoverEndpoints: function() {
+        var endpoints = [];
+        var defGr = new GlideRecord('sys_ws_definition');
+        defGr.addActiveQuery();
+        defGr.query();
+
+        while (defGr.next()) {
+            var defId = defGr.getUniqueValue();
+            var defName = defGr.getValue('name') || '';
+            var defPath = defGr.getValue('path') || '';
+            var defScope = defGr.getValue('sys_scope') || '';
+
+            var opGr = new GlideRecord('sys_ws_operation');
+            opGr.addQuery('web_service_definition', defId);
+            opGr.addActiveQuery();
+            opGr.query();
+
+            while (opGr.next()) {
+                var method = opGr.getValue('http_method') || 'GET';
+                var scriptBody = opGr.getValue('script') || '';
+                var authProfile = opGr.getValue('authentication_profile') || '';
+                var siName = this._extractScriptInclude(scriptBody);
+
+                endpoints.push({
+                    definition_id: defId,
+                    definition_name: defName,
+                    endpoint_path: defPath,
+                    http_method: method,
+                    scope: defScope,
+                    script_include: siName,
+                    auth_profile: authProfile,
+                    operation_id: opGr.getUniqueValue(),
+                    script_body: scriptBody
+                });
+            }
+        }
+        return endpoints;
+    },
+
+    checkIntegrity: function(ep) {
+        var checks = [];
+        var passCount = 0;
+        var failCount = 0;
+        var warnCount = 0;
+
+        var siCheck = this._checkScriptInclude(ep.script_include);
+        checks.push(siCheck);
+        if (siCheck.status === 'pass') { passCount++; }
+        else if (siCheck.status === 'fail') { failCount++; }
+        else { warnCount++; }
+
+        var authCheck = this._checkAuthProfile(ep.auth_profile);
+        checks.push(authCheck);
+        if (authCheck.status === 'pass') { passCount++; }
+        else if (authCheck.status === 'fail') { failCount++; }
+        else { warnCount++; }
+
+        var aclCheck = this._checkACLCoverage(ep.operation_id);
+        checks.push(aclCheck);
+        if (aclCheck.status === 'pass') { passCount++; }
+        else if (aclCheck.status === 'fail') { failCount++; }
+        else { warnCount++; }
+
+        var respCheck = this._checkResponseConsistency(ep.script_body);
+        checks.push(respCheck);
+        if (respCheck.status === 'pass') { passCount++; }
+        else if (respCheck.status === 'fail') { failCount++; }
+        else { warnCount++; }
+
+        var depCheck = this._checkDeprecatedAPI(ep.script_body);
+        checks.push(depCheck);
+        if (depCheck.status === 'pass') { passCount++; }
+        else if (depCheck.status === 'fail') { failCount++; }
+        else { warnCount++; }
+
+        var total = checks.length;
+        var score = total > 0 ? Math.round((passCount / total) * 100) : 0;
+
+        return {
+            checks: checks,
+            pass_count: passCount,
+            fail_count: failCount,
+            warn_count: warnCount,
+            score: score
+        };
+    },
+
+    monitorRuntime: function(ep) {
+        var now = new GlideDateTime();
+        var since = new GlideDateTime();
+        since.addSeconds(-1 * this.REST_LOG_HOURS * 3600);
+
+        var logGr = new GlideRecord('sys_rest_log');
+        logGr.addQuery('sys_created_on', '>=', since);
+        logGr.addQuery('sys_created_on', '<=', now);
+        logGr.addQuery('endpoint', 'CONTAINS', ep.endpoint_path);
+        logGr.setLimit(this.REST_LOG_LIMIT);
+        logGr.query();
+
+        var totalRequests = 0;
+        var agg = new GlideAggregate('sys_rest_log');
+        agg.addQuery('sys_created_on', '>=', since);
+        agg.addQuery('sys_created_on', '<=', now);
+        agg.addQuery('endpoint', 'CONTAINS', ep.endpoint_path);
+        agg.addAggregate('COUNT');
+        agg.query();
+        if (agg.next()) {
+            totalRequests = parseInt(agg.getAggregate('COUNT') || '0', 10);
+        }
+        var errorCount = 0;
+        var totalResponseTime = 0;
+        var responseTimeCount = 0;
+
+        while (logGr.next()) {
+            var statusCode = parseInt(logGr.getValue('status_code') || '0', 10);
+            if (statusCode >= 400) {
+                errorCount++;
+            }
+            var respTime = parseInt(logGr.getValue('response_time') || '0', 10);
+            if (respTime > 0) {
+                totalResponseTime += respTime;
+                responseTimeCount++;
+            }
+        }
+
+        var errorRate = totalRequests > 0 ? Math.round((errorCount / totalRequests) * 100) : 0;
+        var avgResponseMs = responseTimeCount > 0 ? Math.round(totalResponseTime / responseTimeCount) : 0;
+
+        var trafficStatus = 'normal';
+        if (totalRequests === 0) {
+            trafficStatus = 'zero_traffic';
+        } else if (totalRequests < 5) {
+            trafficStatus = 'low_traffic';
+        }
+
+        var score = 100;
+        if (errorRate > 0) {
+            score -= Math.min(errorRate * 2, 60);
+        }
+        if (avgResponseMs > 5000) {
+            score -= 20;
+        } else if (avgResponseMs > 2000) {
+            score -= 10;
+        }
+        if (trafficStatus === 'zero_traffic') {
+            score = Math.max(score - 10, 0);
+        }
+        score = Math.max(score, 0);
+
+        return {
+            error_rate: errorRate,
+            avg_response_ms: avgResponseMs,
+            total_requests: totalRequests,
+            error_count: errorCount,
+            traffic_status: trafficStatus,
+            score: score
+        };
+    },
+
+    calculateScore: function(integrityResult, runtimeResult) {
+        var integrityScore = integrityResult.score || 0;
+        var runtimeScore = runtimeResult.score || 0;
+        return Math.round(integrityScore * this.INTEGRITY_WEIGHT + runtimeScore * this.RUNTIME_WEIGHT);
+    },
+
+    getHealthReport: function() {
+        var gr = new GlideRecord(this.TABLE_ENDPOINT);
+        gr.orderBy('health_score');
+        gr.query();
+
+        var endpoints = [];
+        var totalScore = 0;
+        var healthy = 0;
+        var warning = 0;
+        var critical = 0;
+
+        while (gr.next()) {
+            var status = gr.getValue('status') || 'unknown';
+            var score = parseInt(gr.getValue('health_score') || '0', 10);
+
+            endpoints.push({
+                sys_id: gr.getUniqueValue(),
+                endpoint_name: gr.getValue('endpoint_name') || '',
+                endpoint_path: gr.getValue('endpoint_path') || '',
+                http_method: gr.getValue('http_method') || '',
+                scope: gr.getValue('scope') || '',
+                health_score: score,
+                integrity_score: parseInt(gr.getValue('integrity_score') || '0', 10),
+                runtime_score: parseInt(gr.getValue('runtime_score') || '0', 10),
+                status: status,
+                error_count_24h: parseInt(gr.getValue('error_count_24h') || '0', 10),
+                avg_response_ms: parseInt(gr.getValue('avg_response_ms') || '0', 10),
+                last_scan: gr.getValue('last_scan') || ''
+            });
+
+            totalScore += score;
+            if (status === 'healthy') { healthy++; }
+            else if (status === 'warning') { warning++; }
+            else { critical++; }
+        }
+
+        var count = endpoints.length;
+        return {
+            last_scan: new GlideDateTime().toString(),
+            endpoint_count: count,
+            healthy: healthy,
+            warning: warning,
+            critical: critical,
+            avg_score: count > 0 ? Math.round(totalScore / count) : 0,
+            endpoints: endpoints
+        };
+    },
+
+    getAISuggestion: function(endpointId) {
+        var gr = new GlideRecord(this.TABLE_ENDPOINT);
+        if (!gr.get(endpointId)) {
+            return 'Endpoint not found.';
+        }
+
+        var issuesJson = gr.getValue('issues_json') || '[]';
+        var issues = JSON.parse(issuesJson);
+        if (issues.length === 0) {
+            return 'No issues detected for this endpoint.';
+        }
+
+        var endpointName = gr.getValue('endpoint_name') || 'Unknown';
+        var context = 'Scripted REST API "' + endpointName + '" has the following issues:\n';
+        for (var i = 0; i < issues.length; i++) {
+            var issue = issues[i];
+            context += '- [' + issue.check + '] ' + issue.status + ': ' + issue.detail + '\n';
+        }
+        context += '\nProvide a concise remediation plan with actionable steps.';
+
+        try {
+            var genAI = new sn_generative_ai.GlideGenAI();
+            var result = genAI.generate(context, { max_tokens: 500 });
+            return result || 'AI suggestion unavailable.';
+        } catch (e) {
+            return 'AI suggestion unavailable: ' + e.toString();
+        }
+    },
+
+    getConfig: function(name, defaultValue) {
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('property_name', name);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getValue('property_value') || defaultValue;
+        }
+        return defaultValue;
+    },
+
+    _scoreToStatus: function(score) {
+        if (score >= 80) { return 'healthy'; }
+        if (score >= 50) { return 'warning'; }
+        return 'critical';
+    },
+
+    _extractScriptInclude: function(scriptBody) {
+        if (!scriptBody) { return ''; }
+        var match = scriptBody.match(/new\s+(\w+)\s*\(/);
+        if (match) { return match[1]; }
+        match = scriptBody.match(/(\w+)\.\w+\s*\(/);
+        if (match && match[1] !== 'this' && match[1] !== 'request' && match[1] !== 'response' && match[1] !== 'JSON' && match[1] !== 'gs' && match[1] !== 'GlideRecord' && match[1] !== 'GlideDateTime' && match[1] !== 'GlideEmailOutbound' && match[1] !== 'sn_ws' && match[1] !== 'GlideAggregate' && match[1] !== 'GlideDigest') {
+            return match[1];
+        }
+        return '';
+    },
+
+    _checkScriptInclude: function(siName) {
+        if (!siName) {
+            return {
+                check: 'script_include_reference',
+                status: 'warn',
+                detail: 'No Script Include reference detected. Endpoint may use inline script only.',
+                remediation: 'If this endpoint uses a Script Include, ensure the class name is referenced in the script body.'
+            };
+        }
+
+        var siGr = new GlideRecord('sys_script_include');
+        siGr.addQuery('name', siName);
+        siGr.addActiveQuery();
+        siGr.setLimit(1);
+        siGr.query();
+
+        if (siGr.next()) {
+            return {
+                check: 'script_include_reference',
+                status: 'pass',
+                detail: 'Script Include "' + siName + '" found and active.',
+                remediation: ''
+            };
+        }
+
+        return {
+            check: 'script_include_reference',
+            status: 'fail',
+            detail: 'Script Include "' + siName + '" not found or inactive.',
+            remediation: 'Search sys_script_include for similar names. Check sys_audit for rename or delete events. Update the operation script with the correct Script Include name.'
+        };
+    },
+
+    _checkAuthProfile: function(authProfile) {
+        if (!authProfile) {
+            return {
+                check: 'auth_profile',
+                status: 'warn',
+                detail: 'No authentication profile configured. Endpoint may be unauthenticated.',
+                remediation: 'Configure an authentication profile (Basic Auth or OAuth) if this endpoint should be secured.'
+            };
+        }
+
+        var basicGr = new GlideRecord('sys_auth_profile_basic');
+        basicGr.addQuery('name', authProfile);
+        basicGr.addActiveQuery();
+        basicGr.setLimit(1);
+        basicGr.query();
+        if (basicGr.next()) {
+            return {
+                check: 'auth_profile',
+                status: 'pass',
+                detail: 'Basic Auth profile "' + authProfile + '" found and active.',
+                remediation: ''
+            };
+        }
+
+        var oauthGr = new GlideRecord('sys_oauth_entity');
+        oauthGr.addQuery('name', authProfile);
+        oauthGr.addActiveQuery();
+        oauthGr.setLimit(1);
+        oauthGr.query();
+        if (oauthGr.next()) {
+            var accessExpiry = oauthGr.getValue('access_token_expires_at') || '';
+            var refreshExpiry = oauthGr.getValue('refresh_token_expires_at') || '';
+            var now = new GlideDateTime();
+
+            if (accessExpiry) {
+                var expiryGdt = new GlideDateTime();
+                expiryGdt.setValue(accessExpiry);
+                if (expiryGdt.before(now)) {
+                    if (refreshExpiry) {
+                        var refreshGdt = new GlideDateTime();
+                        refreshGdt.setValue(refreshExpiry);
+                        if (refreshGdt.after(now)) {
+                            return {
+                                check: 'auth_profile',
+                                status: 'warn',
+                                detail: 'OAuth access token expired but refresh token is still valid. Auto-refresh should handle this.',
+                                remediation: 'Verify that the OAuth refresh mechanism is working. If auto-refresh fails, manually re-authorize the OAuth entity.'
+                            };
+                        }
+                    }
+                    return {
+                        check: 'auth_profile',
+                        status: 'fail',
+                        detail: 'OAuth access token expired and no valid refresh token.',
+                        remediation: 'Re-authorize the OAuth entity in sys_oauth_entity. Check that the OAuth provider credentials are still valid.'
+                    };
+                }
+            }
+            return {
+                check: 'auth_profile',
+                status: 'pass',
+                detail: 'OAuth profile "' + authProfile + '" found and active.',
+                remediation: ''
+            };
+        }
+
+        return {
+            check: 'auth_profile',
+            status: 'fail',
+            detail: 'Auth profile "' + authProfile + '" not found in sys_auth_profile_basic or sys_oauth_entity.',
+            remediation: 'Verify the auth profile name matches an existing Basic Auth or OAuth profile. Check for typos or renamed profiles.'
+        };
+    },
+
+    _checkACLCoverage: function(operationId) {
+        if (!operationId) {
+            return {
+                check: 'acl_coverage',
+                status: 'warn',
+                detail: 'No operation ID available for ACL check.',
+                remediation: ''
+            };
+        }
+
+        var aclGr = new GlideRecord('sys_security_acl');
+        aclGr.addQuery('operation', operationId);
+        aclGr.addActiveQuery();
+        aclGr.setLimit(1);
+        aclGr.query();
+
+        if (aclGr.next()) {
+            return {
+                check: 'acl_coverage',
+                status: 'pass',
+                detail: 'ACL records found for this operation.',
+                remediation: ''
+            };
+        }
+
+        return {
+            check: 'acl_coverage',
+            status: 'fail',
+            detail: 'No ACL records found for this operation. Endpoint may be either wide-open or completely blocked.',
+            remediation: 'Create ACL records in sys_security_acl for this operation. Define appropriate role-based access (e.g., x_vlad_rest_medic.user for read, x_vlad_rest_medic.admin for write).'
+        };
+    },
+
+    _checkResponseConsistency: function(scriptBody) {
+        if (!scriptBody) {
+            return {
+                check: 'response_consistency',
+                status: 'warn',
+                detail: 'No script body available for response consistency check.',
+                remediation: ''
+            };
+        }
+
+        var setBodyCalls = scriptBody.match(/response\.setBody\s*\(/g);
+        if (!setBodyCalls || setBodyCalls.length === 0) {
+            return {
+                check: 'response_consistency',
+                status: 'warn',
+                detail: 'No response.setBody() calls found. Endpoint may not return a response body.',
+                remediation: 'Ensure the endpoint returns a consistent JSON response body for all code paths.'
+            };
+        }
+
+        var jsonStringifyCalls = scriptBody.match(/JSON\.stringify\s*\(/g);
+        if (!jsonStringifyCalls || jsonStringifyCalls.length < setBodyCalls.length) {
+            return {
+                check: 'response_consistency',
+                status: 'warn',
+                detail: 'Not all response.setBody() calls use JSON.stringify(). Raw objects may return [object Object].',
+                remediation: 'Wrap all response.setBody() arguments with JSON.stringify() to ensure consistent JSON output.'
+            };
+        }
+
+        return {
+            check: 'response_consistency',
+            status: 'pass',
+            detail: 'All response.setBody() calls use JSON.stringify().',
+            remediation: ''
+        };
+    },
+
+    _checkDeprecatedAPI: function(scriptBody) {
+        if (!scriptBody) {
+            return {
+                check: 'deprecated_api',
+                status: 'warn',
+                detail: 'No script body available for deprecated API check.',
+                remediation: ''
+            };
+        }
+
+        var deprecatedAPIs = [
+            { pattern: /\.getRowCount\s*\(/g, name: 'getRowCount()', replacement: 'GlideAggregate' },
+            { pattern: /\.addEncodedQuery\s*\(/g, name: 'addEncodedQuery()', replacement: 'addQuery()' },
+            { pattern: /gs\.eventQueue\b\s*\(/g, name: 'gs.eventQueue()', replacement: 'gs.eventQueueScheduled()' },
+            { pattern: /GlideDigest\.getDigest\s*\(/g, name: 'GlideDigest.getDigest()', replacement: 'GlideDigest (deprecated, use external hashing)' }
+        ];
+
+        var found = [];
+        for (var i = 0; i < deprecatedAPIs.length; i++) {
+            var api = deprecatedAPIs[i];
+            if (api.pattern.test(scriptBody)) {
+                found.push({ name: api.name, replacement: api.replacement });
+            }
+        }
+
+        if (found.length > 0) {
+            var detail = 'Deprecated APIs found: ';
+            for (var j = 0; j < found.length; j++) {
+                detail += found[j].name + ' (use ' + found[j].replacement + ')';
+                if (j < found.length - 1) { detail += ', '; }
+            }
+            return {
+                check: 'deprecated_api',
+                status: 'fail',
+                detail: detail,
+                remediation: 'Replace deprecated APIs with their recommended alternatives. These may break on future platform upgrades.'
+            };
+        }
+
+        return {
+            check: 'deprecated_api',
+            status: 'pass',
+            detail: 'No deprecated APIs detected.',
+            remediation: ''
+        };
+    },
+
+    _persistEndpoint: function(ep, integrityResult, runtimeResult, score, status) {
+        var gr = new GlideRecord(this.TABLE_ENDPOINT);
+        gr.addQuery('endpoint_path', ep.endpoint_path);
+        gr.addQuery('http_method', ep.http_method);
+        gr.setLimit(1);
+        gr.query();
+
+        var isNew = !gr.next();
+        if (isNew) {
+            gr.initialize();
+        }
+
+        gr.setValue('endpoint_name', ep.definition_name || ep.endpoint_path);
+        gr.setValue('endpoint_path', ep.endpoint_path);
+        gr.setValue('http_method', ep.http_method);
+        gr.setValue('scope', ep.scope);
+        gr.setValue('script_include', ep.script_include || '');
+        gr.setValue('auth_profile', ep.auth_profile || '');
+        gr.setValue('health_score', score);
+        gr.setValue('integrity_score', integrityResult.score);
+        gr.setValue('runtime_score', runtimeResult.score);
+        gr.setValue('issues_json', JSON.stringify(integrityResult.checks));
+        gr.setValue('error_count_24h', runtimeResult.error_count);
+        gr.setValue('avg_response_ms', runtimeResult.avg_response_ms);
+        gr.setValue('status', status);
+        gr.setValue('last_scan', new GlideDateTime().toString());
+
+        var historyJson = gr.getValue('score_history_json') || '[]';
+        var history = JSON.parse(historyJson);
+        history.push({ date: new GlideDateTime().toString().split(' ')[0], score: score });
+        if (history.length > 30) {
+            history = history.slice(history.length - 30);
+        }
+        gr.setValue('score_history_json', JSON.stringify(history));
+
+        try {
+            if (isNew) {
+                gr.insert();
+            } else {
+                gr.setWorkflow(false);
+                gr.update();
+            }
+        } catch (e) {
+            gs.error('RESTMedicEngine: Failed to persist endpoint ' + ep.endpoint_path + ': ' + e.toString());
+        }
+    },
+
+    type: 'RESTMedicEngine'
+};]]></script>
+  </sys_script_include>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <access>public</access>
+    <api_name>x_vlad_rest_medic.RESTMedicAlerter</api_name>
+    <client_callable>false</client_callable>
+    <description>Alert engine for REST Medic — threshold-based notifications via email, Slack, and Teams when endpoint health drops below configured levels.</description>
+    <name>RESTMedicAlerter</name>
+    <script><![CDATA[// REST Medic — Scripted REST API Health Auditor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// RESTMedicAlerter — Alert engine for threshold-based notifications
+// when endpoint health drops below configured levels.
+// @class RESTMedicAlerter @namespace x_vlad_rest_medic
+
+var RESTMedicAlerter = Class.create();
+RESTMedicAlerter.prototype = {
+    initialize: function() {
+        this.TABLE_ENDPOINT = 'x_vlad_rest_medic_endpoint';
+        this.TABLE_CONFIG = 'x_vlad_rest_medic_config';
+    },
+
+    checkThresholds: function() {
+        var criticalThreshold = parseInt(this._getConfig('alert.threshold.critical', '50'), 10);
+        var warningThreshold = parseInt(this._getConfig('alert.threshold.warning', '75'), 10);
+        var cooldownHours = parseInt(this._getConfig('alert.cooldown_hours', '24'), 10);
+
+        var gr = new GlideRecord(this.TABLE_ENDPOINT);
+        gr.addQuery('health_score', '<=', warningThreshold);
+        gr.query();
+
+        var alertsSent = 0;
+        var endpointsChecked = 0;
+
+        while (gr.next()) {
+            endpointsChecked++;
+            var score = parseInt(gr.getValue('health_score') || '0', 10);
+            var endpointName = gr.getValue('endpoint_name') || 'Unknown';
+            var endpointPath = gr.getValue('endpoint_path') || '';
+            var status = gr.getValue('status') || 'unknown';
+
+            if (score <= criticalThreshold && !this.isCooldownActive(endpointPath, 'critical', cooldownHours)) {
+                this.sendAlert(endpointPath, endpointName, score, status, 'critical');
+                this._recordAlert(endpointPath, 'critical', score);
+                alertsSent++;
+            } else if (score <= warningThreshold && score > criticalThreshold && !this.isCooldownActive(endpointPath, 'warning', cooldownHours)) {
+                this.sendAlert(endpointPath, endpointName, score, status, 'warning');
+                this._recordAlert(endpointPath, 'warning', score);
+                alertsSent++;
+            }
+        }
+
+        return { alerts_sent: alertsSent, endpoints_checked: endpointsChecked };
+    },
+
+    sendAlert: function(endpointPath, endpointName, score, status, severity) {
+        var subject = '[REST Medic] ' + severity.toUpperCase() + ': ' + endpointName + ' health score ' + score;
+        var body = 'Endpoint: ' + endpointName + '\n' +
+                   'Path: ' + endpointPath + '\n' +
+                   'Health Score: ' + score + '/100\n' +
+                   'Status: ' + status + '\n' +
+                   'Severity: ' + severity + '\n\n' +
+                   'View details in REST Medic Dashboard.';
+        // Email alert
+        var emailRecipients = this._getConfig('alert.email_recipients', '');
+        if (emailRecipients) {
+            try {
+                var mail = new GlideEmailOutbound();
+                mail.setSubject(subject);
+                mail.setBody(body);
+                mail.setTo(emailRecipients);
+                mail.send();
+            } catch (e) {
+                // Fallback to gs.email.send() if GlideEmailOutbound unavailable
+                try {
+                    gs.email.send(emailRecipients, subject, body);
+                } catch (e2) {
+                    gs.error('RESTMedicAlerter: Email alert failed (both methods): ' + e2.toString());
+                }
+            }
+        }
+
+        var slackWebhook = this._getConfig('alert.slack_webhook', '');
+        if (slackWebhook) {
+            try {
+                var slackPayload = {
+                    text: '*' + subject + '*\n```' + body + '```'
+                };
+                var rm = new sn_ws.RESTMessageV2();
+                rm.setEndpoint(slackWebhook);
+                rm.setHttpMethod('POST');
+                rm.setRequestHeader('Content-Type', 'application/json');
+                rm.setRequestBody(JSON.stringify(slackPayload));
+                rm.execute();
+            } catch (e) {
+                gs.error('RESTMedicAlerter: Slack alert failed: ' + e.toString());
+            }
+        }
+
+        var teamsWebhook = this._getConfig('alert.teams_webhook', '');
+        if (teamsWebhook) {
+            try {
+                var teamsPayload = {
+                    '@type': 'MessageCard',
+                    '@context': 'http://schema.org/extensions',
+                    title: subject,
+                    text: body.replace(/\n/g, '<br/>')
+                };
+                var rm2 = new sn_ws.RESTMessageV2();
+                rm2.setEndpoint(teamsWebhook);
+                rm2.setHttpMethod('POST');
+                rm2.setRequestHeader('Content-Type', 'application/json');
+                rm2.setRequestBody(JSON.stringify(teamsPayload));
+                rm2.execute();
+            } catch (e) {
+                gs.error('RESTMedicAlerter: Teams alert failed: ' + e.toString());
+            }
+        }
+    },
+
+    getAlertHistory: function(hoursBack) {
+        hoursBack = hoursBack || 168;
+        var since = new GlideDateTime();
+        since.addSeconds(-1 * hoursBack * 3600);
+
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('property_name', 'STARTSWITH', 'alert_log.');
+        gr.addQuery('sys_created_on', '>=', since);
+        gr.orderByDesc('sys_created_on');
+        gr.query();
+
+        var alerts = [];
+        while (gr.next()) {
+            var propName = gr.getValue('property_name') || '';
+            var parts = propName.split('.');
+            alerts.push({
+                timestamp: gr.getValue('sys_created_on') || '',
+                endpoint_path: parts[2] || '',
+                severity: parts[3] || '',
+                score: gr.getValue('property_value') || '0'
+            });
+        }
+        return alerts;
+    },
+
+    _getConfig: function(name, defaultValue) {
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('property_name', name);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getValue('property_value') || defaultValue;
+        }
+        return defaultValue;
+    },
+
+    isCooldownActive: function(endpointPath, severity, cooldownHours) {
+        var since = new GlideDateTime();
+        since.addSeconds(-1 * cooldownHours * 3600);
+
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('property_name', 'CONTAINS', 'alert_log.' + endpointPath + '.' + severity);
+        gr.addQuery('sys_created_on', '>=', since);
+        gr.setLimit(1);
+        gr.query();
+
+        return gr.next();
+    },
+
+    _recordAlert: function(endpointPath, severity, score) {
+        try {
+            var gr = new GlideRecord(this.TABLE_CONFIG);
+            gr.initialize();
+            gr.setValue('property_name', 'alert_log.' + endpointPath + '.' + severity);
+            gr.setValue('property_value', String(score));
+            gr.setValue('description', 'Alert sent: ' + severity + ' for ' + endpointPath + ' (score: ' + score + ')');
+            gr.insert();
+        } catch (e) {
+            gs.error('RESTMedicAlerter: Failed to record alert: ' + e.toString());
+        }
+    },
+
+    type: 'RESTMedicAlerter'
+};]]></script>
+  </sys_script_include>
+
+  <!-- Cross-scope privileges (read-only on OOTB tables) -->
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vlad_rest_medic</source_scope>
+    <target_name>sys_ws_definition</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vlad_rest_medic</source_scope>
+    <target_name>sys_ws_operation</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vlad_rest_medic</source_scope>
+    <target_name>sys_rest_log</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vlad_rest_medic</source_scope>
+    <target_name>sys_script_include</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vlad_rest_medic</source_scope>
+    <target_name>sys_security_acl</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vlad_rest_medic</source_scope>
+    <target_name>sys_auth_profile_basic</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vlad_rest_medic</source_scope>
+    <target_name>sys_oauth_entity</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_vlad_rest_medic</source_scope>
+    <target_name>sn_generative_ai.GlideGenAI</target_name>
+    <target_scope>sn_generative_ai</target_scope>
+    <target_type>scriptable</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_vlad_rest_medic</source_scope>
+    <target_name>sn_ws.RESTMessageV2</target_name>
+    <target_scope>global</target_scope>
+    <target_type>scriptable</target_type>
+  </sys_scope_privilege>
+
+  <!-- REST API definition -->
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>REST Medic API</name>
+    <path>/api/x_vlad_rest_medic</path>
+    <scope>x_vlad_rest_medic</scope>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <http_method>POST</http_method>
+    <name>Execute</name>
+    <operation_uri>/execute</operation_uri>
+    <relative_path>/execute</relative_path>
+    <web_service_definition display_value="REST Medic API">REST Medic API</web_service_definition>
+    <script><![CDATA[// REST Medic — Scripted REST API Health Auditor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// POST /api/x_vlad_rest_medic/execute — Action-dispatch endpoint
+// Actions: scan_all, scan_one, get_report, get_alerts
+
+(function process(request, response) {
+    var engine = new RESTMedicEngine();
+    var alerter = new RESTMedicAlerter();
+
+    try {
+        var body = request.body;
+        var action = body.action || '';
+
+        switch (action) {
+            case 'scan_all':
+                var result = engine.scanAll();
+                response.setStatus(200);
+                response.setBody(JSON.stringify({
+                    success: true,
+                    action: 'scan_all',
+                    data: result
+                }));
+                break;
+
+            case 'scan_one':
+                var endpointId = body.endpoint_id || '';
+                if (!endpointId) {
+                    response.setStatus(400);
+                    response.setBody(JSON.stringify({
+                        success: false,
+                        error: 'Missing required parameter: endpoint_id'
+                    }));
+                    return;
+                }
+                var scanResult = engine.scanOne(endpointId);
+                if (scanResult.error) {
+                    response.setStatus(404);
+                    response.setBody(JSON.stringify({
+                        success: false,
+                        error: scanResult.error
+                    }));
+                } else {
+                    response.setStatus(200);
+                    response.setBody(JSON.stringify({
+                        success: true,
+                        action: 'scan_one',
+                        data: scanResult
+                    }));
+                }
+                break;
+
+            case 'get_report':
+                var report = engine.getHealthReport();
+                response.setStatus(200);
+                response.setBody(JSON.stringify({
+                    success: true,
+                    action: 'get_report',
+                    data: report
+                }));
+                break;
+
+            case 'get_alerts':
+                var hoursBack = parseInt(body.hours_back || '168', 10);
+                var alerts = alerter.getAlertHistory(hoursBack);
+                response.setStatus(200);
+                response.setBody(JSON.stringify({
+                    success: true,
+                    action: 'get_alerts',
+                    data: { alerts: alerts, count: alerts.length }
+                }));
+                break;
+
+            default:
+                response.setStatus(400);
+                response.setBody(JSON.stringify({
+                    success: false,
+                    error: 'Unknown action: ' + action + '. Supported actions: scan_all, scan_one, get_report, get_alerts'
+                }));
+        }
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({
+            success: false,
+            error: 'Internal error: ' + e.toString()
+        }));
+    }
+})(request, response);]]></script>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <http_method>GET</http_method>
+    <name>Status</name>
+    <operation_uri>/status</operation_uri>
+    <relative_path>/status</relative_path>
+    <web_service_definition display_value="REST Medic API">REST Medic API</web_service_definition>
+    <script><![CDATA[// REST Medic — Scripted REST API Health Auditor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// GET /api/x_vlad_rest_medic/status — Lightweight health check
+
+(function process(request, response) {
+    try {
+        var engine = new RESTMedicEngine();
+        var report = engine.getHealthReport();
+
+        response.setStatus(200);
+        response.setBody(JSON.stringify({
+            success: true,
+            last_scan: report.last_scan,
+            endpoint_count: report.endpoint_count,
+            healthy: report.healthy,
+            warning: report.warning,
+            critical: report.critical,
+            avg_score: report.avg_score
+        }));
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({
+            success: false,
+            error: 'Internal error: ' + e.toString()
+        }));
+    }
+})(request, response);]]></script>
+  </sys_ws_operation>
+
+  <!-- Scheduled Job -->
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Daily REST Medic scan — discovers all Scripted REST API endpoints, runs integrity and runtime checks, scores health, and sends alerts for endpoints below threshold.</description>
+    <name>REST Medic — Daily Health Scan</name>
+    <run_dayofweek>all</run_dayofweek>
+    <run_period>daily</run_period>
+    <run_start>02:00:00</run_start>
+    <run_type>periodically</run_type>
+    <script><![CDATA[// REST Medic — Daily Health Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function() {
+    try {
+        var engine = new RESTMedicEngine();
+        var alerter = new RESTMedicAlerter();
+
+        var scanResult = engine.scanAll();
+        gs.info('REST Medic daily scan complete: ' + scanResult.endpoint_count + ' endpoints, ' +
+                scanResult.healthy + ' healthy, ' + scanResult.warning + ' warning, ' +
+                scanResult.critical + ' critical, avg score: ' + scanResult.avg_score);
+
+        var alertResult = alerter.checkThresholds();
+        if (alertResult.alerts_sent > 0) {
+            gs.info('REST Medic: ' + alertResult.alerts_sent + ' alerts sent for ' + alertResult.endpoints_checked + ' endpoints checked.');
+        }
+    } catch (e) {
+        gs.error('REST Medic daily scan failed: ' + e.toString());
+    }
+})();]]></script>
+    <sys_scope>x_vlad_rest_medic</sys_scope>
+  </sysauto_script>
+
+  <!-- Custom Tables -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <create_access>true</create_access>
+    <delete_access>true</delete_access>
+    <label>REST Medic Endpoint</label>
+    <name>x_vlad_rest_medic_endpoint</name>
+    <read_access>true</read_access>
+    <super_class/>
+    <update_access>true</update_access>
+    <user_role>x_vlad_rest_medic.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <create_access>true</create_access>
+    <delete_access>true</delete_access>
+    <label>REST Medic Config</label>
+    <name>x_vlad_rest_medic_config</name>
+    <read_access>true</read_access>
+    <super_class/>
+    <update_access>true</update_access>
+    <user_role>x_vlad_rest_medic.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+
+  <!-- ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_vlad_rest_medic.execute</name>
+    <operation display_value="Execute">Execute</operation>
+    <type>rest_endpoint</type>
+    <requires_roles>true</requires_roles>
+    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin') || gs.hasRole('x_vlad_rest_medic.user');]]></script>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_vlad_rest_medic.status</name>
+    <operation display_value="Status">Status</operation>
+    <type>rest_endpoint</type>
+    <requires_roles>true</requires_roles>
+    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin') || gs.hasRole('x_vlad_rest_medic.user');]]></script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_vlad_rest_medic_endpoint.read</name>
+    <operation display_value="read">read</operation>
+    <type>record</type>
+    <requires_roles>true</requires_roles>
+    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin') || gs.hasRole('x_vlad_rest_medic.user');]]></script>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_vlad_rest_medic_endpoint.write</name>
+    <operation display_value="write">write</operation>
+    <type>record</type>
+    <requires_roles>true</requires_roles>
+    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin');]]></script>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_vlad_rest_medic_endpoint.create</name>
+    <operation display_value="create">create</operation>
+    <type>record</type>
+    <requires_roles>true</requires_roles>
+    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin');]]></script>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_vlad_rest_medic_endpoint.delete</name>
+    <operation display_value="delete">delete</operation>
+    <type>record</type>
+    <requires_roles>true</requires_roles>
+    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin');]]></script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_vlad_rest_medic_config.read</name>
+    <operation display_value="read">read</operation>
+    <type>record</type>
+    <requires_roles>true</requires_roles>
+    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin') || gs.hasRole('x_vlad_rest_medic.user');]]></script>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_vlad_rest_medic_config.write</name>
+    <operation display_value="write">write</operation>
+    <type>record</type>
+    <requires_roles>true</requires_roles>
+    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin');]]></script>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_vlad_rest_medic_config.create</name>
+    <operation display_value="create">create</operation>
+    <type>record</type>
+    <requires_roles>true</requires_roles>
+    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin');]]></script>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_vlad_rest_medic_config.delete</name>
+    <operation display_value="delete">delete</operation>
+    <type>record</type>
+    <requires_roles>true</requires_roles>
+    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin');]]></script>
+  </sys_security_acl>
+</unload>

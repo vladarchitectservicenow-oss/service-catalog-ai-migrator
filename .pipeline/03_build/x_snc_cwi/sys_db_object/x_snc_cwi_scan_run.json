@@ -1,0 +1,9 @@
+{
+  "name": "x_snc_cwi_scan_run",
+  "label": "CWI Scan Run",
+  "active": "true",
+  "super_class": "",
+  "create_access_controls": "true",
+  "is_extendable": "false",
+  "mobile_interface": "false"
+}
