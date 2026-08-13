@@ -1,89 +1,76 @@
-// REST Medic — Scripted REST API Health Auditor
+// Now Assist Cost Lens — POST /api/x_nacl/execute
 // Copyright (C) 2026 Vladimir Kapustin
 // SPDX-License-Identifier: AGPL-3.0
 //
-// POST /api/x_vlad_rest_medic/execute — Action-dispatch endpoint
-// Actions: scan_all, scan_one, get_report, get_alerts
+// Action-dispatch REST endpoint. Accepts JSON body with "action" field.
+// Supported actions: recalculate, forecast, detect_waste, optimize
 
 (function process(request, response) {
-    var engine = new RESTMedicEngine();
-    var alerter = new RESTMedicAlerter();
 
-    try {
-        var body = request.body;
-        var action = body.action || '';
-
-        switch (action) {
-            case 'scan_all':
-                var result = engine.scanAll();
-                response.setStatus(200);
-                response.setBody(JSON.stringify({
-                    success: true,
-                    action: 'scan_all',
-                    data: result
-                }));
-                break;
-
-            case 'scan_one':
-                var endpointId = body.endpoint_id || '';
-                if (!endpointId) {
-                    response.setStatus(400);
-                    response.setBody(JSON.stringify({
-                        success: false,
-                        error: 'Missing required parameter: endpoint_id'
-                    }));
-                    return;
-                }
-                var scanResult = engine.scanOne(endpointId);
-                if (scanResult.error) {
-                    response.setStatus(404);
-                    response.setBody(JSON.stringify({
-                        success: false,
-                        error: scanResult.error
-                    }));
-                } else {
-                    response.setStatus(200);
-                    response.setBody(JSON.stringify({
-                        success: true,
-                        action: 'scan_one',
-                        data: scanResult
-                    }));
-                }
-                break;
-
-            case 'get_report':
-                var report = engine.getHealthReport();
-                response.setStatus(200);
-                response.setBody(JSON.stringify({
-                    success: true,
-                    action: 'get_report',
-                    data: report
-                }));
-                break;
-
-            case 'get_alerts':
-                var hoursBack = parseInt(body.hours_back || '168', 10);
-                var alerts = alerter.getAlertHistory(hoursBack);
-                response.setStatus(200);
-                response.setBody(JSON.stringify({
-                    success: true,
-                    action: 'get_alerts',
-                    data: { alerts: alerts, count: alerts.length }
-                }));
-                break;
-
-            default:
-                response.setStatus(400);
-                response.setBody(JSON.stringify({
-                    success: false,
-                    error: 'Unknown action: ' + action + '. Supported actions: scan_all, scan_one, get_report, get_alerts'
-                }));
-        }
-    } catch (e) {
-        response.setStatus(500);
+    var body = request.body ? request.body.data : null;
+    if (!body) {
+        response.setStatus(400);
         response.setBody(JSON.stringify({
-            success: false,
-            error: 'Internal error: ' + e.toString()
+            error: 'Missing request body',
+            message: 'Provide a JSON body with an "action" field'
         }));
+        return;
     }
+
+    var action = body.action || '';
+    var engine = new NACLAnalyticsEngine();
+    var tracker = new NACLCostTracker();
+    var result;
+
+    switch (action) {
+        case 'recalculate':
+            var startDate = body.start_date || null;
+            var endDate = body.end_date || null;
+            var recalculatedCount = tracker.recalculateAll(startDate, endDate);
+            result = {
+                action: 'recalculate',
+                status: 'completed',
+                records_updated: recalculatedCount,
+                message: 'All interaction costs recalculated with current config'
+            };
+            break;
+
+        case 'forecast':
+            var projDays = parseInt(body.projection_days) || 30;
+            result = {
+                action: 'forecast',
+                status: 'completed',
+                data: engine.forecastSpend(projDays)
+            };
+            break;
+
+        case 'detect_waste':
+            var wasteDays = parseInt(body.period_days) || 7;
+            result = {
+                action: 'detect_waste',
+                status: 'completed',
+                data: engine.detectWaste(wasteDays)
+            };
+            break;
+
+        case 'optimize':
+            result = {
+                action: 'optimize',
+                status: 'completed',
+                data: engine.getOptimizationRecommendations()
+            };
+            break;
+
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown action: ' + action,
+                supported_actions: ['recalculate', 'forecast', 'detect_waste', 'optimize']
+            }));
+            return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+
 })(request, response);

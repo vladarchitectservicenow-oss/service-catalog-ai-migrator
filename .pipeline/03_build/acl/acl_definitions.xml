@@ -1,88 +1,173 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unload unload_date="2026-08-11 07:00:00">
-  <!-- REST endpoint ACLs -->
-  <sys_security_acl action="INSERT_OR_UPDATE">
-    <active>true</active>
-    <name>x_vlad_rest_medic.execute</name>
-    <operation display_value="Execute">Execute</operation>
-    <type>rest_endpoint</type>
-    <requires_roles>true</requires_roles>
-    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin') || gs.hasRole('x_vlad_rest_medic.user');]]></script>
-  </sys_security_acl>
-  <sys_security_acl action="INSERT_OR_UPDATE">
-    <active>true</active>
-    <name>x_vlad_rest_medic.status</name>
-    <operation display_value="Status">Status</operation>
-    <type>rest_endpoint</type>
-    <requires_roles>true</requires_roles>
-    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin') || gs.hasRole('x_vlad_rest_medic.user');]]></script>
-  </sys_security_acl>
+<unload unload_date="2026-08-13 05:00:23">
+  <!-- Now Assist Cost Lens — ACL Definitions -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin -->
+  <!-- SPDX-License-Identifier: AGPL-3.0 -->
 
-  <!-- Table ACLs: x_vlad_rest_medic_endpoint -->
-  <sys_security_acl action="INSERT_OR_UPDATE">
+  <!-- x_nacl_interaction_log — Read ACL (admin + user) -->
+  <sys_security_acl>
     <active>true</active>
-    <name>x_vlad_rest_medic_endpoint.read</name>
-    <operation display_value="read">read</operation>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Allow x_nacl.admin and x_nacl.user to read interaction logs</description>
+    <name>x_nacl_interaction_log</name>
+    <operation>
+      <insert>false</insert>
+      <delete>false</delete>
+      <read>true</read>
+      <write>false</write>
+    </operation>
+    <script/>
+    <sys_scope>x_nacl</sys_scope>
     <type>record</type>
-    <requires_roles>true</requires_roles>
-    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin') || gs.hasRole('x_vlad_rest_medic.user');]]></script>
+    <requires_role>true</requires_role>
   </sys_security_acl>
-  <sys_security_acl action="INSERT_OR_UPDATE">
-    <active>true</active>
-    <name>x_vlad_rest_medic_endpoint.write</name>
-    <operation display_value="write">write</operation>
-    <type>record</type>
-    <requires_roles>true</requires_roles>
-    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin');]]></script>
-  </sys_security_acl>
-  <sys_security_acl action="INSERT_OR_UPDATE">
-    <active>true</active>
-    <name>x_vlad_rest_medic_endpoint.create</name>
-    <operation display_value="create">create</operation>
-    <type>record</type>
-    <requires_roles>true</requires_roles>
-    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin');]]></script>
-  </sys_security_acl>
-  <sys_security_acl action="INSERT_OR_UPDATE">
-    <active>true</active>
-    <name>x_vlad_rest_medic_endpoint.delete</name>
-    <operation display_value="delete">delete</operation>
-    <type>record</type>
-    <requires_roles>true</requires_roles>
-    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin');]]></script>
-  </sys_security_acl>
+  <sys_security_acl_role>
+    <sys_scope>x_nacl</sys_scope>
+    <name>x_nacl.admin</name>
+    <sys_security_acl>x_nacl_interaction_log</sys_security_acl>
+  </sys_security_acl_role>
+  <sys_security_acl_role>
+    <sys_scope>x_nacl</sys_scope>
+    <name>x_nacl.user</name>
+    <sys_security_acl>x_nacl_interaction_log</sys_security_acl>
+  </sys_security_acl_role>
 
-  <!-- Table ACLs: x_vlad_rest_medic_config -->
-  <sys_security_acl action="INSERT_OR_UPDATE">
+  <!-- x_nacl_interaction_log — Write ACL (admin only) -->
+  <sys_security_acl>
     <active>true</active>
-    <name>x_vlad_rest_medic_config.read</name>
-    <operation display_value="read">read</operation>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Allow x_nacl.admin to create/update/delete interaction logs</description>
+    <name>x_nacl_interaction_log_write</name>
+    <operation>
+      <insert>true</insert>
+      <delete>true</delete>
+      <read>false</read>
+      <write>true</write>
+    </operation>
+    <script/>
+    <sys_scope>x_nacl</sys_scope>
     <type>record</type>
-    <requires_roles>true</requires_roles>
-    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin') || gs.hasRole('x_vlad_rest_medic.user');]]></script>
+    <requires_role>true</requires_role>
   </sys_security_acl>
-  <sys_security_acl action="INSERT_OR_UPDATE">
+  <sys_security_acl_role>
+    <sys_scope>x_nacl</sys_scope>
+    <name>x_nacl.admin</name>
+    <sys_security_acl>x_nacl_interaction_log_write</sys_security_acl>
+  </sys_security_acl_role>
+
+  <!-- x_nacl_cost_config — Read ACL (admin + user) -->
+  <sys_security_acl>
     <active>true</active>
-    <name>x_vlad_rest_medic_config.write</name>
-    <operation display_value="write">write</operation>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Allow x_nacl.admin and x_nacl.user to read cost configuration</description>
+    <name>x_nacl_cost_config</name>
+    <operation>
+      <insert>false</insert>
+      <delete>false</delete>
+      <read>true</read>
+      <write>false</write>
+    </operation>
+    <script/>
+    <sys_scope>x_nacl</sys_scope>
     <type>record</type>
-    <requires_roles>true</requires_roles>
-    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin');]]></script>
+    <requires_role>true</requires_role>
   </sys_security_acl>
-  <sys_security_acl action="INSERT_OR_UPDATE">
+  <sys_security_acl_role>
+    <sys_scope>x_nacl</sys_scope>
+    <name>x_nacl.admin</name>
+    <sys_security_acl>x_nacl_cost_config</sys_security_acl>
+  </sys_security_acl_role>
+  <sys_security_acl_role>
+    <sys_scope>x_nacl</sys_scope>
+    <name>x_nacl.user</name>
+    <sys_security_acl>x_nacl_cost_config</sys_security_acl>
+  </sys_security_acl_role>
+
+  <!-- x_nacl_cost_config — Write ACL (admin only) -->
+  <sys_security_acl>
     <active>true</active>
-    <name>x_vlad_rest_medic_config.create</name>
-    <operation display_value="create">create</operation>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Allow x_nacl.admin to create/update/delete cost configuration</description>
+    <name>x_nacl_cost_config_write</name>
+    <operation>
+      <insert>true</insert>
+      <delete>true</delete>
+      <read>false</read>
+      <write>true</write>
+    </operation>
+    <script/>
+    <sys_scope>x_nacl</sys_scope>
     <type>record</type>
-    <requires_roles>true</requires_roles>
-    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin');]]></script>
+    <requires_role>true</requires_role>
   </sys_security_acl>
-  <sys_security_acl action="INSERT_OR_UPDATE">
+  <sys_security_acl_role>
+    <sys_scope>x_nacl</sys_scope>
+    <name>x_nacl.admin</name>
+    <sys_security_acl>x_nacl_cost_config_write</sys_security_acl>
+  </sys_security_acl_role>
+
+  <!-- REST Endpoint: POST /api/x_nacl/execute — admin only -->
+  <sys_security_acl>
     <active>true</active>
-    <name>x_vlad_rest_medic_config.delete</name>
-    <operation display_value="delete">delete</operation>
-    <type>record</type>
-    <requires_roles>true</requires_roles>
-    <script><![CDATA[answer = gs.hasRole('x_vlad_rest_medic.admin');]]></script>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Allow x_nacl.admin to execute POST /api/x_nacl/execute</description>
+    <name>x_nacl_execute</name>
+    <operation>
+      <insert>false</insert>
+      <delete>false</delete>
+      <read>false</read>
+      <write>false</write>
+      <execute>true</execute>
+    </operation>
+    <script/>
+    <sys_scope>x_nacl</sys_scope>
+    <type>rest_endpoint</type>
+    <requires_role>true</requires_role>
   </sys_security_acl>
+  <sys_security_acl_role>
+    <sys_scope>x_nacl</sys_scope>
+    <name>x_nacl.admin</name>
+    <sys_security_acl>x_nacl_execute</sys_security_acl>
+  </sys_security_acl_role>
+
+  <!-- REST Endpoint: GET /api/x_nacl/analytics — user + admin -->
+  <sys_security_acl>
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Allow x_nacl.user and x_nacl.admin to read analytics</description>
+    <name>x_nacl_analytics</name>
+    <operation>
+      <insert>false</insert>
+      <delete>false</delete>
+      <read>false</read>
+      <write>false</write>
+      <execute>true</execute>
+    </operation>
+    <script/>
+    <sys_scope>x_nacl</sys_scope>
+    <type>rest_endpoint</type>
+    <requires_role>true</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role>
+    <sys_scope>x_nacl</sys_scope>
+    <name>x_nacl.admin</name>
+    <sys_security_acl>x_nacl_analytics</sys_security_acl>
+  </sys_security_acl_role>
+  <sys_security_acl_role>
+    <sys_scope>x_nacl</sys_scope>
+    <name>x_nacl.user</name>
+    <sys_security_acl>x_nacl_analytics</sys_security_acl>
+  </sys_security_acl_role>
 </unload>

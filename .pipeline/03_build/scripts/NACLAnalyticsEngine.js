@@ -1,368 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<unload unload_date="2026-08-13 05:00:23">
-  <!-- Now Assist Cost Lens — Script Include Registration Records -->
-  <!-- Copyright (C) 2026 Vladimir Kapustin -->
-  <!-- SPDX-License-Identifier: AGPL-3.0 -->
-
-  <sys_script_include>
-    <access>package_private</access>
-    <active>true</active>
-    <api_name>x_nacl.NACLCostTracker</api_name>
-    <caller_access/>
-    <client_callable>false</client_callable>
-    <description>Captures Now Assist interactions, classifies outcomes, estimates tokens, computes costs, and logs to x_nacl_interaction_log.</description>
-    <mobile_callable>false</mobile_callable>
-    <name>NACLCostTracker</name>
-    <sandbox_callable>false</sandbox_callable>
-    <script><![CDATA[
-// Now Assist Cost Lens — NACLCostTracker
-// Copyright (C) 2026 Vladimir Kapustin
-// SPDX-License-Identifier: AGPL-3.0
-//
-// Captures Now Assist interactions, classifies outcomes, estimates tokens,
-// computes costs, and logs to x_nacl_interaction_log.
-// @class NACLCostTracker @namespace x_nacl
-
-var NACLCostTracker = Class.create();
-NACLCostTracker.prototype = {
-    initialize: function() {
-        this.config = null;
-    },
-
-    captureInteraction: function(conversationSysId) {
-        if (!conversationSysId) {
-            return;
-        }
-
-        var convGr = new GlideRecord('sys_cs_conversation');
-        if (!convGr.get(conversationSysId)) {
-            return;
-        }
-
-        var state = convGr.getValue('state') || '';
-        if (state !== 'closed') {
-            return;
-        }
-
-        var topic = convGr.getValue('topic') || '';
-        var userId = convGr.getValue('opened_by') || '';
-        var convStart = convGr.getValue('sys_created_on') || '';
-
-        var msgGr = new GlideRecord('sys_cs_live_message');
-        msgGr.addQuery('conversation', conversationSysId);
-        msgGr.orderBy('sys_created_on');
-        msgGr.query();
-
-        var messageCount = 0;
-        var totalMessageLength = 0;
-        var firstMsgTime = null;
-        var lastMsgTime = null;
-
-        while (msgGr.next()) {
-            messageCount++;
-            var body = msgGr.getValue('body') || '';
-            totalMessageLength += body.length;
-            var msgTime = msgGr.getValue('sys_created_on');
-            if (!firstMsgTime) {
-                firstMsgTime = msgTime;
-            }
-            lastMsgTime = msgTime;
-        }
-
-        if (messageCount === 0) {
-            return;
-        }
-
-        var avgMessageLength = messageCount > 0 ? Math.floor(totalMessageLength / messageCount) : 0;
-        var estimatedTokens = this.estimateTokens(messageCount, avgMessageLength, 'virtual_agent');
-        var outcome = this.classifyOutcome(conversationSysId, messageCount);
-        var durationSeconds = this._computeDuration(firstMsgTime, lastMsgTime);
-        var computedCost = this.computeCost(estimatedTokens, 'virtual_agent');
-
-        var interactionData = {
-            conversation_id: conversationSysId,
-            user_id: userId,
-            feature_type: 'virtual_agent',
-            message_count: messageCount,
-            estimated_tokens: estimatedTokens,
-            duration_seconds: durationSeconds,
-            outcome: outcome,
-            computed_cost: computedCost,
-            human_cost_saved: 0,
-            linked_incident: '',
-            topic: topic,
-            conversation_start: convStart
-        };
-
-        this._upsertLog(interactionData);
-    },
-
-    captureIncidentAR: function(incidentSysId) {
-        if (!incidentSysId) {
-            return;
-        }
-
-        var incGr = new GlideRecord('incident');
-        if (!incGr.get(incidentSysId)) {
-            return;
-        }
-
-        var state = incGr.getValue('state') || '';
-        if (state !== '6' && state !== '7') {
-            return;
-        }
-
-        var userId = incGr.getValue('caller_id') || '';
-        var shortDesc = incGr.getValue('short_description') || '';
-        var estimatedTokens = this.estimateTokens(0, shortDesc.length, 'incident_ar');
-        var computedCost = this.computeCost(estimatedTokens, 'incident_ar');
-        var resolvedAt = incGr.getValue('resolved_at') || incGr.getValue('closed_at') || '';
-        var openedAt = incGr.getValue('opened_at') || '';
-        var durationSeconds = this._computeDuration(openedAt, resolvedAt);
-
-        var interactionData = {
-            conversation_id: incidentSysId,
-            user_id: userId,
-            feature_type: 'incident_ar',
-            message_count: 1,
-            estimated_tokens: estimatedTokens,
-            duration_seconds: durationSeconds,
-            outcome: 'resolved',
-            computed_cost: computedCost,
-            human_cost_saved: 0,
-            linked_incident: incidentSysId,
-            topic: shortDesc.substring(0, 200),
-            conversation_start: openedAt
-        };
-
-        this._upsertLog(interactionData);
-    },
-
-    classifyOutcome: function(conversationSysId, messageCount) {
-        var convGr = new GlideRecord('sys_cs_conversation');
-        if (!convGr.get(conversationSysId)) {
-            return 'unknown';
-        }
-
-        var incGr = new GlideRecord('incident');
-        incGr.addQuery('sys_created_on', '>=', convGr.getValue('sys_created_on'));
-        incGr.addQuery('caller_id', convGr.getValue('opened_by'));
-        incGr.addQuery('short_description', 'CONTAINS', 'Virtual Agent');
-        incGr.setLimit(1);
-        incGr.query();
-
-        if (incGr.next()) {
-            return 'escalated';
-        }
-
-        if (messageCount > 5) {
-            var msgGr = new GlideRecord('sys_cs_live_message');
-            msgGr.addQuery('conversation', conversationSysId);
-            msgGr.orderBy('sys_created_on');
-            msgGr.query();
-
-            var bodies = [];
-            while (msgGr.next()) {
-                bodies.push(msgGr.getValue('body') || '');
-            }
-
-            var duplicateCount = 0;
-            for (var i = 0; i < bodies.length; i++) {
-                for (var j = i + 1; j < bodies.length; j++) {
-                    if (bodies[i] === bodies[j] && bodies[i].length > 10) {
-                        duplicateCount++;
-                    }
-                }
-            }
-
-            if (duplicateCount >= 3) {
-                return 'looped';
-            }
-        }
-
-        var resolution = convGr.getValue('resolution') || '';
-        if (resolution) {
-            return 'resolved';
-        }
-
-        if (messageCount <= 3 && !resolution) {
-            return 'abandoned';
-        }
-
-        return 'unknown';
-    },
-
-    estimateTokens: function(messageCount, avgMessageLength, featureType) {
-        var tokenConfig = {
-            virtual_agent: { base: 200, avg_per_msg: 150 },
-            incident_ar: { base: 500, avg_per_msg: 0 },
-            case_summary: { base: 800, avg_per_msg: 0 },
-            chat_summary: { base: 600, avg_per_msg: 0 },
-            flow_gen: { base: 2000, avg_per_msg: 0 },
-            catalog_gen: { base: 1500, avg_per_msg: 0 },
-            other: { base: 500, avg_per_msg: 100 }
-        };
-
-        var cfg = tokenConfig[featureType] || tokenConfig.other;
-        var tokens = cfg.base + (messageCount * cfg.avg_per_msg);
-
-        if (cfg.avg_per_msg === 0 && avgMessageLength > 0) {
-            tokens += Math.floor(avgMessageLength / 4);
-        }
-
-        return Math.max(tokens, 1);
-    },
-
-    computeCost: function(estimatedTokens, featureType) {
-        var config = this._readCostConfig();
-        var costPer1k = parseFloat(config.cost_per_1k_tokens) || 0.03;
-        var tokenCost = (estimatedTokens / 1000) * costPer1k;
-
-        var fixedCost = 0;
-        if (config.sku_monthly_cost) {
-            var skuMonthly = parseFloat(config.sku_monthly_cost) || 0;
-            fixedCost = skuMonthly / 10000;
-        }
-
-        return parseFloat((tokenCost + fixedCost).toFixed(6));
-    },
-
-    recalculateAll: function(startDate, endDate) {
-        var logGr = new GlideRecord('x_nacl_interaction_log');
-        if (startDate) {
-            logGr.addQuery('captured_at', '>=', startDate);
-        }
-        if (endDate) {
-            logGr.addQuery('captured_at', '<=', endDate);
-        }
-        logGr.query();
-
-        var updated = 0;
-        while (logGr.next()) {
-            var tokens = parseInt(logGr.getValue('estimated_tokens')) || 0;
-            var featureType = logGr.getValue('feature_type') || 'other';
-            var newCost = this.computeCost(tokens, featureType);
-            logGr.setValue('computed_cost', newCost);
-            try {
-                logGr.update();
-                updated++;
-            } catch (e) {
-                gs.error('NACLCostTracker: Failed to update log ' + logGr.getUniqueValue() + ': ' + e.message);
-            }
-        }
-
-        gs.info('NACLCostTracker: Recalculated ' + updated + ' interaction logs');
-    },
-
-    _upsertLog: function(data) {
-        var logGr = new GlideRecord('x_nacl_interaction_log');
-        logGr.addQuery('conversation_id', data.conversation_id);
-        logGr.addQuery('feature_type', data.feature_type);
-        logGr.setLimit(1);
-        logGr.query();
-
-        if (logGr.next()) {
-            for (var key in data) {
-                if (data.hasOwnProperty(key)) {
-                    logGr.setValue(key, data[key]);
-                }
-            }
-            logGr.setValue('captured_at', new GlideDateTime().toString());
-            try {
-                logGr.update();
-                return logGr.getUniqueValue();
-            } catch (e) {
-                gs.error('NACLCostTracker: Failed to update log: ' + e.message);
-                return '';
-            }
-        } else {
-            logGr.initialize();
-            for (var k in data) {
-                if (data.hasOwnProperty(k)) {
-                    logGr.setValue(k, data[k]);
-                }
-            }
-            logGr.setValue('captured_at', new GlideDateTime().toString());
-            try {
-                return logGr.insert();
-            } catch (e) {
-                gs.error('NACLCostTracker: Failed to insert log: ' + e.message);
-                return '';
-            }
-        }
-    },
-
-    _readCostConfig: function() {
-        if (this.config) {
-            return this.config;
-        }
-
-        var cfgGr = new GlideRecord('x_nacl_cost_config');
-        cfgGr.setLimit(1);
-        cfgGr.query();
-
-        if (cfgGr.next()) {
-            this.config = {
-                sku_monthly_cost: cfgGr.getValue('sku_monthly_cost') || '0',
-                cost_per_1k_tokens: cfgGr.getValue('cost_per_1k_tokens') || '0.03',
-                human_cost_per_ticket: cfgGr.getValue('human_cost_per_ticket') || '0',
-                budget_monthly_limit: cfgGr.getValue('budget_monthly_limit') || '0',
-                forecast_confidence: cfgGr.getValue('forecast_confidence') || '0.68',
-                waste_threshold_cost: cfgGr.getValue('waste_threshold_cost') || '0',
-                anomaly_zscore: cfgGr.getValue('anomaly_zscore') || '2.5',
-                alert_email_recipients: cfgGr.getValue('alert_email_recipients') || '',
-                alert_slack_webhook: cfgGr.getValue('alert_slack_webhook') || '',
-                ai_recommendations: cfgGr.getValue('ai_recommendations') || 'false',
-                data_retention_days: cfgGr.getValue('data_retention_days') || '365'
-            };
-        } else {
-            this.config = {
-                sku_monthly_cost: '0',
-                cost_per_1k_tokens: '0.03',
-                human_cost_per_ticket: '0',
-                budget_monthly_limit: '0',
-                forecast_confidence: '0.68',
-                waste_threshold_cost: '0',
-                anomaly_zscore: '2.5',
-                alert_email_recipients: '',
-                alert_slack_webhook: '',
-                ai_recommendations: 'false',
-                data_retention_days: '365'
-            };
-        }
-
-        return this.config;
-    },
-
-    _computeDuration: function(startTime, endTime) {
-        if (!startTime || !endTime) {
-            return 0;
-        }
-        var startGdt = new GlideDateTime(startTime);
-        var endGdt = new GlideDateTime(endTime);
-        var diff = GlideDateTime.subtract(startGdt, endGdt);
-        return Math.floor(diff.getNumericValue() / 1000);
-    },
-
-    type: 'NACLCostTracker'
-};
-]]></script>
-    <sys_class_name>sys_script_include</sys_class_name>
-    <sys_created_by>admin</sys_created_by>
-    <sys_scope>x_nacl</sys_scope>
-  </sys_script_include>
-
-  <sys_script_include>
-    <access>package_private</access>
-    <active>true</active>
-    <api_name>x_nacl.NACLAnalyticsEngine</api_name>
-    <caller_access/>
-    <client_callable>false</client_callable>
-    <description>Computes ROI, waste detection, budget forecasting, feature breakdown, optimization recommendations, anomaly detection, and summary reports.</description>
-    <mobile_callable>false</mobile_callable>
-    <name>NACLAnalyticsEngine</name>
-    <sandbox_callable>false</sandbox_callable>
-    <script><![CDATA[
 // Now Assist Cost Lens — NACLAnalyticsEngine
 // Copyright (C) 2026 Vladimir Kapustin
 // SPDX-License-Identifier: AGPL-3.0
@@ -377,9 +12,14 @@ NACLAnalyticsEngine.prototype = {
         this.tracker = new NACLCostTracker();
     },
 
+    /**
+     * Compute ROI: AI cost vs estimated human cost avoided.
+     * @param {number} periodDays - lookback period in days
+     * @returns {object} ROI report
+     */
     computeROI: function(periodDays) {
         periodDays = periodDays || 30;
-        var config = this.tracker._readCostConfig();
+        var config = this.tracker.getCostConfig();
         var humanCostPerTicket = parseFloat(config.human_cost_per_ticket) || 0;
 
         var sinceGdt = new GlideDateTime();
@@ -432,9 +72,14 @@ NACLAnalyticsEngine.prototype = {
         };
     },
 
+    /**
+     * Detect low-value / wasteful interactions.
+     * @param {number} periodDays - lookback period
+     * @returns {object} waste report with top-10 wasters
+     */
     detectWaste: function(periodDays) {
         periodDays = periodDays || 7;
-        var config = this.tracker._readCostConfig();
+        var config = this.tracker.getCostConfig();
         var wasteThreshold = parseFloat(config.waste_threshold_cost) || 0;
 
         var sinceGdt = new GlideDateTime();
@@ -478,12 +123,18 @@ NACLAnalyticsEngine.prototype = {
         };
     },
 
+    /**
+     * Forecast next month's spend using linear regression on 30-day trend.
+     * @param {number} projectionDays - days to project forward
+     * @returns {object} forecast report
+     */
     forecastSpend: function(projectionDays) {
         projectionDays = projectionDays || 30;
-        var config = this.tracker._readCostConfig();
+        var config = this.tracker.getCostConfig();
         var budgetLimit = parseFloat(config.budget_monthly_limit) || 0;
         var confidence = parseFloat(config.forecast_confidence) || 0.68;
 
+        // Collect daily costs for last 30 days
         var sinceGdt = new GlideDateTime();
         sinceGdt.addSeconds(-30 * 86400);
 
@@ -519,6 +170,7 @@ NACLAnalyticsEngine.prototype = {
             };
         }
 
+        // Linear regression
         var points = [];
         for (var i = 0; i < days.length; i++) {
             points.push({ x: i, y: dailyCosts[days[i]] });
@@ -528,13 +180,14 @@ NACLAnalyticsEngine.prototype = {
         var dailyProjection = reg.slope * (days.length + projectionDays) + reg.intercept;
         var projectedCost = Math.max(0, dailyProjection * projectionDays);
 
+        // Standard deviation for confidence bands
         var residuals = [];
         for (var j = 0; j < points.length; j++) {
             var predicted = reg.slope * points[j].x + reg.intercept;
             residuals.push(points[j].y - predicted);
         }
         var stdDev = this._standardDeviation(residuals);
-        var zScore = confidence >= 0.95 ? 1.96 : 1.0;
+        var zScore = this._zScoreForConfidence(confidence);
 
         var confidenceLow = Math.max(0, projectedCost - zScore * stdDev * projectionDays);
         var confidenceHigh = projectedCost + zScore * stdDev * projectionDays;
@@ -552,6 +205,11 @@ NACLAnalyticsEngine.prototype = {
         };
     },
 
+    /**
+     * Get feature-level cost breakdown.
+     * @param {number} periodDays - lookback period
+     * @returns {object} feature breakdown report
+     */
     getFeatureBreakdown: function(periodDays) {
         periodDays = periodDays || 30;
 
@@ -605,12 +263,18 @@ NACLAnalyticsEngine.prototype = {
         };
     },
 
+    /**
+     * Get optimization recommendations.
+     * Uses deterministic rules; optionally calls GenAI Controller for natural-language expansion.
+     * @returns {object[]} ranked recommendations
+     */
     getOptimizationRecommendations: function() {
-        var config = this.tracker._readCostConfig();
+        var config = this.tracker.getCostConfig();
         var breakdown = this.getFeatureBreakdown(30);
         var waste = this.detectWaste(30);
         var recommendations = [];
 
+        // Rule 1: Low resolution rate → deflect
         for (var i = 0; i < breakdown.features.length; i++) {
             var f = breakdown.features[i];
             if (f.resolution_rate < 20 && f.interaction_count >= 10) {
@@ -626,6 +290,7 @@ NACLAnalyticsEngine.prototype = {
             }
         }
 
+        // Rule 2: High loop rate → redesign topic
         var loopedCost = 0;
         for (var j = 0; j < waste.top_wasters.length; j++) {
             if (waste.top_wasters[j].outcome === 'looped') {
@@ -644,6 +309,7 @@ NACLAnalyticsEngine.prototype = {
             });
         }
 
+        // Rule 3: Cost growth > 50% → investigate
         var forecast = this.forecastSpend(30);
         var roi = this.computeROI(30);
         if (roi.total_ai_cost > 0 && forecast.projected_cost > roi.total_ai_cost * 1.5) {
@@ -658,6 +324,7 @@ NACLAnalyticsEngine.prototype = {
             });
         }
 
+        // Rule 4: Budget exceeded
         if (forecast.exceeds_budget) {
             recommendations.push({
                 priority: 'critical',
@@ -670,6 +337,7 @@ NACLAnalyticsEngine.prototype = {
             });
         }
 
+        // Rule 5: Underutilized features
         var allFeatureTypes = ['virtual_agent', 'incident_ar', 'case_summary', 'chat_summary', 'flow_gen', 'catalog_gen'];
         var usedFeatures = {};
         for (var k = 0; k < breakdown.features.length; k++) {
@@ -689,6 +357,7 @@ NACLAnalyticsEngine.prototype = {
             }
         }
 
+        // Sort by priority
         var priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
         recommendations.sort(function(a, b) {
             return (priorityOrder[a.priority] || 99) - (priorityOrder[b.priority] || 99);
@@ -701,6 +370,10 @@ NACLAnalyticsEngine.prototype = {
         };
     },
 
+    /**
+     * Get dashboard-ready summary.
+     * @returns {object} summary report
+     */
     getSummary: function() {
         var roi = this.computeROI(30);
         var waste = this.detectWaste(7);
@@ -723,10 +396,15 @@ NACLAnalyticsEngine.prototype = {
         };
     },
 
+    /**
+     * Check for cost anomalies using Z-score detection.
+     * @returns {object[]} detected anomalies
+     */
     checkAnomalies: function() {
-        var config = this.tracker._readCostConfig();
+        var config = this.tracker.getCostConfig();
         var zThreshold = parseFloat(config.anomaly_zscore) || 2.5;
 
+        // Collect daily costs for last 14 days
         var sinceGdt = new GlideDateTime();
         sinceGdt.addSeconds(-14 * 86400);
 
@@ -756,6 +434,7 @@ NACLAnalyticsEngine.prototype = {
             return [];
         }
 
+        // Compute mean and std dev
         var costValues = [];
         for (var i = 0; i < days.length; i++) {
             costValues.push(dailyCosts[days[i]]);
@@ -781,6 +460,7 @@ NACLAnalyticsEngine.prototype = {
             }
         }
 
+        // Fire alerts for anomalies
         for (var k = 0; k < anomalies.length; k++) {
             this._fireAlert(anomalies[k]);
         }
@@ -788,6 +468,12 @@ NACLAnalyticsEngine.prototype = {
         return anomalies;
     },
 
+    /**
+     * Linear regression on points [{x, y}, ...].
+     * @param {object[]} points
+     * @returns {object} {slope, intercept, r2}
+     * @private
+     */
     _linearRegression: function(points) {
         var n = points.length;
         if (n < 2) {
@@ -806,6 +492,7 @@ NACLAnalyticsEngine.prototype = {
         var slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
         var intercept = (sumY - slope * sumX) / n;
 
+        // R-squared
         var ssRes = 0, ssTot = 0;
         var meanY = sumY / n;
         for (var j = 0; j < n; j++) {
@@ -818,6 +505,12 @@ NACLAnalyticsEngine.prototype = {
         return { slope: slope, intercept: intercept, r2: r2 };
     },
 
+    /**
+     * Compute mean of an array.
+     * @param {number[]} values
+     * @returns {number}
+     * @private
+     */
     _mean: function(values) {
         if (values.length === 0) {
             return 0;
@@ -829,6 +522,12 @@ NACLAnalyticsEngine.prototype = {
         return sum / values.length;
     },
 
+    /**
+     * Compute standard deviation.
+     * @param {number[]} values
+     * @returns {number}
+     * @private
+     */
     _standardDeviation: function(values) {
         if (values.length < 2) {
             return 0;
@@ -841,14 +540,59 @@ NACLAnalyticsEngine.prototype = {
         return Math.sqrt(sumSqDiff / (values.length - 1));
     },
 
-    _fireAlert: function(anomaly) {
-        var config = this.tracker._readCostConfig();
+    /**
+     * Map confidence level to z-score using a lookup table.
+     * Common confidence levels: 0.68→1.0, 0.80→1.28, 0.90→1.645, 0.95→1.96, 0.99→2.576
+     * @param {number} confidence - confidence level (0-1)
+     * @returns {number} z-score
+     * @private
+     */
+    _zScoreForConfidence: function(confidence) {
+        var lookup = [
+            { c: 0.99, z: 2.576 },
+            { c: 0.95, z: 1.960 },
+            { c: 0.90, z: 1.645 },
+            { c: 0.85, z: 1.440 },
+            { c: 0.80, z: 1.282 },
+            { c: 0.75, z: 1.150 },
+            { c: 0.70, z: 1.036 },
+            { c: 0.68, z: 1.000 }
+        ];
+        for (var i = 0; i < lookup.length; i++) {
+            if (confidence >= lookup[i].c) {
+                return lookup[i].z;
+            }
+        }
+        return 1.0; // default for low confidence
+    },
 
+    /**
+     * Fire alert for an anomaly.
+     * Sends email and/or Slack notification if configured.
+     * @param {object} anomaly
+     * @private
+     */
+    _fireAlert: function(anomaly) {
+        var config = this.tracker.getCostConfig();
+
+        var message = 'Now Assist Cost Lens — Anomaly Detected\n' +
+            'Date: ' + anomaly.date + '\n' +
+            'Daily Cost: ' + anomaly.daily_cost.toFixed(2) + '\n' +
+            'Z-Score: ' + anomaly.z_score.toFixed(2) + '\n' +
+            'Direction: ' + anomaly.direction + '\n' +
+            'Interactions: ' + anomaly.interaction_count;
+
+        // Email alert
         var recipients = config.alert_email_recipients;
         if (recipients) {
-            gs.eventQueue('x_nacl.cost.anomaly', null, anomaly.date, anomaly.direction);
+            try {
+                gs.email.send(recipients, 'Now Assist Cost Lens — Anomaly Detected', message);
+            } catch (e) {
+                gs.error('NACLAnalyticsEngine: Email alert failed: ' + e.message);
+            }
         }
 
+        // Slack webhook
         var webhook = config.alert_slack_webhook;
         if (webhook) {
             try {
@@ -873,9 +617,3 @@ NACLAnalyticsEngine.prototype = {
 
     type: 'NACLAnalyticsEngine'
 };
-]]></script>
-    <sys_class_name>sys_script_include</sys_class_name>
-    <sys_created_by>admin</sys_created_by>
-    <sys_scope>x_nacl</sys_scope>
-  </sys_script_include>
-</unload>

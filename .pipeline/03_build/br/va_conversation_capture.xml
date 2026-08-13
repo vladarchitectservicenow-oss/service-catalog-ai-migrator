@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-13 05:00:23">
+  <!-- Now Assist Cost Lens — Business Rule: VA Conversation Capture -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin -->
+  <!-- SPDX-License-Identifier: AGPL-3.0 -->
+  <sys_script>
+    <abort_action>false</abort_action>
+    <access>package_private</access>
+    <action_delete>false</action_delete>
+    <action_insert>false</action_insert>
+    <action_query>false</action_query>
+    <action_update>true</action_update>
+    <active>true</active>
+    <add_message>false</add_message>
+    <advanced>true</advanced>
+    <change_fields>false</change_fields>
+    <client_callable>false</client_callable>
+    <collection>x_nacl</collection>
+    <condition>current.state.changesTo('closed')</condition>
+    <description>Captures Virtual Agent conversation cost data when a conversation is closed. Calls NACLCostTracker.captureInteraction().</description>
+    <execute_function>true</execute_function>
+    <filter_condition/>
+    <is_rest>false</is_rest>
+    <message/>
+    <name>NACL — Capture VA Conversation</name>
+    <order>100</order>
+    <priority>100</priority>
+    <rest_method/>
+    <rest_method_text/>
+    <rest_service/>
+    <rest_service_text/>
+    <rest_variables/>
+    <role_conditions/>
+    <script><![CDATA[
+// Now Assist Cost Lens — Capture VA Conversation on close
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function executeRule(current, previous /*null when async*/) {
+    try {
+        var tracker = new NACLCostTracker();
+        tracker.captureInteraction(current.getUniqueValue());
+    } catch (e) {
+        gs.error('NACL BR: Failed to capture VA conversation ' + current.getUniqueValue() + ': ' + e.message);
+    }
+})(current, previous);
+]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_scope>x_nacl</sys_scope>
+    <template/>
+    <when>after</when>
+  </sys_script>
+</unload>

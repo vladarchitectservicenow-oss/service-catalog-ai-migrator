@@ -1,143 +1,212 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unload unload_date="2026-08-11 07:00:00">
-  <sys_ws_definition action="INSERT_OR_UPDATE">
+<unload unload_date="2026-08-13 05:00:23">
+  <!-- Now Assist Cost Lens — REST Endpoint Registration Records -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin -->
+  <!-- SPDX-License-Identifier: AGPL-3.0 -->
+
+  <sys_ws_definition>
     <active>true</active>
-    <name>REST Medic API</name>
-    <path>/api/x_vlad_rest_medic</path>
-    <scope>x_vlad_rest_medic</scope>
+    <base_uri>/api/x_nacl</base_uri>
+    <consumes>application/json</consumes>
+    <description>Now Assist Cost Lens REST API — execute actions and retrieve analytics</description>
+    <name>Now Assist Cost Lens API</name>
+    <produces>application/json</produces>
+    <sys_scope>x_nacl</sys_scope>
+    <version>1.0.0</version>
   </sys_ws_definition>
-  <sys_ws_operation action="INSERT_OR_UPDATE">
+
+  <sys_ws_operation>
     <active>true</active>
+    <consumes>application/json</consumes>
+    <description>Execute actions: recalculate, forecast, detect_waste, optimize</description>
     <http_method>POST</http_method>
     <name>Execute</name>
     <operation_uri>/execute</operation_uri>
+    <produces>application/json</produces>
     <relative_path>/execute</relative_path>
-    <web_service_definition display_value="REST Medic API">REST Medic API</web_service_definition>
-    <script><![CDATA[// REST Medic — Scripted REST API Health Auditor
-// Copyright (C) 2026 Vladimir Kapustin
-// SPDX-License-Identifier: AGPL-3.0
-//
-// POST /api/x_vlad_rest_medic/execute — Action-dispatch endpoint
-// Actions: scan_all, scan_one, get_report, get_alerts
-
+    <requires_authentication>true</requires_authentication>
+    <requires_snc_internal_role>false</requires_snc_internal_role>
+    <sys_scope>x_nacl</sys_scope>
+    <web_service_definition>Now Assist Cost Lens API</web_service_definition>
+    <script><![CDATA[
 (function process(request, response) {
-    var engine = new RESTMedicEngine();
-    var alerter = new RESTMedicAlerter();
 
-    try {
-        var body = request.body;
-        var action = body.action || '';
-
-        switch (action) {
-            case 'scan_all':
-                var result = engine.scanAll();
-                response.setStatus(200);
-                response.setBody(JSON.stringify({
-                    success: true,
-                    action: 'scan_all',
-                    data: result
-                }));
-                break;
-
-            case 'scan_one':
-                var endpointId = body.endpoint_id || '';
-                if (!endpointId) {
-                    response.setStatus(400);
-                    response.setBody(JSON.stringify({
-                        success: false,
-                        error: 'Missing required parameter: endpoint_id'
-                    }));
-                    return;
-                }
-                var scanResult = engine.scanOne(endpointId);
-                if (scanResult.error) {
-                    response.setStatus(404);
-                    response.setBody(JSON.stringify({
-                        success: false,
-                        error: scanResult.error
-                    }));
-                } else {
-                    response.setStatus(200);
-                    response.setBody(JSON.stringify({
-                        success: true,
-                        action: 'scan_one',
-                        data: scanResult
-                    }));
-                }
-                break;
-
-            case 'get_report':
-                var report = engine.getHealthReport();
-                response.setStatus(200);
-                response.setBody(JSON.stringify({
-                    success: true,
-                    action: 'get_report',
-                    data: report
-                }));
-                break;
-
-            case 'get_alerts':
-                var hoursBack = parseInt(body.hours_back || '168', 10);
-                var alerts = alerter.getAlertHistory(hoursBack);
-                response.setStatus(200);
-                response.setBody(JSON.stringify({
-                    success: true,
-                    action: 'get_alerts',
-                    data: { alerts: alerts, count: alerts.length }
-                }));
-                break;
-
-            default:
-                response.setStatus(400);
-                response.setBody(JSON.stringify({
-                    success: false,
-                    error: 'Unknown action: ' + action + '. Supported actions: scan_all, scan_one, get_report, get_alerts'
-                }));
-        }
-    } catch (e) {
-        response.setStatus(500);
+    var body = request.body ? request.body.data : null;
+    if (!body) {
+        response.setStatus(400);
         response.setBody(JSON.stringify({
-            success: false,
-            error: 'Internal error: ' + e.toString()
+            error: 'Missing request body',
+            message: 'Provide a JSON body with an "action" field'
         }));
+        return;
     }
-})(request, response);]]></script>
+
+    var action = body.action || '';
+    var engine = new NACLAnalyticsEngine();
+    var tracker = new NACLCostTracker();
+    var result;
+
+    switch (action) {
+        case 'recalculate':
+            var startDate = body.start_date || null;
+            var endDate = body.end_date || null;
+            var recalculatedCount = tracker.recalculateAll(startDate, endDate);
+            result = {
+                action: 'recalculate',
+                status: 'completed',
+                records_updated: recalculatedCount,
+                message: 'All interaction costs recalculated with current config'
+            };
+            break;
+
+        case 'forecast':
+            var projDays = parseInt(body.projection_days) || 30;
+            result = {
+                action: 'forecast',
+                status: 'completed',
+                data: engine.forecastSpend(projDays)
+            };
+            break;
+
+        case 'detect_waste':
+            var wasteDays = parseInt(body.period_days) || 7;
+            result = {
+                action: 'detect_waste',
+                status: 'completed',
+                data: engine.detectWaste(wasteDays)
+            };
+            break;
+
+        case 'optimize':
+            result = {
+                action: 'optimize',
+                status: 'completed',
+                data: engine.getOptimizationRecommendations()
+            };
+            break;
+
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown action: ' + action,
+                supported_actions: ['recalculate', 'forecast', 'detect_waste', 'optimize']
+            }));
+            return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+
+})(request, response);
+]]></script>
   </sys_ws_operation>
-  <sys_ws_operation action="INSERT_OR_UPDATE">
+
+  <sys_ws_operation>
     <active>true</active>
+    <consumes>application/json</consumes>
+    <description>Retrieve analytics: roi, waste, forecast, summary, breakdown, anomalies</description>
     <http_method>GET</http_method>
-    <name>Status</name>
-    <operation_uri>/status</operation_uri>
-    <relative_path>/status</relative_path>
-    <web_service_definition display_value="REST Medic API">REST Medic API</web_service_definition>
-    <script><![CDATA[// REST Medic — Scripted REST API Health Auditor
-// Copyright (C) 2026 Vladimir Kapustin
-// SPDX-License-Identifier: AGPL-3.0
-//
-// GET /api/x_vlad_rest_medic/status — Lightweight health check
-
+    <name>Analytics</name>
+    <operation_uri>/analytics</operation_uri>
+    <produces>application/json</produces>
+    <relative_path>/analytics</relative_path>
+    <requires_authentication>true</requires_authentication>
+    <requires_snc_internal_role>false</requires_snc_internal_role>
+    <sys_scope>x_nacl</sys_scope>
+    <web_service_definition>Now Assist Cost Lens API</web_service_definition>
+    <script><![CDATA[
 (function process(request, response) {
-    try {
-        var engine = new RESTMedicEngine();
-        var report = engine.getHealthReport();
 
-        response.setStatus(200);
-        response.setBody(JSON.stringify({
-            success: true,
-            last_scan: report.last_scan,
-            endpoint_count: report.endpoint_count,
-            healthy: report.healthy,
-            warning: report.warning,
-            critical: report.critical,
-            avg_score: report.avg_score
-        }));
-    } catch (e) {
-        response.setStatus(500);
-        response.setBody(JSON.stringify({
-            success: false,
-            error: 'Internal error: ' + e.toString()
-        }));
+    var queryParams = request.queryParams || {};
+    var report = queryParams.report || 'summary';
+    var periodStr = queryParams.period || '30d';
+    var feature = queryParams.feature || 'all';
+
+    var periodDays = 30;
+    if (periodStr === '7d') {
+        periodDays = 7;
+    } else if (periodStr === '90d') {
+        periodDays = 90;
+    } else if (periodStr === '30d') {
+        periodDays = 30;
     }
-})(request, response);]]></script>
+
+    var engine = new NACLAnalyticsEngine();
+    var result;
+
+    switch (report) {
+        case 'roi':
+            result = {
+                report: 'roi',
+                period_days: periodDays,
+                data: engine.computeROI(periodDays)
+            };
+            break;
+
+        case 'waste':
+            result = {
+                report: 'waste',
+                period_days: periodDays,
+                data: engine.detectWaste(periodDays)
+            };
+            break;
+
+        case 'forecast':
+            result = {
+                report: 'forecast',
+                data: engine.forecastSpend(periodDays)
+            };
+            break;
+
+        case 'summary':
+            result = {
+                report: 'summary',
+                data: engine.getSummary()
+            };
+            break;
+
+        case 'breakdown':
+            var breakdown = engine.getFeatureBreakdown(periodDays);
+            if (feature !== 'all') {
+                var filtered = [];
+                for (var i = 0; i < breakdown.features.length; i++) {
+                    if (breakdown.features[i].feature_type === feature) {
+                        filtered.push(breakdown.features[i]);
+                    }
+                }
+                breakdown.features = filtered;
+            }
+            result = {
+                report: 'breakdown',
+                period_days: periodDays,
+                feature_filter: feature,
+                data: breakdown
+            };
+            break;
+
+        case 'anomalies':
+            result = {
+                report: 'anomalies',
+                data: {
+                    anomalies: engine.checkAnomalies()
+                }
+            };
+            break;
+
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown report type: ' + report,
+                supported_reports: ['roi', 'waste', 'forecast', 'summary', 'breakdown', 'anomalies'],
+                usage: 'GET /api/x_nacl/analytics?report=<type>&period=7d|30d|90d&feature=<type>'
+            }));
+            return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+
+})(request, response);
+]]></script>
   </sys_ws_operation>
 </unload>
