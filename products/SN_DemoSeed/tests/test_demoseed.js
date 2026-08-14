@@ -289,6 +289,19 @@ GlideRecord.prototype.setAbortAction = function(val) {
     this._abortAction = val;
 };
 
+GlideRecord.prototype.getRowCount = function() {
+    var store = GlideRecord._store[this._tableName] || [];
+    return store.length;
+};
+
+GlideRecord.prototype.chooseWindow = function(start, end) {
+    // Simulate windowing: slice the filtered results
+    // Called after query() in source code, so operate on _filtered
+    if (this._filtered.length > 0) {
+        this._filtered = this._filtered.slice(start, end + 1);
+    }
+};
+
 // sn_generative_ai mock
 global.sn_generative_ai = {
     GlideGenerativeAI: function() {}
