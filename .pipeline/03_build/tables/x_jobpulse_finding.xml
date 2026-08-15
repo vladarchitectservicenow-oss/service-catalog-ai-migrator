@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- JobPulse — Scheduled Job Health Auditor — Custom Table: Finding -->
+<!-- Copyright (C) 2026 Vladimir Kapustin -->
+<!-- SPDX-License-Identifier: AGPL-3.0 -->
+<unload>
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_finding</name>
+    <label>JobPulse Finding</label>
+    <super_class/>
+    <access_count>0</access_count>
+    <is_extendable>false</is_extendable>
+    <user_role>x_jobpulse_admin</user_role>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <alter_access>true</alter_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_id</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <mandatory>true</mandatory>
+    <label>Job</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_name</element>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <label>Job Name</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_type</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>other</default_value>
+    <label>Job Type</label>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_type</element>
+    <value>script</value>
+    <label>Script</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_type</element>
+    <value>flow</value>
+    <label>Flow</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_type</element>
+    <value>import</value>
+    <label>Import</label>
+    <sequence>3</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_type</element>
+    <value>other</value>
+    <label>Other</label>
+    <sequence>4</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <label>Finding Type</label>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <value>failure</value>
+    <label>Failure</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <value>orphan</value>
+    <label>Orphan</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <value>overlap</value>
+    <label>Overlap</label>
+    <sequence>3</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <value>peak_hour</value>
+    <label>Peak Hour</label>
+    <sequence>4</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <value>stale</value>
+    <label>Stale</label>
+    <sequence>5</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <value>ownership</value>
+    <label>Ownership</label>
+    <sequence>6</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>severity</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>warning</default_value>
+    <label>Severity</label>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>severity</element>
+    <value>critical</value>
+    <label>Critical</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>severity</element>
+    <value>warning</value>
+    <label>Warning</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>severity</element>
+    <value>info</value>
+    <label>Info</label>
+    <sequence>3</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>signature</element>
+    <internal_type>string</internal_type>
+    <max_length>255</max_length>
+    <label>Signature</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>detail_json</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>Detail JSON</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>remediation</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>Remediation</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>ai_remediation</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>AI Remediation</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>first_seen</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>First Seen</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>last_seen</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Last Seen</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>resolved</element>
+    <internal_type>boolean</internal_type>
+    <default_value>false</default_value>
+    <label>Resolved</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>resolved_at</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Resolved At</label>
+  </sys_dictionary>
+</unload>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- JobPulse — Scheduled Job Health Auditor — Custom Table: Health -->
+<!-- Copyright (C) 2026 Vladimir Kapustin -->
+<!-- SPDX-License-Identifier: AGPL-3.0 -->
+<unload>
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_health</name>
+    <label>JobPulse Health</label>
+    <super_class/>
+    <access_count>0</access_count>
+    <is_extendable>false</is_extendable>
+    <user_role>x_jobpulse_admin</user_role>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <alter_access>true</alter_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>job_id</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <mandatory>true</mandatory>
+    <label>Job</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>job_name</element>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <label>Job Name</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>health_score</element>
+    <internal_type>integer</internal_type>
+    <max_length>3</max_length>
+    <label>Health Score</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>exec_health</element>
+    <internal_type>integer</internal_type>
+    <max_length>3</max_length>
+    <label>Execution Health</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>ref_integrity</element>
+    <internal_type>integer</internal_type>
+    <max_length>3</max_length>
+    <label>Reference Integrity</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>schedule_sanity</element>
+    <internal_type>integer</internal_type>
+    <max_length>3</max_length>
+    <label>Schedule Sanity</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>ownership</element>
+    <internal_type>integer</internal_type>
+    <max_length>3</max_length>
+    <label>Ownership</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>total_findings</element>
+    <internal_type>integer</internal_type>
+    <max_length>6</max_length>
+    <label>Total Findings</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>critical_findings</element>
+    <internal_type>integer</internal_type>
+    <max_length>6</max_length>
+    <label>Critical Findings</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>last_run</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Last Run</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>next_action</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Next Action</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>owner</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <label>Owner</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>status</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>healthy</default_value>
+    <label>Status</label>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>status</element>
+    <value>healthy</value>
+    <label>Healthy</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>status</element>
+    <value>at_risk</value>
+    <label>At Risk</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>status</element>
+    <value>critical</value>
+    <label>Critical</label>
+    <sequence>3</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>scanned_at</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Scanned At</label>
+  </sys_dictionary>
+</unload>

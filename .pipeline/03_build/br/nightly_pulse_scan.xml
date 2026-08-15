@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- JobPulse — Scheduled Job Health Auditor — Scheduled Job: Nightly Pulse Scan -->
+<!-- Copyright (C) 2026 Vladimir Kapustin -->
+<!-- SPDX-License-Identifier: AGPL-3.0 -->
+<unload>
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>JobPulse — Nightly Pulse Scan</name>
+    <description>Scans the scheduled-job estate nightly, upserts findings and health records, and alerts on new critical findings</description>
+    <run_type>daily</run_type>
+    <run_day/>
+    <run_time>02:00:00</run_time>
+    <run_start>2026-08-16 02:00:00</run_start>
+    <script><![CDATA[// JobPulse — Scheduled Job Health Auditor — Nightly Pulse Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function() {
+    var scanner = new JobPulseScanner();
+    var analytics = new JobPulseAnalytics();
+
+    // Full scan of the scheduled-job estate.
+    var stats = scanner.scanAllJobs(false);
+
+    // Delta detection: surface new critical findings since the last scan.
+    var delta = analytics.getDelta();
+    var newCritical = [];
+    for (var i = 0; i < delta.new_findings.length; i++) {
+        if (delta.new_findings[i].severity === 'critical') {
+            newCritical.push(delta.new_findings[i]);
+        }
+    }
+
+    // Alert on new critical findings via email.
+    if (newCritical.length > 0) {
+        var recipient = gs.getProperty('x_jobpulse.alert_recipient', '');
+        if (!recipient) {
+            try {
+                var cfg = JSON.parse(gs.getProperty('x_jobpulse.config', '{}'));
+                recipient = cfg.alert_recipient || '';
+            } catch (e) {
+                recipient = '';
+            }
+        }
+        if (recipient) {
+            var mail = new GlideEmailOutbound();
+            mail.setTo(recipient);
+            mail.setSubject('JobPulse Alert: ' + newCritical.length + ' new critical scheduled-job finding(s)');
+            var body = 'The following new critical findings were detected in the scheduled-job estate:\n\n';
+            for (var j = 0; j < newCritical.length; j++) {
+                body += '- ' + newCritical[j].job_name +
+                        ' (' + newCritical[j].finding_type + '): ' +
+                        newCritical[j].remediation + '\n';
+            }
+            body += '\nScanned ' + stats.scanned + ' jobs, ' + stats.findings +
+                    ' total findings, ' + stats.critical + ' critical.\n';
+            body += 'Review the JobPulse dashboard for full details.\n';
+            mail.setBody(body);
+            mail.send();
+        } else {
+            gs.warn('JobPulse: no alert recipient configured (x_jobpulse.alert_recipient); skipping email alert');
+        }
+    }
+
+    gs.info('JobPulse Nightly Pulse Scan completed: ' + stats.scanned + ' jobs scanned, ' +
+            stats.findings + ' findings, ' + stats.critical + ' critical, ' +
+            newCritical.length + ' new critical alerts');
+})();]]></script>
+  </sysauto_script>
+</unload>

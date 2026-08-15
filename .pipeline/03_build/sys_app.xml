@@ -1,52 +1,2032 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unload unload_date="2026-08-13 05:00:23">
-  <!-- Now Assist Cost Lens — Scoped Application Manifest -->
+<unload unload_date="2026-08-15" unload_user="admin">
+  <!-- JobPulse — Scheduled Job Health Auditor — Scoped Application Manifest -->
   <!-- Copyright (C) 2026 Vladimir Kapustin -->
   <!-- SPDX-License-Identifier: AGPL-3.0 -->
-  <sys_app>
+
+  <!-- ===== SCOPE DEFINITION ===== -->
+  <sys_app action="INSERT_OR_UPDATE">
     <active>true</active>
     <enforce_acl>true</enforce_acl>
-    <name>Now Assist Cost Lens</name>
-    <scope>x_nacl</scope>
-    <short_description>Tracks every Now Assist interaction's cost, compares AI vs human resolution economics, identifies token-wasting interactions, and forecasts next month's bill.</short_description>
+    <name>JobPulse — Scheduled Job Health Auditor</name>
+    <scope>x_jobpulse</scope>
+    <short_description>Scans the scheduled-job estate for silent failures, orphaned references, overlaps, stale jobs, and ownership gaps</short_description>
     <version>1.0.0</version>
     <vendor>Vladimir Kapustin</vendor>
-    <vendor_prefix>x_nacl</vendor_prefix>
-    <sys_class_name>sys_app</sys_class_name>
+    <vendor_prefix>x_jobpulse</vendor_prefix>
+    <runtime_access_tracking>tracking</runtime_access_tracking>
+    <restrict_table_choices>false</restrict_table_choices>
+    <is_restricted>false</is_restricted>
   </sys_app>
 
-  <!-- Roles -->
-  <sys_user_role>
-    <name>x_nacl.admin</name>
-    <description>Full access to Now Assist Cost Lens — configure, recalculate, view all analytics</description>
-    <sys_scope>x_nacl</sys_scope>
-  </sys_user_role>
-  <sys_user_role>
-    <name>x_nacl.user</name>
-    <description>Read-only access to Now Assist Cost Lens dashboards and analytics</description>
-    <sys_scope>x_nacl</sys_scope>
+  <!-- ===== ROLES ===== -->
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_admin</name>
+    <description>Full CRUD on JobPulse tables, execute REST API, configure scheduled job</description>
+    <elevated_privilege>true</elevated_privilege>
+    <assignable_by>admin</assignable_by>
+    <suffix>jobpulse_admin</suffix>
   </sys_user_role>
 
-  <!-- Cross-Scope Privileges (READ-ONLY) -->
-  <sys_scope_privilege>
-    <operation>read</operation>
-    <source_scope>x_nacl</source_scope>
-    <target_name>sys_cs_conversation</target_name>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_user</name>
+    <description>Read on JobPulse tables, execute analytics REST API</description>
+    <elevated_privilege>false</elevated_privilege>
+    <assignable_by>admin</assignable_by>
+    <suffix>jobpulse_user</suffix>
+  </sys_user_role>
+
+  <!-- ===== CROSS-SCOPE PRIVILEGES ===== -->
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_jobpulse</source_scope>
+    <target_name>sys_trigger</target_name>
     <target_type>table</target_type>
-    <target_scope>global</target_scope>
-  </sys_scope_privilege>
-  <sys_scope_privilege>
     <operation>read</operation>
-    <source_scope>x_nacl</source_scope>
-    <target_name>sys_cs_live_message</target_name>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_jobpulse</source_scope>
+    <target_name>sysauto_script</target_name>
     <target_type>table</target_type>
-    <target_scope>global</target_scope>
-  </sys_scope_privilege>
-  <sys_scope_privilege>
     <operation>read</operation>
-    <source_scope>x_nacl</source_scope>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_jobpulse</source_scope>
+    <target_name>sys_hub_flow</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_jobpulse</source_scope>
+    <target_name>scheduled_data_import</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_jobpulse</source_scope>
+    <target_name>syslog</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_jobpulse</source_scope>
+    <target_name>sys_user</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_jobpulse</source_scope>
     <target_name>incident</target_name>
     <target_type>table</target_type>
-    <target_scope>global</target_scope>
+    <operation>read</operation>
+    <status>allowed</status>
   </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_jobpulse</source_scope>
+    <target_name>sys_email</target_name>
+    <target_type>table</target_type>
+    <operation>create</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_jobpulse</source_scope>
+    <target_name>sn_generative_ai.GlideGenerativeAI</target_name>
+    <target_type>scriptable</target_type>
+    <operation>execute</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <!-- ===== CUSTOM TABLES ===== -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_finding</name>
+    <label>JobPulse Finding</label>
+    <super_class/>
+    <access_count>0</access_count>
+    <is_extendable>false</is_extendable>
+    <user_role>x_jobpulse_admin</user_role>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <alter_access>true</alter_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_id</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <mandatory>true</mandatory>
+    <label>Job</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_name</element>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <label>Job Name</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_type</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>other</default_value>
+    <label>Job Type</label>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_type</element>
+    <value>script</value>
+    <label>Script</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_type</element>
+    <value>flow</value>
+    <label>Flow</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_type</element>
+    <value>import</value>
+    <label>Import</label>
+    <sequence>3</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>job_type</element>
+    <value>other</value>
+    <label>Other</label>
+    <sequence>4</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <label>Finding Type</label>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <value>failure</value>
+    <label>Failure</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <value>orphan</value>
+    <label>Orphan</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <value>overlap</value>
+    <label>Overlap</label>
+    <sequence>3</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <value>peak_hour</value>
+    <label>Peak Hour</label>
+    <sequence>4</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <value>stale</value>
+    <label>Stale</label>
+    <sequence>5</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>finding_type</element>
+    <value>ownership</value>
+    <label>Ownership</label>
+    <sequence>6</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>severity</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>warning</default_value>
+    <label>Severity</label>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>severity</element>
+    <value>critical</value>
+    <label>Critical</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>severity</element>
+    <value>warning</value>
+    <label>Warning</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>severity</element>
+    <value>info</value>
+    <label>Info</label>
+    <sequence>3</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>signature</element>
+    <internal_type>string</internal_type>
+    <max_length>255</max_length>
+    <label>Signature</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>detail_json</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>Detail JSON</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>remediation</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>Remediation</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>ai_remediation</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>AI Remediation</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>first_seen</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>First Seen</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>last_seen</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Last Seen</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>resolved</element>
+    <internal_type>boolean</internal_type>
+    <default_value>false</default_value>
+    <label>Resolved</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_finding">
+    <element>resolved_at</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Resolved At</label>
+  </sys_dictionary>
+
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_health</name>
+    <label>JobPulse Health</label>
+    <super_class/>
+    <access_count>0</access_count>
+    <is_extendable>false</is_extendable>
+    <user_role>x_jobpulse_admin</user_role>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <alter_access>true</alter_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>job_id</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <mandatory>true</mandatory>
+    <label>Job</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>job_name</element>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <label>Job Name</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>health_score</element>
+    <internal_type>integer</internal_type>
+    <max_length>3</max_length>
+    <label>Health Score</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>exec_health</element>
+    <internal_type>integer</internal_type>
+    <max_length>3</max_length>
+    <label>Execution Health</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>ref_integrity</element>
+    <internal_type>integer</internal_type>
+    <max_length>3</max_length>
+    <label>Reference Integrity</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>schedule_sanity</element>
+    <internal_type>integer</internal_type>
+    <max_length>3</max_length>
+    <label>Schedule Sanity</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>ownership</element>
+    <internal_type>integer</internal_type>
+    <max_length>3</max_length>
+    <label>Ownership</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>total_findings</element>
+    <internal_type>integer</internal_type>
+    <max_length>6</max_length>
+    <label>Total Findings</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>critical_findings</element>
+    <internal_type>integer</internal_type>
+    <max_length>6</max_length>
+    <label>Critical Findings</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>last_run</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Last Run</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>next_action</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Next Action</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>owner</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <label>Owner</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>status</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>healthy</default_value>
+    <label>Status</label>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>status</element>
+    <value>healthy</value>
+    <label>Healthy</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>status</element>
+    <value>at_risk</value>
+    <label>At Risk</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>status</element>
+    <value>critical</value>
+    <label>Critical</label>
+    <sequence>3</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_jobpulse_health">
+    <element>scanned_at</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Scanned At</label>
+  </sys_dictionary>
+
+  <!-- ===== SCRIPT INCLUDES ===== -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_jobpulse.JobPulseScanner</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Core scan engine: walks the sys_trigger estate and runs the full check pipeline (execution health, orphaned references, overlap, stale, ownership)</description>
+    <name>JobPulseScanner</name>
+    <script><![CDATA[// JobPulse — Scheduled Job Health Auditor — JobPulseScanner
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Core scan engine: walks the sys_trigger estate and runs the full check
+// pipeline (execution health, orphaned references, overlap/contention,
+// stale/dead jobs, ownership gaps), upserting findings and health records.
+
+var JobPulseScanner = Class.create();
+JobPulseScanner.prototype = {
+    initialize: function() {
+        this.BATCH_SIZE = 200;
+        var cfg = this._getConfig();
+        this.PEAK_START = cfg.peak_start;
+        this.PEAK_END = cfg.peak_end;
+        this.STALE_DAYS = cfg.stale_days;
+        this.LOOKBACK_DAYS = cfg.lookback_days;
+    },
+
+    /**
+     * Scan every active scheduled job and upsert findings + health records.
+     * @param {boolean} incremental - if true, only scan jobs modified since last run
+     * @returns {object} {scanned, findings, critical}
+     */
+    scanAllJobs: function(incremental) {
+        var stats = { scanned: 0, findings: 0, critical: 0 };
+
+        var gr = new GlideRecord('sys_trigger');
+        gr.addQuery('active', true);
+        if (incremental) {
+            var since = new GlideDateTime();
+            since.addDaysUTC(-1);
+            gr.addQuery('sys_updated_on', '>=', since.toString());
+        }
+        gr.setLimit(this.BATCH_SIZE);
+        gr.query();
+
+        while (gr.next()) {
+            try {
+                var result = this.scanJob(gr.getUniqueValue());
+                stats.scanned++;
+                stats.findings += result.total_findings;
+                stats.critical += result.critical_findings;
+            } catch (e) {
+                gs.error('JobPulseScanner.scanAllJobs: failed for job ' +
+                         gr.getValue('name') + ': ' + e);
+            }
+        }
+
+        return stats;
+    },
+
+    /**
+     * Scan a single job and upsert its findings + health record.
+     * @param {string} triggerSysId - sys_trigger sys_id
+     * @returns {object} {job_sys_id, total_findings, critical_findings, health_score}
+     */
+    scanJob: function(triggerSysId) {
+        var triggerGr = new GlideRecord('sys_trigger');
+        if (!triggerGr.get(triggerSysId)) {
+            return { job_sys_id: triggerSysId, total_findings: 0, critical_findings: 0, health_score: 0 };
+        }
+
+        var jobName = triggerGr.getValue('name') || triggerSysId;
+        var jobType = this._resolveJobType(triggerGr);
+
+        // Run the full check pipeline
+        var findings = [];
+        findings = findings.concat(this.checkExecutionHealth(triggerGr));
+        findings = findings.concat(this.checkOrphanedRef(triggerGr));
+        findings = findings.concat(this.checkOverlap(triggerGr));
+        findings = findings.concat(this.checkStale(triggerGr));
+        findings = findings.concat(this.checkOwnership(triggerGr));
+
+        // Upsert each finding
+        var criticalCount = 0;
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            f.job_id = triggerSysId;
+            f.job_name = jobName;
+            f.job_type = jobType;
+            this._upsertFinding(f);
+            if (f.severity === 'critical') {
+                criticalCount++;
+            }
+        }
+
+        // Compute and persist health score
+        var analytics = new JobPulseAnalytics();
+        var health = analytics.computeHealthScore(triggerSysId, findings);
+        this._upsertHealth(triggerGr, health, findings.length, criticalCount);
+
+        return {
+            job_sys_id: triggerSysId,
+            total_findings: findings.length,
+            critical_findings: criticalCount,
+            health_score: health.health_score
+        };
+    },
+
+    /**
+     * Detect silent failures: syslog error entries correlated to the job's
+     * execution window with no downstream incident/alert.
+     * @param {object} triggerGr - GlideRecord on sys_trigger
+     * @returns {array} findings
+     */
+    checkExecutionHealth: function(triggerGr) {
+        var findings = [];
+        var jobName = triggerGr.getValue('name') || '';
+        if (!jobName) {
+            return findings;
+        }
+
+        var since = new GlideDateTime();
+        since.addDaysUTC(-this.LOOKBACK_DAYS);
+
+        var logGr = new GlideRecord('syslog');
+        logGr.addQuery('source', jobName);
+        logGr.addQuery('level', 3); // error
+        logGr.addQuery('sys_created_on', '>=', since.toString());
+        logGr.setLimit(50);
+        logGr.query();
+
+        var errorCount = 0;
+        var lastError = '';
+        var lastErrorTime = '';
+        while (logGr.next()) {
+            errorCount++;
+            if (!lastError) {
+                lastError = logGr.getValue('message') || '';
+                lastErrorTime = logGr.getValue('sys_created_on') || '';
+            }
+        }
+
+        if (errorCount === 0) {
+            return findings;
+        }
+
+        // Distinguish "failing loudly" (already alerted) from "failing silently".
+        // A job is failing silently if it has errors but no recent incident
+        // references it. We approximate "loud" by checking for an open incident
+        // whose short description mentions the job name.
+        var isSilent = this._isSilentFailure(jobName);
+
+        var severity = (errorCount >= 5) ? 'critical' : 'warning';
+        var detail = {
+            error_count: errorCount,
+            last_error: lastError,
+            last_error_time: lastErrorTime,
+            lookback_days: this.LOOKBACK_DAYS,
+            silent: isSilent
+        };
+
+        findings.push({
+            finding_type: 'failure',
+            severity: severity,
+            signature: 'failure::' + jobName,
+            detail_json: JSON.stringify(detail),
+            remediation: isSilent
+                ? 'Job "' + jobName + '" has ' + errorCount + ' error(s) in the last ' +
+                  this.LOOKBACK_DAYS + ' days with no downstream alert. Review the latest error: ' +
+                  lastError.substring(0, 200)
+                : 'Job "' + jobName + '" has ' + errorCount + ' error(s) in the last ' +
+                  this.LOOKBACK_DAYS + ' days. An incident may already exist; verify triage.'
+        });
+
+        return findings;
+    },
+
+    /**
+     * Detect orphaned references: job_context pointing at deleted/missing targets.
+     * @param {object} triggerGr - GlideRecord on sys_trigger
+     * @returns {array} findings
+     */
+    checkOrphanedRef: function(triggerGr) {
+        var findings = [];
+        var jobName = triggerGr.getValue('name') || '';
+        var jobContext = triggerGr.getValue('job_context') || '';
+        var jobType = this._resolveJobType(triggerGr);
+
+        if (jobType === 'script') {
+            // Scheduled Script Execution: script body must be non-empty,
+            // and if job_context references sysauto_script it must exist.
+            var scriptBody = triggerGr.getValue('script') || '';
+            if (jobContext) {
+                var autoGr = new GlideRecord('sysauto_script');
+                if (!autoGr.get(jobContext)) {
+                    findings.push(this._orphanFinding(jobName, 'script',
+                        'Scheduled Script Execution record ' + jobContext + ' no longer exists'));
+                }
+            } else if (!scriptBody || scriptBody.trim() === '') {
+                findings.push(this._orphanFinding(jobName, 'script',
+                    'Script body is empty'));
+            }
+        } else if (jobType === 'flow') {
+            if (!jobContext) {
+                findings.push(this._orphanFinding(jobName, 'flow',
+                    'No flow reference (job_context is empty)'));
+            } else {
+                var flowGr = new GlideRecord('sys_hub_flow');
+                if (!flowGr.get(jobContext)) {
+                    findings.push(this._orphanFinding(jobName, 'flow',
+                        'Flow ' + jobContext + ' no longer exists'));
+                } else if (flowGr.getValue('active') !== 'true' && flowGr.getValue('active') !== '1') {
+                    findings.push(this._orphanFinding(jobName, 'flow',
+                        'Flow "' + flowGr.getValue('name') + '" is inactive'));
+                }
+            }
+        } else if (jobType === 'import') {
+            if (!jobContext) {
+                findings.push(this._orphanFinding(jobName, 'import',
+                    'No import reference (job_context is empty)'));
+            } else {
+                var impGr = new GlideRecord('scheduled_data_import');
+                if (!impGr.get(jobContext)) {
+                    findings.push(this._orphanFinding(jobName, 'import',
+                        'Scheduled import ' + jobContext + ' no longer exists'));
+                }
+            }
+        } else {
+            // Generic fallback: if job_context is set, verify the referenced
+            // record exists on its table.
+            if (jobContext) {
+                var refTable = triggerGr.getElement('job_context').getED().getReference();
+                if (refTable) {
+                    var refGr = new GlideRecord(refTable);
+                    if (!refGr.get(jobContext)) {
+                        findings.push(this._orphanFinding(jobName, 'other',
+                            'Referenced ' + refTable + ' record ' + jobContext + ' no longer exists'));
+                    }
+                }
+            }
+        }
+
+        return findings;
+    },
+
+    /**
+     * Detect schedule collisions and peak-hour offenders.
+     * @param {object} triggerGr - GlideRecord on sys_trigger
+     * @returns {array} findings
+     */
+    checkOverlap: function(triggerGr) {
+        var findings = [];
+        var jobName = triggerGr.getValue('name') || '';
+        var runTime = triggerGr.getValue('run_time') || '';
+        var runDay = triggerGr.getValue('run_dayofweek') || '';
+        var triggerType = triggerGr.getValue('trigger_type') || '';
+
+        // Peak-hour offender: daily/weekly jobs running 09:00-17:00.
+        if (runTime && (triggerType === '2' || triggerType === '3')) {
+            var hour = this._parseHour(runTime);
+            if (hour >= this.PEAK_START && hour < this.PEAK_END) {
+                findings.push({
+                    finding_type: 'peak_hour',
+                    severity: 'warning',
+                    signature: 'peak_hour::' + jobName,
+                    detail_json: JSON.stringify({ run_time: runTime, hour: hour }),
+                    remediation: 'Job "' + jobName + '" runs at ' + runTime +
+                        ' (peak hours). Consider rescheduling off-peak (before 09:00 or after 17:00).'
+                });
+            }
+        }
+
+        // Collision: another active job with the same run_time + run_dayofweek.
+        if (runTime && (triggerType === '2' || triggerType === '3')) {
+            var siblingGr = new GlideRecord('sys_trigger');
+            siblingGr.addQuery('active', true);
+            siblingGr.addQuery('run_time', runTime);
+            if (runDay) {
+                siblingGr.addQuery('run_dayofweek', runDay);
+            }
+            siblingGr.addQuery('sys_id', '!=', triggerGr.getUniqueValue());
+            siblingGr.setLimit(20);
+            siblingGr.query();
+
+            var colliders = [];
+            while (siblingGr.next()) {
+                colliders.push(siblingGr.getValue('name') || siblingGr.getUniqueValue());
+            }
+
+            if (colliders.length > 0) {
+                var cappedColliders = colliders.slice(0, 20);
+                var overlapDetail = JSON.stringify({ run_time: runTime, run_day: runDay, colliders: cappedColliders });
+                if (overlapDetail.length > 3900) {
+                    overlapDetail = overlapDetail.substring(0, 3900);
+                }
+                findings.push({
+                    finding_type: 'overlap',
+                    severity: 'warning',
+                    signature: 'overlap::' + runTime + '::' + runDay,
+                    detail_json: overlapDetail,
+                    remediation: 'Job "' + jobName + '" collides with ' + colliders.length +
+                        ' other job(s) at ' + runTime + ': ' + colliders.join(', ').substring(0, 300)
+                });
+            }
+        }
+
+        return findings;
+    },
+
+    /**
+     * Detect dead/stale jobs: never-run, stale, disabled-but-referenced.
+     * @param {object} triggerGr - GlideRecord on sys_trigger
+     * @returns {array} findings
+     */
+    checkStale: function(triggerGr) {
+        var findings = [];
+        var jobName = triggerGr.getValue('name') || '';
+        var nextAction = triggerGr.getValue('next_action') || '';
+        var triggerType = triggerGr.getValue('trigger_type') || '';
+
+        // Never-run: run-once job with a past next_action and no run history.
+        if (triggerType === '0' && nextAction) {
+            var na = new GlideDateTime(nextAction);
+            var now = new GlideDateTime();
+            if (na.before(now)) {
+                var ran = this._hasRunHistory(jobName);
+                if (!ran) {
+                    findings.push({
+                        finding_type: 'stale',
+                        severity: 'warning',
+                        signature: 'stale::never_run::' + jobName,
+                        detail_json: JSON.stringify({ next_action: nextAction, trigger_type: triggerType }),
+                        remediation: 'Job "' + jobName + '" was scheduled to run at ' + nextAction +
+                            ' but has no execution history. It may have never fired.'
+                    });
+                }
+            }
+        }
+
+        // Stale: active job with no execution in STALE_DAYS.
+        var lastRun = this._getLastRun(jobName);
+        if (lastRun) {
+            var lr = new GlideDateTime(lastRun);
+            var cutoff = new GlideDateTime();
+            cutoff.addDaysUTC(-this.STALE_DAYS);
+            if (lr.before(cutoff)) {
+                findings.push({
+                    finding_type: 'stale',
+                    severity: 'warning',
+                    signature: 'stale::no_exec::' + jobName,
+                    detail_json: JSON.stringify({ last_run: lastRun, stale_days: this.STALE_DAYS }),
+                    remediation: 'Job "' + jobName + '" has not executed since ' + lastRun +
+                        ' (' + this.STALE_DAYS + '+ days). Its schedule may be broken or the job is dead.'
+                });
+            }
+        }
+
+        return findings;
+    },
+
+    /**
+     * Detect ownership gaps: no owner, deactivated owner.
+     * @param {object} triggerGr - GlideRecord on sys_trigger
+     * @returns {array} findings
+     */
+    checkOwnership: function(triggerGr) {
+        var findings = [];
+        var jobName = triggerGr.getValue('name') || '';
+        // sys_trigger has no assigned_to/assignment_group fields; the
+        // accountable owner is the user who created the job (sys_created_by).
+        var assignedTo = triggerGr.getValue('sys_created_by') || '';
+
+        if (!assignedTo) {
+            findings.push({
+                finding_type: 'ownership',
+                severity: 'warning',
+                signature: 'ownership::none::' + jobName,
+                detail_json: JSON.stringify({ assigned_to: '', assignment_group: '' }),
+                remediation: 'Job "' + jobName + '" has no owner (no sys_created_by). ' +
+                    'Assign an accountable owner for this automation.'
+            });
+            return findings;
+        }
+
+        // Deactivated owner.
+        if (assignedTo) {
+            var userGr = new GlideRecord('sys_user');
+            if (userGr.get(assignedTo)) {
+                var active = userGr.getValue('active');
+                if (active !== 'true' && active !== '1') {
+                    findings.push({
+                        finding_type: 'ownership',
+                        severity: 'critical',
+                        signature: 'ownership::deactivated::' + jobName,
+                        detail_json: JSON.stringify({ assigned_to: assignedTo, owner_name: userGr.getValue('name') }),
+                        remediation: 'Job "' + jobName + '" is owned by deactivated user "' +
+                            (userGr.getValue('name') || assignedTo) + '". Reassign to an active owner.'
+                    });
+                }
+            }
+        }
+
+        return findings;
+    },
+
+    /**
+     * Upsert a finding, deduping by (job_id, finding_type, signature).
+     * @param {object} f - finding data
+     * @returns {string} sys_id of the finding
+     */
+    _upsertFinding: function(f) {
+        var now = new GlideDateTime().toString();
+
+        var gr = new GlideRecord('x_jobpulse_finding');
+        gr.addQuery('job_id', f.job_id);
+        gr.addQuery('finding_type', f.finding_type);
+        gr.addQuery('signature', f.signature);
+        gr.addQuery('resolved', false);
+        gr.setLimit(1);
+        gr.query();
+
+        if (gr.next()) {
+            // Existing open finding: refresh last_seen and detail.
+            gr.setValue('last_seen', now);
+            gr.setValue('detail_json', f.detail_json);
+            gr.setValue('remediation', f.remediation);
+            gr.setValue('severity', f.severity);
+            gr.setWorkflow(false);
+            gr.update();
+            return gr.getUniqueValue();
+        }
+
+        // New finding.
+        var newGr = new GlideRecord('x_jobpulse_finding');
+        newGr.initialize();
+        newGr.setValue('job_id', f.job_id);
+        newGr.setValue('job_name', f.job_name);
+        newGr.setValue('job_type', f.job_type);
+        newGr.setValue('finding_type', f.finding_type);
+        newGr.setValue('severity', f.severity);
+        newGr.setValue('signature', f.signature);
+        newGr.setValue('detail_json', f.detail_json);
+        newGr.setValue('remediation', f.remediation);
+        newGr.setValue('first_seen', now);
+        newGr.setValue('last_seen', now);
+        newGr.setValue('resolved', false);
+        newGr.setWorkflow(false);
+        return newGr.insert();
+    },
+
+    /**
+     * Upsert the health record for a job.
+     */
+    _upsertHealth: function(triggerGr, health, totalFindings, criticalFindings) {
+        var now = new GlideDateTime().toString();
+        var jobSysId = triggerGr.getUniqueValue();
+        var jobName = triggerGr.getValue('name') || jobSysId;
+        var lastRun = this._getLastRun(jobName);
+        var status = this._statusForScore(health.health_score);
+        var owner = triggerGr.getValue('sys_created_by') || '';
+
+        var gr = new GlideRecord('x_jobpulse_health');
+        gr.addQuery('job_id', jobSysId);
+        gr.setLimit(1);
+        gr.query();
+
+        if (gr.next()) {
+            gr.setValue('health_score', health.health_score);
+            gr.setValue('exec_health', health.exec_health);
+            gr.setValue('ref_integrity', health.ref_integrity);
+            gr.setValue('schedule_sanity', health.schedule_sanity);
+            gr.setValue('ownership', health.ownership);
+            gr.setValue('total_findings', totalFindings);
+            gr.setValue('critical_findings', criticalFindings);
+            gr.setValue('last_run', lastRun);
+            gr.setValue('next_action', triggerGr.getValue('next_action') || '');
+            gr.setValue('owner', owner);
+            gr.setValue('status', status);
+            gr.setValue('scanned_at', now);
+            gr.setWorkflow(false);
+            gr.update();
+            return gr.getUniqueValue();
+        }
+
+        var newGr = new GlideRecord('x_jobpulse_health');
+        newGr.initialize();
+        newGr.setValue('job_id', jobSysId);
+        newGr.setValue('job_name', jobName);
+        newGr.setValue('health_score', health.health_score);
+        newGr.setValue('exec_health', health.exec_health);
+        newGr.setValue('ref_integrity', health.ref_integrity);
+        newGr.setValue('schedule_sanity', health.schedule_sanity);
+        newGr.setValue('ownership', health.ownership);
+        newGr.setValue('total_findings', totalFindings);
+        newGr.setValue('critical_findings', criticalFindings);
+        newGr.setValue('last_run', lastRun);
+        newGr.setValue('next_action', triggerGr.getValue('next_action') || '');
+        newGr.setValue('owner', owner);
+        newGr.setValue('status', status);
+        newGr.setValue('scanned_at', now);
+        newGr.setWorkflow(false);
+        return newGr.insert();
+    },
+
+    /**
+     * Map a 0-100 health score to the status choice value.
+     */
+    _statusForScore: function(score) {
+        if (score >= 80) { return 'healthy'; }
+        if (score >= 50) { return 'at_risk'; }
+        return 'critical';
+    },
+
+    /**
+     * Resolve the job type from job_context's reference table.
+     * @param {object} triggerGr
+     * @returns {string} script|flow|import|other
+     */
+    _resolveJobType: function(triggerGr) {
+        var jobContext = triggerGr.getValue('job_context') || '';
+        if (jobContext) {
+            var ed = triggerGr.getElement('job_context');
+            if (ed && ed.getED) {
+                var ref = ed.getED().getReference();
+                if (ref === 'sysauto_script') { return 'script'; }
+                if (ref === 'sys_hub_flow') { return 'flow'; }
+                if (ref === 'scheduled_data_import') { return 'import'; }
+            }
+        }
+        // Fallback: scheduled script execution stores script directly on sys_trigger.
+        if (triggerGr.getValue('script')) {
+            return 'script';
+        }
+        return 'other';
+    },
+
+    /**
+     * Build an orphan finding.
+     */
+    _orphanFinding: function(jobName, jobType, message) {
+        return {
+            finding_type: 'orphan',
+            severity: 'critical',
+            signature: 'orphan::' + jobType + '::' + jobName,
+            detail_json: JSON.stringify({ dangling_ref: message, job_type: jobType }),
+            remediation: 'Job "' + jobName + '" has a dangling reference: ' + message +
+                '. Repair or retire the job.'
+        };
+    },
+
+    /**
+     * Approximate whether a failing job is already alerted (failing loudly).
+     * Checks for an open incident whose short description mentions the job name.
+     */
+    _isSilentFailure: function(jobName) {
+        var incGr = new GlideRecord('incident');
+        incGr.addQuery('active', true);
+        incGr.addQuery('short_description', 'CONTAINS', jobName);
+        incGr.setLimit(1);
+        incGr.query();
+        return !incGr.hasNext();
+    },
+
+    /**
+     * Check whether a job has any run history in syslog.
+     */
+    _hasRunHistory: function(jobName) {
+        var logGr = new GlideRecord('syslog');
+        logGr.addQuery('source', jobName);
+        logGr.setLimit(1);
+        logGr.query();
+        return logGr.hasNext();
+    },
+
+    /**
+     * Get the most recent execution timestamp for a job from syslog.
+     */
+    _getLastRun: function(jobName) {
+        var logGr = new GlideRecord('syslog');
+        logGr.addQuery('source', jobName);
+        logGr.orderByDesc('sys_created_on');
+        logGr.setLimit(1);
+        logGr.query();
+        if (logGr.next()) {
+            return logGr.getValue('sys_created_on') || '';
+        }
+        return '';
+    },
+
+    /**
+     * Parse an hour (0-23) from a run_time string like "14:30:00".
+     */
+    _parseHour: function(runTime) {
+        var parts = runTime.split(':');
+        if (parts.length > 0) {
+            var h = parseInt(parts[0], 10);
+            if (!isNaN(h)) {
+                return h;
+            }
+        }
+        return -1;
+    },
+
+    /**
+     * Load the JSON config from the x_jobpulse.config system property.
+     */
+    _getConfig: function() {
+        var defaults = {
+            weights: { exec: 0.40, ref: 0.30, schedule: 0.20, ownership: 0.10 },
+            stale_days: 30,
+            lookback_days: 7,
+            peak_start: 9,
+            peak_end: 17,
+            ai_recommendations: false
+        };
+        try {
+            var raw = gs.getProperty('x_jobpulse.config', '');
+            if (raw) {
+                var parsed = JSON.parse(raw);
+                for (var k in defaults) {
+                    if (defaults.hasOwnProperty(k) && parsed[k] !== undefined) {
+                        defaults[k] = parsed[k];
+                    }
+                }
+            }
+        } catch (e) {
+            gs.warn('JobPulseScanner._getConfig: invalid config JSON, using defaults: ' + e);
+        }
+        return defaults;
+    },
+
+    type: 'JobPulseScanner'
+};
+]]></script>
+  </sys_script_include>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_jobpulse.JobPulseAnalytics</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Analytics engine: composite health scoring, run history, overlap map, ownership report, delta detection, remediation, summary</description>
+    <name>JobPulseAnalytics</name>
+    <script><![CDATA[// JobPulse — Scheduled Job Health Auditor — JobPulseAnalytics
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Analytics engine: composite health scoring, run history, overlap map,
+// ownership report, delta detection, remediation suggestions, and summary.
+
+var JobPulseAnalytics = Class.create();
+JobPulseAnalytics.prototype = {
+    initialize: function() {
+        this.WEIGHTS = { exec: 0.40, ref: 0.30, schedule: 0.20, ownership: 0.10 };
+    },
+
+    /**
+     * Compute the composite 0-100 health score for a job.
+     * @param {string} jobSysId - sys_trigger sys_id
+     * @param {array} findings - findings produced by the scanner (optional)
+     * @returns {object} {health_score, exec_health, ref_integrity, schedule_sanity, ownership}
+     */
+    computeHealthScore: function(jobSysId, findings) {
+        if (!findings) {
+            findings = this._loadFindings(jobSysId);
+        }
+
+        var execHealth = this._execHealthScore(findings);
+        var refIntegrity = this._refIntegrityScore(findings);
+        var scheduleSanity = this._scheduleSanityScore(findings);
+        var ownershipScore = this._ownershipScore(findings);
+
+        var score = Math.round(
+            (execHealth * this.WEIGHTS.exec) +
+            (refIntegrity * this.WEIGHTS.ref) +
+            (scheduleSanity * this.WEIGHTS.schedule) +
+            (ownershipScore * this.WEIGHTS.ownership)
+        );
+
+        score = Math.min(100, Math.max(0, score));
+
+        return {
+            health_score: score,
+            exec_health: execHealth,
+            ref_integrity: refIntegrity,
+            schedule_sanity: scheduleSanity,
+            ownership: ownershipScore
+        };
+    },
+
+    /**
+     * Get run history stats for a job from syslog.
+     * @param {string} jobName
+     * @param {number} daysBack
+     * @returns {object} {success_count, error_count, last_error, last_run}
+     */
+    getRunHistory: function(jobName, daysBack) {
+        daysBack = daysBack || 7;
+        var since = new GlideDateTime();
+        since.addDaysUTC(-daysBack);
+
+        var stats = { success_count: 0, error_count: 0, last_error: '', last_run: '' };
+
+        var logGr = new GlideRecord('syslog');
+        logGr.addQuery('source', jobName);
+        logGr.addQuery('sys_created_on', '>=', since.toString());
+        logGr.orderByDesc('sys_created_on');
+        logGr.setLimit(200);
+        logGr.query();
+
+        while (logGr.next()) {
+            var level = parseInt(logGr.getValue('level'), 10);
+            if (level >= 3) {
+                stats.error_count++;
+                if (!stats.last_error) {
+                    stats.last_error = logGr.getValue('message') || '';
+                }
+            } else {
+                stats.success_count++;
+            }
+            if (!stats.last_run) {
+                stats.last_run = logGr.getValue('sys_created_on') || '';
+            }
+        }
+
+        return stats;
+    },
+
+    /**
+     * Build an overlap map: group jobs by time slot and flag collisions.
+     * @returns {object} {slots: [{run_time, run_day, jobs: [...], collision: bool}]}
+     */
+    getOverlapMap: function() {
+        var slotMap = {};
+
+        var gr = new GlideRecord('sys_trigger');
+        gr.addQuery('active', true);
+        gr.setLimit(500);
+        gr.query();
+
+        while (gr.next()) {
+            var runTime = gr.getValue('run_time') || '';
+            var runDay = gr.getValue('run_dayofweek') || '';
+            var triggerType = gr.getValue('trigger_type') || '';
+            if (!runTime || (triggerType !== '2' && triggerType !== '3')) {
+                continue;
+            }
+            var key = runTime + '::' + runDay;
+            if (!slotMap[key]) {
+                slotMap[key] = { run_time: runTime, run_day: runDay, jobs: [] };
+            }
+            slotMap[key].jobs.push(gr.getValue('name') || gr.getUniqueValue());
+        }
+
+        var slots = [];
+        for (var k in slotMap) {
+            if (!slotMap.hasOwnProperty(k)) { continue; }
+            var slot = slotMap[k];
+            slot.collision = slot.jobs.length > 1;
+            slots.push(slot);
+        }
+
+        // Sort by collision count descending, then run_time.
+        slots.sort(function(a, b) {
+            if (a.collision !== b.collision) { return a.collision ? -1 : 1; }
+            return a.run_time < b.run_time ? -1 : 1;
+        });
+
+        return { slots: slots, total_slots: slots.length };
+    },
+
+    /**
+     * Build an ownership report: aggregate unowned/deactivated-owner jobs.
+     * @returns {object} {unowned: [...], deactivated_owner: [...], total}
+     */
+    getOwnershipReport: function() {
+        var unowned = [];
+        var deactivated = [];
+
+        var gr = new GlideRecord('sys_trigger');
+        gr.addQuery('active', true);
+        gr.setLimit(500);
+        gr.query();
+
+        while (gr.next()) {
+            var jobName = gr.getValue('name') || gr.getUniqueValue();
+            // sys_trigger has no assigned_to/assignment_group; owner = creator.
+            var assignedTo = gr.getValue('sys_created_by') || '';
+
+            if (!assignedTo) {
+                unowned.push(jobName);
+                continue;
+            }
+
+            if (assignedTo) {
+                var userGr = new GlideRecord('sys_user');
+                if (userGr.get(assignedTo)) {
+                    var active = userGr.getValue('active');
+                    if (active !== 'true' && active !== '1') {
+                        deactivated.push({
+                            job: jobName,
+                            owner: userGr.getValue('name') || assignedTo
+                        });
+                    }
+                }
+            }
+        }
+
+        return {
+            unowned: unowned,
+            deactivated_owner: deactivated,
+            total_unowned: unowned.length,
+            total_deactivated: deactivated.length
+        };
+    },
+
+    /**
+     * Compute delta: new findings since a given scan, plus resolved findings.
+     * @param {string} sinceScanId - sys_id of a prior scan (optional; uses last_seen window)
+     * @returns {object} {new_findings: [...], resolved_findings: [...], new_count, resolved_count}
+     */
+    getDelta: function(sinceScanId) {
+        var newFindings = [];
+        var resolvedFindings = [];
+
+        // New findings: open findings created since the given scan (or 24h).
+        var since = this._resolveSince(sinceScanId);
+
+        var gr = new GlideRecord('x_jobpulse_finding');
+        gr.addQuery('resolved', false);
+        gr.addQuery('first_seen', '>=', since.toString());
+        gr.orderByDesc('first_seen');
+        gr.setLimit(100);
+        gr.query();
+        while (gr.next()) {
+            newFindings.push(this._findingToObject(gr));
+        }
+
+        // Resolved findings: resolved in the last 24h.
+        var resGr = new GlideRecord('x_jobpulse_finding');
+        resGr.addQuery('resolved', true);
+        resGr.addQuery('resolved_at', '>=', since.toString());
+        resGr.orderByDesc('resolved_at');
+        resGr.setLimit(100);
+        resGr.query();
+        while (resGr.next()) {
+            resolvedFindings.push(this._findingToObject(resGr));
+        }
+
+        return {
+            new_findings: newFindings,
+            resolved_findings: resolvedFindings,
+            new_count: newFindings.length,
+            resolved_count: resolvedFindings.length
+        };
+    },
+
+    /**
+     * Resolve the "since" cutoff for delta detection.
+     * Accepts a finding sys_id (uses its first_seen) or a GlideDateTime string;
+     * falls back to a 24-hour window.
+     */
+    _resolveSince: function(sinceScanId) {
+        if (sinceScanId) {
+            if (/^[0-9a-f]{32}$/i.test(sinceScanId)) {
+                var fg = new GlideRecord('x_jobpulse_finding');
+                if (fg.get(sinceScanId)) {
+                    var ts = fg.getValue('first_seen') || fg.getValue('last_seen');
+                    if (ts) {
+                        return new GlideDateTime(ts);
+                    }
+                }
+            }
+            var gdt = new GlideDateTime(sinceScanId);
+            if (gdt.isValid()) {
+                return gdt;
+            }
+        }
+        var d = new GlideDateTime();
+        d.addDaysUTC(-1);
+        return d;
+    },
+
+    /**
+     * Generate a remediation suggestion for a finding.
+     * Deterministic template; optionally expands via GenAI Controller.
+     * @param {string} findingSysId
+     * @returns {string} remediation text
+     */
+    getRemediation: function(findingSysId) {
+        var gr = new GlideRecord('x_jobpulse_finding');
+        if (!gr.get(findingSysId)) {
+            return 'Finding not found.';
+        }
+
+        var deterministic = gr.getValue('remediation') || '';
+        var cfg = this._getConfig();
+
+        if (!cfg.ai_recommendations) {
+            return deterministic;
+        }
+
+        // Optional GenAI expansion.
+        var aiText = '';
+        try {
+            var prompt = 'You are a ServiceNow platform reliability engineer. ' +
+                'Given the following scheduled-job health finding, produce a concise, ' +
+                'actionable remediation plan (2-3 sentences).\n\n' +
+                'Job: ' + gr.getValue('job_name') + '\n' +
+                'Finding type: ' + gr.getValue('finding_type') + '\n' +
+                'Severity: ' + gr.getValue('severity') + '\n' +
+                'Details: ' + (gr.getValue('detail_json') || '') + '\n' +
+                'Deterministic suggestion: ' + deterministic;
+
+            var genAI = new sn_generative_ai.GlideGenerativeAI();
+            aiText = genAI.generate(prompt, { max_tokens: 300, temperature: 0.3 }) || '';
+        } catch (e) {
+            gs.warn('JobPulseAnalytics.getRemediation: GenAI call failed, using deterministic: ' + e);
+        }
+
+        if (aiText) {
+            // Persist the AI remediation so the field is not dead storage.
+            gr.setValue('ai_remediation', aiText);
+            gr.setWorkflow(false);
+            gr.update();
+            return aiText;
+        }
+
+        return deterministic;
+    },
+
+    /**
+     * Build a summary report across the whole estate.
+     * @returns {object} summary
+     */
+    getSummary: function() {
+        var summary = {
+            total_jobs: 0,
+            healthy: 0,
+            at_risk: 0,
+            critical: 0,
+            orphaned: 0,
+            overlapping: 0,
+            stale: 0,
+            unowned: 0,
+            deactivated_owner: 0,
+            failures: 0,
+            avg_health: 0,
+            worst_offenders: []
+        };
+
+        var healthSum = 0;
+        var healthCount = 0;
+
+        var gr = new GlideRecord('x_jobpulse_health');
+        gr.orderBy('health_score');
+        gr.setLimit(500);
+        gr.query();
+
+        while (gr.next()) {
+            var score = parseInt(gr.getValue('health_score'), 10) || 0;
+            healthSum += score;
+            healthCount++;
+
+            if (score >= 80) { summary.healthy++; }
+            else if (score >= 50) { summary.at_risk++; }
+            else { summary.critical++; }
+
+            if (score < 50 && summary.worst_offenders.length < 10) {
+                summary.worst_offenders.push({
+                    job: gr.getValue('job_name') || gr.getUniqueValue(),
+                    score: score,
+                    critical_findings: parseInt(gr.getValue('critical_findings'), 10) || 0
+                });
+            }
+        }
+
+        // Count finding types.
+        var fGr = new GlideRecord('x_jobpulse_finding');
+        fGr.addQuery('resolved', false);
+        fGr.setLimit(1000);
+        fGr.query();
+        while (fGr.next()) {
+            var type = fGr.getValue('finding_type');
+            var sev = fGr.getValue('severity');
+            if (type === 'orphan') { summary.orphaned++; }
+            else if (type === 'overlap' || type === 'peak_hour') { summary.overlapping++; }
+            else if (type === 'stale') { summary.stale++; }
+            else if (type === 'ownership') {
+                if (sev === 'critical') { summary.deactivated_owner++; }
+                else { summary.unowned++; }
+            }
+            else if (type === 'failure') { summary.failures++; }
+        }
+
+        summary.total_jobs = healthCount;
+        summary.avg_health = healthCount > 0 ? Math.round(healthSum / healthCount) : 0;
+
+        return summary;
+    },
+
+    /**
+     * Load open findings for a job.
+     */
+    _loadFindings: function(jobSysId) {
+        var findings = [];
+        var gr = new GlideRecord('x_jobpulse_finding');
+        gr.addQuery('job_id', jobSysId);
+        gr.addQuery('resolved', false);
+        gr.query();
+        while (gr.next()) {
+            findings.push({
+                finding_type: gr.getValue('finding_type'),
+                severity: gr.getValue('severity')
+            });
+        }
+        return findings;
+    },
+
+    /**
+     * Execution health subscore: 100 if no failure findings, else scaled down.
+     */
+    _execHealthScore: function(findings) {
+        var failures = 0;
+        for (var i = 0; i < findings.length; i++) {
+            if (findings[i].finding_type === 'failure') {
+                failures++;
+            }
+        }
+        if (failures === 0) { return 100; }
+        if (failures === 1) { return 50; }
+        return 0;
+    },
+
+    /**
+     * Reference integrity subscore: binary — 100 if no orphan, else 0.
+     */
+    _refIntegrityScore: function(findings) {
+        for (var i = 0; i < findings.length; i++) {
+            if (findings[i].finding_type === 'orphan') {
+                return 0;
+            }
+        }
+        return 100;
+    },
+
+    /**
+     * Schedule sanity subscore: penalize overlap, peak-hour, and stale findings.
+     */
+    _scheduleSanityScore: function(findings) {
+        var score = 100;
+        for (var i = 0; i < findings.length; i++) {
+            var t = findings[i].finding_type;
+            if (t === 'overlap') { score -= 30; }
+            else if (t === 'peak_hour') { score -= 20; }
+            else if (t === 'stale') { score -= 25; }
+        }
+        return Math.max(0, score);
+    },
+
+    /**
+     * Ownership subscore: 100 if no ownership findings, 50 if warning, 0 if critical.
+     */
+    _ownershipScore: function(findings) {
+        var hasCritical = false;
+        var hasWarning = false;
+        for (var i = 0; i < findings.length; i++) {
+            if (findings[i].finding_type === 'ownership') {
+                if (findings[i].severity === 'critical') { hasCritical = true; }
+                else { hasWarning = true; }
+            }
+        }
+        if (hasCritical) { return 0; }
+        if (hasWarning) { return 50; }
+        return 100;
+    },
+
+    /**
+     * Convert a finding GlideRecord to a plain object.
+     */
+    _findingToObject: function(gr) {
+        return {
+            sys_id: gr.getUniqueValue(),
+            job_id: gr.getValue('job_id') || '',
+            job_name: gr.getValue('job_name') || '',
+            finding_type: gr.getValue('finding_type') || '',
+            severity: gr.getValue('severity') || '',
+            remediation: gr.getValue('remediation') || '',
+            first_seen: gr.getValue('first_seen') || '',
+            last_seen: gr.getValue('last_seen') || ''
+        };
+    },
+
+    /**
+     * Load the JSON config from the x_jobpulse.config system property.
+     */
+    _getConfig: function() {
+        var defaults = { ai_recommendations: false };
+        try {
+            var raw = gs.getProperty('x_jobpulse.config', '');
+            if (raw) {
+                var parsed = JSON.parse(raw);
+                if (parsed.ai_recommendations !== undefined) {
+                    defaults.ai_recommendations = parsed.ai_recommendations;
+                }
+            }
+        } catch (e) {
+            gs.warn('JobPulseAnalytics._getConfig: invalid config JSON: ' + e);
+        }
+        return defaults;
+    },
+
+    type: 'JobPulseAnalytics'
+};
+]]></script>
+  </sys_script_include>
+
+  <!-- ===== REST API ===== -->
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>JobPulse Execute API</name>
+    <description>Trigger scans and on-demand analytics actions</description>
+    <endpoint>/api/x_jobpulse/execute</endpoint>
+    <authentication>true</authentication>
+    <consumes>application/json</consumes>
+    <produces>application/json</produces>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>Execute Action</name>
+    <http_method>POST</http_method>
+    <relative_path>/</relative_path>
+    <web_service_definition>JobPulse Execute API</web_service_definition>
+    <operation_script><![CDATA[// JobPulse — Scheduled Job Health Auditor — Execute REST API
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function process(request, response) {
+
+    try {
+        var body = request.body.data;
+        if (!body || !body.action) {
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Missing required parameter: action',
+                valid_actions: ['scan', 'score', 'overlap', 'ownership', 'delta', 'summary', 'resolve']
+            }));
+            return;
+        }
+
+        var action = body.action;
+        var scanner = new JobPulseScanner();
+        var analytics = new JobPulseAnalytics();
+
+        if (action === 'scan') {
+            var incremental = body.incremental === true || body.incremental === 'true';
+            var stats = scanner.scanAllJobs(incremental);
+            response.setStatus(200);
+            response.setBody(JSON.stringify({
+                action: 'scan',
+                scanned: stats.scanned,
+                findings: stats.findings,
+                critical: stats.critical
+            }));
+
+        } else if (action === 'score') {
+            if (!body.job_sys_id) {
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ error: 'Missing required parameter: job_sys_id' }));
+                return;
+            }
+            var result = scanner.scanJob(body.job_sys_id);
+            response.setStatus(200);
+            response.setBody(JSON.stringify(result));
+
+        } else if (action === 'overlap') {
+            var overlap = analytics.getOverlapMap();
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ action: 'overlap', data: overlap }));
+
+        } else if (action === 'ownership') {
+            var ownership = analytics.getOwnershipReport();
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ action: 'ownership', data: ownership }));
+
+        } else if (action === 'delta') {
+            var delta = analytics.getDelta(body.since_scan_id);
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ action: 'delta', data: delta }));
+
+        } else if (action === 'summary') {
+            var summary = analytics.getSummary();
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ action: 'summary', data: summary }));
+
+        } else if (action === 'resolve') {
+            if (!body.finding_sys_id) {
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ error: 'Missing required parameter: finding_sys_id' }));
+                return;
+            }
+            var fg = new GlideRecord('x_jobpulse_finding');
+            if (!fg.get(body.finding_sys_id)) {
+                response.setStatus(404);
+                response.setBody(JSON.stringify({ error: 'Finding not found' }));
+                return;
+            }
+            fg.setValue('resolved', true);
+            fg.setValue('resolved_at', new GlideDateTime().toString());
+            fg.setWorkflow(false);
+            fg.update();
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ action: 'resolve', finding_sys_id: body.finding_sys_id, resolved: true }));
+
+        } else {
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown action: ' + action,
+                valid_actions: ['scan', 'score', 'overlap', 'ownership', 'delta', 'summary', 'resolve']
+            }));
+        }
+
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({
+            error: 'Internal server error',
+            detail: e.toString()
+        }));
+    }
+})(request, response);
+]]></operation_script>
+  </sys_ws_operation>
+
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>JobPulse Analytics API</name>
+    <description>Query analytics reports (summary, overlap, ownership, delta, health, findings)</description>
+    <endpoint>/api/x_jobpulse/analytics</endpoint>
+    <authentication>true</authentication>
+    <consumes>application/json</consumes>
+    <produces>application/json</produces>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>Get Analytics</name>
+    <http_method>GET</http_method>
+    <relative_path>/</relative_path>
+    <web_service_definition>JobPulse Analytics API</web_service_definition>
+    <operation_script><![CDATA[// JobPulse — Scheduled Job Health Auditor — Analytics REST API
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function process(request, response) {
+
+    try {
+        var qp = request.queryParams;
+        var report = qp.report || 'summary';
+        var analytics = new JobPulseAnalytics();
+
+        if (report === 'summary') {
+            var summary = analytics.getSummary();
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ report: 'summary', data: summary }));
+
+        } else if (report === 'overlap') {
+            var overlap = analytics.getOverlapMap();
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ report: 'overlap', data: overlap }));
+
+        } else if (report === 'ownership') {
+            var ownership = analytics.getOwnershipReport();
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ report: 'ownership', data: ownership }));
+
+        } else if (report === 'delta') {
+            var delta = analytics.getDelta(qp.since_scan_id);
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ report: 'delta', data: delta }));
+
+        } else if (report === 'history') {
+            var jobName = qp.job_name || '';
+            if (!jobName) {
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ error: 'Missing required parameter: job_name' }));
+                return;
+            }
+            var days = parseInt(qp.days, 10) || 7;
+            var history = analytics.getRunHistory(jobName, days);
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ report: 'history', data: history }));
+
+        } else if (report === 'health') {
+            // Health report: list health records, optionally filtered by severity.
+            var severity = qp.severity || '';
+            var limit = parseInt(qp.limit, 10) || 50;
+            if (limit > 200) { limit = 200; }
+
+            var rows = [];
+            var gr = new GlideRecord('x_jobpulse_health');
+            if (severity === 'critical') {
+                gr.addQuery('health_score', '<', 50);
+            } else if (severity === 'warning') {
+                gr.addQuery('health_score', '>=', 50);
+                gr.addQuery('health_score', '<', 80);
+            } else if (severity === 'info') {
+                gr.addQuery('health_score', '>=', 80);
+            }
+            gr.orderBy('health_score');
+            gr.setLimit(limit);
+            gr.query();
+
+            while (gr.next()) {
+                rows.push({
+                    job_id: gr.getValue('job_id') || '',
+                    job_name: gr.getValue('job_name') || '',
+                    health_score: parseInt(gr.getValue('health_score'), 10) || 0,
+                    critical_findings: parseInt(gr.getValue('critical_findings'), 10) || 0,
+                    total_findings: parseInt(gr.getValue('total_findings'), 10) || 0,
+                    scanned_at: gr.getValue('scanned_at') || ''
+                });
+            }
+
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ report: 'health', count: rows.length, data: rows }));
+
+        } else if (report === 'failures' || report === 'orphans' || report === 'stale') {
+            // Finding-type report: list open findings of a given type.
+            var typeMap = { failures: 'failure', orphans: 'orphan', stale: 'stale' };
+            var findingType = typeMap[report];
+            var limit = parseInt(qp.limit, 10) || 50;
+            if (limit > 200) { limit = 200; }
+
+            var rows = [];
+            var fGr = new GlideRecord('x_jobpulse_finding');
+            fGr.addQuery('resolved', false);
+            fGr.addQuery('finding_type', findingType);
+            fGr.orderByDesc('last_seen');
+            fGr.setLimit(limit);
+            fGr.query();
+
+            while (fGr.next()) {
+                rows.push({
+                    sys_id: fGr.getUniqueValue(),
+                    job_id: fGr.getValue('job_id') || '',
+                    job_name: fGr.getValue('job_name') || '',
+                    severity: fGr.getValue('severity') || '',
+                    remediation: fGr.getValue('remediation') || '',
+                    last_seen: fGr.getValue('last_seen') || ''
+                });
+            }
+
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ report: report, count: rows.length, data: rows }));
+
+        } else {
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown report: ' + report,
+                valid_reports: ['summary', 'overlap', 'ownership', 'delta', 'history', 'health', 'failures', 'orphans', 'stale']
+            }));
+        }
+
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({
+            error: 'Internal server error',
+            detail: e.toString()
+        }));
+    }
+})(request, response);
+]]></operation_script>
+  </sys_ws_operation>
+
+  <!-- ===== SCHEDULED JOB ===== -->
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>JobPulse — Nightly Pulse Scan</name>
+    <description>Scans the scheduled-job estate nightly, upserts findings and health records, and alerts on new critical findings</description>
+    <run_type>daily</run_type>
+    <run_day/>
+    <run_time>02:00:00</run_time>
+    <run_start>2026-08-16 02:00:00</run_start>
+    <script><![CDATA[// JobPulse — Scheduled Job Health Auditor — Nightly Pulse Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function() {
+    var scanner = new JobPulseScanner();
+    var analytics = new JobPulseAnalytics();
+
+    // Full scan of the scheduled-job estate.
+    var stats = scanner.scanAllJobs(false);
+
+    // Delta detection: surface new critical findings since the last scan.
+    var delta = analytics.getDelta();
+    var newCritical = [];
+    for (var i = 0; i < delta.new_findings.length; i++) {
+        if (delta.new_findings[i].severity === 'critical') {
+            newCritical.push(delta.new_findings[i]);
+        }
+    }
+
+    // Alert on new critical findings via email.
+    if (newCritical.length > 0) {
+        var recipient = gs.getProperty('x_jobpulse.alert_recipient', '');
+        if (!recipient) {
+            try {
+                var cfg = JSON.parse(gs.getProperty('x_jobpulse.config', '{}'));
+                recipient = cfg.alert_recipient || '';
+            } catch (e) {
+                recipient = '';
+            }
+        }
+        if (recipient) {
+            var mail = new GlideEmailOutbound();
+            mail.setTo(recipient);
+            mail.setSubject('JobPulse Alert: ' + newCritical.length + ' new critical scheduled-job finding(s)');
+            var body = 'The following new critical findings were detected in the scheduled-job estate:\n\n';
+            for (var j = 0; j < newCritical.length; j++) {
+                body += '- ' + newCritical[j].job_name +
+                        ' (' + newCritical[j].finding_type + '): ' +
+                        newCritical[j].remediation + '\n';
+            }
+            body += '\nScanned ' + stats.scanned + ' jobs, ' + stats.findings +
+                    ' total findings, ' + stats.critical + ' critical.\n';
+            body += 'Review the JobPulse dashboard for full details.\n';
+            mail.setBody(body);
+            mail.send();
+        } else {
+            gs.warn('JobPulse: no alert recipient configured (x_jobpulse.alert_recipient); skipping email alert');
+        }
+    }
+
+    gs.info('JobPulse Nightly Pulse Scan completed: ' + stats.scanned + ' jobs scanned, ' +
+            stats.findings + ' findings, ' + stats.critical + ' critical, ' +
+            newCritical.length + ' new critical alerts');
+})();]]></script>
+  </sysauto_script>
+
+  <!-- ===== ACLs ===== -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_finding</name>
+    <operation>read</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_finding</name>
+    <operation>write</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_finding</name>
+    <operation>create</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_finding</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_finding</name>
+    <operation>read</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_user</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_health</name>
+    <operation>read</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_health</name>
+    <operation>write</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_health</name>
+    <operation>create</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_health</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_health</name>
+    <operation>read</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_user</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>Execute Action</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>Get Analytics</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_user</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>Get Analytics</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+
+  <!-- ===== APPLICATION MENU MODULES ===== -->
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_jobpulse</application>
+    <name>Health Dashboard</name>
+    <title>Health Dashboard</title>
+    <link_type>DIRECT</link_type>
+    <order>100</order>
+    <roles>x_jobpulse_admin,x_jobpulse_user</roles>
+  </sys_app_module>
+
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_jobpulse</application>
+    <name>Overlap Map</name>
+    <title>Overlap Map</title>
+    <link_type>DIRECT</link_type>
+    <order>200</order>
+    <roles>x_jobpulse_admin,x_jobpulse_user</roles>
+  </sys_app_module>
+
+  <sys_app_module action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <application>x_jobpulse</application>
+    <name>Ownership Report</name>
+    <title>Ownership Report</title>
+    <link_type>DIRECT</link_type>
+    <order>300</order>
+    <roles>x_jobpulse_admin,x_jobpulse_user</roles>
+  </sys_app_module>
+
 </unload>

@@ -1,173 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unload unload_date="2026-08-13 05:00:23">
-  <!-- Now Assist Cost Lens — ACL Definitions -->
-  <!-- Copyright (C) 2026 Vladimir Kapustin -->
-  <!-- SPDX-License-Identifier: AGPL-3.0 -->
-
-  <!-- x_nacl_interaction_log — Read ACL (admin + user) -->
-  <sys_security_acl>
-    <active>true</active>
-    <admin_overrides>true</admin_overrides>
-    <advanced>false</advanced>
-    <condition/>
-    <description>Allow x_nacl.admin and x_nacl.user to read interaction logs</description>
-    <name>x_nacl_interaction_log</name>
-    <operation>
-      <insert>false</insert>
-      <delete>false</delete>
-      <read>true</read>
-      <write>false</write>
-    </operation>
-    <script/>
-    <sys_scope>x_nacl</sys_scope>
+<!-- JobPulse — Scheduled Job Health Auditor — ACL Definitions -->
+<!-- Copyright (C) 2026 Vladimir Kapustin -->
+<!-- SPDX-License-Identifier: AGPL-3.0 -->
+<unload>
+  <!-- x_jobpulse_finding — Admin full CRUD -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_finding</name>
+    <operation>read</operation>
     <type>record</type>
     <requires_role>true</requires_role>
-  </sys_security_acl>
-  <sys_security_acl_role>
-    <sys_scope>x_nacl</sys_scope>
-    <name>x_nacl.admin</name>
-    <sys_security_acl>x_nacl_interaction_log</sys_security_acl>
-  </sys_security_acl_role>
-  <sys_security_acl_role>
-    <sys_scope>x_nacl</sys_scope>
-    <name>x_nacl.user</name>
-    <sys_security_acl>x_nacl_interaction_log</sys_security_acl>
-  </sys_security_acl_role>
-
-  <!-- x_nacl_interaction_log — Write ACL (admin only) -->
-  <sys_security_acl>
-    <active>true</active>
-    <admin_overrides>true</admin_overrides>
-    <advanced>false</advanced>
+    <role>x_jobpulse_admin</role>
     <condition/>
-    <description>Allow x_nacl.admin to create/update/delete interaction logs</description>
-    <name>x_nacl_interaction_log_write</name>
-    <operation>
-      <insert>true</insert>
-      <delete>true</delete>
-      <read>false</read>
-      <write>true</write>
-    </operation>
     <script/>
-    <sys_scope>x_nacl</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_finding</name>
+    <operation>write</operation>
     <type>record</type>
     <requires_role>true</requires_role>
-  </sys_security_acl>
-  <sys_security_acl_role>
-    <sys_scope>x_nacl</sys_scope>
-    <name>x_nacl.admin</name>
-    <sys_security_acl>x_nacl_interaction_log_write</sys_security_acl>
-  </sys_security_acl_role>
-
-  <!-- x_nacl_cost_config — Read ACL (admin + user) -->
-  <sys_security_acl>
-    <active>true</active>
-    <admin_overrides>true</admin_overrides>
-    <advanced>false</advanced>
+    <role>x_jobpulse_admin</role>
     <condition/>
-    <description>Allow x_nacl.admin and x_nacl.user to read cost configuration</description>
-    <name>x_nacl_cost_config</name>
-    <operation>
-      <insert>false</insert>
-      <delete>false</delete>
-      <read>true</read>
-      <write>false</write>
-    </operation>
     <script/>
-    <sys_scope>x_nacl</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_finding</name>
+    <operation>create</operation>
     <type>record</type>
     <requires_role>true</requires_role>
-  </sys_security_acl>
-  <sys_security_acl_role>
-    <sys_scope>x_nacl</sys_scope>
-    <name>x_nacl.admin</name>
-    <sys_security_acl>x_nacl_cost_config</sys_security_acl>
-  </sys_security_acl_role>
-  <sys_security_acl_role>
-    <sys_scope>x_nacl</sys_scope>
-    <name>x_nacl.user</name>
-    <sys_security_acl>x_nacl_cost_config</sys_security_acl>
-  </sys_security_acl_role>
-
-  <!-- x_nacl_cost_config — Write ACL (admin only) -->
-  <sys_security_acl>
-    <active>true</active>
-    <admin_overrides>true</admin_overrides>
-    <advanced>false</advanced>
+    <role>x_jobpulse_admin</role>
     <condition/>
-    <description>Allow x_nacl.admin to create/update/delete cost configuration</description>
-    <name>x_nacl_cost_config_write</name>
-    <operation>
-      <insert>true</insert>
-      <delete>true</delete>
-      <read>false</read>
-      <write>true</write>
-    </operation>
     <script/>
-    <sys_scope>x_nacl</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_finding</name>
+    <operation>delete</operation>
     <type>record</type>
     <requires_role>true</requires_role>
-  </sys_security_acl>
-  <sys_security_acl_role>
-    <sys_scope>x_nacl</sys_scope>
-    <name>x_nacl.admin</name>
-    <sys_security_acl>x_nacl_cost_config_write</sys_security_acl>
-  </sys_security_acl_role>
-
-  <!-- REST Endpoint: POST /api/x_nacl/execute — admin only -->
-  <sys_security_acl>
-    <active>true</active>
-    <admin_overrides>true</admin_overrides>
-    <advanced>false</advanced>
+    <role>x_jobpulse_admin</role>
     <condition/>
-    <description>Allow x_nacl.admin to execute POST /api/x_nacl/execute</description>
-    <name>x_nacl_execute</name>
-    <operation>
-      <insert>false</insert>
-      <delete>false</delete>
-      <read>false</read>
-      <write>false</write>
-      <execute>true</execute>
-    </operation>
     <script/>
-    <sys_scope>x_nacl</sys_scope>
+  </sys_security_acl>
+
+  <!-- x_jobpulse_finding — User read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_finding</name>
+    <operation>read</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_user</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+
+  <!-- x_jobpulse_health — Admin full CRUD -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_health</name>
+    <operation>read</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_health</name>
+    <operation>write</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_health</name>
+    <operation>create</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_health</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+
+  <!-- x_jobpulse_health — User read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_jobpulse_health</name>
+    <operation>read</operation>
+    <type>record</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_user</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
+
+  <!-- REST endpoint execute ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>Execute Action</name>
+    <operation>execute</operation>
     <type>rest_endpoint</type>
     <requires_role>true</requires_role>
-  </sys_security_acl>
-  <sys_security_acl_role>
-    <sys_scope>x_nacl</sys_scope>
-    <name>x_nacl.admin</name>
-    <sys_security_acl>x_nacl_execute</sys_security_acl>
-  </sys_security_acl_role>
-
-  <!-- REST Endpoint: GET /api/x_nacl/analytics — user + admin -->
-  <sys_security_acl>
-    <active>true</active>
-    <admin_overrides>true</admin_overrides>
-    <advanced>false</advanced>
+    <role>x_jobpulse_admin</role>
     <condition/>
-    <description>Allow x_nacl.user and x_nacl.admin to read analytics</description>
-    <name>x_nacl_analytics</name>
-    <operation>
-      <insert>false</insert>
-      <delete>false</delete>
-      <read>false</read>
-      <write>false</write>
-      <execute>true</execute>
-    </operation>
     <script/>
-    <sys_scope>x_nacl</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>Get Analytics</name>
+    <operation>execute</operation>
     <type>rest_endpoint</type>
     <requires_role>true</requires_role>
+    <role>x_jobpulse_user</role>
+    <condition/>
+    <script/>
   </sys_security_acl>
-  <sys_security_acl_role>
-    <sys_scope>x_nacl</sys_scope>
-    <name>x_nacl.admin</name>
-    <sys_security_acl>x_nacl_analytics</sys_security_acl>
-  </sys_security_acl_role>
-  <sys_security_acl_role>
-    <sys_scope>x_nacl</sys_scope>
-    <name>x_nacl.user</name>
-    <sys_security_acl>x_nacl_analytics</sys_security_acl>
-  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>Get Analytics</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <requires_role>true</requires_role>
+    <role>x_jobpulse_admin</role>
+    <condition/>
+    <script/>
+  </sys_security_acl>
 </unload>
