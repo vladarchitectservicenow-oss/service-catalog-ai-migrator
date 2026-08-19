@@ -1,0 +1,3172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-19 05:00:00">
+  <sys_app action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <enforce_license>log</enforce_license>
+    <license>AGPL-3.0</license>
+    <name>ClientScript Medic</name>
+    <scope>x_snc_csm</scope>
+    <short_description>Audits client-side scripts and UI policies for field-level conflicts, broken references, and overlapping policies.</short_description>
+    <store_correlation_id/>
+    <sys_class_name>sys_app</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000000</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ClientScript Medic</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_app_x_snc_csm</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <version>1.0.0</version>
+  </sys_app>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <can_delegate>true</can_delegate>
+    <description>ClientScript Medic administrator — full access to run scans, view findings, and manage configuration.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_snc_csm.admin</name>
+    <requires_subscription>-1</requires_subscription>
+    <scoped_admin>false</scoped_admin>
+    <suffix>admin</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000010</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm.admin</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_user_role_x_snc_csm_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <can_delegate>true</can_delegate>
+    <description>ClientScript Medic user — read-only access to findings, conflict maps, and health scores.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_snc_csm.user</name>
+    <requires_subscription>-1</requires_subscription>
+    <scoped_admin>false</scoped_admin>
+    <suffix>user</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000011</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm.user</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_user_role_x_snc_csm_user</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+  </sys_user_role>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <admin_only>false</admin_only>
+    <name>sys_script_client</name>
+    <operation>read</operation>
+    <source_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm000000000000000000000000000000600</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_script_client</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_scope_privilege_sys_script_client</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <target_name>sys_script_client</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <admin_only>false</admin_only>
+    <name>sys_ui_policy</name>
+    <operation>read</operation>
+    <source_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm000000000000000000000000000000601</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_ui_policy</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_scope_privilege_sys_ui_policy</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <target_name>sys_ui_policy</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <admin_only>false</admin_only>
+    <name>sys_ui_policy_action</name>
+    <operation>read</operation>
+    <source_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm000000000000000000000000000000602</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_ui_policy_action</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_scope_privilege_sys_ui_policy_action</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <target_name>sys_ui_policy_action</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <admin_only>false</admin_only>
+    <name>catalog_script_client</name>
+    <operation>read</operation>
+    <source_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm000000000000000000000000000000603</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>catalog_script_client</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_scope_privilege_catalog_script_client</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <target_name>catalog_script_client</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <admin_only>false</admin_only>
+    <name>sys_script_include</name>
+    <operation>read</operation>
+    <source_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm000000000000000000000000000000606</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_script_include</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_scope_privilege_sys_script_include</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <target_name>sys_script_include</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <admin_only>false</admin_only>
+    <name>sys_dictionary</name>
+    <operation>read</operation>
+    <source_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm000000000000000000000000000000607</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_dictionary</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_scope_privilege_sys_dictionary</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <target_name>sys_dictionary</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <admin_only>false</admin_only>
+    <name>item_option_new</name>
+    <operation>read</operation>
+    <source_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm000000000000000000000000000000609</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>item_option_new</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_scope_privilege_item_option_new</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <target_name>item_option_new</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <admin_only>false</admin_only>
+    <name>sys_db_object</name>
+    <operation>read</operation>
+    <source_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm000000000000000000000000000000608</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_db_object</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_scope_privilege_sys_db_object</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <target_name>sys_db_object</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snc_csm.ClientScriptMedicEngine</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Deterministic audit engine: conflict map, overlap detection, reference resolution, health scoring.</description>
+    <name>ClientScriptMedicEngine</name>
+    <script><![CDATA[
+// ClientScript Medic — ClientScriptMedicEngine (deterministic audit core)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Deterministic engine that audits every client-side script and UI Policy on an
+// instance: builds a field x event conflict map, detects overlapping/dead UI
+// policies, resolves field/table/script-include references against the live
+// schema, and scores per-table form health. AI is NOT used here — detection is
+// 100% reproducible. AI only enriches findings with advisory text (see
+// ClientScriptMedicAI).
+//
+// @class ClientScriptMedicEngine @namespace x_snc_csm
+
+var ClientScriptMedicEngine = Class.create();
+ClientScriptMedicEngine.prototype = {
+
+    initialize: function () {
+        this._findings = [];
+        this._runId = '';
+        this._healthScores = []; // per-table health scores (init to avoid undefined)
+        this._fieldCache = {};   // table -> { fieldName: true }
+        this._tableCache = {};   // tableName -> true
+        this._siCache = {};      // scriptIncludeName -> true
+        this._catalogVarCache = {}; // catalog variable name -> true
+        this._loadedCaches = false;
+    },
+
+    // ------------------------------------------------------------------
+    // Public API
+    // ------------------------------------------------------------------
+
+    /**
+     * Run a full audit. Orchestrates conflict map, overlap detection, reference
+     * resolution, and health scoring, persisting findings and a scan-run record.
+     * Returns the run sys_id.
+     */
+    scanAll: function () {
+        this._loadCaches();
+        this._runId = this._createRun();
+
+        this._buildConflictMap();
+        this._detectOverlaps();
+        this._resolveReferences();
+        this._scoreForms();
+
+        this._finalizeRun();
+        return this._runId;
+    },
+
+    /**
+     * Return the conflict map for a given table (or all tables when empty).
+     * Returns an array of { table, field, event, scripts, policies, severity }.
+     */
+    getConflictMap: function (tableName) {
+        var out = [];
+        var gr = new GlideRecord('x_snc_csm_finding');
+        gr.addQuery('finding_type', 'CONFLICT');
+        if (tableName) {
+            gr.addQuery('table_name', tableName);
+        }
+        gr.orderBy('table_name');
+        gr.query();
+        while (gr.next()) {
+            out.push(this._findingToObject(gr));
+        }
+        // Rank by severity weight (CRITICAL > WARNING > INFO), not alphabetically.
+        var weight = { CRITICAL: 0, WARNING: 1, INFO: 2 };
+        out.sort(function (a, b) {
+            var wa = weight[a.severity] !== undefined ? weight[a.severity] : 3;
+            var wb = weight[b.severity] !== undefined ? weight[b.severity] : 3;
+            return wa - wb;
+        });
+        return out;
+    },
+
+    /**
+     * Return per-table health scores. Returns an array of
+     * { table, score, critical, warning, info, last_run }.
+     */
+    getHealthScores: function () {
+        var gr = new GlideRecord('x_snc_csm_scan_run');
+        gr.addQuery('status', 'completed');
+        gr.orderByDesc('completed_on');
+        gr.setLimit(1);
+        gr.query();
+        if (!gr.next()) {
+            return [];
+        }
+        var raw = gr.getValue('health_scores_json') || '[]';
+        var parsed = [];
+        try {
+            parsed = JSON.parse(raw);
+        } catch (e) {
+            parsed = [];
+        }
+        return parsed;
+    },
+
+    /**
+     * Return findings, optionally filtered by type and table.
+     */
+    getFindings: function (findingType, tableName) {
+        var out = [];
+        var gr = new GlideRecord('x_snc_csm_finding');
+        if (findingType) {
+            gr.addQuery('finding_type', findingType);
+        }
+        if (tableName) {
+            gr.addQuery('table_name', tableName);
+        }
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(500);
+        gr.query();
+        while (gr.next()) {
+            out.push(this._findingToObject(gr));
+        }
+        return out;
+    },
+
+    // ------------------------------------------------------------------
+    // Cache loading (cross-scope reads of OOTB tables)
+    // ------------------------------------------------------------------
+
+    _loadCaches: function () {
+        if (this._loadedCaches) {
+            return;
+        }
+
+        // Field names per table
+        var d = new GlideRecord('sys_dictionary');
+        d.addNotNullQuery('element');
+        d.addNotNullQuery('name');
+        d.setLimit(0);
+        d.query();
+        while (d.next()) {
+            var tbl = d.getValue('name');
+            var el = d.getValue('element');
+            if (!this._fieldCache[tbl]) {
+                this._fieldCache[tbl] = {};
+            }
+            this._fieldCache[tbl][el] = true;
+        }
+
+        // Table names
+        var t = new GlideRecord('sys_db_object');
+        t.addNotNullQuery('name');
+        t.setLimit(0);
+        t.query();
+        while (t.next()) {
+            this._tableCache[t.getValue('name')] = true;
+        }
+
+        // Script include names
+        var s = new GlideRecord('sys_script_include');
+        s.addNotNullQuery('name');
+        s.setLimit(0);
+        s.query();
+        while (s.next()) {
+            this._siCache[s.getValue('name')] = true;
+        }
+
+        // Catalog variable names (item_option_new). Catalog client scripts
+        // reference variables, not table fields, so they are validated against
+        // this cache instead of sys_dictionary.
+        var cv = new GlideRecord('item_option_new');
+        cv.addNotNullQuery('name');
+        cv.setLimit(0);
+        cv.query();
+        while (cv.next()) {
+            this._catalogVarCache[cv.getValue('name')] = true;
+        }
+
+        this._loadedCaches = true;
+    },
+
+    // ------------------------------------------------------------------
+    // Scan run lifecycle
+    // ------------------------------------------------------------------
+
+    _createRun: function () {
+        var gr = new GlideRecord('x_snc_csm_scan_run');
+        gr.initialize();
+        gr.setValue('status', 'running');
+        gr.setValue('started_on', new GlideDateTime().getValue());
+        gr.setValue('baseline_fingerprint', this._computeFingerprint());
+        var sysId = '';
+        try {
+            sysId = gr.insert();
+        } catch (e) {
+            gs.error('ClientScriptMedic: failed to create scan run: ' + e);
+        }
+        return sysId;
+    },
+
+    _finalizeRun: function () {
+        if (!this._runId) {
+            return;
+        }
+        var gr = new GlideRecord('x_snc_csm_scan_run');
+        if (!gr.get(this._runId)) {
+            return;
+        }
+        gr.setValue('status', 'completed');
+        gr.setValue('completed_on', new GlideDateTime().getValue());
+        gr.setValue('finding_count', this._findings.length);
+        gr.setValue('health_scores_json', JSON.stringify(this._healthScores));
+        try {
+            gr.update();
+        } catch (e) {
+            gs.error('ClientScriptMedic: failed to finalize scan run: ' + e);
+        }
+    },
+
+    _computeFingerprint: function () {
+        // Stable fingerprint of the script/policy inventory so the nightly delta
+        // job can detect drift. Sorted sys_id keys only — no timestamps, so the
+        // hash changes only when scripts/policies are added or removed.
+        var keys = [];
+        var gr = new GlideRecord('sys_script_client');
+        gr.addNotNullQuery('sys_id');
+        gr.setLimit(0);
+        gr.query();
+        while (gr.next()) {
+            keys.push('cs:' + gr.getValue('sys_id'));
+        }
+        var up = new GlideRecord('sys_ui_policy');
+        up.addNotNullQuery('sys_id');
+        up.setLimit(0);
+        up.query();
+        while (up.next()) {
+            keys.push('up:' + up.getValue('sys_id'));
+        }
+        keys.sort();
+        return new GlideDigest().getMD5Hex(keys.join('|'));
+    },
+
+    // ------------------------------------------------------------------
+    // 1. Field x Event conflict map
+    // ------------------------------------------------------------------
+
+    _buildConflictMap: function () {
+        // Collect client scripts grouped by (table, field, event)
+        var scriptMap = {}; // key -> [ {name, sys_id, body, type} ]
+        var cs = new GlideRecord('sys_script_client');
+        cs.addNotNullQuery('script');
+        cs.setLimit(0);
+        cs.query();
+        while (cs.next()) {
+            var table = cs.getValue('table') || '';
+            var field = cs.getValue('field') || '';
+            var type = cs.getValue('type') || '';
+            var body = cs.getValue('script') || '';
+            var refs = this._parseFieldRefs(body);
+            // A client script may touch multiple fields; attribute to each.
+            var fields = refs.length > 0 ? refs : [field];
+            for (var i = 0; i < fields.length; i++) {
+                var key = table + '|' + fields[i] + '|' + type;
+                if (!scriptMap[key]) {
+                    scriptMap[key] = [];
+                }
+                scriptMap[key].push({
+                    name: cs.getValue('name') || '',
+                    sys_id: cs.getValue('sys_id') || '',
+                    body: body,
+                    type: type
+                });
+            }
+        }
+
+        // Collect UI policy actions grouped by (table, field, event)
+        var policyMap = {}; // key -> [ {name, sys_id, action, value} ]
+        var upa = new GlideRecord('sys_ui_policy_action');
+        upa.addNotNullQuery('ui_policy');
+        upa.setLimit(0);
+        upa.query();
+        while (upa.next()) {
+            var up = new GlideRecord('sys_ui_policy');
+            if (!up.get(upa.getValue('ui_policy'))) {
+                continue;
+            }
+            var pTable = up.getValue('table') || '';
+            var pField = upa.getValue('field') || '';
+            var pAction = upa.getValue('action') || '';
+            var pValue = upa.getValue('value') || '';
+            // UI policies fire on load and on change; attribute to both.
+            var events = ['onLoad', 'onChange'];
+            for (var e = 0; e < events.length; e++) {
+                var key = pTable + '|' + pField + '|' + events[e];
+                if (!policyMap[key]) {
+                    policyMap[key] = [];
+                }
+                policyMap[key].push({
+                    name: up.getValue('name') || '',
+                    sys_id: up.getValue('sys_id') || '',
+                    action: pAction,
+                    value: pValue
+                });
+            }
+        }
+
+        // Detect conflicts within each key
+        var keys = {};
+        for (var k in scriptMap) {
+            keys[k] = true;
+        }
+        for (var k2 in policyMap) {
+            keys[k2] = true;
+        }
+
+        for (var key in keys) {
+            var parts = key.split('|');
+            var tbl = parts[0];
+            var fld = parts[1];
+            var evt = parts[2];
+            var scripts = scriptMap[key] || [];
+            var policies = policyMap[key] || [];
+
+            // Conflict A: two client scripts both setValue the same field
+            var setters = [];
+            for (var a = 0; a < scripts.length; a++) {
+                if (scripts[a].body.indexOf('setValue') >= 0) {
+                    setters.push(scripts[a]);
+                }
+            }
+            if (setters.length >= 2) {
+                this._addFinding(tbl, fld, evt, 'CONFLICT', 'CRITICAL',
+                    'Multiple client scripts call setValue on the same field/event',
+                    setters[0].sys_id,
+                    'Scripts: ' + this._names(setters) + '. The later script overwrites the earlier one.');
+            }
+
+            // Conflict B: a script setValue vs a policy set_value/read_only on same field
+            if (setters.length >= 1 && policies.length >= 1) {
+                var mutating = false;
+                for (var p = 0; p < policies.length; p++) {
+                    if (policies[p].action === 'set_value' || policies[p].action === 'read_only' ||
+                        policies[p].action === 'mandatory') {
+                        mutating = true;
+                    }
+                }
+                if (mutating) {
+                    this._addFinding(tbl, fld, evt, 'CONFLICT', 'WARNING',
+                        'Client script and UI policy both mutate the same field',
+                        setters[0].sys_id,
+                        'A client script setValue competes with a UI policy action on this field.');
+                }
+            }
+
+            // Conflict C: two UI policies with contradictory actions on same field
+            var actions = {};
+            for (var q = 0; q < policies.length; q++) {
+                actions[policies[q].action] = true;
+            }
+            if (actions['set_value'] && actions['read_only']) {
+                this._addFinding(tbl, fld, evt, 'CONFLICT', 'CRITICAL',
+                    'UI policies apply contradictory actions to the same field',
+                    policies[0].sys_id,
+                    'One policy sets a value while another forces read-only on the same field.');
+            }
+        }
+    },
+
+    // ------------------------------------------------------------------
+    // 2. UI policy overlap / dead-condition detection
+    // ------------------------------------------------------------------
+
+    _detectOverlaps: function () {
+        var byTable = {}; // table -> [ {sys_id, name, conditions, active} ]
+        var up = new GlideRecord('sys_ui_policy');
+        up.addNotNullQuery('table');
+        up.setLimit(0);
+        up.query();
+        while (up.next()) {
+            var tbl = up.getValue('table');
+            if (!byTable[tbl]) {
+                byTable[tbl] = [];
+            }
+            byTable[tbl].push({
+                sys_id: up.getValue('sys_id'),
+                name: up.getValue('name'),
+                conditions: up.getValue('conditions') || '',
+                active: up.getValue('active')
+            });
+        }
+
+        for (var table in byTable) {
+            var list = byTable[table];
+            for (var i = 0; i < list.length; i++) {
+                // Dead condition: contradictory active=true^active=false
+                if (this._isDeadCondition(list[i].conditions)) {
+                    this._addFinding(table, '', 'onLoad', 'DEAD_POLICY', 'WARNING',
+                        'UI policy condition can never evaluate true',
+                        list[i].sys_id,
+                        'Policy "' + list[i].name + '" has a self-contradictory condition.');
+                }
+                // Duplicate: same table + same conditions as another policy
+                for (var j = i + 1; j < list.length; j++) {
+                    if (list[i].conditions === list[j].conditions &&
+                        list[i].conditions !== '') {
+                        this._addFinding(table, '', 'onLoad', 'OVERLAP', 'WARNING',
+                            'Duplicate UI policies with identical conditions',
+                            list[i].sys_id,
+                            'Policies "' + list[i].name + '" and "' + list[j].name +
+                            '" share identical conditions and will both fire.');
+                    }
+                }
+            }
+        }
+
+        // Actions targeting non-existent fields
+        var upa = new GlideRecord('sys_ui_policy_action');
+        upa.addNotNullQuery('field');
+        upa.setLimit(0);
+        upa.query();
+        while (upa.next()) {
+            var up2 = new GlideRecord('sys_ui_policy');
+            if (!up2.get(upa.getValue('ui_policy'))) {
+                continue;
+            }
+            var pTable = up2.getValue('table') || '';
+            var pField = upa.getValue('field') || '';
+            if (pField && !this._fieldExists(pTable, pField)) {
+                this._addFinding(pTable, pField, 'onLoad', 'BROKEN_REF', 'CRITICAL',
+                    'UI policy action targets a non-existent field',
+                    up2.getValue('sys_id'),
+                    'Field "' + pField + '" does not exist on table "' + pTable + '".');
+            }
+        }
+    },
+
+    _isDeadCondition: function (conditions) {
+        if (!conditions) {
+            return false;
+        }
+        // Detect contradictory pairs like active=true^active=false
+        var re = /([A-Za-z0-9_]+)\s*=\s*([^^]+)\^[^^]*\1\s*=\s*([^^]+)/;
+        var m = conditions.match(re);
+        if (m) {
+            var v1 = m[2].trim();
+            var v2 = m[3].trim();
+            if ((v1 === 'true' && v2 === 'false') || (v1 === 'false' && v2 === 'true')) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    // ------------------------------------------------------------------
+    // 3. Reference integrity
+    // ------------------------------------------------------------------
+
+    _resolveReferences: function () {
+        // Client scripts
+        var cs = new GlideRecord('sys_script_client');
+        cs.addNotNullQuery('script');
+        cs.setLimit(0);
+        cs.query();
+        while (cs.next()) {
+            this._checkScriptRefs(
+                cs.getValue('table') || '',
+                cs.getValue('script') || '',
+                cs.getValue('sys_id') || '',
+                cs.getValue('name') || ''
+            );
+        }
+
+        // Catalog client scripts
+        var ccs = new GlideRecord('catalog_script_client');
+        ccs.addNotNullQuery('script');
+        ccs.setLimit(0);
+        ccs.query();
+        while (ccs.next()) {
+            this._checkScriptRefs(
+                'catalog',
+                ccs.getValue('script') || '',
+                ccs.getValue('sys_id') || '',
+                ccs.getValue('name') || ''
+            );
+        }
+    },
+
+    _checkScriptRefs: function (table, body, sysId, name) {
+        // Table-level reference validation (uses the sys_db_object cache).
+        if (table && table !== 'catalog' && !this._tableExists(table)) {
+            this._addFinding(table, '', 'onLoad', 'BROKEN_REF', 'CRITICAL',
+                'Client script targets a non-existent table',
+                sysId,
+                'Script "' + name + '" targets table "' + table + '" which does not exist.');
+        }
+
+        // Field references. Catalog client scripts reference catalog variables
+        // (item_option_new), not table fields, so they are validated against a
+        // separate cache to avoid guaranteed false positives.
+        var fieldRefs = this._parseFieldRefs(body);
+        for (var i = 0; i < fieldRefs.length; i++) {
+            var f = fieldRefs[i];
+            var exists = (table === 'catalog')
+                ? this._catalogVarExists(f)
+                : this._fieldExists(table, f);
+            if (f && !exists) {
+                this._addFinding(table, f, 'onLoad', 'BROKEN_REF', 'CRITICAL',
+                    'Client script references a non-existent field',
+                    sysId,
+                    'Script "' + name + '" references field "' + f +
+                    '" which does not exist on table "' + table + '".');
+            }
+        }
+
+        // Script include references (GlideAjax)
+        var siRefs = this._parseScriptIncludeRefs(body);
+        for (var j = 0; j < siRefs.length; j++) {
+            var si = siRefs[j];
+            if (si && !this._siCache[si]) {
+                this._addFinding(table, '', 'onLoad', 'BROKEN_REF', 'CRITICAL',
+                    'Client script calls a non-existent script include',
+                    sysId,
+                    'Script "' + name + '" calls GlideAjax script include "' + si +
+                    '" which does not exist.');
+            }
+        }
+    },
+
+    _parseFieldRefs: function (body) {
+        var out = [];
+        var re = /g_form\.(?:getControl|setValue|getReference|getValue|setReadOnly|setMandatory|setVisible|setDisplay|addOption|clearValue|getField)\s*\(\s*['"]([^'"]+)['"]/g;
+        var m;
+        while ((m = re.exec(body)) !== null) {
+            if (out.indexOf(m[1]) < 0) {
+                out.push(m[1]);
+            }
+        }
+        return out;
+    },
+
+    _parseScriptIncludeRefs: function (body) {
+        var out = [];
+        // GlideAjax('ScriptIncludeName', ...)
+        var re = /GlideAjax\s*\(\s*['"]([^'"]+)['"]/g;
+        var m;
+        while ((m = re.exec(body)) !== null) {
+            if (out.indexOf(m[1]) < 0) {
+                out.push(m[1]);
+            }
+        }
+        return out;
+    },
+
+    _fieldExists: function (table, field) {
+        if (!table || !field) {
+            return true; // cannot validate without both
+        }
+        var cache = this._fieldCache[table];
+        if (!cache) {
+            return false;
+        }
+        return cache[field] === true;
+    },
+
+    _tableExists: function (table) {
+        if (!table) {
+            return true; // cannot validate without a table name
+        }
+        return this._tableCache[table] === true;
+    },
+
+    _catalogVarExists: function (name) {
+        if (!name) {
+            return true; // cannot validate without a name
+        }
+        return this._catalogVarCache[name] === true;
+    },
+
+    // ------------------------------------------------------------------
+    // 4. Health scoring
+    // ------------------------------------------------------------------
+
+    _scoreForms: function () {
+        var scores = {}; // table -> {critical, warning, info}
+        for (var i = 0; i < this._findings.length; i++) {
+            var f = this._findings[i];
+            var tbl = f.table || '(global)';
+            if (!scores[tbl]) {
+                scores[tbl] = { critical: 0, warning: 0, info: 0 };
+            }
+            if (f.severity === 'CRITICAL') {
+                scores[tbl].critical++;
+            } else if (f.severity === 'WARNING') {
+                scores[tbl].warning++;
+            } else {
+                scores[tbl].info++;
+            }
+        }
+
+        this._healthScores = [];
+        for (var table in scores) {
+            var s = scores[table];
+            var raw = 100 - (s.critical * 20 + s.warning * 5 + s.info * 1);
+            var score = raw < 0 ? 0 : raw;
+            this._healthScores.push({
+                table: table,
+                score: score,
+                critical: s.critical,
+                warning: s.warning,
+                info: s.info,
+                last_run: new GlideDateTime().getValue()
+            });
+        }
+        this._healthScores.sort(function (a, b) {
+            return a.score - b.score; // worst first
+        });
+    },
+
+    // ------------------------------------------------------------------
+    // Finding persistence
+    // ------------------------------------------------------------------
+
+    _addFinding: function (table, field, event, type, severity, title, sourceSysId, detail) {
+        var gr = new GlideRecord('x_snc_csm_finding');
+        gr.initialize();
+        gr.setValue('run_id', this._runId);
+        gr.setValue('table_name', table || '');
+        gr.setValue('field_name', field || '');
+        gr.setValue('event', event || '');
+        gr.setValue('finding_type', type);
+        gr.setValue('severity', severity);
+        gr.setValue('title', title);
+        gr.setValue('source_sys_id', sourceSysId || '');
+        gr.setValue('detail', detail || '');
+        gr.setValue('resolved', false);
+        try {
+            gr.insert();
+        } catch (e) {
+            gs.error('ClientScriptMedic: failed to insert finding: ' + e);
+        }
+        this._findings.push({
+            table: table || '',
+            field: field || '',
+            event: event || '',
+            type: type,
+            severity: severity,
+            title: title,
+            source_sys_id: sourceSysId || '',
+            detail: detail || ''
+        });
+    },
+
+    _findingToObject: function (gr) {
+        return {
+            sys_id: gr.getValue('sys_id') || '',
+            run_id: gr.getValue('run_id') || '',
+            table: gr.getValue('table_name') || '',
+            field: gr.getValue('field_name') || '',
+            event: gr.getValue('event') || '',
+            finding_type: gr.getValue('finding_type') || '',
+            severity: gr.getValue('severity') || '',
+            title: gr.getValue('title') || '',
+            source_sys_id: gr.getValue('source_sys_id') || '',
+            detail: gr.getValue('detail') || '',
+            ai_suggestion: gr.getValue('ai_suggestion') || '',
+            resolved: gr.getValue('resolved') === 'true' || gr.getValue('resolved') === true
+        };
+    },
+
+    _names: function (arr) {
+        var out = [];
+        for (var i = 0; i < arr.length; i++) {
+            out.push(arr[i].name);
+        }
+        return out.join(', ');
+    },
+
+    type: 'ClientScriptMedicEngine'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000070</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ClientScriptMedicEngine</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_script_include_ClientScriptMedicEngine</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+  </sys_script_include>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snc_csm.ClientScriptMedicAI</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Advisory AI layer: generates remediation suggestions via Generative AI Controller, degrades to rule-based templates.</description>
+    <name>ClientScriptMedicAI</name>
+    <script><![CDATA[
+// ClientScript Medic — ClientScriptMedicAI (advisory suggestion generator)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Advisory-only AI layer. Wraps the Generative AI Controller to produce
+// human-readable remediation suggestions for findings already flagged by the
+// deterministic engine. AI never detects conflicts, never modifies scripts,
+// and never gates the health score. If no BYOK provider is configured, it
+// degrades gracefully to a rule-based template and marks the finding
+// ai_suggestion = NOT_CONFIGURED.
+//
+// @class ClientScriptMedicAI @namespace x_snc_csm
+
+var ClientScriptMedicAI = Class.create();
+ClientScriptMedicAI.prototype = {
+
+    initialize: function () {
+        this._aiAvailable = false;
+        this._checked = false;
+    },
+
+    /**
+     * Generate an advisory suggestion for a single finding record.
+     * Returns the suggestion string (or a rule-based fallback).
+     */
+    suggestFix: function (findingGr) {
+        var type = findingGr.getValue('finding_type') || '';
+        var title = findingGr.getValue('title') || '';
+        var detail = findingGr.getValue('detail') || '';
+        var table = findingGr.getValue('table_name') || '';
+        var field = findingGr.getValue('field_name') || '';
+
+        if (this._isAIAvailable()) {
+            var suggestion = this._callGenerativeAI(type, title, detail, table, field);
+            if (suggestion) {
+                return suggestion;
+            }
+        }
+        return this._ruleBasedSuggestion(type, table, field);
+    },
+
+    /**
+     * Enrich all findings for a run with advisory suggestions.
+     */
+    enrichRun: function (runId) {
+        var gr = new GlideRecord('x_snc_csm_finding');
+        gr.addQuery('run_id', runId);
+        gr.query();
+        while (gr.next()) {
+            var suggestion = this.suggestFix(gr);
+            gr.setValue('ai_suggestion', suggestion);
+            try {
+                gr.update();
+            } catch (e) {
+                gs.error('ClientScriptMedic: failed to update ai_suggestion: ' + e);
+            }
+        }
+    },
+
+    // ------------------------------------------------------------------
+    // AI availability (BYOK capability check)
+    // ------------------------------------------------------------------
+
+    _isAIAvailable: function () {
+        if (this._checked) {
+            return this._aiAvailable;
+        }
+        this._checked = true;
+        try {
+            // Generative AI Controller is plugin-dependent. If the class is
+            // absent (vanilla PDI), degrade gracefully.
+            if (typeof sn_generative_ai === 'undefined' ||
+                typeof sn_generative_ai.GenerativeAI === 'undefined') {
+                this._aiAvailable = false;
+                return false;
+            }
+            this._aiAvailable = true;
+        } catch (e) {
+            this._aiAvailable = false;
+        }
+        return this._aiAvailable;
+    },
+
+    _callGenerativeAI: function (type, title, detail, table, field) {
+        try {
+            var prompt = this._buildPrompt(type, title, detail, table, field);
+            var genAI = new sn_generative_ai.GenerativeAI();
+            var result = genAI.generate(prompt);
+            if (result && result.text) {
+                return result.text;
+            }
+            return '';
+        } catch (e) {
+            gs.warn('ClientScriptMedic: GenerativeAI call failed, using rule-based fallback: ' + e);
+            return '';
+        }
+    },
+
+    _buildPrompt: function (type, title, detail, table, field) {
+        return 'You are a ServiceNow platform expert. A client-side script audit ' +
+            'found the following issue. Explain it in plain language and suggest a ' +
+            'concrete remediation. Do not modify any code.\n\n' +
+            'Finding type: ' + type + '\n' +
+            'Title: ' + title + '\n' +
+            'Table: ' + (table || '(n/a)') + '\n' +
+            'Field: ' + (field || '(n/a)') + '\n' +
+            'Detail: ' + detail;
+    },
+
+    // ------------------------------------------------------------------
+    // Rule-based fallback (no AI)
+    // ------------------------------------------------------------------
+
+    _ruleBasedSuggestion: function (type, table, field) {
+        var base = 'NOT_CONFIGURED — ';
+        switch (type) {
+            case 'CONFLICT':
+                return base + 'Review the conflicting scripts/policies on ' +
+                    (field ? 'field "' + field + '"' : 'this field') +
+                    ' and consolidate into a single source of truth. Prefer a UI Policy ' +
+                    'for declarative field control and remove redundant client-script setValue calls.';
+            case 'BROKEN_REF':
+                return base + 'Rename the broken reference to a valid field/script-include, ' +
+                    'or remove the dead code. Verify the target exists on ' +
+                    (table || 'the target table') + ' before re-enabling.';
+            case 'OVERLAP':
+                return base + 'Merge the duplicate UI policies into one, or differentiate ' +
+                    'their conditions so only the intended policy fires.';
+            case 'DEAD_POLICY':
+                return base + 'Delete the dead policy or correct its condition so it can ' +
+                    'evaluate true when intended.';
+            case 'PERF':
+                return base + 'Defer non-critical work out of onLoad, cache g_form lookups, ' +
+                    'and batch GlideAjax calls to reduce form load weight.';
+            default:
+                return base + 'Review the finding manually and apply the appropriate remediation.';
+        }
+    },
+
+    type: 'ClientScriptMedicAI'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000071</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ClientScriptMedicAI</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_script_include_ClientScriptMedicAI</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+  </sys_script_include>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snc_csm.ClientScriptMedicDeltaAudit</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Nightly delta audit: diffs new scan against previous baseline, emits new/resolved/regressed digest.</description>
+    <name>ClientScriptMedicDeltaAudit</name>
+    <script><![CDATA[
+// ClientScript Medic — Nightly Delta Audit (scheduled job)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Scheduled job that re-runs the full scan nightly and diffs the new baseline
+// fingerprint against the previous run, emitting a delta digest (new/resolved/
+// regressed findings) to the system log. Findings are never deleted — the
+// `resolved` flag is set instead so re-emergence is detectable.
+
+var ClientScriptMedicDeltaAudit = Class.create();
+ClientScriptMedicDeltaAudit.prototype = {
+
+    initialize: function () {},
+
+    run: function () {
+        var engine = new ClientScriptMedicEngine();
+        var newRunId = engine.scanAll();
+
+        // Enrich with AI suggestions (advisory only, degrades gracefully)
+        var ai = new ClientScriptMedicAI();
+        ai.enrichRun(newRunId);
+
+        // Diff against the previous completed run
+        var prev = this._getPreviousRun(newRunId);
+        if (!prev) {
+            gs.info('ClientScriptMedic: first scan complete, run ' + newRunId +
+                ' — no baseline to diff against.');
+            return;
+        }
+
+        var delta = this._diffRuns(prev, newRunId);
+        gs.info('ClientScriptMedic: nightly delta — new=' + delta.newCount +
+            ', resolved=' + delta.resolvedCount + ', regressed=' + delta.regressedCount);
+    },
+
+    _getPreviousRun: function (currentRunId) {
+        var gr = new GlideRecord('x_snc_csm_scan_run');
+        gr.addQuery('status', 'completed');
+        gr.addQuery('sys_id', '!=', currentRunId);
+        gr.orderByDesc('completed_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getValue('sys_id');
+        }
+        return '';
+    },
+
+    _diffRuns: function (prevRunId, newRunId) {
+        // Build a normalized key -> sys_id map for the previous run's findings
+        var prevKeys = {};
+        var p = new GlideRecord('x_snc_csm_finding');
+        p.addQuery('run_id', prevRunId);
+        p.query();
+        while (p.next()) {
+            prevKeys[this._key(p)] = p.getValue('sys_id');
+        }
+
+        // Walk the new run's findings, classify each
+        var newCount = 0;
+        var resolvedCount = 0;
+        var regressedCount = 0;
+        var n = new GlideRecord('x_snc_csm_finding');
+        n.addQuery('run_id', newRunId);
+        n.query();
+        while (n.next()) {
+            var k = this._key(n);
+            if (!prevKeys[k]) {
+                newCount++;
+                // A finding that reappears after being resolved is a regression.
+                if (this._wasResolved(n, newRunId)) {
+                    regressedCount++;
+                }
+            }
+        }
+
+        // Resolved = previous findings whose key is absent from the new run.
+        // Mark them resolved=true so re-emergence is detectable.
+        var newKeys = {};
+        var n2 = new GlideRecord('x_snc_csm_finding');
+        n2.addQuery('run_id', newRunId);
+        n2.query();
+        while (n2.next()) {
+            newKeys[this._key(n2)] = true;
+        }
+        for (var pk in prevKeys) {
+            if (!newKeys[pk]) {
+                resolvedCount++;
+                this._markResolved(prevKeys[pk]);
+            }
+        }
+
+        return {
+            newCount: newCount,
+            resolvedCount: resolvedCount,
+            regressedCount: regressedCount
+        };
+    },
+
+    _markResolved: function (findingSysId) {
+        var gr = new GlideRecord('x_snc_csm_finding');
+        if (!gr.get(findingSysId)) {
+            return;
+        }
+        gr.setValue('resolved', true);
+        try {
+            gr.update();
+        } catch (e) {
+            gs.error('ClientScriptMedic: failed to mark finding resolved: ' + e);
+        }
+    },
+
+    _wasResolved: function (findingGr, excludeRunId) {
+        var q = new GlideRecord('x_snc_csm_finding');
+        q.addQuery('resolved', true);
+        q.addQuery('table_name', findingGr.getValue('table_name') || '');
+        q.addQuery('field_name', findingGr.getValue('field_name') || '');
+        q.addQuery('event', findingGr.getValue('event') || '');
+        q.addQuery('finding_type', findingGr.getValue('finding_type') || '');
+        q.addQuery('title', findingGr.getValue('title') || '');
+        q.addQuery('run_id', '!=', excludeRunId);
+        q.setLimit(1);
+        q.query();
+        return q.next();
+    },
+
+    _key: function (gr) {
+        return (gr.getValue('table_name') || '') + '|' +
+            (gr.getValue('field_name') || '') + '|' +
+            (gr.getValue('event') || '') + '|' +
+            (gr.getValue('finding_type') || '') + '|' +
+            (gr.getValue('title') || '');
+    },
+
+    type: 'ClientScriptMedicDeltaAudit'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000072</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ClientScriptMedicDeltaAudit</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_script_include_ClientScriptMedicDeltaAudit</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+  </sys_script_include>
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>/api/x_snc_csm</base_uri>
+    <consumes>application/json</consumes>
+    <consumes_custom>false</consumes_custom>
+    <default_version>v1</default_version>
+    <doc_link/>
+    <enforce_acl>true</enforce_acl>
+    <name>ClientScript Medic API</name>
+    <namespace>x_snc_csm</namespace>
+    <produces>application/json</produces>
+    <produces_custom>false</produces_custom>
+    <service_id>x_snc_csm.rest</service_id>
+    <short_description>REST API for ClientScript Medic: run scans, query conflicts, health scores, and findings.</short_description>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000080</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ClientScript Medic API</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_ws_definition_x_snc_csm</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+  </sys_ws_definition>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_custom>false</consumes_custom>
+    <default_acl>x_snc_csm.rest</default_acl>
+    <documentation/>
+    <enforce_acl>true</enforce_acl>
+    <name>Execute</name>
+    <operation_uri>/execute</operation_uri>
+    <operation_script><![CDATA[
+// ClientScript Medic — POST /execute (action-dispatch REST endpoint)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single POST endpoint dispatching on an `action` body parameter. Consolidates
+// the design's `scan` and `findings` endpoints into one write/query surface.
+//
+// Actions: scan, findings, enrich
+
+(function process(request, response) {
+    var body = {};
+    try {
+        body = request.body ? request.body.data : {};
+    } catch (e) {
+        body = {};
+    }
+
+    var action = body.action || '';
+    var engine = new ClientScriptMedicEngine();
+    var result = {};
+
+    switch (action) {
+        case 'scan':
+            // Write action — admin role only.
+            if (!gs.hasRole('x_snc_csm.admin')) {
+                response.setStatus(403);
+                response.setBody(JSON.stringify({
+                    ok: false,
+                    error: 'Action "' + action + '" requires the x_snc_csm.admin role'
+                }));
+                return;
+            }
+            // Run a full audit; return the run sys_id.
+            var runId = engine.scanAll();
+            result = {
+                ok: true,
+                run_id: runId,
+                scanned_at: new GlideDateTime().getValue()
+            };
+            break;
+
+        case 'findings':
+            // Return findings, optionally filtered by type and table.
+            result = {
+                ok: true,
+                findings: engine.getFindings(body.finding_type || '', body.table_name || '')
+            };
+            break;
+
+        case 'enrich':
+            // Write action — admin role only.
+            if (!gs.hasRole('x_snc_csm.admin')) {
+                response.setStatus(403);
+                response.setBody(JSON.stringify({
+                    ok: false,
+                    error: 'Action "' + action + '" requires the x_snc_csm.admin role'
+                }));
+                return;
+            }
+            // Generate AI advisory suggestions for a completed run.
+            var ai = new ClientScriptMedicAI();
+            ai.enrichRun(body.run_id || '');
+            result = {
+                ok: true,
+                enriched_run_id: body.run_id || ''
+            };
+            break;
+
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                ok: false,
+                error: 'Unknown action: ' + action,
+                valid_actions: ['scan', 'findings', 'enrich']
+            }));
+            return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+})(request, response);
+]]></operation_script>
+    <produces>application/json</produces>
+    <produces_custom>false</produces_custom>
+    <relative_path>/execute</relative_path>
+    <request_method>POST</request_method>
+    <requires_acl>x_snc_csm.rest</requires_acl>
+    <requires_sn_csrf_protection>true</requires_sn_csrf_protection>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000081</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Execute</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_ws_operation_x_snc_csm_execute</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <web_service_definition display_value="ClientScript Medic API">csm00000000000000000000000000000080</web_service_definition>
+    <web_service_version>v1</web_service_version>
+  </sys_ws_operation>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_custom>false</consumes_custom>
+    <default_acl>x_snc_csm.rest</default_acl>
+    <documentation/>
+    <enforce_acl>true</enforce_acl>
+    <name>Status</name>
+    <operation_uri>/status</operation_uri>
+    <operation_script><![CDATA[
+// ClientScript Medic — GET /status (read-only reporting REST endpoint)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single GET endpoint returning conflict map, health scores, or findings based
+// on query parameters. Consolidates the design's `conflicts` and `health`
+// endpoints into one read-only surface.
+//
+// Query params: view=conflicts|health|findings, table=<name>, type=<finding_type>
+
+(function process(request, response) {
+    var q = request.queryParams || {};
+    var view = q.view || 'health';
+    var engine = new ClientScriptMedicEngine();
+    var result = { queried_at: new GlideDateTime().getValue() };
+
+    switch (view) {
+        case 'conflicts':
+            result.conflicts = engine.getConflictMap(q.table || '');
+            break;
+
+        case 'health':
+            result.health = engine.getHealthScores();
+            break;
+
+        case 'findings':
+            result.findings = engine.getFindings(q.type || '', q.table || '');
+            break;
+
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                ok: false,
+                error: 'Unknown view: ' + view,
+                valid_views: ['conflicts', 'health', 'findings']
+            }));
+            return;
+    }
+
+    result.ok = true;
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+})(request, response);
+]]></operation_script>
+    <produces>application/json</produces>
+    <produces_custom>false</produces_custom>
+    <relative_path>/status</relative_path>
+    <request_method>GET</request_method>
+    <requires_acl>x_snc_csm.rest</requires_acl>
+    <requires_sn_csrf_protection>false</requires_sn_csrf_protection>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000082</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Status</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_ws_operation_x_snc_csm_status</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <web_service_definition display_value="ClientScript Medic API">csm00000000000000000000000000000080</web_service_definition>
+    <web_service_version>v1</web_service_version>
+  </sys_ws_operation>
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Nightly delta audit: re-runs the full client-script/UI-policy scan and diffs against the previous baseline, emitting a new/resolved/regressed digest.</description>
+    <name>ClientScript Medic Nightly Delta Audit</name>
+    <run_as>admin</run_as>
+    <run_dayofweek/>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_period>daily</run_period>
+    <run_start>2026-08-19 02:00:00</run_start>
+    <run_time>02:00:00</run_time>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// ClientScript Medic — Nightly Delta Audit (scheduled job)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+var deltaAudit = new ClientScriptMedicDeltaAudit();
+deltaAudit.run();]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000050</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ClientScript Medic Nightly Delta Audit</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sysauto_script_csm_nightly_delta_audit</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+  </sysauto_script>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Read access to scan run records for x_snc_csm.admin and x_snc_csm.user roles.</description>
+    <name>x_snc_csm_scan_run</name>
+    <operation display_value="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000040</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_scan_run</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_security_acl_x_snc_csm_scan_run_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000041</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_scan_run</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm_scan_run">csm00000000000000000000000000000040</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_scan_run_read_x_snc_csm.admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.admin" name="x_snc_csm.admin">csm00000000000000000000000000000010</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000042</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_scan_run</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm_scan_run">csm00000000000000000000000000000040</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_scan_run_read_x_snc_csm.user</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.user" name="x_snc_csm.user">csm00000000000000000000000000000011</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Write access to scan run records for x_snc_csm.admin role only.</description>
+    <name>x_snc_csm_scan_run</name>
+    <operation display_value="write">write</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000043</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_scan_run</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_security_acl_x_snc_csm_scan_run_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000044</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_scan_run</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm_scan_run">csm00000000000000000000000000000043</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_scan_run_write_x_snc_csm.admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.admin" name="x_snc_csm.admin">csm00000000000000000000000000000010</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Read access to finding records for x_snc_csm.admin and x_snc_csm.user roles.</description>
+    <name>x_snc_csm_finding</name>
+    <operation display_value="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000045</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_finding</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_security_acl_x_snc_csm_finding_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000046</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_finding</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm_finding">csm00000000000000000000000000000045</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_finding_read_x_snc_csm.admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.admin" name="x_snc_csm.admin">csm00000000000000000000000000000010</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000047</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_finding</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm_finding">csm00000000000000000000000000000045</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_finding_read_x_snc_csm.user</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.user" name="x_snc_csm.user">csm00000000000000000000000000000011</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Write access to finding records for x_snc_csm.admin role only.</description>
+    <name>x_snc_csm_finding</name>
+    <operation display_value="write">write</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000048</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_finding</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_security_acl_x_snc_csm_finding_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000049</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_finding</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm_finding">csm00000000000000000000000000000048</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_finding_write_x_snc_csm.admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.admin" name="x_snc_csm.admin">csm00000000000000000000000000000010</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Execute access to the ClientScript Medic REST API for x_snc_csm.admin and x_snc_csm.user roles.</description>
+    <name>x_snc_csm.rest</name>
+    <operation display_value="execute">execute</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm0000000000000000000000000000004a</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm.rest</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_security_acl_x_snc_csm_rest_execute</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <type display_value="rest_endpoint">rest_endpoint</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm0000000000000000000000000000004b</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm.rest</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm.rest">csm0000000000000000000000000000004a</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_rest_execute_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.admin" name="x_snc_csm.admin">csm00000000000000000000000000000010</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm0000000000000000000000000000004c</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm.rest</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm.rest">csm0000000000000000000000000000004a</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_rest_execute_user</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.user" name="x_snc_csm.user">csm00000000000000000000000000000011</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+
+<sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <actions_access>false</actions_access>
+    <alter_access>false</alter_access>
+    <client_scripts_access>false</client_scripts_access>
+    <configuration_access>false</configuration_access>
+    <create_access>false</create_access>
+    <create_access_controls>true</create_access_controls>
+    <delete_access>false</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>Scan Run</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_snc_csm_scan_run</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000001</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Scan Run</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_db_object_x_snc_csm_scan_run</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <update_access>false</update_access>
+    <user_role display_value="x_snc_csm.admin" name="x_snc_csm.admin">csm00000000000000000000000000000010</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="status">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>1</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Status</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value>running</default_value>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>status</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_snc_csm_scan_run</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000011</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Status</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_scan_run_status</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="started_on">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Started On</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>started_on</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_snc_csm_scan_run</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000012</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Started On</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_scan_run_started_on</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="completed_on">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Completed On</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>completed_on</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_snc_csm_scan_run</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000013</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Completed On</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_scan_run_completed_on</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="baseline_fingerprint">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Baseline Fingerprint</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>baseline_fingerprint</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>64</max_length>
+    <name>x_snc_csm_scan_run</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000014</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Baseline Fingerprint</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_scan_run_baseline_fingerprint</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="finding_count">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Finding Count</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value>0</default_value>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>finding_count</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Integer">integer</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_snc_csm_scan_run</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000015</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Finding Count</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_scan_run_finding_count</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="health_scores_json">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Health Scores (JSON)</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>health_scores_json</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>4000</max_length>
+    <name>x_snc_csm_scan_run</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000016</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Health Scores (JSON)</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_scan_run_health_scores_json</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_snc_csm_scan_run">
+    <dependent_value/>
+    <element>status</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Running</label>
+    <language>en</language>
+    <name>x_snc_csm_scan_run</name>
+    <sequence>10</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000017</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <value>running</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_snc_csm_scan_run">
+    <dependent_value/>
+    <element>status</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Completed</label>
+    <language>en</language>
+    <name>x_snc_csm_scan_run</name>
+    <sequence>20</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000018</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <value>completed</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_snc_csm_scan_run">
+    <dependent_value/>
+    <element>status</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Failed</label>
+    <language>en</language>
+    <name>x_snc_csm_scan_run</name>
+    <sequence>30</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000019</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <value>failed</value>
+  </sys_choice>
+
+
+<sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <actions_access>false</actions_access>
+    <alter_access>false</alter_access>
+    <client_scripts_access>false</client_scripts_access>
+    <configuration_access>false</configuration_access>
+    <create_access>false</create_access>
+    <create_access_controls>true</create_access_controls>
+    <delete_access>false</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>Finding</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_snc_csm_finding</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000002</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Finding</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_db_object_x_snc_csm_finding</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <update_access>false</update_access>
+    <user_role display_value="x_snc_csm.admin" name="x_snc_csm.admin">csm00000000000000000000000000000010</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="run_id">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Run</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>run_id</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Reference">reference</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>32</max_length>
+    <name>x_snc_csm_finding</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference display_value="Scan Run" name="x_snc_csm_scan_run">x_snc_csm_scan_run</reference>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000021</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Run</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_finding_run_id</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="table_name">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Table</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>table_name</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>80</max_length>
+    <name>x_snc_csm_finding</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000022</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Table</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_finding_table_name</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="field_name">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Field</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>field_name</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>80</max_length>
+    <name>x_snc_csm_finding</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000023</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Field</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_finding_field_name</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="event">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Event</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>event</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_snc_csm_finding</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000024</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Event</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_finding_event</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="finding_type">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>1</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Finding Type</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>finding_type</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_snc_csm_finding</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000025</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Finding Type</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_finding_finding_type</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="severity">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>1</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Severity</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>severity</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_snc_csm_finding</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000026</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Severity</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_finding_severity</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="title">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Title</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>title</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>255</max_length>
+    <name>x_snc_csm_finding</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000027</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Title</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_finding_title</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_sys_id">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Source Sys ID</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>source_sys_id</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>32</max_length>
+    <name>x_snc_csm_finding</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000028</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Source Sys ID</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_finding_source_sys_id</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="detail">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Detail</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>detail</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>4000</max_length>
+    <name>x_snc_csm_finding</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000029</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Detail</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_finding_detail</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="ai_suggestion">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>AI Suggestion</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>ai_suggestion</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>4000</max_length>
+    <name>x_snc_csm_finding</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm0000000000000000000000000000002a</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>AI Suggestion</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_finding_ai_suggestion</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="resolved">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation><![CDATA[]]></calculation>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Resolved</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value>false</default_value>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>resolved</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="True/False">boolean</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_snc_csm_finding</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm0000000000000000000000000000002b</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Resolved</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_dictionary_x_snc_csm_finding_resolved</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" element="finding_type" name="x_snc_csm_finding">
+    <dependent_value/>
+    <element>finding_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Conflict</label>
+    <language>en</language>
+    <name>x_snc_csm_finding</name>
+    <sequence>10</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm0000000000000000000000000000002c</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <value>CONFLICT</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="finding_type" name="x_snc_csm_finding">
+    <dependent_value/>
+    <element>finding_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Broken Reference</label>
+    <language>en</language>
+    <name>x_snc_csm_finding</name>
+    <sequence>20</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm0000000000000000000000000000002d</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <value>BROKEN_REF</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="finding_type" name="x_snc_csm_finding">
+    <dependent_value/>
+    <element>finding_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Overlap</label>
+    <language>en</language>
+    <name>x_snc_csm_finding</name>
+    <sequence>30</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm0000000000000000000000000000002e</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <value>OVERLAP</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="finding_type" name="x_snc_csm_finding">
+    <dependent_value/>
+    <element>finding_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Dead Policy</label>
+    <language>en</language>
+    <name>x_snc_csm_finding</name>
+    <sequence>40</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm0000000000000000000000000000002f</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <value>DEAD_POLICY</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="finding_type" name="x_snc_csm_finding">
+    <dependent_value/>
+    <element>finding_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Performance</label>
+    <language>en</language>
+    <name>x_snc_csm_finding</name>
+    <sequence>50</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000030</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <value>PERF</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="severity" name="x_snc_csm_finding">
+    <dependent_value/>
+    <element>severity</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Critical</label>
+    <language>en</language>
+    <name>x_snc_csm_finding</name>
+    <sequence>10</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000031</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <value>CRITICAL</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="severity" name="x_snc_csm_finding">
+    <dependent_value/>
+    <element>severity</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Warning</label>
+    <language>en</language>
+    <name>x_snc_csm_finding</name>
+    <sequence>20</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000032</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <value>WARNING</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="severity" name="x_snc_csm_finding">
+    <dependent_value/>
+    <element>severity</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Info</label>
+    <language>en</language>
+    <name>x_snc_csm_finding</name>
+    <sequence>30</sequence>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000033</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <value>INFO</value>
+  </sys_choice>
+
+</unload>

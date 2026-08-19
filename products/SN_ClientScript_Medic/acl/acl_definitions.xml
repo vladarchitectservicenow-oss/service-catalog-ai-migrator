@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-19 05:00:00">
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Read access to scan run records for x_snc_csm.admin and x_snc_csm.user roles.</description>
+    <name>x_snc_csm_scan_run</name>
+    <operation display_value="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000040</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_scan_run</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_security_acl_x_snc_csm_scan_run_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000041</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_scan_run</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm_scan_run">csm00000000000000000000000000000040</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_scan_run_read_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.admin" name="x_snc_csm.admin">csm00000000000000000000000000000010</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000042</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_scan_run</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm_scan_run">csm00000000000000000000000000000040</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_scan_run_read_user</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.user" name="x_snc_csm.user">csm00000000000000000000000000000011</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Write access to scan run records for x_snc_csm.admin role only.</description>
+    <name>x_snc_csm_scan_run</name>
+    <operation display_value="write">write</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000043</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_scan_run</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_security_acl_x_snc_csm_scan_run_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000044</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_scan_run</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm_scan_run">csm00000000000000000000000000000043</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_scan_run_write_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.admin" name="x_snc_csm.admin">csm00000000000000000000000000000010</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Read access to finding records for x_snc_csm.admin and x_snc_csm.user roles.</description>
+    <name>x_snc_csm_finding</name>
+    <operation display_value="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000045</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_finding</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_security_acl_x_snc_csm_finding_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000046</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_finding</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm_finding">csm00000000000000000000000000000045</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_finding_read_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.admin" name="x_snc_csm.admin">csm00000000000000000000000000000010</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000047</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_finding</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm_finding">csm00000000000000000000000000000045</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_finding_read_user</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.user" name="x_snc_csm.user">csm00000000000000000000000000000011</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Write access to finding records for x_snc_csm.admin role only.</description>
+    <name>x_snc_csm_finding</name>
+    <operation display_value="write">write</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000048</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_finding</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_security_acl_x_snc_csm_finding_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <type display_value="record">record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm00000000000000000000000000000049</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm_finding</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm_finding">csm00000000000000000000000000000048</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_finding_write_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.admin" name="x_snc_csm.admin">csm00000000000000000000000000000010</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Execute access to the ClientScript Medic REST API for x_snc_csm.admin and x_snc_csm.user roles.</description>
+    <name>x_snc_csm.rest</name>
+    <operation display_value="execute">execute</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm0000000000000000000000000000004a</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm.rest</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_security_acl_x_snc_csm_rest_execute</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <type display_value="rest_endpoint">rest_endpoint</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm0000000000000000000000000000004b</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm.rest</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm.rest">csm0000000000000000000000000000004a</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_rest_execute_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.admin" name="x_snc_csm.admin">csm00000000000000000000000000000010</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-19 05:00:00</sys_created_on>
+    <sys_id>csm0000000000000000000000000000004c</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_csm.rest</sys_name>
+    <sys_package display_value="ClientScript Medic" source="x_snc_csm">csm00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ClientScript Medic">csm00000000000000000000000000000000</sys_scope>
+    <sys_security_acl display_value="x_snc_csm.rest">csm0000000000000000000000000000004a</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_x_snc_csm_rest_execute_user</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-19 05:00:00</sys_updated_on>
+    <sys_user_role display_value="x_snc_csm.user" name="x_snc_csm.user">csm00000000000000000000000000000011</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+</unload>
