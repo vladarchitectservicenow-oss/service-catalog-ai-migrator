@@ -1,0 +1,1176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-20 00:00:00">
+  <sys_scope action="INSERT_OR_UPDATE">
+    <app_scope>x_sn_acl_sentinel</app_scope>
+    <description>ACL Sentinel — least-privilege and drift auditor for ServiceNow ACLs.</description>
+    <name>ACL Sentinel</name>
+    <runtime_access_tracking>false</runtime_access_tracking>
+    <sys_class_name>sys_scope</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>ACL Sentinel</sys_name>
+    <sys_package display_value="ACL Sentinel">x_sn_acl_sentinel</sys_package>
+    <sys_scope display_value="ACL Sentinel">x_sn_acl_sentinel</sys_scope>
+    <template>false</template>
+    <vendor display_value="Vladimir Kapustin">Vladimir Kapustin</vendor>
+    <vendor_prefix>vkap</vendor_prefix>
+  </sys_scope>
+
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <can_delegate>true</can_delegate>
+    <description>ACL Sentinel administrator — can run scans and view findings.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_sn_acl_sentinel.admin</name>
+    <requires_subscription>-1</requires_subscription>
+    <scoped_admin>false</scoped_admin>
+    <suffix>admin</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>x_sn_acl_sentinel.admin</sys_name>
+    <sys_package display_value="ACL Sentinel">x_sn_acl_sentinel</sys_package>
+    <sys_scope display_value="ACL Sentinel">x_sn_acl_sentinel</sys_scope>
+  </sys_user_role>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_sn_acl_sentinel.AclSentinelEngine</api_name>
+    <caller_access>1</caller_access>
+    <client_callable>false</client_callable>
+    <description>Deterministic ACL audit engine — five detectors plus access-denied correlation.</description>
+    <name>AclSentinelEngine</name>
+    <script><![CDATA[// ACL Sentinel — AclSentinelEngine
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Deterministic ACL audit engine. Implements the five detectors
+// (least-privilege scoring, over-permissive, orphan/dead-rule,
+// conflict, cross-environment drift) plus access-denied correlation.
+// Pure GlideRecord logic — no LLM in the critical path.
+// @class AclSentinelEngine @namespace x_sn_acl_sentinel
+
+var AclSentinelEngine = Class.create();
+AclSentinelEngine.prototype = {
+
+    initialize: function () {
+        this._aclTable = 'sys_security_acl';
+        this._aclRoleTable = 'sys_security_acl_role';
+        this._findingTable = 'x_sn_acl_sentinel_finding';
+        this._scanTable = 'x_sn_acl_sentinel_scan';
+        this._logTable = 'syslog';
+    },
+
+    /**
+     * Run a full scan. Returns the scan sys_id, or null on failure.
+     * @param {string} scanType - 'full' | 'delta'
+     * @param {string} sourceEnv - environment label (dev/test/prod)
+     * @return {string|null} scan sys_id
+     */
+    runScan: function (scanType, sourceEnv) {
+        var scanId = this._createScan(scanType, sourceEnv);
+        if (!scanId) {
+            return null;
+        }
+        var acls;
+        try {
+            acls = this._collectAcls();
+        } catch (e) {
+            gs.error('AclSentinelEngine.runScan collection failed: ' + e.message);
+            this._failScan(scanId, e.message);
+            return null;
+        }
+        var counts = {
+            over_permissive: this._detectOverPermissive(acls, scanId),
+            orphan: this._detectOrphans(acls, scanId),
+            conflict: this._detectConflicts(acls, scanId),
+            access_denied: this._correlateAccessDenied(acls, scanId)
+        };
+        var scores = this._scoreTables(acls);
+        this._finalizeScan(scanId, counts, scores);
+        return scanId;
+    },
+
+    /**
+     * Collect all ACLs with their roles into a normalized in-memory
+     * structure. Conditions are read inline from sys_security_acl.condition
+     * (there is no separate condition table in ServiceNow).
+     * @return {Array} normalized ACL records
+     */
+    _collectAcls: function () {
+        var acls = [];
+        var gr = new GlideRecord(this._aclTable);
+        gr.addActiveQuery();
+        gr.query();
+        while (gr.next()) {
+            var acl = {
+                sys_id: gr.getUniqueValue(),
+                name: gr.getValue('name'),
+                operation: gr.getValue('operation'),
+                type: gr.getValue('type'),
+                table_name: gr.getValue('name') ? this._extractTable(gr.getValue('name')) : '',
+                condition: gr.getValue('condition') || '',
+                script: gr.getValue('script') || '',
+                requires_role: gr.getValue('requires_role') === 'true' || gr.getValue('requires_role') === '1',
+                admin_overrides: gr.getValue('admin_overrides') === 'true' || gr.getValue('admin_overrides') === '1',
+                roles: this._getRoles(gr.getUniqueValue())
+            };
+            acls.push(acl);
+        }
+        return acls;
+    },
+
+    /**
+     * Extract the target table name from an ACL name.
+     * sys_security_acl.name holds the table name ("incident") or a
+     * field-level reference ("incident.short_description"). ServiceNow
+     * table names never contain dots, so the first segment is the table.
+     * @param {string} name - ACL name
+     * @return {string} table name or empty string
+     */
+    _extractTable: function (name) {
+        if (!name) {
+            return '';
+        }
+        var idx = name.indexOf('.');
+        if (idx <= 0) {
+            return name;
+        }
+        return name.substring(0, idx);
+    },
+
+    /**
+     * Fetch the role names required by an ACL.
+     * sys_user_role is a reference field; getDisplayValue() returns the
+     * role name rather than the 32-char sys_id.
+     * @param {string} aclSysId - ACL sys_id
+     * @return {Array} role names
+     */
+    _getRoles: function (aclSysId) {
+        var roles = [];
+        var gr = new GlideRecord(this._aclRoleTable);
+        gr.addQuery('sys_security_acl', aclSysId);
+        gr.query();
+        while (gr.next()) {
+            var role = gr.sys_user_role.getDisplayValue();
+            if (role) {
+                roles.push(role);
+            }
+        }
+        return roles;
+    },
+
+    /**
+     * Create a scan record and return its sys_id.
+     * @param {string} scanType - 'full' | 'delta'
+     * @param {string} sourceEnv - environment label
+     * @return {string|null} scan sys_id
+     */
+    _createScan: function (scanType, sourceEnv) {
+        try {
+            var gr = new GlideRecord(this._scanTable);
+            gr.initialize();
+            gr.setValue('type', scanType || 'full');
+            gr.setValue('source_env', sourceEnv || 'local');
+            gr.setValue('status', 'running');
+            gr.setValue('started_at', new GlideDateTime().getValue());
+            return gr.insert();
+        } catch (e) {
+            gs.error('AclSentinelEngine._createScan failed: ' + e.message);
+            return null;
+        }
+    },
+
+    /**
+     * Mark a scan as failed with an error message.
+     * @param {string} scanId - scan sys_id
+     * @param {string} message - error message
+     */
+    _failScan: function (scanId, message) {
+        try {
+            var gr = new GlideRecord(this._scanTable);
+            if (!gr.get(scanId)) {
+                return;
+            }
+            gr.setValue('status', 'failed');
+            gr.setValue('completed_at', new GlideDateTime().getValue());
+            gr.update();
+        } catch (e) {
+            gs.error('AclSentinelEngine._failScan failed: ' + e.message);
+        }
+    },
+
+    /**
+     * Finalize a scan record with counts and per-table scores.
+     * @param {string} scanId - scan sys_id
+     * @param {Object} counts - finding counts by category
+     * @param {Object} scores - per-table least-privilege scores
+     */
+    _finalizeScan: function (scanId, counts, scores) {
+        try {
+            var gr = new GlideRecord(this._scanTable);
+            if (!gr.get(scanId)) {
+                return;
+            }
+            gr.setValue('status', 'completed');
+            gr.setValue('completed_at', new GlideDateTime().getValue());
+            gr.setValue('over_permissive_count', counts.over_permissive || 0);
+            gr.setValue('orphan_count', counts.orphan || 0);
+            gr.setValue('conflict_count', counts.conflict || 0);
+            gr.setValue('access_denied_count', counts.access_denied || 0);
+            gr.setValue('scores_json', JSON.stringify(scores || {}));
+            gr.update();
+        } catch (e) {
+            gs.error('AclSentinelEngine._finalizeScan failed: ' + e.message);
+        }
+    },
+
+    /**
+     * Detector 1 — Over-permissive ACLs.
+     * Flags ACLs with a wildcard role, empty conditions, admin-only grants,
+     * or no role required (public). Reports every applicable defect on an
+     * ACL, not just the first.
+     * @param {Array} acls - normalized ACL records
+     * @param {string} scanId - scan sys_id
+     * @return {number} findings created
+     */
+    _detectOverPermissive: function (acls, scanId) {
+        var count = 0;
+        for (var i = 0; i < acls.length; i++) {
+            var acl = acls[i];
+            var reasons = [];
+            if (this._hasWildcard(acl.roles)) {
+                reasons.push({
+                    reason: 'ACL grants access to wildcard role "' + (acl.roles.indexOf('*') >= 0 ? '*' : 'public') + '"',
+                    suggestion: 'Replace wildcard role with a named role scoped to the least-privilege set of users.'
+                });
+            }
+            if (!acl.condition && !acl.script) {
+                reasons.push({
+                    reason: 'ACL has no condition and no script (no row-level restriction)',
+                    suggestion: 'Add a condition or script to scope the rule to the intended records.'
+                });
+            }
+            if (acl.admin_overrides && acl.roles.length === 0) {
+                reasons.push({
+                    reason: 'ACL relies solely on admin_overrides with no explicit role',
+                    suggestion: 'Assign an explicit role and disable admin_overrides unless required.'
+                });
+            }
+            if (!acl.requires_role && acl.roles.length === 0) {
+                reasons.push({
+                    reason: 'ACL requires no role (public access)',
+                    suggestion: 'Set requires_role=true and assign a named role to enforce least privilege.'
+                });
+            }
+            for (var r = 0; r < reasons.length; r++) {
+                this._createFinding(scanId, 'over_permissive', acl, reasons[r].reason, reasons[r].suggestion, 'high');
+                count++;
+            }
+        }
+        return count;
+    },
+
+    /**
+     * Detector 2 — Orphan & dead rules.
+     * Flags ACLs referencing non-existent tables, and rules fully shadowed
+     * by a strictly-broader earlier rule on the same table+operation.
+     * @param {Array} acls - normalized ACL records
+     * @param {string} scanId - scan sys_id
+     * @return {number} findings created
+     */
+    _detectOrphans: function (acls, scanId) {
+        var count = 0;
+        var tableExists = {};
+        for (var i = 0; i < acls.length; i++) {
+            var acl = acls[i];
+            var table = acl.table_name;
+            if (!table) {
+                this._createFinding(scanId, 'orphan', acl, 'ACL name has no parseable table reference', 'Rename the ACL to "<table>.<operation>" or retire it.', 'medium');
+                count++;
+                continue;
+            }
+            if (tableExists[table] === undefined) {
+                tableExists[table] = this._tableExists(table);
+            }
+            if (!tableExists[table]) {
+                this._createFinding(scanId, 'orphan', acl, 'ACL references non-existent table "' + table + '"', 'Retire the ACL or correct the table reference.', 'medium');
+                count++;
+            }
+        }
+        // Shadow detection: flag a rule only when an earlier rule on the same
+        // table+operation is strictly broader (superset role / no condition).
+        var seen = {};
+        for (var j = 0; j < acls.length; j++) {
+            var a = acls[j];
+            var key = a.table_name + '|' + a.operation;
+            if (seen[key] !== undefined && this._isShadowedBy(seen[key], a)) {
+                this._createFinding(scanId, 'orphan', a, 'ACL is shadowed by a broader earlier rule on ' + a.table_name + '.' + a.operation, 'Review the rule pair and retire the redundant ACL.', 'low');
+                count++;
+            } else if (seen[key] === undefined) {
+                seen[key] = a;
+            }
+        }
+        return count;
+    },
+
+    /**
+     * Determine whether an earlier ACL strictly shadows a later one.
+     * Shadowing requires the earlier rule to be broader: a wildcard/no-role
+     * grant where the later rule is role-scoped, or an unconditional rule
+     * where the later rule adds a condition/script.
+     * @param {Object} earlier - earlier ACL
+     * @param {Object} later - later ACL
+     * @return {boolean} true if earlier strictly shadows later
+     */
+    _isShadowedBy: function (earlier, later) {
+        var earlierBroad = this._hasWildcard(earlier.roles) || earlier.roles.length === 0;
+        var laterBroad = this._hasWildcard(later.roles) || later.roles.length === 0;
+        var roleBroader = earlierBroad && !laterBroad;
+        var condBroader = (!earlier.condition && !earlier.script) && (later.condition || later.script);
+        return roleBroader || condBroader;
+    },
+
+    /**
+     * Check whether a table exists in the instance.
+     * @param {string} tableName - table name
+     * @return {boolean} true if the table exists
+     */
+    _tableExists: function (tableName) {
+        var gr = new GlideRecord('sys_db_object');
+        gr.addQuery('name', tableName);
+        gr.setLimit(1);
+        gr.query();
+        return gr.hasNext();
+    },
+
+    /**
+     * Detector 3 — Conflict detection.
+     * Identifies overlapping ACLs on the same table+operation with genuinely
+     * contradictory requirements (same role, divergent condition/script).
+     * @param {Array} acls - normalized ACL records
+     * @param {string} scanId - scan sys_id
+     * @return {number} findings created
+     */
+    _detectConflicts: function (acls, scanId) {
+        var count = 0;
+        var byKey = {};
+        for (var i = 0; i < acls.length; i++) {
+            var acl = acls[i];
+            var key = acl.table_name + '|' + acl.operation;
+            if (!byKey[key]) {
+                byKey[key] = [];
+            }
+            byKey[key].push(acl);
+        }
+        for (var k in byKey) {
+            if (!byKey.hasOwnProperty(k)) {
+                continue;
+            }
+            var group = byKey[k];
+            if (group.length < 2) {
+                continue;
+            }
+            for (var a = 0; a < group.length; a++) {
+                for (var b = a + 1; b < group.length; b++) {
+                    if (this._rolesContradict(group[a], group[b])) {
+                        var detail = JSON.stringify({
+                            rule_a: group[a].sys_id,
+                            rule_b: group[b].sys_id,
+                            roles_a: group[a].roles,
+                            roles_b: group[b].roles
+                        });
+                        this._createFinding(scanId, 'conflict', group[a], 'Conflicting ACLs on ' + k + ' with contradictory requirements', 'Merge into a single least-privilege rule; keep the narrower role and add the missing condition.', 'high', detail);
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    },
+
+    /**
+     * Determine whether two ACLs have genuinely contradictory requirements.
+     * ServiceNow ACLs on the same table+operation are OR'd, so wildcard-vs-
+     * scoped and empty-vs-nonempty role sets are normal layering, not
+     * conflicts. A real conflict is two rules requiring the SAME role but
+     * diverging on condition/script, making resolution ambiguous.
+     * @param {Object} aclA - first ACL
+     * @param {Object} aclB - second ACL
+     * @return {boolean} true if contradictory
+     */
+    _rolesContradict: function (aclA, aclB) {
+        var aRoles = (aclA.roles || []).slice().sort().join(',');
+        var bRoles = (aclB.roles || []).slice().sort().join(',');
+        if (aRoles !== bRoles) {
+            return false;
+        }
+        if (aRoles === '') {
+            return false;
+        }
+        var aCond = aclA.condition || aclA.script || '';
+        var bCond = aclB.condition || aclB.script || '';
+        return aCond !== bCond;
+    },
+
+    /**
+     * Check whether a role list contains a wildcard.
+     * @param {Array} roles - role names
+     * @return {boolean} true if wildcard present
+     */
+    _hasWildcard: function (roles) {
+        for (var i = 0; i < roles.length; i++) {
+            if (roles[i] === '*' || roles[i] === 'public') {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    /**
+     * Detector 4 — Access-denied correlation.
+     * Joins syslog access-denied entries against the ACL set to surface
+     * actual breakage (a real user blocked by a real rule).
+     * @param {Array} acls - normalized ACL records
+     * @param {string} scanId - scan sys_id
+     * @return {number} findings created
+     */
+    _correlateAccessDenied: function (acls, scanId) {
+        var count = 0;
+        var gr = new GlideRecord(this._logTable);
+        gr.addQuery('level', '2');
+        gr.addQuery('message', 'CONTAINS', 'denied');
+        gr.setLimit(1000);
+        gr.query();
+        while (gr.next()) {
+            var message = gr.getValue('message') || '';
+            var table = this._extractTableFromLog(message);
+            if (!table) {
+                continue;
+            }
+            var matched = this._findAclForTable(acls, table);
+            if (matched) {
+                this._createFinding(scanId, 'access_denied', matched, 'Access denied for table "' + table + '" correlates to an active ACL', 'Review the ACL and the denied user; tighten or relax the rule based on the intended policy.', 'high', message);
+                count++;
+            }
+        }
+        return count;
+    },
+
+    /**
+     * Extract a table name from a syslog access-denied message.
+     * @param {string} message - log message
+     * @return {string} table name or empty string
+     */
+    _extractTableFromLog: function (message) {
+        if (!message) {
+            return '';
+        }
+        var m = message.match(/table[:=\s]+([a-z0-9_]+)/i);
+        if (m && m[1]) {
+            return m[1];
+        }
+        m = message.match(/on\s+([a-z0-9_]+)/i);
+        if (m && m[1]) {
+            return m[1];
+        }
+        m = message.match(/\b([a-z][a-z0-9_]{2,})\b/i);
+        if (m && m[1]) {
+            return m[1];
+        }
+        return '';
+    },
+
+    /**
+     * Find the first ACL governing a table.
+     * @param {Array} acls - normalized ACL records
+     * @param {string} table - table name
+     * @return {Object|null} matching ACL or null
+     */
+    _findAclForTable: function (acls, table) {
+        for (var i = 0; i < acls.length; i++) {
+            if (acls[i].table_name === table) {
+                return acls[i];
+            }
+        }
+        return null;
+    },
+
+    /**
+     * Detector 5 — Least-privilege scoring.
+     * Computes a 0-100 score per table as the average penalty across its
+     * ACLs (normalized by ACL count), so a table with many clean ACLs and
+     * one bad ACL scores higher than a table with a single bad ACL.
+     * @param {Array} acls - normalized ACL records
+     * @return {Object} map of table name to score
+     */
+    _scoreTables: function (acls) {
+        var tables = {};
+        for (var i = 0; i < acls.length; i++) {
+            var acl = acls[i];
+            var table = acl.table_name;
+            if (!table) {
+                continue;
+            }
+            if (!tables[table]) {
+                tables[table] = { total: 0, penalties: 0 };
+            }
+            tables[table].total++;
+            if (this._hasWildcard(acl.roles)) {
+                tables[table].penalties += 30;
+            }
+            if (!acl.condition && !acl.script) {
+                tables[table].penalties += 20;
+            }
+            if (acl.admin_overrides && acl.roles.length === 0) {
+                tables[table].penalties += 15;
+            }
+            if (!acl.requires_role && acl.roles.length === 0) {
+                tables[table].penalties += 25;
+            }
+        }
+        var scores = {};
+        for (var t in tables) {
+            if (!tables.hasOwnProperty(t)) {
+                continue;
+            }
+            var entry = tables[t];
+            var raw = 100 - Math.round(entry.penalties / entry.total);
+            scores[t] = raw < 0 ? 0 : raw;
+        }
+        return scores;
+    },
+
+    /**
+     * Create a finding record.
+     * @param {string} scanId - scan sys_id
+     * @param {string} category - finding category
+     * @param {Object} acl - source ACL
+     * @param {string} reason - human-readable reason
+     * @param {string} suggestion - remediation suggestion
+     * @param {string} severity - 'high' | 'medium' | 'low'
+     * @param {string} detail - optional JSON detail
+     * @return {string|null} finding sys_id
+     */
+    _createFinding: function (scanId, category, acl, reason, suggestion, severity, detail) {
+        try {
+            var gr = new GlideRecord(this._findingTable);
+            gr.initialize();
+            gr.setValue('scan', scanId);
+            gr.setValue('category', category);
+            gr.setValue('acl_sys_id', acl.sys_id || '');
+            gr.setValue('acl_name', acl.name || '');
+            gr.setValue('table_name', acl.table_name || '');
+            gr.setValue('operation', acl.operation || '');
+            gr.setValue('reason', reason);
+            gr.setValue('suggestion', suggestion);
+            gr.setValue('severity', severity);
+            gr.setValue('status', 'open');
+            if (detail) {
+                gr.setValue('detail_json', detail);
+            }
+            return gr.insert();
+        } catch (e) {
+            gs.error('AclSentinelEngine._createFinding failed: ' + e.message);
+            return null;
+        }
+    },
+
+    /**
+     * Cross-environment drift diff.
+     * Compares the local ACL set against a remote ACL set (fetched via
+     * Table API by the caller) and returns a drift summary.
+     * @param {Array} remoteAcls - normalized remote ACL records
+     * @return {Object} drift summary { added, removed, changed, total }
+     */
+    diffEnvironments: function (remoteAcls) {
+        var local = this._collectAcls();
+        var localMap = this._indexByName(local);
+        var remoteMap = this._indexByName(remoteAcls || []);
+        var added = [];
+        var removed = [];
+        var changed = [];
+        for (var r in remoteMap) {
+            if (!remoteMap.hasOwnProperty(r)) {
+                continue;
+            }
+            if (!localMap[r]) {
+                added.push(r);
+            } else if (this._fingerprint(localMap[r]) !== this._fingerprint(remoteMap[r])) {
+                changed.push(r);
+            }
+        }
+        for (var l in localMap) {
+            if (!localMap.hasOwnProperty(l)) {
+                continue;
+            }
+            if (!remoteMap[l]) {
+                removed.push(l);
+            }
+        }
+        return {
+            added: added,
+            removed: removed,
+            changed: changed,
+            total: added.length + removed.length + changed.length
+        };
+    },
+
+    /**
+     * Index ACLs by name.
+     * @param {Array} acls - normalized ACL records
+     * @return {Object} name -> ACL map
+     */
+    _indexByName: function (acls) {
+        var map = {};
+        for (var i = 0; i < acls.length; i++) {
+            map[acls[i].name] = acls[i];
+        }
+        return map;
+    },
+
+    /**
+     * Compute a stable fingerprint for an ACL (roles + condition + script).
+     * @param {Object} acl - normalized ACL record
+     * @return {string} fingerprint
+     */
+    _fingerprint: function (acl) {
+        var roles = (acl.roles || []).slice().sort().join(',');
+        return [roles, acl.condition || '', acl.script || ''].join('|');
+    },
+
+    type: 'AclSentinelEngine'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>AclSentinelEngine</sys_name>
+    <sys_package display_value="ACL Sentinel">x_sn_acl_sentinel</sys_package>
+    <sys_scope display_value="ACL Sentinel">x_sn_acl_sentinel</sys_scope>
+  </sys_script_include>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_sn_acl_sentinel.AclSentinelReport</api_name>
+    <caller_access>1</caller_access>
+    <client_callable>false</client_callable>
+    <description>Reporting engine — Markdown/JSON/CSV reports and remediation narratives.</description>
+    <name>AclSentinelReport</name>
+    <script><![CDATA[// ACL Sentinel — AclSentinelReport
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Reporting engine for ACL Sentinel. Produces Markdown/JSON/CSV reports
+// from scan findings, per-table least-privilege scores, and cross-env
+// drift summaries. Also generates plain-language remediation narratives
+// (deterministic templates — no LLM dependency).
+// @class AclSentinelReport @namespace x_sn_acl_sentinel
+
+var AclSentinelReport = Class.create();
+AclSentinelReport.prototype = {
+
+    initialize: function () {
+        this._findingTable = 'x_sn_acl_sentinel_finding';
+        this._scanTable = 'x_sn_acl_sentinel_scan';
+    },
+
+    /**
+     * Build a full report for a scan in the requested format.
+     * @param {string} scanId - scan sys_id
+     * @param {string} format - 'markdown' | 'json' | 'csv'
+     * @return {string} report body
+     */
+    buildReport: function (scanId, format) {
+        var scan = this._getScan(scanId);
+        var findings = this._getFindings(scanId);
+        var scores = this._parseScores(scan.scores_json);
+        if (format === 'json') {
+            return JSON.stringify({
+                scan: scan,
+                findings: findings,
+                scores: scores
+            });
+        }
+        if (format === 'csv') {
+            return this._toCsv(findings);
+        }
+        return this._toMarkdown(scan, findings, scores);
+    },
+
+    /**
+     * Fetch a scan record as a plain object.
+     * @param {string} scanId - scan sys_id
+     * @return {Object} scan record
+     */
+    _getScan: function (scanId) {
+        var gr = new GlideRecord(this._scanTable);
+        if (!gr.get(scanId)) {
+            return {};
+        }
+        return {
+            sys_id: gr.getUniqueValue(),
+            type: gr.getValue('type'),
+            source_env: gr.getValue('source_env'),
+            status: gr.getValue('status'),
+            started_at: gr.getValue('started_at'),
+            completed_at: gr.getValue('completed_at'),
+            over_permissive_count: parseInt(gr.getValue('over_permissive_count') || '0', 10),
+            orphan_count: parseInt(gr.getValue('orphan_count') || '0', 10),
+            conflict_count: parseInt(gr.getValue('conflict_count') || '0', 10),
+            access_denied_count: parseInt(gr.getValue('access_denied_count') || '0', 10),
+            scores_json: gr.getValue('scores_json') || '{}'
+        };
+    },
+
+    /**
+     * Fetch findings for a scan as an array of plain objects.
+     * @param {string} scanId - scan sys_id
+     * @return {Array} finding records
+     */
+    _getFindings: function (scanId) {
+        var findings = [];
+        var gr = new GlideRecord(this._findingTable);
+        gr.addQuery('scan', scanId);
+        gr.orderBy('severity');
+        gr.orderByDesc('sys_created_on');
+        gr.query();
+        while (gr.next()) {
+            findings.push({
+                sys_id: gr.getUniqueValue(),
+                category: gr.getValue('category'),
+                acl_name: gr.getValue('acl_name'),
+                table_name: gr.getValue('table_name'),
+                operation: gr.getValue('operation'),
+                reason: gr.getValue('reason'),
+                suggestion: gr.getValue('suggestion'),
+                severity: gr.getValue('severity'),
+                status: gr.getValue('status')
+            });
+        }
+        return findings;
+    },
+
+    /**
+     * Parse a scores JSON string into an object.
+     * @param {string} json - scores JSON
+     * @return {Object} scores map
+     */
+    _parseScores: function (json) {
+        try {
+            return JSON.parse(json || '{}');
+        } catch (e) {
+            return {};
+        }
+    },
+
+    /**
+     * Render findings as a Markdown report.
+     * @param {Object} scan - scan record
+     * @param {Array} findings - finding records
+     * @param {Object} scores - per-table scores
+     * @return {string} markdown
+     */
+    _toMarkdown: function (scan, findings, scores) {
+        var out = [];
+        out.push('# ACL Sentinel — Scan Report');
+        out.push('');
+        out.push('**Environment:** ' + (scan.source_env || 'local'));
+        out.push('**Scan type:** ' + (scan.type || 'full'));
+        out.push('**Status:** ' + (scan.status || 'unknown'));
+        out.push('**Started:** ' + (scan.started_at || ''));
+        out.push('**Completed:** ' + (scan.completed_at || ''));
+        out.push('');
+        out.push('## Summary');
+        out.push('');
+        out.push('| Category | Count |');
+        out.push('|----------|-------|');
+        out.push('| Over-permissive | ' + (scan.over_permissive_count || 0) + ' |');
+        out.push('| Orphan / dead | ' + (scan.orphan_count || 0) + ' |');
+        out.push('| Conflict | ' + (scan.conflict_count || 0) + ' |');
+        out.push('| Access-denied | ' + (scan.access_denied_count || 0) + ' |');
+        out.push('');
+        out.push('## Least-Privilege Scores');
+        out.push('');
+        var tableNames = [];
+        for (var t in scores) {
+            if (scores.hasOwnProperty(t)) {
+                tableNames.push(t);
+            }
+        }
+        tableNames.sort(function (a, b) {
+            return scores[a] - scores[b];
+        });
+        if (tableNames.length === 0) {
+            out.push('_No tables scored._');
+        } else {
+            out.push('| Table | Score |');
+            out.push('|-------|-------|');
+            for (var i = 0; i < tableNames.length; i++) {
+                out.push('| ' + tableNames[i] + ' | ' + scores[tableNames[i]] + ' |');
+            }
+        }
+        out.push('');
+        out.push('## Findings');
+        out.push('');
+        if (findings.length === 0) {
+            out.push('_No findings._');
+        } else {
+            for (var j = 0; j < findings.length; j++) {
+                var f = findings[j];
+                out.push('### [' + f.severity + '] ' + f.category + ' — ' + (f.acl_name || f.table_name || 'unknown'));
+                out.push('');
+                out.push('- **Reason:** ' + f.reason);
+                out.push('- **Suggestion:** ' + f.suggestion);
+                out.push('');
+            }
+        }
+        return out.join('\n');
+    },
+
+    /**
+     * Render findings as CSV.
+     * @param {Array} findings - finding records
+     * @return {string} CSV body
+     */
+    _toCsv: function (findings) {
+        var rows = ['severity,category,acl_name,table_name,operation,reason,suggestion,status'];
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            rows.push([
+                this._csvEscape(f.severity),
+                this._csvEscape(f.category),
+                this._csvEscape(f.acl_name),
+                this._csvEscape(f.table_name),
+                this._csvEscape(f.operation),
+                this._csvEscape(f.reason),
+                this._csvEscape(f.suggestion),
+                this._csvEscape(f.status)
+            ].join(','));
+        }
+        return rows.join('\n');
+    },
+
+    /**
+     * Escape a CSV field.
+     * @param {string} value - raw value
+     * @return {string} escaped value
+     */
+    _csvEscape: function (value) {
+        var s = value === null || value === undefined ? '' : String(value);
+        if (s.indexOf(',') >= 0 || s.indexOf('"') >= 0 || s.indexOf('\n') >= 0) {
+            return '"' + s.replace(/"/g, '""') + '"';
+        }
+        return s;
+    },
+
+    /**
+     * Generate a plain-language remediation narrative for a finding.
+     * Deterministic template — no LLM dependency.
+     * @param {Object} finding - finding record
+     * @return {string} narrative
+     */
+    remediationNarrative: function (finding) {
+        var cat = finding.category || 'unknown';
+        var table = finding.table_name || 'unknown table';
+        var narratives = {
+            over_permissive: 'The ACL on "' + table + '" grants broader access than necessary. ' +
+                'This widens the attack surface and will likely surface as a least-privilege finding in a SOX or ISO 27001 audit. ' +
+                'Tightening it to a named role with an explicit condition reduces risk without breaking legitimate access.',
+            orphan: 'The ACL on "' + table + '" is no longer effective — it either references a table that does not exist or is fully shadowed by another rule. ' +
+                'It adds noise to the ACL surface and obscures the real policy. Retiring it is zero-risk and improves clarity.',
+            conflict: 'Two ACLs on "' + table + '" have contradictory role requirements, making access resolution non-deterministic. ' +
+                'This is the classic cause of "why can this user see this field?" tickets. Merging them into a single least-privilege rule resolves the ambiguity.',
+            access_denied: 'A real user was denied access on "' + table + '" by an active ACL. ' +
+                'This is actual breakage, not a static smell. Review the rule against the intended policy and adjust it to restore access without over-granting.'
+        };
+        return narratives[cat] || 'Review the finding and apply the suggested remediation.';
+    },
+
+    type: 'AclSentinelReport'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>AclSentinelReport</sys_name>
+    <sys_package display_value="ACL Sentinel">x_sn_acl_sentinel</sys_package>
+    <sys_scope display_value="ACL Sentinel">x_sn_acl_sentinel</sys_scope>
+  </sys_script_include>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_acl_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sys_security_acl</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_acl_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sys_security_acl_role</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_acl_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sys_db_object</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_acl_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>syslog</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>/api/x_sn_acl_sentinel</base_uri>
+    <consumes>application/json</consumes>
+    <consumes_custom>false</consumes_custom>
+    <default_version>v1</default_version>
+    <doc_link/>
+    <enforce_acl>true</enforce_acl>
+    <is_versioned>false</is_versioned>
+    <name>ACL Sentinel API</name>
+    <namespace>x_sn_acl_sentinel</namespace>
+    <produces>application/json</produces>
+    <produces_custom>false</produces_custom>
+    <service_id>x_sn_acl_sentinel.rest_api</service_id>
+    <short_description>ACL Sentinel REST API</short_description>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>ACL Sentinel API</sys_name>
+    <sys_package display_value="ACL Sentinel">x_sn_acl_sentinel</sys_package>
+    <sys_scope display_value="ACL Sentinel">x_sn_acl_sentinel</sys_scope>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_custom>false</consumes_custom>
+    <doc_link/>
+    <enforce_acl>true</enforce_acl>
+    <name>Execute</name>
+    <operation_uri>/execute</operation_uri>
+    <operation_script><![CDATA[// ACL Sentinel — POST /execute (action dispatch)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single POST endpoint dispatching all write/query operations via an
+// `action` body parameter. Consolidates the design's scan, drift, and
+// remediation endpoints into one.
+(function process(request, response) {
+
+    var body = request.body ? request.body.data : {};
+    var action = body.action || 'scan';
+    var engine = new AclSentinelEngine();
+    var report = new AclSentinelReport();
+    var result;
+
+    switch (action) {
+        case 'scan':
+            result = _handleScan(engine, body);
+            break;
+        case 'drift':
+            result = _handleDrift(engine, body);
+            break;
+        case 'report':
+            result = _handleReport(report, body);
+            break;
+        case 'narrative':
+            result = _handleNarrative(report, body);
+            break;
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown action: ' + action,
+                valid_actions: ['scan', 'drift', 'report', 'narrative']
+            }));
+            return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+
+    function _handleScan(engine, body) {
+        var scanType = body.scan_type || 'full';
+        var sourceEnv = body.source_env || 'local';
+        var scanId = engine.runScan(scanType, sourceEnv);
+        if (!scanId) {
+            return { ok: false, error: 'Scan failed to start' };
+        }
+        return { ok: true, scan_id: scanId, scan_type: scanType, source_env: sourceEnv };
+    }
+
+    function _handleDrift(engine, body) {
+        var remoteAcls = body.remote_acls || [];
+        var drift = engine.diffEnvironments(remoteAcls);
+        return { ok: true, drift: drift };
+    }
+
+    function _handleReport(report, body) {
+        var scanId = body.scan_id || '';
+        var format = body.format || 'markdown';
+        if (!scanId) {
+            return { ok: false, error: 'scan_id is required' };
+        }
+        var content = report.buildReport(scanId, format);
+        return { ok: true, format: format, report: content };
+    }
+
+    function _handleNarrative(report, body) {
+        var finding = body.finding || {};
+        var narrative = report.remediationNarrative(finding);
+        return { ok: true, narrative: narrative };
+    }
+
+})(request, response);
+]]></operation_script>
+    <operation_type>POST</operation_type>
+    <produces>application/json</produces>
+    <produces_custom>false</produces_custom>
+    <relative_path>/execute</relative_path>
+    <request_method>POST</request_method>
+    <service_id>x_sn_acl_sentinel.rest_api</service_id>
+    <short_description>Action-dispatch endpoint (scan, drift, report, narrative)</short_description>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>Execute</sys_name>
+    <sys_package display_value="ACL Sentinel">x_sn_acl_sentinel</sys_package>
+    <sys_scope display_value="ACL Sentinel">x_sn_acl_sentinel</sys_scope>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_custom>false</consumes_custom>
+    <doc_link/>
+    <enforce_acl>true</enforce_acl>
+    <name>Status</name>
+    <operation_uri>/status</operation_uri>
+    <operation_script><![CDATA[// ACL Sentinel — GET /status (read-only reporting)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single GET endpoint returning scan status, findings, and per-table
+// least-privilege scores via query parameters. Consolidates the design's
+// status/reporting endpoints into one read-only surface.
+(function process(request, response) {
+
+    var q = request.queryParams || {};
+    var scanId = q.scan_id || '';
+    var format = q.format || 'json';
+    var engine = new AclSentinelEngine();
+    var report = new AclSentinelReport();
+    var result = { queried_at: new GlideDateTime().getValue() };
+
+    if (scanId) {
+        result.scan = report.buildReport(scanId, format);
+    } else if (q.latest === 'true') {
+        var latest = _getLatestScan();
+        if (latest) {
+            result.scan = report.buildReport(latest, format);
+        } else {
+            result.scan = null;
+            result.message = 'No scans found';
+        }
+    } else {
+        result.scans = _listScans();
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+
+    function _getLatestScan() {
+        var gr = new GlideRecord('x_sn_acl_sentinel_scan');
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getUniqueValue();
+        }
+        return null;
+    }
+
+    function _listScans() {
+        var scans = [];
+        var gr = new GlideRecord('x_sn_acl_sentinel_scan');
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(20);
+        gr.query();
+        while (gr.next()) {
+            scans.push({
+                sys_id: gr.getUniqueValue(),
+                type: gr.getValue('type'),
+                source_env: gr.getValue('source_env'),
+                status: gr.getValue('status'),
+                started_at: gr.getValue('started_at'),
+                completed_at: gr.getValue('completed_at'),
+                over_permissive_count: parseInt(gr.getValue('over_permissive_count') || '0', 10),
+                orphan_count: parseInt(gr.getValue('orphan_count') || '0', 10),
+                conflict_count: parseInt(gr.getValue('conflict_count') || '0', 10),
+                access_denied_count: parseInt(gr.getValue('access_denied_count') || '0', 10)
+            });
+        }
+        return scans;
+    }
+
+})(request, response);
+]]></operation_script>
+    <operation_type>GET</operation_type>
+    <produces>application/json</produces>
+    <produces_custom>false</produces_custom>
+    <relative_path>/status</relative_path>
+    <request_method>GET</request_method>
+    <service_id>x_sn_acl_sentinel.rest_api</service_id>
+    <short_description>Read-only status and reporting endpoint</short_description>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>Status</sys_name>
+    <sys_package display_value="ACL Sentinel">x_sn_acl_sentinel</sys_package>
+    <sys_scope display_value="ACL Sentinel">x_sn_acl_sentinel</sys_scope>
+  </sys_ws_operation>
+
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Runs a daily delta ACL scan for ACL Sentinel.</description>
+    <name>ACL Sentinel Daily Scan</name>
+    <run_dayofweek/>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_period>daily</run_period>
+    <run_start>2026-08-20 02:00:00</run_start>
+    <run_style>periodically</run_style>
+    <run_time>02:00:00</run_time>
+    <script><![CDATA[
+// ACL Sentinel — Daily Delta Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function () {
+    var engine = new AclSentinelEngine();
+    var scanId = engine.runScan('delta', 'local');
+    if (scanId) {
+        gs.info('ACL Sentinel daily scan completed: ' + scanId);
+    } else {
+        gs.error('ACL Sentinel daily scan failed to start');
+    }
+})();
+]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>ACL Sentinel Daily Scan</sys_name>
+    <sys_package display_value="ACL Sentinel">x_sn_acl_sentinel</sys_package>
+    <sys_scope display_value="ACL Sentinel">x_sn_acl_sentinel</sys_scope>
+    <timezone>GMT</timezone>
+  </sysauto_script>
+</unload>
