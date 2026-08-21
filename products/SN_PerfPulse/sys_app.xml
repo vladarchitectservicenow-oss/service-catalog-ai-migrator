@@ -1,0 +1,1338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-21 00:00:00">
+  <sys_scope action="INSERT_OR_UPDATE">
+    <app_scope>x_vkap_perf_pulse</app_scope>
+    <description>PerfPulse — whole-instance performance and slow-query auditor for ServiceNow.</description>
+    <name>PerfPulse</name>
+    <runtime_access_tracking>false</runtime_access_tracking>
+    <sys_class_name>sys_scope</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>PerfPulse</sys_name>
+    <sys_package display_value="PerfPulse">x_vkap_perf_pulse</sys_package>
+    <sys_scope display_value="PerfPulse">x_vkap_perf_pulse</sys_scope>
+    <template>false</template>
+    <vendor display_value="Vladimir Kapustin">Vladimir Kapustin</vendor>
+    <vendor_prefix>vkap</vendor_prefix>
+  </sys_scope>
+
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <can_delegate>true</can_delegate>
+    <description>PerfPulse administrator — can run scans and view findings.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_vkap_perf_pulse.admin</name>
+    <requires_subscription>-1</requires_subscription>
+    <scoped_admin>false</scoped_admin>
+    <suffix>admin</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>x_vkap_perf_pulse.admin</sys_name>
+    <sys_package display_value="PerfPulse">x_vkap_perf_pulse</sys_package>
+    <sys_scope display_value="PerfPulse">x_vkap_perf_pulse</sys_scope>
+  </sys_user_role>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_vkap_perf_pulse.PerfPulseEngine</api_name>
+    <caller_access>false</caller_access>
+    <client_callable>false</client_callable>
+    <description>Deterministic performance audit engine — six detectors plus component scoring.</description>
+    <name>PerfPulseEngine</name>
+    <script><![CDATA[// PerfPulse — PerfPulseEngine
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Deterministic instance-performance audit engine. Implements the six
+// detectors (business-rule scanner, slow-query detector, N+1 pattern
+// detector, client-script scanner, ACL evaluation-cost scorer, and
+// transaction-log correlator) plus per-component cost scoring.
+// Pure GlideRecord / static-analysis logic — no LLM in the critical path.
+// @class PerfPulseEngine @namespace x_vkap_perf_pulse
+
+var PerfPulseEngine = Class.create();
+PerfPulseEngine.prototype = {
+
+    initialize: function () {
+        this._brTable = 'sys_script';
+        this._clientScriptTable = 'sys_script_client';
+        this._aclTable = 'sys_security_acl';
+        this._dictTable = 'sys_dictionary';
+        this._txnTable = 'syslog_transaction';
+        this._findingTable = 'x_vkap_perf_pulse_finding';
+        this._scanTable = 'x_vkap_perf_pulse_scan';
+    },
+
+    /**
+     * Run a full scan. Returns the scan sys_id, or null on failure.
+     * @param {string} scanType - 'full' | 'delta'
+     * @param {string} sourceEnv - environment label (dev/test/prod)
+     * @return {string|null} scan sys_id
+     */
+    runScan: function (scanType, sourceEnv) {
+        var scanId = this._createScan(scanType, sourceEnv);
+        if (!scanId) {
+            return null;
+        }
+        var inventory;
+        try {
+            inventory = this._collectInventory();
+        } catch (e) {
+            gs.error('PerfPulseEngine.runScan collection failed: ' + e.message);
+            this._failScan(scanId, e.message);
+            return null;
+        }
+        var counts = {
+            business_rule: this._detectBusinessRules(inventory.businessRules, scanId),
+            slow_query: this._detectSlowQueries(inventory, scanId),
+            n_plus_one: this._detectNPlusOne(inventory.scriptIncludes, scanId),
+            client_script: this._detectClientScripts(inventory.clientScripts, scanId),
+            acl_cost: this._scoreAclCost(inventory.acls, scanId),
+            transaction: this._correlateTransactions(inventory, scanId)
+        };
+        var scores = this._scoreComponents(inventory);
+        this._finalizeScan(scanId, counts, scores);
+        return scanId;
+    },
+
+    /**
+     * Collect the full execution-surface inventory into a normalized
+     * in-memory structure. Reads business rules, client scripts, ACLs,
+     * dictionary entries, and script includes.
+     * @return {Object} normalized inventory
+     */
+    _collectInventory: function () {
+        return {
+            businessRules: this._collectBusinessRules(),
+            clientScripts: this._collectClientScripts(),
+            acls: this._collectAcls(),
+            dictionaries: this._collectDictionaries(),
+            scriptIncludes: this._collectScriptIncludes()
+        };
+    },
+
+    /**
+     * Collect active business rules (sys_script) with their script bodies.
+     * @return {Array} normalized business-rule records
+     */
+    _collectBusinessRules: function () {
+        var rules = [];
+        var gr = new GlideRecord(this._brTable);
+        gr.addActiveQuery();
+        gr.query();
+        while (gr.next()) {
+            rules.push({
+                sys_id: gr.getUniqueValue(),
+                name: gr.getValue('name'),
+                collection: gr.getValue('collection') || '',
+                when: gr.getValue('when') || '',
+                script: gr.getValue('script') || '',
+                order: parseInt(gr.getValue('order') || '0', 10)
+            });
+        }
+        return rules;
+    },
+
+    /**
+     * Collect active client scripts (sys_script_client).
+     * @return {Array} normalized client-script records
+     */
+    _collectClientScripts: function () {
+        var scripts = [];
+        var gr = new GlideRecord(this._clientScriptTable);
+        gr.addActiveQuery();
+        gr.query();
+        while (gr.next()) {
+            scripts.push({
+                sys_id: gr.getUniqueValue(),
+                name: gr.getValue('name'),
+                table: gr.getValue('table') || '',
+                type: gr.getValue('type') || '',
+                script: gr.getValue('script') || ''
+            });
+        }
+        return scripts;
+    },
+
+    /**
+     * Collect ACLs with their roles and scripted conditions.
+     * @return {Array} normalized ACL records
+     */
+    _collectAcls: function () {
+        var acls = [];
+        var gr = new GlideRecord(this._aclTable);
+        gr.addActiveQuery();
+        gr.query();
+        while (gr.next()) {
+            var name = gr.getValue('name') || '';
+            acls.push({
+                sys_id: gr.getUniqueValue(),
+                name: name,
+                table_name: this._extractTable(name),
+                operation: gr.getValue('operation') || '',
+                condition: gr.getValue('condition') || '',
+                script: gr.getValue('script') || ''
+            });
+        }
+        return acls;
+    },
+
+    /**
+     * Collect dictionary entries (index metadata) for slow-query analysis.
+     * @return {Array} normalized dictionary records
+     */
+    _collectDictionaries: function () {
+        var dicts = [];
+        var gr = new GlideRecord(this._dictTable);
+        gr.addQuery('internal_type', 'IN', 'string,reference');
+        gr.setLimit(20000);
+        gr.query();
+        while (gr.next()) {
+            dicts.push({
+                sys_id: gr.getUniqueValue(),
+                name: gr.getValue('name') || '',
+                element: gr.getValue('element') || '',
+                internal_type: gr.getValue('internal_type') || '',
+                reference: gr.getValue('reference') || '',
+                attributes: gr.getValue('attributes') || ''
+            });
+        }
+        return dicts;
+    },
+
+    /**
+     * Collect script includes (sys_script_include) for N+1 static analysis.
+     * @return {Array} normalized script-include records
+     */
+    _collectScriptIncludes: function () {
+        var includes = [];
+        var gr = new GlideRecord('sys_script_include');
+        gr.addActiveQuery();
+        gr.query();
+        while (gr.next()) {
+            includes.push({
+                sys_id: gr.getUniqueValue(),
+                name: gr.getValue('name') || '',
+                api_name: gr.getValue('api_name') || '',
+                script: gr.getValue('script') || ''
+            });
+        }
+        return includes;
+    },
+
+    /**
+     * Extract the target table name from an ACL name.
+     * @param {string} name - ACL name
+     * @return {string} table name or empty string
+     */
+    _extractTable: function (name) {
+        if (!name) {
+            return '';
+        }
+        var idx = name.indexOf('.');
+        if (idx <= 0) {
+            return name;
+        }
+        return name.substring(0, idx);
+    },
+
+    /**
+     * Detector 1 — Business-rule performance scanner.
+     * Flags before/after business rules with full-table GlideRecord scans,
+     * missing setLimit(), expensive dot-walked queries, and getRowCount()
+     * on large tables. Reports every applicable defect per rule.
+     * @param {Array} rules - normalized business rules
+     * @param {string} scanId - scan sys_id
+     * @return {number} findings created
+     */
+    _detectBusinessRules: function (rules, scanId) {
+        var count = 0;
+        for (var i = 0; i < rules.length; i++) {
+            var rule = rules[i];
+            var script = rule.script || '';
+            if (!script) {
+                continue;
+            }
+            var reasons = [];
+            if (this._hasFullTableScan(script)) {
+                reasons.push({
+                    reason: 'Business rule "' + rule.name + '" performs a full-table GlideRecord scan with no filter',
+                    suggestion: 'Add an addQuery() filter or setLimit() to bound the result set before iterating.'
+                });
+            }
+            if (this._missingSetLimit(script)) {
+                reasons.push({
+                    reason: 'Business rule "' + rule.name + '" iterates a GlideRecord without setLimit()',
+                    suggestion: 'Add setLimit(N) to cap the number of records processed per transaction.'
+                });
+            }
+            if (this._hasDotWalkedQuery(script)) {
+                reasons.push({
+                    reason: 'Business rule "' + rule.name + '" uses an expensive dot-walked query',
+                    suggestion: 'Replace dot-walked conditions with a direct reference-field query or a GlideRecord on the target table.'
+                });
+            }
+            if (this._hasGetRowCount(script)) {
+                reasons.push({
+                    reason: 'Business rule "' + rule.name + '" calls getRowCount() on a potentially large table',
+                    suggestion: 'Use getAggregate("COUNT") or a hasNext() check instead of materializing the full result set.'
+                });
+            }
+            for (var r = 0; r < reasons.length; r++) {
+                this._createFinding(scanId, 'business_rule', rule, reasons[r].reason, reasons[r].suggestion, 'high');
+                count++;
+            }
+        }
+        return count;
+    },
+
+    /**
+     * Detector 2 — Slow-query detector.
+     * Flags dictionary entries with missing indexes on reference fields,
+     * LIKE '%...%' patterns, and unindexed ORDER BY on large tables.
+     * @param {Array} dicts - normalized dictionary records
+     * @param {string} scanId - scan sys_id
+     * @return {number} findings created
+     */
+    _detectSlowQueries: function (inventory, scanId) {
+        var count = 0;
+        var dicts = inventory.dictionaries;
+        var i;
+        for (i = 0; i < dicts.length; i++) {
+            var d = dicts[i];
+            if (d.internal_type === 'reference' && d.reference && !this._isIndexed(d.attributes)) {
+                this._createFinding(scanId, 'slow_query', d,
+                    'Reference field "' + d.name + '.' + d.element + '" is not indexed',
+                    'Add an index to the reference field to speed up joins and lookups.',
+                    'medium');
+                count++;
+            }
+        }
+        // Leading-wildcard LIKE patterns live in query code (business rules
+        // and script includes), not in dictionary attributes.
+        var scripts = [];
+        var j;
+        for (j = 0; j < inventory.businessRules.length; j++) {
+            scripts.push({ name: inventory.businessRules[j].name, script: inventory.businessRules[j].script });
+        }
+        for (j = 0; j < inventory.scriptIncludes.length; j++) {
+            scripts.push({ name: inventory.scriptIncludes[j].name, script: inventory.scriptIncludes[j].script });
+        }
+        for (j = 0; j < scripts.length; j++) {
+            if (this._hasLikePattern(scripts[j].script)) {
+                this._createFinding(scanId, 'slow_query', scripts[j],
+                    'Component "' + scripts[j].name + '" uses a leading-wildcard LIKE pattern',
+                    'Avoid leading-wildcard LIKE; use a text index or a normalized search field instead.',
+                    'medium');
+                count++;
+            }
+        }
+        return count;
+    },
+
+    /**
+     * Detector 3 — N+1 pattern detector.
+     * Static analysis of script includes for query-inside-loop anti-patterns
+     * (GlideRecord instantiated inside a while/for loop).
+     * @param {Array} includes - normalized script-include records
+     * @param {string} scanId - scan sys_id
+     * @return {number} findings created
+     */
+    _detectNPlusOne: function (includes, scanId) {
+        var count = 0;
+        for (var i = 0; i < includes.length; i++) {
+            var inc = includes[i];
+            var script = inc.script || '';
+            if (this._hasQueryInLoop(script)) {
+                this._createFinding(scanId, 'n_plus_one', inc,
+                    'Script include "' + inc.name + '" instantiates a GlideRecord inside a loop (N+1 anti-pattern)',
+                    'Hoist the query out of the loop, or batch the lookups into a single query with an IN clause.',
+                    'high');
+                count++;
+            }
+        }
+        return count;
+    },
+
+    /**
+     * Detector 4 — Client-script performance scanner.
+     * Flags heavy onLoad scripts, synchronous GlideAjax calls, DOM
+     * manipulation in loops, and getReference() misuse.
+     * @param {Array} scripts - normalized client scripts
+     * @param {string} scanId - scan sys_id
+     * @return {number} findings created
+     */
+    _detectClientScripts: function (scripts, scanId) {
+        var count = 0;
+        for (var i = 0; i < scripts.length; i++) {
+            var cs = scripts[i];
+            var script = cs.script || '';
+            var reasons = [];
+            if (cs.type === 'onLoad' && script.length > 2000) {
+                reasons.push({
+                    reason: 'onLoad client script "' + cs.name + '" is heavy (' + script.length + ' chars)',
+                    suggestion: 'Defer non-critical work to onLoad via a callback or move it to a UI action.'
+                });
+            }
+            if (this._hasSyncGlideAjax(script)) {
+                reasons.push({
+                    reason: 'Client script "' + cs.name + '" uses a synchronous GlideAjax call',
+                    suggestion: 'Use getXMLWait() only when unavoidable; prefer asynchronous getXML(callback).'
+                });
+            }
+            if (this._hasDomInLoop(script)) {
+                reasons.push({
+                    reason: 'Client script "' + cs.name + '" manipulates the DOM inside a loop',
+                    suggestion: 'Build a single HTML string and set it once, or use a document fragment.'
+                });
+            }
+            if (this._hasGetReference(script)) {
+                reasons.push({
+                    reason: 'Client script "' + cs.name + '" calls g_form.getReference()',
+                    suggestion: 'Use a GlideAjax call or a reference field with a display value instead of a blocking getReference().'
+                });
+            }
+            for (var r = 0; r < reasons.length; r++) {
+                this._createFinding(scanId, 'client_script', cs, reasons[r].reason, reasons[r].suggestion, 'medium');
+                count++;
+            }
+        }
+        return count;
+    },
+
+    /**
+     * Detector 5 — ACL evaluation-cost scorer.
+     * Scores hot tables by ACL count + scripted-condition density, surfacing
+     * tables where every access pays a heavy security-evaluation tax.
+     * @param {Array} acls - normalized ACL records
+     * @param {string} scanId - scan sys_id
+     * @return {number} findings created
+     */
+    _scoreAclCost: function (acls, scanId) {
+        var byTable = {};
+        for (var i = 0; i < acls.length; i++) {
+            var acl = acls[i];
+            var table = acl.table_name;
+            if (!table) {
+                continue;
+            }
+            if (!byTable[table]) {
+                byTable[table] = { count: 0, scripted: 0 };
+            }
+            byTable[table].count++;
+            if (acl.script) {
+                byTable[table].scripted++;
+            }
+        }
+        var count = 0;
+        for (var t in byTable) {
+            if (!byTable.hasOwnProperty(t)) {
+                continue;
+            }
+            var entry = byTable[t];
+            if (entry.count >= 10 || entry.scripted >= 3) {
+                this._createFinding(scanId, 'acl_cost', { sys_id: '', name: t, table_name: t },
+                    'Table "' + t + '" has ' + entry.count + ' ACLs (' + entry.scripted + ' scripted) — high evaluation cost',
+                    'Consolidate ACLs and replace scripted conditions with declarative conditions where possible.',
+                    'medium');
+                count++;
+            }
+        }
+        return count;
+    },
+
+    /**
+     * Detector 6 — Transaction-log hotspot aggregator.
+     * Joins syslog_transaction slow entries against the component inventory
+     * to surface actual runtime culprits, not just static smells.
+     * @param {Object} inventory - normalized inventory
+     * @param {string} scanId - scan sys_id
+     * @return {number} findings created
+     */
+    _correlateTransactions: function (inventory, scanId) {
+        var count = 0;
+        var gr = new GlideRecord(this._txnTable);
+        gr.addQuery('response_time', '>', 5000);
+        gr.orderByDesc('response_time');
+        gr.setLimit(500);
+        gr.query();
+        while (gr.next()) {
+            var url = gr.getValue('url') || '';
+            var table = this._extractTableFromUrl(url);
+            if (!table) {
+                continue;
+            }
+            var matched = this._findComponentForTable(inventory, table);
+            if (matched) {
+                this._createFinding(scanId, 'transaction', matched,
+                    'Slow transaction (' + gr.getValue('response_time') + 'ms) on "' + table + '" correlates to component "' + matched.name + '"',
+                    'Review the correlated component for the performance defect flagged by the static detectors.',
+                    'high', JSON.stringify({ url: url }));
+                count++;
+            }
+        }
+        return count;
+    },
+
+    /**
+     * Extract a table name from a transaction URL.
+     * @param {string} url - transaction URL
+     * @return {string} table name or empty string
+     */
+    _extractTableFromUrl: function (url) {
+        if (!url) {
+            return '';
+        }
+        var m = url.match(/table=([a-z0-9_]+)/i);
+        if (m && m[1]) {
+            return m[1];
+        }
+        m = url.match(/\/([a-z][a-z0-9_]{2,})\.do/i);
+        if (m && m[1]) {
+            return m[1];
+        }
+        return '';
+    },
+
+    /**
+     * Find the first component (business rule / client script / ACL)
+     * governing a table.
+     * @param {Object} inventory - normalized inventory
+     * @param {string} table - table name
+     * @return {Object|null} matching component or null
+     */
+    _findComponentForTable: function (inventory, table) {
+        var i;
+        for (i = 0; i < inventory.businessRules.length; i++) {
+            if (inventory.businessRules[i].collection === table) {
+                return inventory.businessRules[i];
+            }
+        }
+        for (i = 0; i < inventory.clientScripts.length; i++) {
+            if (inventory.clientScripts[i].table === table) {
+                return inventory.clientScripts[i];
+            }
+        }
+        for (i = 0; i < inventory.acls.length; i++) {
+            if (inventory.acls[i].table_name === table) {
+                return inventory.acls[i];
+            }
+        }
+        return null;
+    },
+
+    /**
+     * Compute a per-component performance score (0-100) across the inventory.
+     * @param {Object} inventory - normalized inventory
+     * @return {Object} map of component name to score
+     */
+    _scoreComponents: function (inventory) {
+        var scores = {};
+        var i;
+        for (i = 0; i < inventory.businessRules.length; i++) {
+            var br = inventory.businessRules[i];
+            scores[br.name] = this._scoreScript(br.script);
+        }
+        for (i = 0; i < inventory.clientScripts.length; i++) {
+            var cs = inventory.clientScripts[i];
+            scores[cs.name] = this._scoreScript(cs.script);
+        }
+        for (i = 0; i < inventory.scriptIncludes.length; i++) {
+            var si = inventory.scriptIncludes[i];
+            scores[si.name] = this._scoreScript(si.script);
+        }
+        for (i = 0; i < inventory.acls.length; i++) {
+            var acl = inventory.acls[i];
+            scores[acl.name] = this._scoreScript(acl.script);
+        }
+        return scores;
+    },
+
+    /**
+     * Score a single script body (0-100) by counting anti-patterns.
+     * @param {string} script - script body
+     * @return {number} score
+     */
+    _scoreScript: function (script) {
+        if (!script) {
+            return 100;
+        }
+        var penalty = 0;
+        if (this._hasFullTableScan(script)) {
+            penalty += 30;
+        }
+        if (this._missingSetLimit(script)) {
+            penalty += 20;
+        }
+        if (this._hasDotWalkedQuery(script)) {
+            penalty += 15;
+        }
+        if (this._hasGetRowCount(script)) {
+            penalty += 15;
+        }
+        if (this._hasQueryInLoop(script)) {
+            penalty += 20;
+        }
+        var score = 100 - penalty;
+        return score < 0 ? 0 : score;
+    },
+
+    // ---- Static-analysis helpers (regex-based, deterministic) ----
+
+    _hasFullTableScan: function (script) {
+        // Split on each GlideRecord instantiation and check whether that
+        // instance is filtered (addQuery) before its query() call. This
+        // catches unfiltered scans even when another GlideRecord in the
+        // same script is properly filtered.
+        var parts = script.split(/new\s+GlideRecord\(/);
+        for (var i = 1; i < parts.length; i++) {
+            var seg = parts[i];
+            var queryIdx = seg.indexOf('.query(');
+            if (queryIdx === -1) {
+                continue;
+            }
+            if (!/addQuery\(/.test(seg.substring(0, queryIdx))) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    _missingSetLimit: function (script) {
+        // Only flag completely unbounded scans (no filter AND no limit).
+        // Filtered-but-unbounded queries are intentional and no longer flagged.
+        return /new\s+GlideRecord\(/.test(script) &&
+            /\.query\(\)/.test(script) &&
+            !/setLimit\(/.test(script) &&
+            !/addQuery\(/.test(script);
+    },
+
+    _hasDotWalkedQuery: function (script) {
+        // A dot-walked query is a dot inside the FIRST (field-name) argument,
+        // e.g. addQuery('caller_id.department', ...). Dots inside later
+        // string-literal values are not dot-walking.
+        return /addQuery\(\s*['"][^'"]*\.[^'"]*['"]/.test(script);
+    },
+
+    _hasGetRowCount: function (script) {
+        return /getRowCount\(\)/.test(script);
+    },
+
+    _hasQueryInLoop: function (script) {
+        var re = /(?:while|for)\s*\([^)]*\)\s*\{/g;
+        var m;
+        while ((m = re.exec(script)) !== null) {
+            var body = this._extractLoopBody(script, m.index + m[0].length - 1);
+            if (/new\s+GlideRecord\(/.test(body)) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    _hasSyncGlideAjax: function (script) {
+        return /getXMLWait\(\)/.test(script);
+    },
+
+    _hasDomInLoop: function (script) {
+        var re = /(?:while|for)\s*\([^)]*\)\s*\{/g;
+        var m;
+        while ((m = re.exec(script)) !== null) {
+            var body = this._extractLoopBody(script, m.index + m[0].length - 1);
+            if (/(getElementById|appendChild|innerHTML)/.test(body)) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    _hasGetReference: function (script) {
+        return /getReference\(/.test(script);
+    },
+
+    _extractLoopBody: function (script, braceIdx) {
+        var depth = 0;
+        for (var i = braceIdx; i < script.length; i++) {
+            var c = script.charAt(i);
+            if (c === '{') {
+                depth++;
+            } else if (c === '}') {
+                depth--;
+                if (depth === 0) {
+                    return script.substring(braceIdx + 1, i);
+                }
+            }
+        }
+        return script.substring(braceIdx + 1);
+    },
+
+    _isIndexed: function (attributes) {
+        return /index=true/.test(attributes || '');
+    },
+
+    _hasLikePattern: function (script) {
+        // Leading-wildcard LIKE patterns live in query code, not dictionary
+        // attributes. Detect LIKE '%...' (leading wildcard) in script text.
+        return /LIKE\s*['"]%/.test((script || '').toUpperCase());
+    },
+
+    // ---- Scan lifecycle helpers ----
+
+    _createScan: function (scanType, sourceEnv) {
+        try {
+            var gr = new GlideRecord(this._scanTable);
+            gr.initialize();
+            gr.setValue('type', scanType || 'full');
+            gr.setValue('source_env', sourceEnv || 'local');
+            gr.setValue('status', 'running');
+            gr.setValue('started_at', new GlideDateTime().getValue());
+            return gr.insert();
+        } catch (e) {
+            gs.error('PerfPulseEngine._createScan failed: ' + e.message);
+            return null;
+        }
+    },
+
+    _failScan: function (scanId, message) {
+        try {
+            var gr = new GlideRecord(this._scanTable);
+            if (!gr.get(scanId)) {
+                return;
+            }
+            gr.setValue('status', 'failed');
+            gr.setValue('completed_at', new GlideDateTime().getValue());
+            gr.setValue('failure_reason', message || '');
+            gr.update();
+        } catch (e) {
+            gs.error('PerfPulseEngine._failScan failed: ' + e.message);
+        }
+    },
+
+    _finalizeScan: function (scanId, counts, scores) {
+        try {
+            var gr = new GlideRecord(this._scanTable);
+            if (!gr.get(scanId)) {
+                return;
+            }
+            gr.setValue('status', 'completed');
+            gr.setValue('completed_at', new GlideDateTime().getValue());
+            gr.setValue('business_rule_count', counts.business_rule || 0);
+            gr.setValue('slow_query_count', counts.slow_query || 0);
+            gr.setValue('n_plus_one_count', counts.n_plus_one || 0);
+            gr.setValue('client_script_count', counts.client_script || 0);
+            gr.setValue('acl_cost_count', counts.acl_cost || 0);
+            gr.setValue('transaction_count', counts.transaction || 0);
+            gr.setValue('scores_json', JSON.stringify(scores || {}));
+            gr.update();
+        } catch (e) {
+            gs.error('PerfPulseEngine._finalizeScan failed: ' + e.message);
+        }
+    },
+
+    _createFinding: function (scanId, category, component, reason, suggestion, severity, detail) {
+        try {
+            var gr = new GlideRecord(this._findingTable);
+            gr.initialize();
+            gr.setValue('scan', scanId);
+            gr.setValue('category', category);
+            gr.setValue('component_sys_id', component.sys_id || '');
+            gr.setValue('component_name', component.name || '');
+            gr.setValue('table_name', component.table_name || component.collection || component.table || '');
+            gr.setValue('reason', reason);
+            gr.setValue('suggestion', suggestion);
+            gr.setValue('severity', severity);
+            gr.setValue('status', 'open');
+            if (detail) {
+                gr.setValue('detail_json', detail);
+            }
+            return gr.insert();
+        } catch (e) {
+            gs.error('PerfPulseEngine._createFinding failed: ' + e.message);
+            return null;
+        }
+    },
+
+    type: 'PerfPulseEngine'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>PerfPulseEngine</sys_name>
+    <sys_package display_value="PerfPulse">x_vkap_perf_pulse</sys_package>
+    <sys_scope display_value="PerfPulse">x_vkap_perf_pulse</sys_scope>
+  </sys_script_include>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_vkap_perf_pulse.PerfPulseReport</api_name>
+    <caller_access>false</caller_access>
+    <client_callable>false</client_callable>
+    <description>Reporting engine — Markdown/JSON/CSV reports and remediation narratives.</description>
+    <name>PerfPulseReport</name>
+    <script><![CDATA[// PerfPulse — PerfPulseReport
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Reporting engine for PerfPulse. Produces Markdown/JSON/CSV reports from
+// scan findings and per-component performance scores. Also generates
+// plain-language remediation narratives (deterministic templates — no LLM
+// dependency).
+// @class PerfPulseReport @namespace x_vkap_perf_pulse
+
+var PerfPulseReport = Class.create();
+PerfPulseReport.prototype = {
+
+    initialize: function () {
+        this._findingTable = 'x_vkap_perf_pulse_finding';
+        this._scanTable = 'x_vkap_perf_pulse_scan';
+    },
+
+    /**
+     * Build a full report for a scan in the requested format.
+     * @param {string} scanId - scan sys_id
+     * @param {string} format - 'markdown' | 'json' | 'csv'
+     * @return {string} report body
+     */
+    buildReport: function (scanId, format) {
+        var scan = this._getScan(scanId);
+        var findings = this._getFindings(scanId);
+        var scores = this._parseScores(scan.scores_json);
+        if (format === 'json') {
+            return JSON.stringify({
+                scan: scan,
+                findings: findings,
+                scores: scores
+            });
+        }
+        if (format === 'csv') {
+            return this._toCsv(findings);
+        }
+        return this._toMarkdown(scan, findings, scores);
+    },
+
+    /**
+     * Fetch a scan record as a plain object.
+     * @param {string} scanId - scan sys_id
+     * @return {Object} scan record
+     */
+    _getScan: function (scanId) {
+        var gr = new GlideRecord(this._scanTable);
+        if (!gr.get(scanId)) {
+            return {};
+        }
+        return {
+            sys_id: gr.getUniqueValue(),
+            type: gr.getValue('type'),
+            source_env: gr.getValue('source_env'),
+            status: gr.getValue('status'),
+            started_at: gr.getValue('started_at'),
+            completed_at: gr.getValue('completed_at'),
+            business_rule_count: parseInt(gr.getValue('business_rule_count') || '0', 10),
+            slow_query_count: parseInt(gr.getValue('slow_query_count') || '0', 10),
+            n_plus_one_count: parseInt(gr.getValue('n_plus_one_count') || '0', 10),
+            client_script_count: parseInt(gr.getValue('client_script_count') || '0', 10),
+            acl_cost_count: parseInt(gr.getValue('acl_cost_count') || '0', 10),
+            transaction_count: parseInt(gr.getValue('transaction_count') || '0', 10),
+            scores_json: gr.getValue('scores_json') || '{}'
+        };
+    },
+
+    /**
+     * Fetch findings for a scan as an array of plain objects.
+     * @param {string} scanId - scan sys_id
+     * @return {Array} finding records
+     */
+    _getFindings: function (scanId) {
+        var findings = [];
+        var gr = new GlideRecord(this._findingTable);
+        gr.addQuery('scan', scanId);
+        gr.orderBy('severity');
+        gr.orderByDesc('sys_created_on');
+        gr.query();
+        while (gr.next()) {
+            findings.push({
+                sys_id: gr.getUniqueValue(),
+                category: gr.getValue('category'),
+                component_name: gr.getValue('component_name'),
+                table_name: gr.getValue('table_name'),
+                reason: gr.getValue('reason'),
+                suggestion: gr.getValue('suggestion'),
+                severity: gr.getValue('severity'),
+                status: gr.getValue('status')
+            });
+        }
+        return findings;
+    },
+
+    /**
+     * Fetch a single finding by sys_id.
+     * @param {string} findingId - finding sys_id
+     * @return {Object|null} finding record or null
+     */
+    getFinding: function (findingId) {
+        var gr = new GlideRecord(this._findingTable);
+        if (!gr.get(findingId)) {
+            return null;
+        }
+        return {
+            sys_id: gr.getUniqueValue(),
+            category: gr.getValue('category'),
+            component_name: gr.getValue('component_name'),
+            table_name: gr.getValue('table_name'),
+            reason: gr.getValue('reason'),
+            suggestion: gr.getValue('suggestion'),
+            severity: gr.getValue('severity'),
+            status: gr.getValue('status')
+        };
+    },
+
+    /**
+     * Parse a scores JSON string into an object.
+     * @param {string} json - scores JSON
+     * @return {Object} scores map
+     */
+    _parseScores: function (json) {
+        try {
+            return JSON.parse(json || '{}');
+        } catch (e) {
+            return {};
+        }
+    },
+
+    /**
+     * Render findings as a Markdown report.
+     * @param {Object} scan - scan record
+     * @param {Array} findings - finding records
+     * @param {Object} scores - per-component scores
+     * @return {string} markdown
+     */
+    _toMarkdown: function (scan, findings, scores) {
+        var out = [];
+        out.push('# PerfPulse — Performance Scan Report');
+        out.push('');
+        out.push('**Environment:** ' + (scan.source_env || 'local'));
+        out.push('**Scan type:** ' + (scan.type || 'full'));
+        out.push('**Status:** ' + (scan.status || 'unknown'));
+        out.push('**Started:** ' + (scan.started_at || ''));
+        out.push('**Completed:** ' + (scan.completed_at || ''));
+        out.push('');
+        out.push('## Summary');
+        out.push('');
+        out.push('| Category | Count |');
+        out.push('|----------|-------|');
+        out.push('| Business rules | ' + (scan.business_rule_count || 0) + ' |');
+        out.push('| Slow queries | ' + (scan.slow_query_count || 0) + ' |');
+        out.push('| N+1 patterns | ' + (scan.n_plus_one_count || 0) + ' |');
+        out.push('| Client scripts | ' + (scan.client_script_count || 0) + ' |');
+        out.push('| ACL evaluation cost | ' + (scan.acl_cost_count || 0) + ' |');
+        out.push('| Transaction hotspots | ' + (scan.transaction_count || 0) + ' |');
+        out.push('');
+        out.push('## Top Offenders (lowest scores first)');
+        out.push('');
+        var names = [];
+        for (var t in scores) {
+            if (scores.hasOwnProperty(t)) {
+                names.push(t);
+            }
+        }
+        names.sort(function (a, b) {
+            return scores[a] - scores[b];
+        });
+        if (names.length === 0) {
+            out.push('_No components scored._');
+        } else {
+            out.push('| Component | Score |');
+            out.push('|-----------|-------|');
+            var limit = Math.min(names.length, 20);
+            for (var i = 0; i < limit; i++) {
+                out.push('| ' + names[i] + ' | ' + scores[names[i]] + ' |');
+            }
+        }
+        out.push('');
+        out.push('## Findings');
+        out.push('');
+        if (findings.length === 0) {
+            out.push('_No findings._');
+        } else {
+            for (var j = 0; j < findings.length; j++) {
+                var f = findings[j];
+                out.push('### [' + f.severity + '] ' + f.category + ' — ' + (f.component_name || f.table_name || 'unknown'));
+                out.push('');
+                out.push('- **Reason:** ' + f.reason);
+                out.push('- **Suggestion:** ' + f.suggestion);
+                out.push('');
+            }
+        }
+        return out.join('\n');
+    },
+
+    /**
+     * Render findings as CSV.
+     * @param {Array} findings - finding records
+     * @return {string} CSV body
+     */
+    _toCsv: function (findings) {
+        var rows = ['severity,category,component_name,table_name,reason,suggestion,status'];
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            rows.push([
+                this._csvEscape(f.severity),
+                this._csvEscape(f.category),
+                this._csvEscape(f.component_name),
+                this._csvEscape(f.table_name),
+                this._csvEscape(f.reason),
+                this._csvEscape(f.suggestion),
+                this._csvEscape(f.status)
+            ].join(','));
+        }
+        return rows.join('\n');
+    },
+
+    /**
+     * Escape a CSV field.
+     * @param {string} value - raw value
+     * @return {string} escaped value
+     */
+    _csvEscape: function (value) {
+        var s = value === null || value === undefined ? '' : String(value);
+        if (s.indexOf(',') >= 0 || s.indexOf('"') >= 0 || s.indexOf('\n') >= 0) {
+            return '"' + s.replace(/"/g, '""') + '"';
+        }
+        return s;
+    },
+
+    /**
+     * Generate a plain-language remediation narrative for a finding.
+     * Deterministic template — no LLM dependency.
+     * @param {Object} finding - finding record
+     * @return {string} narrative
+     */
+    remediationNarrative: function (finding) {
+        var cat = finding.category || 'unknown';
+        var name = finding.component_name || finding.table_name || 'unknown component';
+        var narratives = {
+            business_rule: 'The business rule "' + name + '" is doing expensive work on every transaction. ' +
+                'A full-table scan or missing setLimit() multiplies database round-trips and directly slows the user-facing operation. ' +
+                'Adding a filter and a setLimit() bound is a low-risk change that typically removes the bottleneck entirely.',
+            slow_query: 'The field "' + name + '" is queried without an index or with a leading-wildcard LIKE. ' +
+                'This forces a full table scan on every lookup. Adding an index (or a text index for search) is a declarative change with immediate payoff.',
+            n_plus_one: 'The script include "' + name + '" runs a query inside a loop. ' +
+                'This is the classic N+1 anti-pattern: N records trigger N+1 round-trips. ' +
+                'Hoisting the query out of the loop or batching lookups into a single IN-clause query removes the multiplicative cost.',
+            client_script: 'The client script "' + name + '" blocks the browser with synchronous work. ' +
+                'Synchronous GlideAjax and DOM-in-loop patterns freeze the UI and degrade perceived performance. ' +
+                'Switching to asynchronous callbacks and batched DOM updates restores responsiveness.',
+            acl_cost: 'The table "' + name + '" carries a heavy ACL evaluation tax. ' +
+                'Every access pays the cost of evaluating many rules, several of them scripted. ' +
+                'Consolidating rules and replacing scripted conditions with declarative ones reduces per-access overhead.',
+            transaction: 'A real slow transaction was traced to "' + name + '". ' +
+                'This is actual runtime evidence, not a static smell. ' +
+                'Review the correlated component against the static findings and apply the suggested remediation.'
+        };
+        return narratives[cat] || 'Review the finding and apply the suggested remediation.';
+    },
+
+    type: 'PerfPulseReport'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>PerfPulseReport</sys_name>
+    <sys_package display_value="PerfPulse">x_vkap_perf_pulse</sys_package>
+    <sys_scope display_value="PerfPulse">x_vkap_perf_pulse</sys_scope>
+  </sys_script_include>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vkap_perf_pulse</source_scope>
+    <status>allowed</status>
+    <target_name>sys_script</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vkap_perf_pulse</source_scope>
+    <status>allowed</status>
+    <target_name>sys_script_client</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vkap_perf_pulse</source_scope>
+    <status>allowed</status>
+    <target_name>sys_script_include</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vkap_perf_pulse</source_scope>
+    <status>allowed</status>
+    <target_name>sys_security_acl</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vkap_perf_pulse</source_scope>
+    <status>allowed</status>
+    <target_name>sys_dictionary</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_vkap_perf_pulse</source_scope>
+    <status>allowed</status>
+    <target_name>syslog_transaction</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>/api/x_vkap_perf_pulse</base_uri>
+    <consumes>application/json</consumes>
+    <consumes_custom>false</consumes_custom>
+    <default_version/>
+    <doc_link/>
+    <enforce_acl>true</enforce_acl>
+    <is_versioned>false</is_versioned>
+    <name>PerfPulse API</name>
+    <namespace>x_vkap_perf_pulse</namespace>
+    <produces>application/json</produces>
+    <produces_custom>false</produces_custom>
+    <service_id>x_vkap_perf_pulse.rest_api</service_id>
+    <short_description>PerfPulse REST API</short_description>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>PerfPulse API</sys_name>
+    <sys_package display_value="PerfPulse">x_vkap_perf_pulse</sys_package>
+    <sys_scope display_value="PerfPulse">x_vkap_perf_pulse</sys_scope>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_custom>false</consumes_custom>
+    <doc_link/>
+    <enforce_acl>true</enforce_acl>
+    <name>Execute</name>
+    <operation_uri>/execute</operation_uri>
+    <operation_script><![CDATA[// PerfPulse — POST /execute (action dispatch)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single POST endpoint dispatching all write/query operations via an
+// `action` body parameter. Consolidates the design's scan, report, and
+// remediation endpoints into one.
+(function process(request, response) {
+
+    var body = request.body ? request.body.data : {};
+    var action = body.action || 'scan';
+    var engine = new PerfPulseEngine();
+    var report = new PerfPulseReport();
+    var result;
+
+    switch (action) {
+        case 'scan':
+            result = _handleScan(engine, body);
+            break;
+        case 'report':
+            result = _handleReport(report, body);
+            break;
+        case 'narrative':
+            result = _handleNarrative(report, body);
+            break;
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown action: ' + action,
+                valid_actions: ['scan', 'report', 'narrative']
+            }));
+            return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+
+    function _handleScan(engine, body) {
+        var scanType = body.scan_type || 'full';
+        var sourceEnv = body.source_env || 'local';
+        var scanId = engine.runScan(scanType, sourceEnv);
+        if (!scanId) {
+            return { ok: false, error: 'Scan failed to start' };
+        }
+        return { ok: true, scan_id: scanId, scan_type: scanType, source_env: sourceEnv };
+    }
+
+    function _handleReport(report, body) {
+        var scanId = body.scan_id || '';
+        var format = body.format || 'markdown';
+        if (!scanId) {
+            return { ok: false, error: 'scan_id is required' };
+        }
+        var content = report.buildReport(scanId, format);
+        return { ok: true, format: format, report: content };
+    }
+
+    function _handleNarrative(report, body) {
+        var findingId = body.finding_id || '';
+        if (!findingId) {
+            return { ok: false, error: 'finding_id is required' };
+        }
+        var finding = report.getFinding(findingId);
+        if (!finding) {
+            return { ok: false, error: 'Finding not found' };
+        }
+        var narrative = report.remediationNarrative(finding);
+        return { ok: true, narrative: narrative };
+    }
+
+})(request, response);
+]]></operation_script>
+    <operation_type>POST</operation_type>
+    <produces>application/json</produces>
+    <produces_custom>false</produces_custom>
+    <relative_path>/execute</relative_path>
+    <request_method>POST</request_method>
+    <service_id>x_vkap_perf_pulse.rest_api</service_id>
+    <short_description>Action-dispatch endpoint (scan, report, narrative)</short_description>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>Execute</sys_name>
+    <sys_package display_value="PerfPulse">x_vkap_perf_pulse</sys_package>
+    <sys_scope display_value="PerfPulse">x_vkap_perf_pulse</sys_scope>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_custom>false</consumes_custom>
+    <doc_link/>
+    <enforce_acl>true</enforce_acl>
+    <name>Status</name>
+    <operation_uri>/status</operation_uri>
+    <operation_script><![CDATA[// PerfPulse — GET /status (read-only reporting)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single GET endpoint returning scan status, findings, and per-component
+// performance scores via query parameters. Consolidates the design's
+// status/reporting endpoints into one read-only surface.
+(function process(request, response) {
+
+    var q = request.queryParams || {};
+    var scanId = q.scan_id || '';
+    var format = q.format || 'json';
+    var report = new PerfPulseReport();
+    var result = { queried_at: new GlideDateTime().getValue() };
+
+    if (scanId) {
+        result.scan = report.buildReport(scanId, format);
+    } else if (q.latest === 'true') {
+        var latest = _getLatestScan();
+        if (latest) {
+            result.scan = report.buildReport(latest, format);
+        } else {
+            result.scan = null;
+            result.message = 'No scans found';
+        }
+    } else {
+        result.scans = _listScans();
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+
+    function _getLatestScan() {
+        var gr = new GlideRecord('x_vkap_perf_pulse_scan');
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getUniqueValue();
+        }
+        return null;
+    }
+
+    function _listScans() {
+        var scans = [];
+        var gr = new GlideRecord('x_vkap_perf_pulse_scan');
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(20);
+        gr.query();
+        while (gr.next()) {
+            scans.push({
+                sys_id: gr.getUniqueValue(),
+                type: gr.getValue('type'),
+                source_env: gr.getValue('source_env'),
+                status: gr.getValue('status'),
+                started_at: gr.getValue('started_at'),
+                completed_at: gr.getValue('completed_at'),
+                business_rule_count: parseInt(gr.getValue('business_rule_count') || '0', 10),
+                slow_query_count: parseInt(gr.getValue('slow_query_count') || '0', 10),
+                n_plus_one_count: parseInt(gr.getValue('n_plus_one_count') || '0', 10),
+                client_script_count: parseInt(gr.getValue('client_script_count') || '0', 10),
+                acl_cost_count: parseInt(gr.getValue('acl_cost_count') || '0', 10),
+                transaction_count: parseInt(gr.getValue('transaction_count') || '0', 10)
+            });
+        }
+        return scans;
+    }
+
+})(request, response);
+]]></operation_script>
+    <operation_type>GET</operation_type>
+    <produces>application/json</produces>
+    <produces_custom>false</produces_custom>
+    <relative_path>/status</relative_path>
+    <request_method>GET</request_method>
+    <service_id>x_vkap_perf_pulse.rest_api</service_id>
+    <short_description>Read-only status and reporting endpoint</short_description>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>Status</sys_name>
+    <sys_package display_value="PerfPulse">x_vkap_perf_pulse</sys_package>
+    <sys_scope display_value="PerfPulse">x_vkap_perf_pulse</sys_scope>
+  </sys_ws_operation>
+
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Runs a daily delta performance scan for PerfPulse.</description>
+    <name>PerfPulse Daily Scan</name>
+    <run_dayofweek/>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_period>daily</run_period>
+    <run_start>2026-08-21 02:00:00</run_start>
+    <run_style>periodically</run_style>
+    <run_time>02:00:00</run_time>
+    <script><![CDATA[
+// PerfPulse — Daily Delta Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function () {
+    var engine = new PerfPulseEngine();
+    var scanId = engine.runScan('delta', 'local');
+    if (scanId) {
+        gs.info('PerfPulse daily scan completed: ' + scanId);
+    } else {
+        gs.error('PerfPulse daily scan failed to start');
+    }
+})();
+]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>PerfPulse Daily Scan</sys_name>
+    <sys_package display_value="PerfPulse">x_vkap_perf_pulse</sys_package>
+    <sys_scope display_value="PerfPulse">x_vkap_perf_pulse</sys_scope>
+    <timezone>GMT</timezone>
+  </sysauto_script>
+</unload>

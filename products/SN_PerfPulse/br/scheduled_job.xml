@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-21 00:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Runs a daily delta performance scan for PerfPulse.</description>
+    <name>PerfPulse Daily Scan</name>
+    <run_dayofweek/>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_period>daily</run_period>
+    <run_start>2026-08-21 02:00:00</run_start>
+    <run_style>periodically</run_style>
+    <run_time>02:00:00</run_time>
+    <script><![CDATA[
+// PerfPulse — Daily Delta Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function () {
+    var engine = new PerfPulseEngine();
+    var scanId = engine.runScan('delta', 'local');
+    if (scanId) {
+        gs.info('PerfPulse daily scan completed: ' + scanId);
+    } else {
+        gs.error('PerfPulse daily scan failed to start');
+    }
+})();
+]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>PerfPulse Daily Scan</sys_name>
+    <sys_package display_value="PerfPulse">x_vkap_perf_pulse</sys_package>
+    <sys_scope display_value="PerfPulse">x_vkap_perf_pulse</sys_scope>
+    <timezone>GMT</timezone>
+  </sysauto_script>
+</unload>
