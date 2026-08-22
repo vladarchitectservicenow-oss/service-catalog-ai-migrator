@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-22 00:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>SLAWatch daily SLA estate scan</description>
+    <name>SLAWatch Daily Scan</name>
+    <run_dayofweek/>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_period>daily</run_period>
+    <run_start>2026-08-22 00:00:00</run_start>
+    <run_time>05:00:00</run_time>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// SLAWatch — scheduled daily scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function () {
+    try {
+        var engine = new SlaWatchEngine();
+        var scanSysId = engine.runFullScan('delta', 30);
+        if (scanSysId) {
+            gs.info('SLAWatch daily scan completed: ' + scanSysId);
+        } else {
+            gs.error('SLAWatch daily scan failed to create scan record');
+        }
+    } catch (e) {
+        gs.error('SLAWatch daily scan error: ' + e.message);
+    }
+})();
+]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>d0000000000000000000000000000001</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>SLAWatch Daily Scan</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sysauto_script_d0000000000000000000000000000001</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sysauto_script>
+</unload>

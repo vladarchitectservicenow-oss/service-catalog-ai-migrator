@@ -1,0 +1,1064 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-22 00:00:00">
+  <sys_app action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>SLAWatch — continuous SLA estate health auditor. Scores every SLA definition for breach-risk and surfaces drift before it becomes a penalty.</description>
+    <name>SLAWatch</name>
+    <scope>x_sn_slawatch</scope>
+    <short_description>SLA compliance-health auditor</short_description>
+    <sys_class_name>sys_app</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000001</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>SLAWatch</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_app_e0000000000000000000000000000001</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <version>1.0.0</version>
+  </sys_app>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <can_delegate>true</can_delegate>
+    <description>SLAWatch user — read access to findings and scans</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_sn_slawatch.user</name>
+    <requires_subscription>-1</requires_subscription>
+    <scoped_admin>false</scoped_admin>
+    <suffix>slawatch</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000011</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_slawatch.user</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_user_role_e0000000000000000000000000000011</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <can_delegate>true</can_delegate>
+    <description>SLAWatch admin — write access and REST execution</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_sn_slawatch.admin</name>
+    <requires_subscription>-1</requires_subscription>
+    <scoped_admin>false</scoped_admin>
+    <suffix>slawatch</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000012</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_slawatch.admin</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_user_role_e0000000000000000000000000000012</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sys_user_role>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_sn_slawatch.SlaWatchEngine</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Deterministic SLA estate detection engine (condition integrity, orphan/coverage, schedule drift, liveness, breach-risk scoring)</description>
+    <name>SlaWatchEngine</name>
+    <script><![CDATA[// SLAWatch — SlaWatchEngine: deterministic SLA estate detection engine
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Consolidates five detectors into a single Script Include:
+//   Condition Integrity Scanner, Orphan & Coverage Detector,
+//   Schedule Drift Monitor, Attachment Liveness Check, Breach-Risk Scorer.
+// All logic is pure GlideRecord / Table API — no LLM in the critical path,
+// so results are reproducible and auditable.
+//
+// @class SlaWatchEngine @namespace x_sn_slawatch
+var SlaWatchEngine = Class.create();
+SlaWatchEngine.prototype = {
+    initialize: function () {
+        this._findingTable = 'x_sn_slawatch_finding';
+        this._scanTable = 'x_sn_slawatch_scan';
+        this._slaTable = 'contract_sla';
+        this._taskSlaTable = 'task_sla';
+        this._dictTable = 'sys_dictionary';
+        this._scheduleTable = 'cmn_schedule';
+        this._spanTable = 'cmn_schedule_span';
+        // Task tables that are expected to carry SLA coverage.
+        this._taskTables = ['incident', 'change_request', 'problem', 'sc_request', 'sc_req_item', 'sc_task'];
+        // Condition fields on contract_sla that reference task-table fields.
+        this._conditionFields = ['start_condition', 'pause_condition', 'stop_condition', 'reset_condition'];
+    },
+
+    /**
+     * Run a full or delta scan of the SLA estate and persist findings + a scan record.
+     * @param {string} scanType  'full' | 'delta'
+     * @param {number} livenessDays  attachment-liveness threshold in days
+     * @return {string} sys_id of the created scan record ('' on failure)
+     */
+    runFullScan: function (scanType, livenessDays) {
+        var scanType = scanType || 'full';
+        var livenessDays = livenessDays || 30;
+        var scanGr = new GlideRecord(this._scanTable);
+        scanGr.initialize();
+        scanGr.setValue('scan_type', scanType);
+        scanGr.setValue('started_at', new GlideDateTime().getValue());
+        scanGr.setValue('status', 'running');
+        var scanSysId = scanGr.insert();
+        if (!scanSysId) {
+            gs.error('SlaWatchEngine.runFullScan: failed to create scan record');
+            return '';
+        }
+
+        // Delta scans use a high-water mark: only SLAs updated since the last
+        // completed scan are re-analyzed. Full scans process the entire estate.
+        var since = (scanType === 'delta') ? this._getHighWaterMark() : '';
+
+        // Load the schedule baseline map once (avoids N+1 re-reads per SLA).
+        this._baselineMap = this._getBaselineMap();
+        this._baselineUpdates = {};
+
+        var findings = [];
+        try {
+            findings = findings.concat(this._scanConditionIntegrity(scanSysId, since));
+            findings = findings.concat(this._detectOrphansAndCoverage(scanSysId, since));
+            findings = findings.concat(this._detectScheduleDrift(scanSysId, since));
+            findings = findings.concat(this._checkLiveness(scanSysId, livenessDays, since));
+
+            // Compute breach-risk score per SLA and persist as findings of category 'score'.
+            var scoreFindings = this._computeBreachRiskScores(scanSysId, findings);
+            findings = findings.concat(scoreFindings);
+
+            // Persist findings to the finding table (release-blocking wiring).
+            var report = new SlaWatchReport();
+            report.persistFindings(findings);
+
+            // Finalize scan record.
+            var done = new GlideRecord(this._scanTable);
+            if (done.get(scanSysId)) {
+                done.setValue('completed_at', new GlideDateTime().getValue());
+                done.setValue('status', 'completed');
+                done.setValue('sla_count', this._countSlas());
+                done.setValue('finding_count', findings.length);
+                done.setValue('high_risk_count', this._countHighRisk(findings));
+                done.setValue('summary_json', JSON.stringify(this._buildSummary(findings)));
+                done.setValue('baseline_json', JSON.stringify(this._mergeBaseline()));
+                done.update();
+            }
+        } catch (e) {
+            gs.error('SlaWatchEngine.runFullScan: scan failed: ' + e.message);
+            var fail = new GlideRecord(this._scanTable);
+            if (fail.get(scanSysId)) {
+                fail.setValue('completed_at', new GlideDateTime().getValue());
+                fail.setValue('status', 'failed');
+                fail.update();
+            }
+            return '';
+        }
+        return scanSysId;
+    },
+
+    /**
+     * 1) Condition Integrity Scanner.
+     * Parses start/pause/stop/reset conditions and cross-references each
+     * referenced field against sys_dictionary for the SLA's target table.
+     */
+    _scanConditionIntegrity: function (scanSysId, since) {
+        var out = [];
+        var slaGr = new GlideRecord(this._slaTable);
+        slaGr.addActiveQuery();
+        if (since) { slaGr.addQuery('sys_updated_on', '>', since); }
+        slaGr.query();
+        while (slaGr.next()) {
+            var collection = slaGr.getValue('collection') || '';
+            var slaName = slaGr.getValue('name') || slaGr.getValue('sys_id');
+            var slaSysId = slaGr.getUniqueValue();
+            if (!collection) {
+                continue; // orphan handled by coverage detector
+            }
+            var dictFields = this._getDictionaryFields(collection);
+            for (var i = 0; i < this._conditionFields.length; i++) {
+                var condField = this._conditionFields[i];
+                var cond = slaGr.getValue(condField) || '';
+                if (!cond) {
+                    continue;
+                }
+                var refs = this._extractFieldRefs(cond);
+                for (var j = 0; j < refs.length; j++) {
+                    var fieldName = refs[j];
+                    if (this._isSystemField(fieldName)) {
+                        continue;
+                    }
+                    if (dictFields.indexOf(fieldName) === -1) {
+                        out.push(this._makeFinding(scanSysId, slaSysId, slaName, collection,
+                            'condition_integrity', 'high',
+                            'Condition references missing field "' + fieldName + '" on table ' + collection,
+                            condField, fieldName, cond));
+                    }
+                }
+            }
+        }
+        return out;
+    },
+
+    /**
+     * 2) Orphan & Coverage Detector.
+     * SLAs with no target table, and task tables with no SLA coverage.
+     */
+    _detectOrphansAndCoverage: function (scanSysId, since) {
+        var out = [];
+        var coveredTables = {};
+        var slaGr = new GlideRecord(this._slaTable);
+        slaGr.addActiveQuery();
+        if (since) { slaGr.addQuery('sys_updated_on', '>', since); }
+        slaGr.query();
+        while (slaGr.next()) {
+            var collection = slaGr.getValue('collection') || '';
+            var slaName = slaGr.getValue('name') || slaGr.getValue('sys_id');
+            var slaSysId = slaGr.getUniqueValue();
+            if (!collection) {
+                out.push(this._makeFinding(scanSysId, slaSysId, slaName, '',
+                    'orphan', 'high',
+                    'SLA definition has no target task table (collection is empty)',
+                    'collection', '', ''));
+                continue;
+            }
+            coveredTables[collection] = true;
+        }
+        for (var t = 0; t < this._taskTables.length; t++) {
+            var table = this._taskTables[t];
+            if (!coveredTables[table]) {
+                out.push(this._makeFinding(scanSysId, '', table, table,
+                    'coverage', 'high',
+                    'Task table "' + table + '" has no active SLA coverage',
+                    'collection', '', ''));
+            }
+        }
+        return out;
+    },
+
+    /**
+     * 3) Schedule Drift Monitor.
+     * Snapshots each SLA's schedule and diffs against a stored baseline.
+     * Baseline updates are accumulated in-memory and written once at finalize.
+     */
+    _detectScheduleDrift: function (scanSysId, since) {
+        var out = [];
+        var slaGr = new GlideRecord(this._slaTable);
+        slaGr.addActiveQuery();
+        if (since) { slaGr.addQuery('sys_updated_on', '>', since); }
+        slaGr.query();
+        while (slaGr.next()) {
+            var scheduleSysId = slaGr.getValue('schedule') || '';
+            var slaName = slaGr.getValue('name') || slaGr.getValue('sys_id');
+            var slaSysId = slaGr.getUniqueValue();
+            if (!scheduleSysId) {
+                continue;
+            }
+            var fingerprint = this._scheduleFingerprint(scheduleSysId);
+            var baseline = this._getBaseline(slaSysId);
+            if (baseline && baseline !== fingerprint) {
+                out.push(this._makeFinding(scanSysId, slaSysId, slaName,
+                    slaGr.getValue('collection') || '',
+                    'schedule_drift', 'medium',
+                    'Schedule changed since baseline snapshot',
+                    'schedule', scheduleSysId, fingerprint));
+            }
+            this._baselineUpdates[slaSysId] = fingerprint;
+        }
+        return out;
+    },
+
+    /**
+     * 4) Attachment Liveness Check.
+     * Flags SLAs that have not attached to any task in N days.
+     */
+    _checkLiveness: function (scanSysId, livenessDays, since) {
+        var out = [];
+        var cutoff = new GlideDateTime();
+        cutoff.addDaysUTC(-1 * livenessDays);
+        var slaGr = new GlideRecord(this._slaTable);
+        slaGr.addActiveQuery();
+        if (since) { slaGr.addQuery('sys_updated_on', '>', since); }
+        slaGr.query();
+        while (slaGr.next()) {
+            var slaSysId = slaGr.getUniqueValue();
+            var slaName = slaGr.getValue('name') || slaSysId;
+            var collection = slaGr.getValue('collection') || '';
+            var lastAttach = this._lastAttachment(slaSysId);
+            if (!lastAttach) {
+                out.push(this._makeFinding(scanSysId, slaSysId, slaName, collection,
+                    'liveness', 'medium',
+                    'SLA has never attached to any task (possible broken start condition)',
+                    'start_condition', '', ''));
+            } else if (lastAttach < cutoff.getValue()) {
+                out.push(this._makeFinding(scanSysId, slaSysId, slaName, collection,
+                    'liveness', 'low',
+                    'SLA has not attached to any task in ' + livenessDays + ' days',
+                    'start_condition', '', lastAttach));
+            }
+        }
+        return out;
+    },
+
+    /**
+     * 5) Breach-Risk Scoring Engine.
+     * Composite 0-100 score per SLA from condition integrity, orphan status,
+     * schedule drift, and liveness.
+     */
+    _computeBreachRiskScores: function (scanSysId, findings) {
+        var out = [];
+        var riskBySla = {};
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            if (!f.sla_sys_id) {
+                continue;
+            }
+            if (!riskBySla[f.sla_sys_id]) {
+                riskBySla[f.sla_sys_id] = { name: f.sla_name, table: f.sla_table, score: 0 };
+            }
+            riskBySla[f.sla_sys_id].score += this._severityWeight(f.severity);
+        }
+        for (var slaId in riskBySla) {
+            if (!riskBySla.hasOwnProperty(slaId)) {
+                continue;
+            }
+            var entry = riskBySla[slaId];
+            var score = Math.min(100, entry.score);
+            out.push(this._makeFinding(scanSysId, slaId, entry.name, entry.table,
+                'score', this._scoreSeverity(score),
+                'Composite breach-risk score ' + score + '/100',
+                '', '', String(score)));
+        }
+        return out;
+    },
+
+    // ---- Helpers ---------------------------------------------------------
+
+    _makeFinding: function (scanSysId, slaSysId, slaName, slaTable, category, severity, message, field, fieldValue, detail) {
+        return {
+            scan_sys_id: scanSysId,
+            sla_sys_id: slaSysId,
+            sla_name: slaName,
+            sla_table: slaTable,
+            category: category,
+            severity: severity,
+            message: message,
+            field: field,
+            field_value: fieldValue,
+            detail: detail
+        };
+    },
+
+    _severityWeight: function (severity) {
+        if (severity === 'high') { return 40; }
+        if (severity === 'medium') { return 20; }
+        return 10;
+    },
+
+    _scoreSeverity: function (score) {
+        if (score >= 60) { return 'high'; }
+        if (score >= 30) { return 'medium'; }
+        return 'low';
+    },
+
+    _countHighRisk: function (findings) {
+        var n = 0;
+        for (var i = 0; i < findings.length; i++) {
+            if (findings[i].severity === 'high') { n++; }
+        }
+        return n;
+    },
+
+    _buildSummary: function (findings) {
+        var byCategory = {};
+        for (var i = 0; i < findings.length; i++) {
+            var c = findings[i].category;
+            byCategory[c] = (byCategory[c] || 0) + 1;
+        }
+        return { total: findings.length, by_category: byCategory };
+    },
+
+    _countSlas: function () {
+        var ga = new GlideAggregate(this._slaTable);
+        ga.addActiveQuery();
+        ga.addAggregate('COUNT');
+        ga.query();
+        if (ga.next()) {
+            return parseInt(ga.getAggregate('COUNT'), 10);
+        }
+        return 0;
+    },
+
+    _getDictionaryFields: function (table) {
+        var fields = [];
+        var gr = new GlideRecord(this._dictTable);
+        gr.addQuery('name', table);
+        gr.addQuery('element', '!=', '');
+        gr.query();
+        while (gr.next()) {
+            fields.push(gr.getValue('element'));
+        }
+        return fields;
+    },
+
+    _isSystemField: function (fieldName) {
+        var sys = ['sys_id', 'sys_created_on', 'sys_created_by', 'sys_updated_on',
+            'sys_updated_by', 'sys_mod_count', 'sys_class_name', 'sys_domain',
+            'sys_domain_path', 'sys_scope', 'sys_tags'];
+        return sys.indexOf(fieldName) !== -1;
+    },
+
+    /**
+     * Extract field names from a condition string. Handles encoded-query style
+     * (field=value^field2=value2) and script-style (current.field_name) references.
+     */
+    _extractFieldRefs: function (cond) {
+        var refs = [];
+        var seen = {};
+        // Encoded query: field=value or field!=value or fieldINvalue
+        var eqRe = /(?:^|\^|[\s])([A-Za-z_][A-Za-z0-9_]*)(?:=|!=|IN|NOT IN|LIKE|STARTSWITH|ENDSWITH)/g;
+        var m;
+        while ((m = eqRe.exec(cond)) !== null) {
+            if (!seen[m[1]]) { seen[m[1]] = true; refs.push(m[1]); }
+        }
+        // Script style: current.field_name or current.getValue('field_name')
+        var curRe = /current\.([A-Za-z_][A-Za-z0-9_]*)/g;
+        while ((m = curRe.exec(cond)) !== null) {
+            if (!seen[m[1]]) { seen[m[1]] = true; refs.push(m[1]); }
+        }
+        var gvRe = /getValue\(['"]([A-Za-z_][A-Za-z0-9_]*)['"]\)/g;
+        while ((m = gvRe.exec(cond)) !== null) {
+            if (!seen[m[1]]) { seen[m[1]] = true; refs.push(m[1]); }
+        }
+        return refs;
+    },
+
+    _scheduleFingerprint: function (scheduleSysId) {
+        var parts = [];
+        var sched = new GlideRecord(this._scheduleTable);
+        if (sched.get(scheduleSysId)) {
+            parts.push('name=' + (sched.getValue('name') || ''));
+            parts.push('tz=' + (sched.getValue('time_zone') || ''));
+        }
+        var span = new GlideRecord(this._spanTable);
+        span.addQuery('schedule', scheduleSysId);
+        span.orderBy('sys_id');
+        span.query();
+        var spanCount = 0;
+        while (span.next()) {
+            spanCount++;
+            parts.push(span.getValue('day_of_week') + ':' + span.getValue('start_time') + '-' + span.getValue('end_time'));
+        }
+        parts.push('spans=' + spanCount);
+        return parts.join('|');
+    },
+
+    /**
+     * Load the most recent non-empty schedule baseline map (single query).
+     * Replaces the fragile CONTAINS substring match with a direct JSON parse.
+     */
+    _getBaselineMap: function () {
+        var gr = new GlideRecord(this._scanTable);
+        gr.addQuery('baseline_json', '!=', '');
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            try {
+                return JSON.parse(gr.getValue('baseline_json') || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+        return {};
+    },
+
+    _getBaseline: function (slaSysId) {
+        return this._baselineMap[slaSysId] || '';
+    },
+
+    _mergeBaseline: function () {
+        var merged = {};
+        var k;
+        for (k in this._baselineMap) {
+            if (this._baselineMap.hasOwnProperty(k)) { merged[k] = this._baselineMap[k]; }
+        }
+        for (k in this._baselineUpdates) {
+            if (this._baselineUpdates.hasOwnProperty(k)) { merged[k] = this._baselineUpdates[k]; }
+        }
+        return merged;
+    },
+
+    _getHighWaterMark: function () {
+        var gr = new GlideRecord(this._scanTable);
+        gr.addQuery('status', 'completed');
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getValue('completed_at') || gr.getValue('sys_created_on') || '';
+        }
+        return '';
+    },
+
+    _lastAttachment: function (slaSysId) {
+        var gr = new GlideRecord(this._taskSlaTable);
+        gr.addQuery('sla', slaSysId);
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getValue('sys_created_on');
+        }
+        return '';
+    },
+
+    type: 'SlaWatchEngine'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000021</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>SlaWatchEngine</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_script_include_e0000000000000000000000000000021</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sys_script_include>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_sn_slawatch.SlaWatchReport</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Reporting layer: finding persistence, ranked digest, executive summary, optional Now Assist narrative</description>
+    <name>SlaWatchReport</name>
+    <script><![CDATA[// SLAWatch — SlaWatchReport: persistence, digest, and optional AI narrative
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Consolidates the reporting layer: finding persistence, ranked digest
+// generation, and the optional Now Assist breach-impact narrative.
+// AI is layered on top of the deterministic engine and is never load-bearing.
+//
+// @class SlaWatchReport @namespace x_sn_slawatch
+var SlaWatchReport = Class.create();
+SlaWatchReport.prototype = {
+    initialize: function () {
+        this._findingTable = 'x_sn_slawatch_finding';
+        this._scanTable = 'x_sn_slawatch_scan';
+    },
+
+    /**
+     * Persist a list of finding objects (from SlaWatchEngine) to the finding table.
+     * @param {Array} findings  array of finding objects
+     * @return {number} number of findings persisted
+     */
+    persistFindings: function (findings) {
+        var count = 0;
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            var gr = new GlideRecord(this._findingTable);
+            gr.initialize();
+            gr.setValue('scan', f.scan_sys_id || '');
+            gr.setValue('sla', f.sla_sys_id || '');
+            gr.setValue('sla_name', f.sla_name || '');
+            gr.setValue('sla_table', f.sla_table || '');
+            gr.setValue('category', f.category || '');
+            gr.setValue('severity', f.severity || 'low');
+            gr.setValue('message', f.message || '');
+            gr.setValue('field', f.field || '');
+            gr.setValue('field_value', f.field_value || '');
+            gr.setValue('detail', f.detail || '');
+            gr.setValue('status', 'open');
+            try {
+                if (gr.insert()) {
+                    count++;
+                }
+            } catch (e) {
+                gs.error('SlaWatchReport.persistFindings: insert failed for ' + f.category + ': ' + e.message);
+            }
+        }
+        return count;
+    },
+
+    /**
+     * Build a ranked digest of the top breach-risk SLAs.
+     * @param {number} limit  max number of entries
+     * @return {Array} ranked list of { sla_name, sla_table, score, severity }
+     */
+    getRankedDigest: function (limit) {
+        var limit = limit || 10;
+        var out = [];
+        var gr = new GlideRecord(this._findingTable);
+        gr.addQuery('category', 'score');
+        gr.query();
+        while (gr.next()) {
+            out.push({
+                sla_name: gr.getValue('sla_name'),
+                sla_table: gr.getValue('sla_table'),
+                score: parseInt(gr.getValue('detail') || '0', 10),
+                severity: gr.getValue('severity')
+            });
+        }
+        // Numeric sort (descending) — the `detail` field stores scores as
+        // strings, so a DB orderByDesc would sort lexicographically ("90" > "100").
+        out.sort(function (a, b) { return b.score - a.score; });
+        return out.slice(0, limit);
+    },
+
+    /**
+     * Build a plain-language executive summary of the current scan.
+     * @param {string} scanSysId  scan record sys_id
+     * @return {string} summary text
+     */
+    getExecutiveSummary: function (scanSysId) {
+        var gr = new GlideRecord(this._scanTable);
+        if (!gr.get(scanSysId)) {
+            return 'No scan found.';
+        }
+        var slaCount = parseInt(gr.getValue('sla_count') || '0', 10);
+        var findingCount = parseInt(gr.getValue('finding_count') || '0', 10);
+        var highRisk = parseInt(gr.getValue('high_risk_count') || '0', 10);
+        var summary = 'SLAWatch scanned ' + slaCount + ' SLA definitions and found ' +
+            findingCount + ' findings, of which ' + highRisk + ' are high-risk.';
+        if (highRisk > 0) {
+            summary += ' Immediate remediation is recommended for the top offenders.';
+        } else {
+            summary += ' No high-risk conditions detected.';
+        }
+        return summary;
+    },
+
+    /**
+     * Optional Now Assist breach-impact narrative for a single high-risk finding.
+     * Deterministic fallback is returned when no GenAI Controller is configured.
+     * @param {string} findingSysId  finding record sys_id
+     * @return {string} narrative text
+     */
+    getBreachImpactNarrative: function (findingSysId) {
+        var gr = new GlideRecord(this._findingTable);
+        if (!gr.get(findingSysId)) {
+            return 'Finding not found.';
+        }
+        var slaName = gr.getValue('sla_name') || 'this SLA';
+        var category = gr.getValue('category') || '';
+        var message = gr.getValue('message') || '';
+
+        // Deterministic fallback — always available, no LLM dependency.
+        var narrative = 'SLA "' + slaName + '" is flagged as ' + category +
+            '. ' + message + '. This condition can cause the SLA to breach silently ' +
+            'or fail to attach, exposing the organization to contractual penalty and ' +
+            'audit findings. Review and remediate before the next reporting period.';
+
+        // Optional AI upgrade via Now Assist (BYOK). Never load-bearing.
+        try {
+            if (typeof sn_generative_ai !== 'undefined' && sn_generative_ai.GenerativeAI) {
+                var genAI = new sn_generative_ai.GenerativeAI();
+                var prompt = 'Explain in plain language, for a contract manager, why this ' +
+                    'ServiceNow SLA is at risk and what the fix does. SLA: ' + slaName +
+                    '. Finding: ' + message + '. Keep it under 80 words.';
+                var aiResult = genAI.generateText(prompt);
+                if (aiResult && aiResult.text) {
+                    narrative = aiResult.text;
+                }
+            }
+        } catch (e) {
+            gs.warn('SlaWatchReport.getBreachImpactNarrative: AI unavailable, using deterministic fallback: ' + e.message);
+        }
+        return narrative;
+    },
+
+    type: 'SlaWatchReport'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000022</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>SlaWatchReport</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_script_include_e0000000000000000000000000000022</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sys_script_include>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_slawatch</source_scope>
+    <status>allowed</status>
+    <target_name>contract_sla</target_name>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000031</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>contract_sla</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_scope_privilege_e0000000000000000000000000000031</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_slawatch</source_scope>
+    <status>allowed</status>
+    <target_name>task_sla</target_name>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000032</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>task_sla</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_scope_privilege_e0000000000000000000000000000032</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_slawatch</source_scope>
+    <status>allowed</status>
+    <target_name>sys_dictionary</target_name>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000033</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_dictionary</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_scope_privilege_e0000000000000000000000000000033</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_slawatch</source_scope>
+    <status>allowed</status>
+    <target_name>cmn_schedule</target_name>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000034</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>cmn_schedule</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_scope_privilege_e0000000000000000000000000000034</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_slawatch</source_scope>
+    <status>allowed</status>
+    <target_name>cmn_schedule_span</target_name>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000035</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>cmn_schedule_span</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_scope_privilege_e0000000000000000000000000000035</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_sn_slawatch</source_scope>
+    <status>allowed</status>
+    <target_name>sn_generative_ai</target_name>
+    <target_type>scriptable</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000036</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sn_generative_ai</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_scope_privilege_e0000000000000000000000000000036</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>/api/x_sn_slawatch</base_uri>
+    <description>SLAWatch REST API</description>
+    <name>SLAWatch API</name>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000041</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>SLAWatch API</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_ws_definition_e0000000000000000000000000000041</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sys_ws_definition>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <name>execute</name>
+    <operation_uri>/execute</operation_uri>
+    <produces>application/json</produces>
+    <relative_path>/execute</relative_path>
+    <request_method>POST</request_method>
+    <operation_script><![CDATA[
+// SLAWatch — POST /execute: action-dispatch endpoint
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single POST endpoint dispatching on an `action` body parameter.
+// Consolidates the design's scan/digest/remediation operations.
+(function process(request, response) {
+    var body = {};
+    try {
+        body = (request && request.body && request.body.data) ? request.body.data : {};
+    } catch (e) {
+        body = {};
+    }
+    var action = body.action || 'scan';
+    var engine = new SlaWatchEngine();
+    var report = new SlaWatchReport();
+    var result;
+
+    switch (action) {
+        case 'scan':
+            // Run a full or delta scan of the SLA estate.
+            var scanType = body.scan_type || 'full';
+            var livenessDays = parseInt(body.liveness_days || '30', 10);
+            if (isNaN(livenessDays) || livenessDays <= 0) {
+                livenessDays = 30;
+            }
+            var scanSysId = engine.runFullScan(scanType, livenessDays);
+            result = { scan_sys_id: scanSysId, status: scanSysId ? 'completed' : 'failed' };
+            break;
+
+        case 'digest':
+            // Ranked digest of top breach-risk SLAs.
+            var limit = parseInt(body.limit || '10', 10);
+            if (isNaN(limit) || limit <= 0) {
+                limit = 10;
+            }
+            result = { digest: report.getRankedDigest(limit) };
+            break;
+
+        case 'summary':
+            // Executive summary for a given scan.
+            var summaryScanId = body.scan_sys_id || '';
+            result = { summary: report.getExecutiveSummary(summaryScanId) };
+            break;
+
+        case 'narrative':
+            // Optional AI breach-impact narrative for a finding.
+            var findingId = body.finding_sys_id || '';
+            result = { narrative: report.getBreachImpactNarrative(findingId) };
+            break;
+
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown action: ' + action,
+                valid_actions: ['scan', 'digest', 'summary', 'narrative']
+            }));
+            return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+})(request, response);
+
+]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000042</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>execute</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_ws_operation_e0000000000000000000000000000042</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <web_service_definition display_value="SLAWatch API" name="SLAWatch API">e0000000000000000000000000000041</web_service_definition>
+  </sys_ws_operation>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <name>status</name>
+    <operation_uri>/status</operation_uri>
+    <produces>application/json</produces>
+    <relative_path>/status</relative_path>
+    <request_method>GET</request_method>
+    <operation_script><![CDATA[
+// SLAWatch — GET /status: read-only reporting endpoint
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single GET endpoint returning scan status, findings, and health data
+// differentiated by query parameters.
+(function process(request, response) {
+    var q = (request && request.queryParams) ? request.queryParams : {};
+    var result = { queried_at: new GlideDateTime().getValue() };
+
+    var scanSysId = q.scan_sys_id || '';
+    var category = q.category || '';
+    var severity = q.severity || '';
+    var limit = parseInt(q.limit || '50', 10);
+    if (isNaN(limit) || limit <= 0) {
+        limit = 50;
+    }
+
+    if (scanSysId) {
+        // Full detail for one scan record.
+        var scanGr = new GlideRecord('x_sn_slawatch_scan');
+        if (scanGr.get(scanSysId)) {
+            result.scan = {
+                scan_type: scanGr.getValue('scan_type'),
+                status: scanGr.getValue('status'),
+                started_at: scanGr.getValue('started_at'),
+                completed_at: scanGr.getValue('completed_at'),
+                sla_count: scanGr.getValue('sla_count'),
+                finding_count: scanGr.getValue('finding_count'),
+                high_risk_count: scanGr.getValue('high_risk_count')
+            };
+        } else {
+            result.scan = null;
+        }
+    }
+
+    // Findings query (optionally filtered by scan, category, severity).
+    var fgr = new GlideRecord('x_sn_slawatch_finding');
+    if (scanSysId) {
+        fgr.addQuery('scan', scanSysId);
+    }
+    if (category) {
+        fgr.addQuery('category', category);
+    }
+    if (severity) {
+        fgr.addQuery('severity', severity);
+    }
+    fgr.orderByDesc('sys_created_on');
+    fgr.setLimit(limit);
+    fgr.query();
+    var findings = [];
+    while (fgr.next()) {
+        findings.push({
+            sys_id: fgr.getUniqueValue(),
+            sla_name: fgr.getValue('sla_name'),
+            sla_table: fgr.getValue('sla_table'),
+            category: fgr.getValue('category'),
+            severity: fgr.getValue('severity'),
+            message: fgr.getValue('message'),
+            status: fgr.getValue('status')
+        });
+    }
+    result.findings = findings;
+    result.findings_count = findings.length;
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+})(request, response);
+
+]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000043</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>status</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_ws_operation_e0000000000000000000000000000043</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <web_service_definition display_value="SLAWatch API" name="SLAWatch API">e0000000000000000000000000000041</web_service_definition>
+  </sys_ws_operation>
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>SLAWatch daily SLA estate scan</description>
+    <name>SLAWatch Daily Scan</name>
+    <run_dayofweek/>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_period>daily</run_period>
+    <run_start>2026-08-22 00:00:00</run_start>
+    <run_time>05:00:00</run_time>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+
+// SLAWatch — scheduled daily scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function () {
+    try {
+        var engine = new SlaWatchEngine();
+        var scanSysId = engine.runFullScan('delta', 30);
+        if (scanSysId) {
+            gs.info('SLAWatch daily scan completed: ' + scanSysId);
+        } else {
+            gs.error('SLAWatch daily scan failed to create scan record');
+        }
+    } catch (e) {
+        gs.error('SLAWatch daily scan error: ' + e.message);
+    }
+})();
+
+]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>e0000000000000000000000000000051</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>SLAWatch Daily Scan</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sysauto_script_e0000000000000000000000000000051</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+  </sysauto_script>
+</unload>

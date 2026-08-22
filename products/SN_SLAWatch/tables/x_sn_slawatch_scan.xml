@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-22 00:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <actions_access>false</actions_access>
+    <alter_access>false</alter_access>
+    <client_scripts_access>false</client_scripts_access>
+    <configuration_access>false</configuration_access>
+    <create_access>false</create_access>
+    <create_access_controls>true</create_access_controls>
+    <delete_access>false</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>Scan</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_sn_slawatch_scan</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>b0000000000000000000000000000001</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Scan</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_db_object_x_sn_slawatch_scan</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <update_access>false</update_access>
+    <user_role display_value="x_sn_slawatch.user" name="x_sn_slawatch.user">x_sn_slawatch.user</user_role>
+    <ws_access>create</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="scan_type" table="x_sn_slawatch_scan">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>1</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Scan Type</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value>full</default_value>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>scan_type</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Choice">choice</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_slawatch_scan</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>b0000000000000000000000000000011</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Scan Type</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_slawatch_scan_scan_type</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>scan_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Full</label>
+    <language>en</language>
+    <name>x_sn_slawatch_scan</name>
+    <sequence>10</sequence>
+    <synonyms/>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_domain>global</sys_domain>
+    <sys_domain_path>/</sys_domain_path>
+    <sys_id>b0000000000000000000000000000021</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <value>full</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>scan_type</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Delta</label>
+    <language>en</language>
+    <name>x_sn_slawatch_scan</name>
+    <sequence>20</sequence>
+    <synonyms/>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_domain>global</sys_domain>
+    <sys_domain_path>/</sys_domain_path>
+    <sys_id>b0000000000000000000000000000022</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <value>delta</value>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="status" table="x_sn_slawatch_scan">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>1</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Status</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value>running</default_value>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>status</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Choice">choice</internal_type>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_slawatch_scan</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>b0000000000000000000000000000012</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Status</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_slawatch_scan_status</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>status</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Running</label>
+    <language>en</language>
+    <name>x_sn_slawatch_scan</name>
+    <sequence>10</sequence>
+    <synonyms/>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_domain>global</sys_domain>
+    <sys_domain_path>/</sys_domain_path>
+    <sys_id>b0000000000000000000000000000023</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <value>running</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>status</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Completed</label>
+    <language>en</language>
+    <name>x_sn_slawatch_scan</name>
+    <sequence>20</sequence>
+    <synonyms/>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_domain>global</sys_domain>
+    <sys_domain_path>/</sys_domain_path>
+    <sys_id>b0000000000000000000000000000024</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <value>completed</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>status</element>
+    <hint/>
+    <inactive>false</inactive>
+    <label>Failed</label>
+    <language>en</language>
+    <name>x_sn_slawatch_scan</name>
+    <sequence>30</sequence>
+    <synonyms/>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_domain>global</sys_domain>
+    <sys_domain_path>/</sys_domain_path>
+    <sys_id>b0000000000000000000000000000025</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <value>failed</value>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="started_at" table="x_sn_slawatch_scan">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Started At</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>started_at</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_slawatch_scan</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>b0000000000000000000000000000013</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Started At</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_slawatch_scan_started_at</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="completed_at" table="x_sn_slawatch_scan">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Completed At</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>completed_at</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_slawatch_scan</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>b0000000000000000000000000000014</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Completed At</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_slawatch_scan_completed_at</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="sla_count" table="x_sn_slawatch_scan">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>SLA Count</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>sla_count</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Integer">integer</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_slawatch_scan</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>b0000000000000000000000000000015</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>SLA Count</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_slawatch_scan_sla_count</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="finding_count" table="x_sn_slawatch_scan">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Finding Count</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>finding_count</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Integer">integer</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_slawatch_scan</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>b0000000000000000000000000000016</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Finding Count</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_slawatch_scan_finding_count</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="high_risk_count" table="x_sn_slawatch_scan">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>High Risk Count</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>high_risk_count</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="Integer">integer</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_slawatch_scan</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>b0000000000000000000000000000017</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>High Risk Count</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_slawatch_scan_high_risk_count</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="summary_json" table="x_sn_slawatch_scan">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Summary (JSON)</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>summary_json</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>4000</max_length>
+    <name>x_sn_slawatch_scan</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>b0000000000000000000000000000018</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Summary (JSON)</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_slawatch_scan_summary_json</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="baseline_json" table="x_sn_slawatch_scan">
+    <active>true</active>
+    <array>false</array>
+    <attributes/>
+    <audit>false</audit>
+    <calculation/>
+    <choice>0</choice>
+    <choice_field/>
+    <choice_table/>
+    <column_label>Baseline (JSON)</column_label>
+    <comments/>
+    <create_roles/>
+    <default_value/>
+    <defaultsort/>
+    <delete_roles/>
+    <dependent/>
+    <dependent_on_field/>
+    <display>false</display>
+    <dynamic_creation>false</dynamic_creation>
+    <dynamic_creation_script/>
+    <dynamic_default_value/>
+    <dynamic_ref_qual/>
+    <element>baseline_json</element>
+    <element_reference>false</element_reference>
+    <foreign_database/>
+    <function_definition/>
+    <function_field>false</function_field>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <max_length>4000</max_length>
+    <name>x_sn_slawatch_scan</name>
+    <next_element/>
+    <primary>false</primary>
+    <read_only>false</read_only>
+    <read_roles/>
+    <reference/>
+    <reference_cascade_rule/>
+    <reference_floats>false</reference_floats>
+    <reference_key/>
+    <reference_qual/>
+    <reference_qual_condition/>
+    <reference_type/>
+    <sizeclass/>
+    <spell_check>false</spell_check>
+    <staged>false</staged>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-08-22 00:00:00</sys_created_on>
+    <sys_id>b0000000000000000000000000000019</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Baseline (JSON)</sys_name>
+    <sys_package display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="SLAWatch" source="x_sn_slawatch">x_sn_slawatch</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_slawatch_scan_baseline_json</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-08-22 00:00:00</sys_updated_on>
+    <table_reference>false</table_reference>
+    <text_index>false</text_index>
+    <unique>false</unique>
+    <use_dependent_field>false</use_dependent_field>
+    <use_dynamic_default>false</use_dynamic_default>
+    <use_reference_qualifier>simple</use_reference_qualifier>
+    <virtual>false</virtual>
+    <widget/>
+    <write_roles/>
+    <xml_view>false</xml_view>
+  </sys_dictionary>
+</unload>
