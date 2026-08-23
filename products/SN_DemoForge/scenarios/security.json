@@ -1,0 +1,12 @@
+{
+  "name": "security",
+  "description": "Security incident drill: high-severity incidents with priority/severity spread for SOC demos.",
+  "default_count": 200,
+  "tables": {
+    "sys_user": { "count": "target" },
+    "sys_user_group": { "count": 4 },
+    "cmn_location": { "count": 8 },
+    "incident": { "count": "target" },
+    "kb_knowledge": { "count": 15 }
+  }
+}

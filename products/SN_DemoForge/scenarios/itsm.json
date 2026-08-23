@@ -1,0 +1,12 @@
+{
+  "name": "itsm",
+  "description": "Standard ITSM demo: incidents, users, assignment groups, and locations with coherent relationships.",
+  "default_count": 500,
+  "tables": {
+    "sys_user": { "count": "target" },
+    "sys_user_group": { "count": 8 },
+    "cmn_location": { "count": 12 },
+    "incident": { "count": "target" },
+    "kb_knowledge": { "count": 40 }
+  }
+}

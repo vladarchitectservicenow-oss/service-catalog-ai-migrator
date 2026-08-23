@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-23 05:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <actions_access>false</actions_access>
+    <alter_access>false</alter_access>
+    <client_scripts_access>false</client_scripts_access>
+    <configuration_access>false</configuration_access>
+    <create_access>true</create_access>
+    <create_access_controls>true</create_access_controls>
+    <delete_access>true</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>DemoForge Run</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_demo_forge_run</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>Vladimir Kapustin</sys_created_by>
+    <sys_name>DemoForge Run</sys_name>
+    <sys_package display_value="DemoForge" source="x_demo_forge">x_demo_forge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+    <sys_update_name>sys_db_object_x_demo_forge_run</sys_update_name>
+    <update_access>false</update_access>
+    <user_role display_value="x_demo_forge.admin" name="x_demo_forge.admin">x_demo_forge.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>scenario</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>Scenario</label>
+    <mandatory>true</mandatory>
+    <max_length>100</max_length>
+    <name>x_demo_forge_run</name>
+    <read_only>false</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>record_count</element>
+    <internal_type display_value="Integer">integer</internal_type>
+    <label>Record Count</label>
+    <mandatory>false</mandatory>
+    <name>x_demo_forge_run</name>
+    <read_only>false</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>status</element>
+    <internal_type display_value="Choice">choice</internal_type>
+    <label>Status</label>
+    <mandatory>true</mandatory>
+    <name>x_demo_forge_run</name>
+    <read_only>false</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+    <choice>1</choice>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>started_at</element>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <label>Started At</label>
+    <mandatory>false</mandatory>
+    <name>x_demo_forge_run</name>
+    <read_only>true</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>completed_at</element>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <label>Completed At</label>
+    <mandatory>false</mandatory>
+    <name>x_demo_forge_run</name>
+    <read_only>true</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>created_count</element>
+    <internal_type display_value="Integer">integer</internal_type>
+    <label>Created Count</label>
+    <mandatory>false</mandatory>
+    <name>x_demo_forge_run</name>
+    <read_only>true</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>updated_count</element>
+    <internal_type display_value="Integer">integer</internal_type>
+    <label>Updated Count</label>
+    <mandatory>false</mandatory>
+    <name>x_demo_forge_run</name>
+    <read_only>true</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>error_count</element>
+    <internal_type display_value="Integer">integer</internal_type>
+    <label>Error Count</label>
+    <mandatory>false</mandatory>
+    <name>x_demo_forge_run</name>
+    <read_only>true</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>seed_log</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>Seed Log (JSON)</label>
+    <mandatory>false</mandatory>
+    <max_length>4000</max_length>
+    <name>x_demo_forge_run</name>
+    <read_only>false</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>status</element>
+    <hint>false</hint>
+    <inactive>false</inactive>
+    <label>In Progress</label>
+    <language>en</language>
+    <name>x_demo_forge_run</name>
+    <sequence>10</sequence>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+    <value>in_progress</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>status</element>
+    <hint>false</hint>
+    <inactive>false</inactive>
+    <label>Completed</label>
+    <language>en</language>
+    <name>x_demo_forge_run</name>
+    <sequence>20</sequence>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+    <value>completed</value>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <dependent_value/>
+    <element>status</element>
+    <hint>false</hint>
+    <inactive>false</inactive>
+    <label>Failed</label>
+    <language>en</language>
+    <name>x_demo_forge_run</name>
+    <sequence>30</sequence>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+    <value>failed</value>
+  </sys_choice>
+</unload>

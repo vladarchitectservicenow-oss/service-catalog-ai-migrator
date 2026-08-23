@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-23 05:00:00">
+  <sys_script action="INSERT_OR_UPDATE">
+    <abort_action>true</abort_action>
+    <access>package_private</access>
+    <action_delete>false</action_delete>
+    <action_insert>true</action_insert>
+    <action_query>false</action_query>
+    <action_update>true</action_update>
+    <active>true</active>
+    <add_message>false</add_message>
+    <advanced>true</advanced>
+    <change_fields>false</change_fields>
+    <client_callable>false</client_callable>
+    <collection>x_demo_forge_scenario</collection>
+    <condition/>
+    <description>Validate scenario definition JSON on insert/update.</description>
+    <execute_function>false</execute_function>
+    <filter_condition/>
+    <is_rest>false</is_rest>
+    <message/>
+    <name>Validate Scenario Definition</name>
+    <order>100</order>
+    <priority>100</priority>
+    <rest_method/>
+    <rest_method_text/>
+    <rest_service/>
+    <rest_service_text/>
+    <rest_variables/>
+    <role_conditions/>
+    <script><![CDATA[// DemoForge — Realistic Demo & Test Data Generator for ServiceNow
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Business Rule: Validate scenario definition JSON on insert/update.
+// Prevents malformed scenario schemas from entering the registry.
+(function executeRule(current, previous /*null when async*/) {
+    var def = current.getValue('definition');
+    if (!def) {
+        gs.addErrorMessage('DemoForge: scenario definition is required.');
+        current.setAbortAction(true);
+        return;
+    }
+    try {
+        var parsed = JSON.parse(def);
+        if (!parsed.name || !parsed.tables) {
+            gs.addErrorMessage('DemoForge: scenario definition must include "name" and "tables".');
+            current.setAbortAction(true);
+            return;
+        }
+    } catch (e) {
+        gs.addErrorMessage('DemoForge: scenario definition is not valid JSON: ' + e);
+        current.setAbortAction(true);
+    }
+})(current, previous);]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_created_by>Vladimir Kapustin</sys_created_by>
+    <sys_name>Validate Scenario Definition</sys_name>
+    <sys_package display_value="DemoForge" source="x_demo_forge">x_demo_forge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+    <sys_update_name>sys_script_validate_scenario_definition</sys_update_name>
+    <template/>
+    <when>before</when>
+  </sys_script>
+</unload>

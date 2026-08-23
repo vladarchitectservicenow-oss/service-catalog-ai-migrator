@@ -1,0 +1,12 @@
+{
+  "name": "ai-training",
+  "description": "High-variance incidents with realistic short-description and resolution text for AI agent fine-tuning.",
+  "default_count": 1000,
+  "tables": {
+    "sys_user": { "count": "target" },
+    "sys_user_group": { "count": 8 },
+    "cmn_location": { "count": 12 },
+    "incident": { "count": "target" },
+    "kb_knowledge": { "count": 60 }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "executive",
+  "description": "Dashboard-showcase data tuned to populate OOTB Performance Analytics widgets for C-level demos.",
+  "default_count": 400,
+  "tables": {
+    "sys_user": { "count": "target" },
+    "sys_user_group": { "count": 8 },
+    "cmn_location": { "count": 12 },
+    "incident": { "count": "target" },
+    "kb_knowledge": { "count": 30 }
+  }
+}

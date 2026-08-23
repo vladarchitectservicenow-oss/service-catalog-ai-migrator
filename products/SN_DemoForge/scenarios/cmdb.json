@@ -1,0 +1,13 @@
+{
+  "name": "cmdb",
+  "description": "CMDB population: servers, laptops, and network gear with vendor/model and location relationships.",
+  "default_count": 300,
+  "tables": {
+    "sys_user": { "count": 50 },
+    "sys_user_group": { "count": 6 },
+    "cmn_location": { "count": 12 },
+    "cmdb_ci": { "count": "target" },
+    "incident": { "count": 100 },
+    "kb_knowledge": { "count": 20 }
+  }
+}

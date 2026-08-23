@@ -1,0 +1,1561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-23 05:00:00">
+  <!-- ===================== SCOPE ===================== -->
+  <sys_scope action="INSERT_OR_UPDATE">
+    <can_edit_in_studio>true</can_edit_in_studio>
+    <description>DemoForge — Realistic Demo &amp; Test Data Generator for ServiceNow. Generates domain-aware, internally-consistent synthetic records for demos, POCs, training, and AI-agent testing.</description>
+    <js_level>es5</js_level>
+    <name>DemoForge</name>
+    <restrict_table_access>false</restrict_table_access>
+    <runtime_access_tracking>tracking</runtime_access_tracking>
+    <scope>x_demo_forge</scope>
+    <scoped_administration>false</scoped_administration>
+    <short_description>Realistic demo &amp; test data generator</short_description>
+    <sys_class_name>sys_scope</sys_class_name>
+    <sys_created_by>Vladimir Kapustin</sys_created_by>
+    <sys_name>DemoForge</sys_name>
+    <sys_package display_value="DemoForge" source="x_demo_forge">x_demo_forge</sys_package>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+    <vendor>Vladimir Kapustin</vendor>
+    <vendor_prefix>x_demo_forge</vendor_prefix>
+  </sys_scope>
+
+  <!-- ===================== ROLES ===================== -->
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <can_delegate>true</can_delegate>
+    <description>Full administrative access to DemoForge: seed, clean, and manage scenarios.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_demo_forge.admin</name>
+    <requires_subscription>-1</requires_subscription>
+    <scoped_admin>false</scoped_admin>
+    <suffix>admin</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>Vladimir Kapustin</sys_created_by>
+    <sys_name>x_demo_forge.admin</sys_name>
+    <sys_package display_value="DemoForge" source="x_demo_forge">x_demo_forge</sys_package>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_user_role>
+
+  <!-- ===================== SCRIPT INCLUDES ===================== -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_demo_forge.DemoForgeContent</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Deterministic, faker-style content generation: names, titles, departments, locations, vendor/model strings, and natural-language short descriptions / resolution notes.</description>
+    <name>DemoForgeContent</name>
+    <script><![CDATA[// DemoForge — Realistic Demo & Test Data Generator for ServiceNow
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// DemoForgeContent — deterministic, faker-style content generation.
+// Produces realistic names, titles, departments, locations, vendor/model
+// strings, and natural-language short descriptions / resolution notes.
+// No GenAI Controller dependency: weighted template pools + variation.
+// @class DemoForgeContent @namespace x_demo_forge
+var DemoForgeContent = Class.create();
+DemoForgeContent.prototype = {
+    initialize: function(seed) {
+        // Optional seed for reproducible runs. When omitted, uses Math.random().
+        this._seed = seed || 0;
+        this._state = this._seed;
+    },
+
+    // ---- Seeded PRNG (LCG) ----
+    _next: function() {
+        // Numerical Recipes LCG — deterministic when seeded, random otherwise.
+        this._state = (this._state * 1664525 + 1013904223) % 4294967296;
+        return this._state / 4294967296;
+    },
+
+    _rand: function() {
+        if (this._seed) {
+            return this._next();
+        }
+        return Math.random();
+    },
+
+    _pick: function(arr) {
+        return arr[Math.floor(this._rand() * arr.length)];
+    },
+
+    _int: function(min, max) {
+        return min + Math.floor(this._rand() * (max - min + 1));
+    },
+
+    // ---- Name pools ----
+    _firstNames: ['James', 'Mary', 'Robert', 'Patricia', 'John', 'Jennifer', 'Michael', 'Linda',
+        'David', 'Elizabeth', 'William', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica',
+        'Thomas', 'Sarah', 'Charles', 'Karen', 'Daniel', 'Nancy', 'Matthew', 'Lisa', 'Anthony',
+        'Betty', 'Mark', 'Margaret', 'Donald', 'Sandra', 'Steven', 'Ashley', 'Paul', 'Kimberly',
+        'Andrew', 'Emily', 'Joshua', 'Donna', 'Kenneth', 'Michelle', 'Kevin', 'Carol', 'Brian',
+        'Amanda', 'George', 'Dorothy', 'Timothy', 'Melissa', 'Ronald', 'Deborah', 'Edward',
+        'Stephanie', 'Jason', 'Rebecca', 'Jeffrey', 'Sharon', 'Ryan', 'Laura', 'Jacob', 'Cynthia',
+        'Gary', 'Kathleen', 'Nicholas', 'Amy', 'Eric', 'Angela', 'Jonathan', 'Helen', 'Stephen',
+        'Anna', 'Larry', 'Brenda', 'Justin', 'Pamela', 'Scott', 'Nicole', 'Brandon', 'Samantha',
+        'Benjamin', 'Katherine', 'Samuel', 'Emma', 'Gregory', 'Ruth', 'Alexander', 'Christine',
+        'Frank', 'Catherine', 'Patrick', 'Debra', 'Raymond', 'Rachel', 'Jack', 'Carolyn', 'Dennis',
+        'Janet', 'Jerry', 'Virginia', 'Tyler', 'Maria', 'Aaron', 'Heather', 'Jose', 'Diane'],
+
+    _lastNames: ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis',
+        'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas',
+        'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson', 'White', 'Harris',
+        'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Walker', 'Young', 'Allen', 'King',
+        'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores', 'Green', 'Adams', 'Nelson',
+        'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts', 'Gomez', 'Phillips',
+        'Evans', 'Turner', 'Diaz', 'Parker', 'Cruz', 'Edwards', 'Collins', 'Reyes', 'Stewart',
+        'Morris', 'Morales', 'Murphy', 'Cook', 'Rogers', 'Gutierrez', 'Ortiz', 'Morgan', 'Cooper',
+        'Peterson', 'Bailey', 'Reed', 'Kelly', 'Howard', 'Ramos', 'Kim', 'Cox', 'Ward',
+        'Richardson', 'Watson', 'Brooks', 'Chavez', 'Wood', 'James', 'Bennett', 'Gray', 'Mendoza',
+        'Ruiz', 'Hughes', 'Price', 'Alvarez', 'Castillo', 'Sanders', 'Patel', 'Myers', 'Long',
+        'Ross', 'Foster', 'Jimenez'],
+
+    _titles: ['IT Support Specialist', 'Systems Administrator', 'Network Engineer', 'Database Administrator',
+        'Help Desk Analyst', 'Service Desk Manager', 'IT Operations Manager', 'Security Analyst',
+        'Security Engineer', 'Cloud Architect', 'DevOps Engineer', 'Application Developer',
+        'Business Analyst', 'Project Manager', 'IT Director', 'Chief Information Officer',
+        'Infrastructure Engineer', 'Desktop Support Technician', 'IT Asset Manager', 'Change Manager',
+        'Incident Manager', 'Problem Manager', 'Release Manager', 'Compliance Officer',
+        'Data Analyst', 'QA Engineer', 'Site Reliability Engineer', 'IT Procurement Specialist'],
+
+    _departments: ['IT Operations', 'Information Security', 'Application Development', 'Infrastructure',
+        'Service Desk', 'Network Engineering', 'Database Administration', 'Cloud Services',
+        'IT Service Management', 'Compliance & Risk', 'Project Management Office', 'End User Computing',
+        'Data & Analytics', 'Quality Assurance', 'IT Procurement', 'Executive Leadership'],
+
+    _locations: ['New York, NY', 'San Francisco, CA', 'Austin, TX', 'Chicago, IL', 'Seattle, WA',
+        'Boston, MA', 'Atlanta, GA', 'Denver, CO', 'Dallas, TX', 'Los Angeles, CA', 'Miami, FL',
+        'Philadelphia, PA', 'Phoenix, AZ', 'Portland, OR', 'Minneapolis, MN', 'Washington, DC',
+        'Toronto, ON', 'London, UK', 'Berlin, DE', 'Singapore', 'Sydney, AU', 'Tokyo, JP'],
+
+    _vendors: ['Dell', 'HP', 'Lenovo', 'Apple', 'Cisco', 'Juniper', 'Arista', 'Fortinet', 'Palo Alto',
+        'Microsoft', 'IBM', 'Oracle', 'NetApp', 'EMC', 'Pure Storage', 'Supermicro', 'HPE',
+        'Ubiquiti', 'F5', 'Check Point'],
+
+    _serverModels: ['PowerEdge R740', 'PowerEdge R750', 'ProLiant DL380 Gen10', 'ProLiant DL360 Gen11',
+        'ThinkSystem SR650', 'ThinkSystem SR630', 'UCS C220 M6', 'UCS B200 M5', 'Mac Pro 7,1',
+        'Supermicro SYS-1029P', 'PowerEdge R650xs', 'ProLiant DL325 Gen10'],
+
+    _laptopModels: ['Latitude 5520', 'Latitude 7420', 'ThinkPad X1 Carbon', 'ThinkPad T14', 'EliteBook 840 G8',
+        'EliteBook 850 G8', 'MacBook Pro 14', 'MacBook Air M2', 'Precision 5560', 'ThinkPad P15'],
+
+    _networkModels: ['Catalyst 9300', 'Catalyst 9500', 'Nexus 9000', 'EX4300', 'QFX5120', 'FortiGate 200F',
+        'PA-5250', 'ASA 5525-X', 'ISR 4451', 'ASR 1002-X'],
+
+    _incidentCategories: ['Hardware', 'Software', 'Network', 'Email', 'Access', 'Database', 'Security',
+        'Printing', 'VPN', 'Mobile Device'],
+
+    _incidentTemplates: [
+        'Unable to access {app} — {symptom}',
+        '{app} is running slowly for {who}',
+        'Cannot connect to {resource} from {location}',
+        'Password reset required for {app}',
+        '{device} will not power on',
+        'Email not syncing on {device}',
+        'VPN connection drops every {minutes} minutes',
+        'Printer {printer} is offline',
+        '{app} crashes when {action}',
+        'Requesting access to {resource}',
+        'Software installation failed on {device}',
+        'Network drive {drive} is not accessible'
+    ],
+
+    _symptoms: ['showing a blank screen', 'returning a 500 error', 'timing out after 30 seconds',
+        'displaying an authentication error', 'freezing on startup', 'throwing an unexpected exception',
+        'not responding to input', 'showing stale data', 'failing to load modules'],
+
+    _apps: ['ServiceNow', 'Outlook', 'Salesforce', 'SAP', 'Jira', 'Confluence', 'SharePoint', 'Teams',
+        'Slack', 'Workday', 'Oracle ERP', 'Active Directory', 'Citrix', 'Zoom'],
+
+    _resources: ['the file server', 'the intranet portal', 'the CRM database', 'the VPN gateway',
+        'the shared drive', 'the print server', 'the HR system', 'the finance application'],
+
+    _devices: ['laptop', 'desktop', 'workstation', 'tablet', 'thin client'],
+
+    _printers: ['PRN-FL2-01', 'PRN-FL3-04', 'PRN-FL1-02', 'PRN-B1-07', 'PRN-FL4-11'],
+
+    _actions: ['opening a new record', 'saving a form', 'running a report', 'exporting data',
+        'attaching a file', 'submitting a request', 'approving a change'],
+
+    _drives: ['H:', 'S:', 'P:', 'T:', 'U:'],
+
+    _resolutionTemplates: [
+        'Rebooted the {device} and verified the issue was resolved. {followup}',
+        'Cleared the cached credentials and re-authenticated the user. {followup}',
+        'Applied the latest patch to {app} and confirmed normal operation. {followup}',
+        'Re-provisioned access to {resource} after verifying the request. {followup}',
+        'Replaced the faulty {component} and ran diagnostics to confirm. {followup}',
+        'Reset the {app} configuration to the known-good baseline. {followup}',
+        'Escalated to the {team} team; they resolved the underlying {cause}. {followup}',
+        'Updated the {app} client to the latest version. {followup}',
+        'Restarted the affected service and monitored for 30 minutes. {followup}',
+        'Re-imaged the {device} and restored the user profile. {followup}'
+    ],
+
+    _followups: ['No further issues reported.', 'User confirmed the issue is resolved.',
+        'Monitoring for recurrence over the next 24 hours.', 'Closed after user confirmation.',
+        'Added a knowledge article to prevent recurrence.', 'Documented the root cause for the team.'],
+
+    _components: ['power supply', 'network card', 'hard drive', 'memory module', 'display panel',
+        'keyboard', 'battery', 'motherboard'],
+
+    _teams: ['network', 'database', 'security', 'application', 'infrastructure', 'vendor support'],
+
+    _causes: ['configuration drift', 'expired certificate', 'failed update', 'resource exhaustion',
+        'misconfigured policy', 'corrupted profile'],
+
+    _kbTitles: [
+        'How to reset your {app} password',
+        'Troubleshooting {app} connectivity issues',
+        'Setting up VPN access on {device}',
+        'Common {app} error messages and fixes',
+        'Requesting access to {resource}',
+        'Best practices for {app} performance',
+        'How to map a network drive on {device}',
+        'Recovering deleted files from {resource}'
+    ],
+
+    // ---- Public API ----
+    getName: function() {
+        return this._pick(this._firstNames) + ' ' + this._pick(this._lastNames);
+    },
+
+    getTitle: function() {
+        return this._pick(this._titles);
+    },
+
+    getDepartment: function() {
+        return this._pick(this._departments);
+    },
+
+    getLocation: function() {
+        return this._pick(this._locations);
+    },
+
+    /**
+     * Map a location string ("New York, NY" / "Singapore") to a country code.
+     * US entries carry a state code in the second segment; international
+     * entries carry a country code. Returns a proper ISO country code.
+     */
+    getCountry: function(location) {
+        var parts = (location || '').split(',');
+        if (parts.length < 2) {
+            // No comma: single-token international city.
+            var city = (parts[0] || '').trim();
+            if (city === 'Singapore') { return 'SG'; }
+            if (city === 'Tokyo') { return 'JP'; }
+            return 'US';
+        }
+        var code = parts[1].trim();
+        // US state codes (2 uppercase letters) map to US.
+        if (/^[A-Z]{2}$/.test(code) && code !== 'UK' && code !== 'DE' && code !== 'AU' && code !== 'JP') {
+            return 'US';
+        }
+        return code;
+    },
+
+    getVendor: function() {
+        return this._pick(this._vendors);
+    },
+
+    getServerModel: function() {
+        return this._pick(this._serverModels);
+    },
+
+    getLaptopModel: function() {
+        return this._pick(this._laptopModels);
+    },
+
+    getNetworkModel: function() {
+        return this._pick(this._networkModels);
+    },
+
+    getEmail: function(firstName, lastName) {
+        var f = (firstName || 'user').toLowerCase().replace(/[^a-z]/g, '');
+        var l = (lastName || 'user').toLowerCase().replace(/[^a-z]/g, '');
+        return f + '.' + l + '@' + this._pick(['acme.com', 'globex.com', 'initech.com', 'umbrella.com', 'stark.com']);
+    },
+
+    getPhone: function() {
+        return '+1 (' + this._int(200, 989) + ') ' + this._int(200, 989) + '-' + this._int(1000, 9999);
+    },
+
+    getShortDescription: function(category) {
+        var t = this._pick(this._incidentTemplates);
+        return t
+            .replace('{app}', this._pick(this._apps))
+            .replace('{symptom}', this._pick(this._symptoms))
+            .replace('{who}', this._pick(['the user', 'multiple users', 'the finance team', 'remote staff', 'new hires']))
+            .replace('{resource}', this._pick(this._resources))
+            .replace('{location}', this._pick(this._locations))
+            .replace('{device}', this._pick(this._devices))
+            .replace('{minutes}', String(this._int(5, 60)))
+            .replace('{printer}', this._pick(this._printers))
+            .replace('{action}', this._pick(this._actions))
+            .replace('{drive}', this._pick(this._drives));
+    },
+
+    getResolutionNotes: function() {
+        var t = this._pick(this._resolutionTemplates);
+        return t
+            .replace('{device}', this._pick(this._devices))
+            .replace('{app}', this._pick(this._apps))
+            .replace('{resource}', this._pick(this._resources))
+            .replace('{component}', this._pick(this._components))
+            .replace('{team}', this._pick(this._teams))
+            .replace('{cause}', this._pick(this._causes))
+            .replace('{followup}', this._pick(this._followups));
+    },
+
+    getKbTitle: function() {
+        return this._pick(this._kbTitles)
+            .replace('{app}', this._pick(this._apps))
+            .replace('{device}', this._pick(this._devices))
+            .replace('{resource}', this._pick(this._resources));
+    },
+
+    getKbBody: function(title) {
+        var paras = [];
+        paras.push('This article describes how to resolve a common issue with ' + title.split(' ').slice(0, 3).join(' ') + '.');
+        paras.push('Before you begin, verify that you are connected to the corporate network and that your account is in good standing.');
+        paras.push('Follow the steps below in order. If the issue persists after completing all steps, escalate to the ' + this._pick(this._teams) + ' team.');
+        paras.push('Step 1: Restart the affected ' + this._pick(this._devices) + ' and log in again.');
+        paras.push('Step 2: Clear cached credentials and re-authenticate.');
+        paras.push('Step 3: If the problem continues, open a new incident and reference this article.');
+        return paras.join('\n\n');
+    },
+
+    type: 'DemoForgeContent'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>Vladimir Kapustin</sys_created_by>
+    <sys_name>DemoForgeContent</sys_name>
+    <sys_package display_value="DemoForge" source="x_demo_forge">x_demo_forge</sys_package>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_script_include>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_demo_forge.DemoForgeEngine</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Orchestration, consistency, idempotency, rate control, seeding, and clean rollback.</description>
+    <name>DemoForgeEngine</name>
+    <script><![CDATA[// DemoForge — Realistic Demo & Test Data Generator for ServiceNow
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// DemoForgeEngine — orchestration, consistency, idempotency, rate control,
+// seeding, and clean rollback. Absorbs the design's ScenarioLoader,
+// ConsistencyEngine, IdempotencyTagger, RateController, SeedRunner, and
+// Cleaner responsibilities into a single Script Include.
+// @class DemoForgeEngine @namespace x_demo_forge
+var DemoForgeEngine = Class.create();
+DemoForgeEngine.prototype = {
+    // ---- Constants ----
+    RUN_TABLE: 'x_demo_forge_run',
+    SCENARIO_TABLE: 'x_demo_forge_scenario',
+    TAG_FIELD: 'u_demo_forge_run',
+    DEFAULT_BATCH_SIZE: 100,
+    DEFAULT_MAX_RECORDS: 10000,
+
+    // ---- Built-in scenario registry (seeded on first use) ----
+    _SCENARIOS: [
+        {
+            name: 'itsm',
+            description: 'Standard ITSM demo: incidents, users, assignment groups, and locations with coherent relationships.',
+            default_count: 500,
+            tables: {
+                sys_user: { count: 'target' },
+                sys_user_group: { count: 8 },
+                cmn_location: { count: 12 },
+                incident: { count: 'target' },
+                kb_knowledge: { count: 40 }
+            }
+        },
+        {
+            name: 'security',
+            description: 'Security incident drill: high-severity incidents with priority/severity spread for SOC demos.',
+            default_count: 200,
+            tables: {
+                sys_user: { count: 'target' },
+                sys_user_group: { count: 4 },
+                cmn_location: { count: 8 },
+                incident: { count: 'target' },
+                kb_knowledge: { count: 15 }
+            }
+        },
+        {
+            name: 'cmdb',
+            description: 'CMDB population: servers, laptops, and network gear with vendor/model and location relationships.',
+            default_count: 300,
+            tables: {
+                sys_user: { count: 50 },
+                sys_user_group: { count: 6 },
+                cmn_location: { count: 12 },
+                cmdb_ci: { count: 'target' },
+                incident: { count: 100 },
+                kb_knowledge: { count: 20 }
+            }
+        },
+        {
+            name: 'ai-training',
+            description: 'High-variance incidents with realistic short-description and resolution text for AI agent fine-tuning.',
+            default_count: 1000,
+            tables: {
+                sys_user: { count: 'target' },
+                sys_user_group: { count: 8 },
+                cmn_location: { count: 12 },
+                incident: { count: 'target' },
+                kb_knowledge: { count: 60 }
+            }
+        },
+        {
+            name: 'executive',
+            description: 'Dashboard-showcase data tuned to populate OOTB Performance Analytics widgets for C-level demos.',
+            default_count: 400,
+            tables: {
+                sys_user: { count: 'target' },
+                sys_user_group: { count: 8 },
+                cmn_location: { count: 12 },
+                incident: { count: 'target' },
+                kb_knowledge: { count: 30 }
+            }
+        }
+    ],
+
+    initialize: function(seed) {
+        this._content = new DemoForgeContent(seed);
+        this._runSysId = '';
+        this._batchSize = this.DEFAULT_BATCH_SIZE;
+        this._maxRecords = this.DEFAULT_MAX_RECORDS;
+        this._stats = { created: 0, updated: 0, skipped: 0, errors: 0 };
+        this._writeCount = 0;
+    },
+
+    /**
+     * Set the deterministic content seed (reproducible runs).
+     */
+    setSeed: function(seed) {
+        this._content = new DemoForgeContent(seed);
+    },
+
+    // =====================================================================
+    // SCENARIO LOADER
+    // =====================================================================
+
+    /**
+     * Ensure the built-in scenario registry is present in the scenario
+     * table. Idempotent: inserts only scenarios whose name is absent.
+     */
+    ensureScenarios: function() {
+        for (var i = 0; i < this._SCENARIOS.length; i++) {
+            var s = this._SCENARIOS[i];
+            var gr = new GlideRecord(this.SCENARIO_TABLE);
+            gr.addQuery('name', s.name);
+            gr.setLimit(1);
+            gr.query();
+            if (gr.next()) {
+                continue;
+            }
+            var ins = new GlideRecord(this.SCENARIO_TABLE);
+            ins.initialize();
+            ins.setValue('name', s.name);
+            ins.setValue('description', s.description);
+            ins.setValue('definition', JSON.stringify(s));
+            ins.setValue('active', true);
+            ins.setValue('order', i + 1);
+            ins.insert();
+        }
+    },
+
+    /**
+     * Load a scenario definition by name from the scenario registry table.
+     * Returns a parsed object or null if not found.
+     */
+    loadScenario: function(name) {
+        this.ensureScenarios();
+        var gr = new GlideRecord(this.SCENARIO_TABLE);
+        gr.addQuery('name', name);
+        gr.addQuery('active', 'true');
+        gr.setLimit(1);
+        gr.query();
+        if (!gr.next()) {
+            return null;
+        }
+        var def = gr.getValue('definition');
+        if (!def) {
+            return null;
+        }
+        try {
+            return JSON.parse(def);
+        } catch (e) {
+            gs.error('DemoForge: failed to parse scenario definition for "' + name + '": ' + e);
+            return null;
+        }
+    },
+
+    /**
+     * List all active scenario names in the registry.
+     */
+    listScenarios: function() {
+        this.ensureScenarios();
+        var names = [];
+        var gr = new GlideRecord(this.SCENARIO_TABLE);
+        gr.addQuery('active', 'true');
+        gr.orderBy('order');
+        gr.orderBy('name');
+        gr.query();
+        while (gr.next()) {
+            names.push(gr.getValue('name'));
+        }
+        return names;
+    },
+
+    // =====================================================================
+    // CONSISTENCY ENGINE — business-hours timestamps
+    // =====================================================================
+
+    /**
+     * Return a GlideDateTime within business hours (Mon-Fri, 08:00-18:00)
+     * offset by the given number of business days in the past.
+     */
+    businessHoursTimestamp: function(daysAgo) {
+        var gdt = new GlideDateTime();
+        gdt.addDaysLocalTime(-daysAgo);
+        // Walk back to a weekday. ServiceNow follows the Java Calendar
+        // convention: 1=Sunday .. 7=Saturday.
+        var day = gdt.getDayOfWeekLocalTime();
+        while (day === 1 || day === 7) {
+            gdt.addDaysLocalTime(-1);
+            day = gdt.getDayOfWeekLocalTime();
+        }
+        // Clamp to business hours 08:00-18:00.
+        var hour = gdt.getHourLocalTime();
+        if (hour < 8) {
+            gdt.setDisplayValue(gdt.getLocalDate().getValue() + ' 08:00:00');
+        } else if (hour >= 18) {
+            gdt.setDisplayValue(gdt.getLocalDate().getValue() + ' 17:59:59');
+        }
+        return gdt;
+    },
+
+    /**
+     * Return a timestamp a random number of business minutes after `start`.
+     */
+    businessHoursAfter: function(start, maxMinutes) {
+        var gdt = new GlideDateTime(start.getValue());
+        var mins = this._content._int(5, maxMinutes || 480);
+        gdt.addMinutesLocalTime(mins);
+        var hour = gdt.getHourLocalTime();
+        if (hour >= 18) {
+            gdt.setDisplayValue(gdt.getLocalDate().getValue() + ' 17:59:59');
+        }
+        return gdt;
+    },
+
+    // =====================================================================
+    // IDEMPOTENCY TAGGER
+    // =====================================================================
+
+    /**
+     * Create a run record and return its sys_id. Every seeded record is
+     * tagged with this sys_id so a run can be re-seeded (upsert) or rolled
+     * back cleanly.
+     */
+    createRun: function(scenarioName, count) {
+        var gr = new GlideRecord(this.RUN_TABLE);
+        gr.initialize();
+        gr.setValue('scenario', scenarioName);
+        gr.setValue('record_count', count);
+        gr.setValue('status', 'in_progress');
+        gr.setValue('started_at', new GlideDateTime().getValue());
+        try {
+            this._runSysId = gr.insert();
+        } catch (e) {
+            gs.error('DemoForge: failed to create run record: ' + e);
+            this._runSysId = '';
+        }
+        return this._runSysId;
+    },
+
+    /**
+     * Mark a run record as completed with final stats and a write audit.
+     */
+    completeRun: function(status) {
+        if (!this._runSysId) {
+            return;
+        }
+        var gr = new GlideRecord(this.RUN_TABLE);
+        if (gr.get(this._runSysId)) {
+            gr.setValue('status', status || 'completed');
+            gr.setValue('completed_at', new GlideDateTime().getValue());
+            gr.setValue('created_count', this._stats.created);
+            gr.setValue('updated_count', this._stats.updated);
+            gr.setValue('error_count', this._stats.errors);
+            gr.setValue('seed_log', JSON.stringify(this._stats));
+            try {
+                gr.update();
+            } catch (e) {
+                gs.error('DemoForge: failed to update run record: ' + e);
+            }
+        }
+    },
+
+    // =====================================================================
+    // RATE CONTROL — batched writes with backoff
+    // =====================================================================
+
+    /**
+     * Set the batch size for Table API writes. Clamped to [1, 1000].
+     * The engine yields (gs.sleep) after every batch of writes.
+     */
+    setBatchSize: function(n) {
+        var v = parseInt(n, 10);
+        if (isNaN(v) || v < 1) {
+            v = this.DEFAULT_BATCH_SIZE;
+        }
+        if (v > 1000) {
+            v = 1000;
+        }
+        this._batchSize = v;
+    },
+
+    /**
+     * Set the maximum number of records to seed (safety cap).
+     */
+    setMaxRecords: function(n) {
+        var v = parseInt(n, 10);
+        if (isNaN(v) || v < 1) {
+            v = this.DEFAULT_MAX_RECORDS;
+        }
+        this._maxRecords = v;
+    },
+
+    // =====================================================================
+    // SEED RUNNER
+    // =====================================================================
+
+    /**
+     * Seed a scenario. Returns a stats object.
+     * @param {string} scenarioName  name of the scenario in the registry
+     * @param {number} count         number of primary records to generate
+     * @param {boolean} dryRun       if true, compute counts without writing
+     */
+    seed: function(scenarioName, count, dryRun) {
+        var scenario = this.loadScenario(scenarioName);
+        if (!scenario) {
+            return { ok: false, error: 'Scenario not found: ' + scenarioName };
+        }
+
+        var target = parseInt(count, 10);
+        if (isNaN(target) || target < 1) {
+            target = scenario.default_count || 100;
+        }
+        if (target > this._maxRecords) {
+            target = this._maxRecords;
+        }
+
+        if (dryRun) {
+            return this._dryRun(scenario, target);
+        }
+
+        this._runSysId = this.createRun(scenarioName, target);
+        if (!this._runSysId) {
+            return { ok: false, error: 'Failed to create run record' };
+        }
+
+        try {
+            this._seedUsers(scenario, target);
+            this._seedGroups(scenario);
+            this._seedLocations(scenario);
+            this._seedCIs(scenario, target);
+            this._seedIncidents(scenario, target);
+            this._seedKnowledge(scenario, target);
+            this.completeRun('completed');
+        } catch (e) {
+            gs.error('DemoForge: seed failed: ' + e);
+            this.completeRun('failed');
+            return { ok: false, error: String(e), stats: this._stats };
+        }
+
+        return { ok: true, run_sys_id: this._runSysId, stats: this._stats };
+    },
+
+    /**
+     * Public dry-run preview: compute what a seed would create without
+     * writing anything.
+     */
+    preview: function(scenarioName, count) {
+        var scenario = this.loadScenario(scenarioName);
+        if (!scenario) {
+            return { ok: false, error: 'Scenario not found: ' + scenarioName };
+        }
+        var target = parseInt(count, 10);
+        if (isNaN(target) || target < 1) {
+            target = scenario.default_count || 100;
+        }
+        return this._dryRun(scenario, target);
+    },
+
+    /**
+     * Compute what a seed would create without writing anything.
+     */
+    _dryRun: function(scenario, target) {
+        var plan = {
+            scenario: scenario.name,
+            target: target,
+            tables: {}
+        };
+        var tables = scenario.tables || {};
+        for (var t in tables) {
+            if (tables.hasOwnProperty(t)) {
+                var spec = tables[t];
+                var n = spec.count === 'target' ? target : (parseInt(spec.count, 10) || 0);
+                if (t === 'cmdb_ci') {
+                    // CIs are distributed across three subclasses.
+                    var per = Math.floor(n / 3);
+                    var rem = n % 3;
+                    plan.tables['cmdb_ci_server'] = per + (rem > 0 ? 1 : 0);
+                    plan.tables['cmdb_ci_computer'] = per + (rem > 1 ? 1 : 0);
+                    plan.tables['cmdb_ci_netgear'] = per;
+                } else {
+                    plan.tables[t] = n;
+                }
+            }
+        }
+        return { ok: true, dry_run: true, plan: plan };
+    },
+
+    // ---- Per-entity seeders ----
+
+    _seedUsers: function(scenario, target) {
+        var spec = (scenario.tables && scenario.tables.sys_user) || {};
+        var n = spec.count === 'target' ? target : (parseInt(spec.count, 10) || 0);
+        if (n <= 0) {
+            return;
+        }
+        var departments = this._content._departments;
+        for (var i = 0; i < n; i++) {
+            var first = this._content._pick(this._content._firstNames);
+            var last = this._content._pick(this._content._lastNames);
+            var gr = new GlideRecord('sys_user');
+            gr.initialize();
+            gr.setValue('first_name', first);
+            gr.setValue('last_name', last);
+            gr.setValue('user_name', (first + '.' + last).toLowerCase().replace(/[^a-z.]/g, '') + this._content._int(1, 99));
+            gr.setValue('email', this._content.getEmail(first, last));
+            gr.setValue('title', this._content.getTitle());
+            gr.setValue('department', this._getOrCreateDepartment(this._content._pick(departments)));
+            gr.setValue('location', this._getOrCreateLocation(this._content.getLocation()));
+            gr.setValue('phone', this._content.getPhone());
+            gr.setValue('active', true);
+            gr.setValue(this.TAG_FIELD, this._runSysId);
+            this._upsert(gr, 'sys_user', 'user_name',
+                ['first_name', 'last_name', 'email', 'title', 'department', 'location', 'phone', 'active', this.TAG_FIELD]);
+        }
+    },
+
+    _seedGroups: function(scenario) {
+        var spec = (scenario.tables && scenario.tables.sys_user_group) || {};
+        var n = parseInt(spec.count, 10) || 0;
+        if (n <= 0) {
+            return;
+        }
+        var names = ['Service Desk', 'Network Operations', 'Security Operations', 'Application Support',
+            'Database Administration', 'Infrastructure', 'End User Computing', 'Change Management'];
+        for (var i = 0; i < n && i < names.length; i++) {
+            var gr = new GlideRecord('sys_user_group');
+            gr.initialize();
+            gr.setValue('name', names[i]);
+            gr.setValue('description', 'DemoForge assignment group for ' + names[i]);
+            gr.setValue('active', true);
+            gr.setValue(this.TAG_FIELD, this._runSysId);
+            this._upsert(gr, 'sys_user_group', 'name', ['description', 'active', this.TAG_FIELD]);
+        }
+    },
+
+    _seedLocations: function(scenario) {
+        var spec = (scenario.tables && scenario.tables.cmn_location) || {};
+        var n = parseInt(spec.count, 10) || 0;
+        if (n <= 0) {
+            return;
+        }
+        var locs = this._content._locations;
+        for (var i = 0; i < n && i < locs.length; i++) {
+            var gr = new GlideRecord('cmn_location');
+            gr.initialize();
+            gr.setValue('name', locs[i]);
+            gr.setValue('city', locs[i].split(',')[0]);
+            gr.setValue('country', this._content.getCountry(locs[i]));
+            gr.setValue(this.TAG_FIELD, this._runSysId);
+            this._upsert(gr, 'cmn_location', 'name', ['city', 'country', this.TAG_FIELD]);
+        }
+    },
+
+    _seedCIs: function(scenario, target) {
+        var spec = (scenario.tables && scenario.tables.cmdb_ci) || {};
+        var n = spec.count === 'target' ? target : (parseInt(spec.count, 10) || 0);
+        if (n <= 0) {
+            return;
+        }
+        var classes = ['cmdb_ci_server', 'cmdb_ci_computer', 'cmdb_ci_netgear'];
+        for (var i = 0; i < n; i++) {
+            var cls = this._content._pick(classes);
+            var gr = new GlideRecord(cls);
+            gr.initialize();
+            gr.setValue('name', this._ciName(cls));
+            gr.setValue('manufacturer', this._getOrCreateCompany(this._content.getVendor()));
+            gr.setValue('model_id', this._getOrCreateModel(this._ciModel(cls)));
+            gr.setValue('operational_status', '1');
+            gr.setValue('install_status', '1');
+            gr.setValue('location', this._getOrCreateLocation(this._content.getLocation()));
+            gr.setValue(this.TAG_FIELD, this._runSysId);
+            this._upsert(gr, cls, 'name',
+                ['manufacturer', 'model_id', 'operational_status', 'install_status', 'location', this.TAG_FIELD]);
+        }
+    },
+
+    _ciName: function(cls) {
+        var prefix = cls === 'cmdb_ci_server' ? 'SRV' : (cls === 'cmdb_ci_computer' ? 'WS' : 'NET');
+        return prefix + '-' + this._content._int(100, 999) + '-' + this._content._int(10, 99);
+    },
+
+    _ciModel: function(cls) {
+        if (cls === 'cmdb_ci_server') {
+            return this._content.getServerModel();
+        }
+        if (cls === 'cmdb_ci_computer') {
+            return this._content.getLaptopModel();
+        }
+        return this._content.getNetworkModel();
+    },
+
+    _seedIncidents: function(scenario, target) {
+        var spec = (scenario.tables && scenario.tables.incident) || {};
+        var n = spec.count === 'target' ? target : (parseInt(spec.count, 10) || 0);
+        if (n <= 0) {
+            return;
+        }
+        var priorities = ['1', '2', '3', '4'];
+        var states = ['1', '2', '3', '6', '7'];
+        for (var i = 0; i < n; i++) {
+            var opened = this.businessHoursTimestamp(this._content._int(0, 30));
+            var gr = new GlideRecord('incident');
+            gr.initialize();
+            gr.setValue('short_description', this._content.getShortDescription());
+            gr.setValue('description', this._content.getShortDescription() + '. Reported by ' + this._content.getName() + '.');
+            gr.setValue('category', this._content._pick(this._content._incidentCategories));
+            gr.setValue('priority', this._content._pick(priorities));
+            gr.setValue('state', this._content._pick(states));
+            gr.setValue('opened_at', opened.getValue());
+            gr.setValue('caller_id', this._randomUserSysId());
+            gr.setValue('assignment_group', this._randomGroupSysId());
+            if (this._content._rand() > 0.3) {
+                gr.setValue('close_notes', this._content.getResolutionNotes());
+                gr.setValue('resolved_at', this.businessHoursAfter(opened, 480).getValue());
+            }
+            gr.setValue(this.TAG_FIELD, this._runSysId);
+            this._safeInsert(gr, 'incident');
+        }
+    },
+
+    _seedKnowledge: function(scenario, target) {
+        var spec = (scenario.tables && scenario.tables.kb_knowledge) || {};
+        var n = spec.count === 'target' ? target : (parseInt(spec.count, 10) || 0);
+        if (n <= 0) {
+            return;
+        }
+        for (var i = 0; i < n; i++) {
+            var title = this._content.getKbTitle();
+            var gr = new GlideRecord('kb_knowledge');
+            gr.initialize();
+            gr.setValue('short_description', title);
+            gr.setValue('text', this._content.getKbBody(title));
+            gr.setValue('workflow_state', 'published');
+            gr.setValue('author', this._randomUserSysId());
+            gr.setValue(this.TAG_FIELD, this._runSysId);
+            this._upsert(gr, 'kb_knowledge', 'short_description',
+                ['text', 'workflow_state', 'author', this.TAG_FIELD]);
+        }
+    },
+
+    // ---- Helpers ----
+
+    _randomUserSysId: function() {
+        var gr = new GlideRecord('sys_user');
+        gr.addQuery(this.TAG_FIELD, this._runSysId);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getUniqueValue();
+        }
+        return '';
+    },
+
+    _randomGroupSysId: function() {
+        var gr = new GlideRecord('sys_user_group');
+        gr.addQuery(this.TAG_FIELD, this._runSysId);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getUniqueValue();
+        }
+        return '';
+    },
+
+    /**
+     * Resolve a location by name, creating it (tagged) if absent.
+     * Returns the cmn_location sys_id.
+     */
+    _getOrCreateLocation: function(name) {
+        var gr = new GlideRecord('cmn_location');
+        gr.addQuery('name', name);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getUniqueValue();
+        }
+        gr.initialize();
+        gr.setValue('name', name);
+        gr.setValue('city', name.split(',')[0]);
+        gr.setValue('country', this._content.getCountry(name));
+        gr.setValue(this.TAG_FIELD, this._runSysId);
+        return gr.insert();
+    },
+
+    /**
+     * Resolve a department by name, creating it if absent.
+     * Returns the cmn_department sys_id.
+     */
+    _getOrCreateDepartment: function(name) {
+        var gr = new GlideRecord('cmn_department');
+        gr.addQuery('name', name);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getUniqueValue();
+        }
+        gr.initialize();
+        gr.setValue('name', name);
+        return gr.insert();
+    },
+
+    /**
+     * Resolve a company (vendor) by name, creating it if absent.
+     * Returns the core_company sys_id.
+     */
+    _getOrCreateCompany: function(name) {
+        var gr = new GlideRecord('core_company');
+        gr.addQuery('name', name);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getUniqueValue();
+        }
+        gr.initialize();
+        gr.setValue('name', name);
+        return gr.insert();
+    },
+
+    /**
+     * Resolve a hardware model by name, creating it if absent.
+     * Returns the cmdb_model sys_id.
+     */
+    _getOrCreateModel: function(name) {
+        var gr = new GlideRecord('cmdb_model');
+        gr.addQuery('name', name);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getUniqueValue();
+        }
+        gr.initialize();
+        gr.setValue('name', name);
+        return gr.insert();
+    },
+
+    /**
+     * Insert a record with a guard against unhandled exceptions.
+     */
+    _safeInsert: function(gr, tableName) {
+        try {
+            var sysId = gr.insert();
+            if (sysId) {
+                this._stats.created++;
+            } else {
+                this._stats.skipped++;
+            }
+            this._throttle();
+            return sysId;
+        } catch (e) {
+            this._stats.errors++;
+            gs.error('DemoForge: insert failed on ' + tableName + ': ' + e);
+            return '';
+        }
+    },
+
+    /**
+     * Upsert a record keyed by `matchField`. If a record with the same key
+     * exists, its listed fields are updated in place; otherwise a new record
+     * is inserted. This makes re-seeding idempotent (no duplicates).
+     */
+    _upsert: function(gr, tableName, matchField, fields) {
+        var matchValue = gr.getValue(matchField);
+        if (!matchValue) {
+            return this._safeInsert(gr, tableName);
+        }
+        var existing = new GlideRecord(tableName);
+        existing.addQuery(matchField, matchValue);
+        existing.setLimit(1);
+        existing.query();
+        if (existing.next()) {
+            var sysId = existing.getUniqueValue();
+            var upd = new GlideRecord(tableName);
+            if (upd.get(sysId)) {
+                for (var i = 0; i < fields.length; i++) {
+                    var f = fields[i];
+                    var v = gr.getValue(f);
+                    if (v) {
+                        upd.setValue(f, v);
+                    }
+                }
+                try {
+                    upd.update();
+                    this._stats.updated++;
+                    this._throttle();
+                    return sysId;
+                } catch (e) {
+                    this._stats.errors++;
+                    gs.error('DemoForge: update failed on ' + tableName + ': ' + e);
+                    return '';
+                }
+            }
+        }
+        return this._safeInsert(gr, tableName);
+    },
+
+    /**
+     * Rate control: yield after every `_batchSize` writes.
+     */
+    _throttle: function() {
+        this._writeCount++;
+        if (this._writeCount % this._batchSize === 0) {
+            gs.sleep(10);
+        }
+    },
+
+    // =====================================================================
+    // CLEANER — rollback a run
+    // =====================================================================
+
+    /**
+     * Delete every record tagged with the given run sys_id across all
+     * seeded tables. Returns a stats object.
+     */
+    clean: function(runSysId) {
+        if (!runSysId) {
+            return { ok: false, error: 'run_sys_id is required' };
+        }
+        var tables = ['incident', 'kb_knowledge', 'cmdb_ci_server', 'cmdb_ci_computer', 'cmdb_ci_netgear',
+            'sys_user', 'sys_user_group', 'cmn_location'];
+        var stats = { deleted: 0, errors: 0 };
+        for (var i = 0; i < tables.length; i++) {
+            var gr = new GlideRecord(tables[i]);
+            gr.addQuery(this.TAG_FIELD, runSysId);
+            gr.query();
+            while (gr.next()) {
+                try {
+                    if (gr.deleteRecord()) {
+                        stats.deleted++;
+                    }
+                } catch (e) {
+                    stats.errors++;
+                    gs.error('DemoForge: delete failed on ' + tables[i] + ': ' + e);
+                }
+            }
+        }
+        // Delete the run record itself.
+        var runGr = new GlideRecord(this.RUN_TABLE);
+        if (runGr.get(runSysId)) {
+            try {
+                runGr.deleteRecord();
+            } catch (e) {
+                gs.error('DemoForge: failed to delete run record: ' + e);
+            }
+        }
+        return { ok: true, stats: stats };
+    },
+
+    type: 'DemoForgeEngine'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>Vladimir Kapustin</sys_created_by>
+    <sys_name>DemoForgeEngine</sys_name>
+    <sys_package display_value="DemoForge" source="x_demo_forge">x_demo_forge</sys_package>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_script_include>
+
+
+  <!-- ===================== OOTB TAG FIELD (u_demo_forge_run) ===================== -->
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>u_demo_forge_run</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>DemoForge Run</label>
+    <mandatory>false</mandatory>
+    <max_length>32</max_length>
+    <name>incident</name>
+    <read_only>false</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>u_demo_forge_run</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>DemoForge Run</label>
+    <mandatory>false</mandatory>
+    <max_length>32</max_length>
+    <name>sys_user</name>
+    <read_only>false</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>u_demo_forge_run</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>DemoForge Run</label>
+    <mandatory>false</mandatory>
+    <max_length>32</max_length>
+    <name>sys_user_group</name>
+    <read_only>false</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>u_demo_forge_run</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>DemoForge Run</label>
+    <mandatory>false</mandatory>
+    <max_length>32</max_length>
+    <name>cmn_location</name>
+    <read_only>false</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>u_demo_forge_run</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>DemoForge Run</label>
+    <mandatory>false</mandatory>
+    <max_length>32</max_length>
+    <name>cmdb_ci_server</name>
+    <read_only>false</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>u_demo_forge_run</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>DemoForge Run</label>
+    <mandatory>false</mandatory>
+    <max_length>32</max_length>
+    <name>cmdb_ci_computer</name>
+    <read_only>false</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>u_demo_forge_run</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>DemoForge Run</label>
+    <mandatory>false</mandatory>
+    <max_length>32</max_length>
+    <name>cmdb_ci_netgear</name>
+    <read_only>false</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>u_demo_forge_run</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>DemoForge Run</label>
+    <mandatory>false</mandatory>
+    <max_length>32</max_length>
+    <name>kb_knowledge</name>
+    <read_only>false</read_only>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_dictionary>
+  <!-- ===================== CROSS-SCOPE PRIVILEGES ===================== -->
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>incident</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>incident</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user_group</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user_group</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>cmn_location</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>cmn_location</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>cmdb_ci_server</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>cmdb_ci_server</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>cmdb_ci_computer</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>cmdb_ci_computer</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>cmdb_ci_netgear</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>cmdb_ci_netgear</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>kb_knowledge</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_demo_forge</source_scope>
+    <status>allowed</status>
+    <target_name>kb_knowledge</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+
+  <!-- ===================== REST API ===================== -->
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>/api/x_demo_forge</base_uri>
+    <consumes>application/json</consumes>
+    <consumes_custom>false</consumes_custom>
+    <default_version>v1</default_version>
+    <doc_link/>
+    <enforce_acl>true</enforce_acl>
+    <is_versioned>false</is_versioned>
+    <name>DemoForge API</name>
+    <namespace>x_demo_forge</namespace>
+    <produces>application/json</produces>
+    <produces_custom>false</produces_custom>
+    <service_id>x_demo_forge</service_id>
+    <short_description>DemoForge REST API</short_description>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_created_by>Vladimir Kapustin</sys_created_by>
+    <sys_name>DemoForge API</sys_name>
+    <sys_package display_value="DemoForge" source="x_demo_forge">x_demo_forge</sys_package>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+  </sys_ws_definition>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_custom>false</consumes_custom>
+    <consumes_mime_type>application/json</consumes_mime_type>
+    <name>Execute</name>
+    <operation_uri>/execute</operation_uri>
+    <operation_script><![CDATA[// DemoForge — Realistic Demo & Test Data Generator for ServiceNow
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// POST /api/x_demo_forge/execute — action-dispatch endpoint.
+// Actions: seed, clean, list_scenarios.
+(function process(request, response) {
+    var body = request.body ? request.body.data : {};
+    var action = body.action || '';
+
+    var engine = new DemoForgeEngine();
+    var result;
+
+    switch (action) {
+        case 'seed':
+            engine.setBatchSize(body.batch_size);
+            engine.setMaxRecords(body.max_records);
+            if (body.seed !== undefined && body.seed !== null) {
+                engine.setSeed(body.seed);
+            }
+            result = engine.seed(body.scenario, body.count, body.dry_run === true);
+            break;
+
+        case 'clean':
+            result = engine.clean(body.run_sys_id);
+            break;
+
+        case 'list_scenarios':
+            result = { ok: true, scenarios: engine.listScenarios() };
+            break;
+
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown action: ' + action,
+                valid_actions: ['seed', 'clean', 'list_scenarios']
+            }));
+            return;
+    }
+
+    if (result && result.ok === false) {
+        response.setStatus(400);
+        response.setBody(JSON.stringify(result));
+        return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+})(request, response);
+]]></operation_script>
+    <produces>application/json</produces>
+    <produces_custom>false</produces_custom>
+    <produces_mime_type>application/json</produces_mime_type>
+    <relative_path>/execute</relative_path>
+    <request_method>POST</request_method>
+    <requires_acl>true</requires_acl>
+    <requires_sn_csrf_protection>true</requires_sn_csrf_protection>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>Vladimir Kapustin</sys_created_by>
+    <sys_name>Execute</sys_name>
+    <sys_package display_value="DemoForge" source="x_demo_forge">x_demo_forge</sys_package>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+    <web_service_definition display_value="DemoForge API">x_demo_forge</web_service_definition>
+  </sys_ws_operation>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_custom>false</consumes_custom>
+    <consumes_mime_type>application/json</consumes_mime_type>
+    <name>Status</name>
+    <operation_uri>/status</operation_uri>
+    <operation_script><![CDATA[// DemoForge — Realistic Demo & Test Data Generator for ServiceNow
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// GET /api/x_demo_forge/status — read-only reporting endpoint.
+// Query params: scenario (preview plan), run_sys_id (run detail), list (all runs).
+(function process(request, response) {
+    var q = request.queryParams || {};
+    var engine = new DemoForgeEngine();
+    var result = { queried_at: new GlideDateTime().getValue() };
+
+    if (q.scenario) {
+        // Dry-run preview: what a seed would create, without writing.
+        var scenario = engine.loadScenario(q.scenario);
+        if (!scenario) {
+            response.setStatus(404);
+            response.setBody(JSON.stringify({ error: 'Scenario not found: ' + q.scenario }));
+            return;
+        }
+        var target = parseInt(q.count, 10) || scenario.default_count || 100;
+        result.preview = engine.preview(q.scenario, target);
+    } else if (q.run_sys_id) {
+        // Detail for a single run.
+        var gr = new GlideRecord(engine.RUN_TABLE);
+        if (gr.get(q.run_sys_id)) {
+            result.run = {
+                sys_id: gr.getUniqueValue(),
+                scenario: gr.getValue('scenario'),
+                record_count: gr.getValue('record_count'),
+                status: gr.getValue('status'),
+                started_at: gr.getValue('started_at'),
+                completed_at: gr.getValue('completed_at'),
+                created_count: gr.getValue('created_count'),
+                updated_count: gr.getValue('updated_count'),
+                error_count: gr.getValue('error_count')
+            };
+        } else {
+            response.setStatus(404);
+            response.setBody(JSON.stringify({ error: 'Run not found: ' + q.run_sys_id }));
+            return;
+        }
+    } else {
+        // Default: list recent runs.
+        var runs = [];
+        var rg = new GlideRecord(engine.RUN_TABLE);
+        rg.orderByDesc('started_at');
+        rg.setLimit(parseInt(q.limit, 10) || 20);
+        rg.query();
+        while (rg.next()) {
+            runs.push({
+                sys_id: rg.getUniqueValue(),
+                scenario: rg.getValue('scenario'),
+                status: rg.getValue('status'),
+                started_at: rg.getValue('started_at'),
+                created_count: rg.getValue('created_count')
+            });
+        }
+        result.runs = runs;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+})(request, response);
+]]></operation_script>
+    <produces>application/json</produces>
+    <produces_custom>false</produces_custom>
+    <produces_mime_type>application/json</produces_mime_type>
+    <relative_path>/status</relative_path>
+    <request_method>GET</request_method>
+    <requires_acl>true</requires_acl>
+    <requires_sn_csrf_protection>false</requires_sn_csrf_protection>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>Vladimir Kapustin</sys_created_by>
+    <sys_name>Status</sys_name>
+    <sys_package display_value="DemoForge" source="x_demo_forge">x_demo_forge</sys_package>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+    <web_service_definition display_value="DemoForge API">x_demo_forge</web_service_definition>
+  </sys_ws_operation>
+
+  <!-- ===================== BUSINESS RULE ===================== -->
+  <sys_script action="INSERT_OR_UPDATE">
+    <abort_action>true</abort_action>
+    <access>package_private</access>
+    <action_delete>false</action_delete>
+    <action_insert>true</action_insert>
+    <action_query>false</action_query>
+    <action_update>true</action_update>
+    <active>true</active>
+    <add_message>false</add_message>
+    <advanced>true</advanced>
+    <change_fields>false</change_fields>
+    <client_callable>false</client_callable>
+    <collection>x_demo_forge_scenario</collection>
+    <condition/>
+    <description>Validate scenario definition JSON on insert/update.</description>
+    <execute_function>false</execute_function>
+    <filter_condition/>
+    <is_rest>false</is_rest>
+    <message/>
+    <name>Validate Scenario Definition</name>
+    <order>100</order>
+    <priority>100</priority>
+    <rest_method/>
+    <rest_method_text/>
+    <rest_service/>
+    <rest_service_text/>
+    <rest_variables/>
+    <role_conditions/>
+    <script><![CDATA[// DemoForge — Realistic Demo & Test Data Generator for ServiceNow
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Business Rule: Validate scenario definition JSON on insert/update.
+// Prevents malformed scenario schemas from entering the registry.
+(function executeRule(current, previous /*null when async*/) {
+    var def = current.getValue('definition');
+    if (!def) {
+        gs.addErrorMessage('DemoForge: scenario definition is required.');
+        current.setAbortAction(true);
+        return;
+    }
+    try {
+        var parsed = JSON.parse(def);
+        if (!parsed.name || !parsed.tables) {
+            gs.addErrorMessage('DemoForge: scenario definition must include "name" and "tables".');
+            current.setAbortAction(true);
+            return;
+        }
+    } catch (e) {
+        gs.addErrorMessage('DemoForge: scenario definition is not valid JSON: ' + e);
+        current.setAbortAction(true);
+    }
+})(current, previous);
+]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_created_by>Vladimir Kapustin</sys_created_by>
+    <sys_name>Validate Scenario Definition</sys_name>
+    <sys_package display_value="DemoForge" source="x_demo_forge">x_demo_forge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="DemoForge">x_demo_forge</sys_scope>
+    <sys_update_name>sys_script_validate_scenario_definition</sys_update_name>
+    <template/>
+    <when>before</when>
+  </sys_script>
+</unload>
