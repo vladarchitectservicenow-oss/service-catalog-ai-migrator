@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-24 07:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <create_access>true</create_access>
+    <delete_access>true</delete_access>
+    <label>SIM Scan</label>
+    <name>x_snc_script_include_medic_scan</name>
+    <plural>SIM Scans</plural>
+    <read_access>true</read_access>
+    <super_class x_platsvc="true" x_sys_id="e0355b31ef303000a61d5a3615c0fb78">sys_metadata</super_class>
+    <update_access>true</update_access>
+    <user_role>snc_internal</user_role>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="scan_type">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>string</internal_type>
+    <label>Scan Type</label>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>false</read_only>
+    <choice>2</choice>
+    <choice_field>scan_type</choice_field>
+    <choice_table>scan_type</choice_table>
+    <default_value>full</default_value>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="status">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>string</internal_type>
+    <label>Status</label>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>false</read_only>
+    <choice>2</choice>
+    <choice_field>status</choice_field>
+    <choice_table>status</choice_table>
+    <default_value>running</default_value>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="started_on">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>glide_date_time</internal_type>
+    <label>Started On</label>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>true</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="completed_on">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>glide_date_time</internal_type>
+    <label>Completed On</label>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>true</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="triggered_by">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>string</internal_type>
+    <label>Triggered By</label>
+    <max_length>100</max_length>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>true</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="include_count">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>integer</internal_type>
+    <label>Include Count</label>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>true</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="dead_count">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>integer</internal_type>
+    <label>Dead Code Count</label>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>true</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="duplicate_count">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>integer</internal_type>
+    <label>Duplicate Count</label>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>true</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="naming_count">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>integer</internal_type>
+    <label>Naming Violation Count</label>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>true</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="doc_count">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>integer</internal_type>
+    <label>Documentation Count</label>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>true</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="cycle_count">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>integer</internal_type>
+    <label>Cycle Count</label>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>true</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="reinvention_count">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>integer</internal_type>
+    <label>Reinvention Count</label>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>true</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="instance_health">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>integer</internal_type>
+    <label>Instance Health</label>
+    <name>x_snc_script_include_medic_scan</name>
+    <read_only>true</read_only>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE" element="scan_type" name="x_snc_script_include_medic_scan">
+    <value>full</value>
+    <label>Full</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="scan_type" name="x_snc_script_include_medic_scan">
+    <value>incremental</value>
+    <label>Incremental</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_snc_script_include_medic_scan">
+    <value>running</value>
+    <label>Running</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_snc_script_include_medic_scan">
+    <value>completed</value>
+    <label>Completed</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_snc_script_include_medic_scan">
+    <value>failed</value>
+    <label>Failed</label>
+  </sys_choice>
+</unload>

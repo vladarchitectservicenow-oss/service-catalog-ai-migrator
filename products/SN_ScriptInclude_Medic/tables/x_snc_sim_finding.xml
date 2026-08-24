@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-24 07:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <create_access>true</create_access>
+    <delete_access>true</delete_access>
+    <label>SIM Finding</label>
+    <name>x_snc_script_include_medic_finding</name>
+    <plural>SIM Findings</plural>
+    <read_access>true</read_access>
+    <super_class x_platsvc="true" x_sys_id="e0355b31ef303000a61d5a3615c0fb78">sys_metadata</super_class>
+    <update_access>true</update_access>
+    <user_role>snc_internal</user_role>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="scan">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>reference</internal_type>
+    <label>Scan</label>
+    <mandatory>true</mandatory>
+    <max_length>32</max_length>
+    <name>x_snc_script_include_medic_finding</name>
+    <read_only>false</read_only>
+    <reference>x_snc_script_include_medic_scan</reference>
+    <reference_cascade_rule></reference_cascade_rule>
+    <reference_floats>false</reference_floats>
+    <reference_qual></reference_qual>
+    <reference_type>sys_id</reference_type>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="type">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>string</internal_type>
+    <label>Finding Type</label>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_snc_script_include_medic_finding</name>
+    <read_only>false</read_only>
+    <choice>1</choice>
+    <choice_field>type</choice_field>
+    <choice_table>type</choice_table>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="severity">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>string</internal_type>
+    <label>Severity</label>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_snc_script_include_medic_finding</name>
+    <read_only>false</read_only>
+    <choice>1</choice>
+    <choice_field>severity</choice_field>
+    <choice_table>severity</choice_table>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="include_sys_id">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>string</internal_type>
+    <label>Include Sys ID</label>
+    <max_length>32</max_length>
+    <name>x_snc_script_include_medic_finding</name>
+    <read_only>false</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="include_name">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>string</internal_type>
+    <label>Include Name</label>
+    <max_length>255</max_length>
+    <name>x_snc_script_include_medic_finding</name>
+    <read_only>false</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="target_name">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>string</internal_type>
+    <label>Target Name</label>
+    <max_length>4000</max_length>
+    <name>x_snc_script_include_medic_finding</name>
+    <read_only>false</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="metric">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>string</internal_type>
+    <label>Metric</label>
+    <max_length>255</max_length>
+    <name>x_snc_script_include_medic_finding</name>
+    <read_only>false</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="score">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>integer</internal_type>
+    <label>Score</label>
+    <name>x_snc_script_include_medic_finding</name>
+    <read_only>false</read_only>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" element="detail">
+    <active>true</active>
+    <audit>false</audit>
+    <internal_type>string</internal_type>
+    <label>Detail</label>
+    <max_length>4000</max_length>
+    <name>x_snc_script_include_medic_finding</name>
+    <read_only>false</read_only>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE" element="type" name="x_snc_script_include_medic_finding">
+    <value>dead_code</value>
+    <label>Dead Code</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="type" name="x_snc_script_include_medic_finding">
+    <value>duplicate</value>
+    <label>Duplicate</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="type" name="x_snc_script_include_medic_finding">
+    <value>naming</value>
+    <label>Naming</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="type" name="x_snc_script_include_medic_finding">
+    <value>documentation</value>
+    <label>Documentation</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="type" name="x_snc_script_include_medic_finding">
+    <value>cycle</value>
+    <label>Cycle</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="type" name="x_snc_script_include_medic_finding">
+    <value>reinvention</value>
+    <label>Reinvention</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="type" name="x_snc_script_include_medic_finding">
+    <value>health</value>
+    <label>Health</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="severity" name="x_snc_script_include_medic_finding">
+    <value>critical</value>
+    <label>Critical</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="severity" name="x_snc_script_include_medic_finding">
+    <value>high</value>
+    <label>High</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="severity" name="x_snc_script_include_medic_finding">
+    <value>medium</value>
+    <label>Medium</label>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="severity" name="x_snc_script_include_medic_finding">
+    <value>low</value>
+    <label>Low</label>
+  </sys_choice>
+</unload>

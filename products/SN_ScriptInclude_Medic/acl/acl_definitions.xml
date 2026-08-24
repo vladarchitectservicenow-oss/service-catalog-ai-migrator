@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-24 07:00:00">
+  <!-- READ ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <operation>read</operation>
+    <type>record</type>
+    <name>x_snc_script_include_medic_scan</name>
+    <description>SIM Scan read</description>
+    <condition></condition>
+    <script>answer = gs.hasRole('x_snc_script_include_medic.medic_user') || gs.hasRole('x_snc_script_include_medic.medic_admin') || gs.hasRole('admin');</script>
+    <requires_role x_type="boolean">false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <operation>read</operation>
+    <type>record</type>
+    <name>x_snc_script_include_medic_finding</name>
+    <description>SIM Finding read</description>
+    <condition></condition>
+    <script>answer = gs.hasRole('x_snc_script_include_medic.medic_user') || gs.hasRole('x_snc_script_include_medic.medic_admin') || gs.hasRole('admin');</script>
+    <requires_role x_type="boolean">false</requires_role>
+  </sys_security_acl>
+
+  <!-- WRITE ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <operation>write</operation>
+    <type>record</type>
+    <name>x_snc_script_include_medic_scan</name>
+    <description>SIM Scan write</description>
+    <condition></condition>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_script_include_medic.medic_admin');</script>
+    <requires_role x_type="boolean">false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <operation>write</operation>
+    <type>record</type>
+    <name>x_snc_script_include_medic_finding</name>
+    <description>SIM Finding write</description>
+    <condition></condition>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_script_include_medic.medic_admin');</script>
+    <requires_role x_type="boolean">false</requires_role>
+  </sys_security_acl>
+
+  <!-- CREATE ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <operation>create</operation>
+    <type>record</type>
+    <name>x_snc_script_include_medic_scan</name>
+    <description>SIM Scan create</description>
+    <condition></condition>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_script_include_medic.medic_admin');</script>
+    <requires_role x_type="boolean">false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <operation>create</operation>
+    <type>record</type>
+    <name>x_snc_script_include_medic_finding</name>
+    <description>SIM Finding create</description>
+    <condition></condition>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_script_include_medic.medic_admin');</script>
+    <requires_role x_type="boolean">false</requires_role>
+  </sys_security_acl>
+
+  <!-- DELETE ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <operation>delete</operation>
+    <type>record</type>
+    <name>x_snc_script_include_medic_scan</name>
+    <description>SIM Scan delete</description>
+    <condition></condition>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_script_include_medic.medic_admin');</script>
+    <requires_role x_type="boolean">false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <operation>delete</operation>
+    <type>record</type>
+    <name>x_snc_script_include_medic_finding</name>
+    <description>SIM Finding delete</description>
+    <condition></condition>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_script_include_medic.medic_admin');</script>
+    <requires_role x_type="boolean">false</requires_role>
+  </sys_security_acl>
+
+  <!-- REST endpoint ACLs (execute) -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <operation>execute</operation>
+    <type>rest_service</type>
+    <name>Scan</name>
+    <description>SIM scan endpoint execute</description>
+    <condition></condition>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_script_include_medic.medic_admin');</script>
+    <requires_role x_type="boolean">false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <operation>execute</operation>
+    <type>rest_service</type>
+    <name>Results</name>
+    <description>SIM results endpoint execute</description>
+    <condition></condition>
+    <script>answer = gs.hasRole('x_snc_script_include_medic.medic_user') || gs.hasRole('x_snc_script_include_medic.medic_admin') || gs.hasRole('admin');</script>
+    <requires_role x_type="boolean">false</requires_role>
+  </sys_security_acl>
+</unload>

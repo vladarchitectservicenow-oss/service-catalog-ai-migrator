@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-24 07:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>ScriptInclude Medic — Daily Scan</name>
+    <description>Runs a daily incremental scan of the script include layer; falls back to a full scan when the include set changed.</description>
+    <run_type>periodically</run_type>
+    <run_dayofweek></run_dayofweek>
+    <run_period>daily</run_period>
+    <run_time>04:00:00</run_time>
+    <condition></condition>
+    <script><![CDATA[
+// ScriptInclude Medic — Scheduled Scan (scheduled job script)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function runScheduledScan() {
+    try {
+        var runner = new SimMedicRunner();
+        var incremental = false;
+        if (runner.hasChangedSinceLastScan()) {
+            incremental = false;
+        } else {
+            incremental = true;
+        }
+        var summary = runner.runScan(incremental, null);
+        gs.info('SimMedic scheduled scan complete: health=' + summary.instance_health +
+            ', includes=' + summary.include_count +
+            ', dead=' + summary.dead_count +
+            ', duplicates=' + summary.duplicate_count);
+    } catch (e) {
+        gs.error('SimMedic scheduled scan failed: ' + e.message);
+    }
+})();
+    ]]></script>
+  </sysauto_script>
+</unload>
