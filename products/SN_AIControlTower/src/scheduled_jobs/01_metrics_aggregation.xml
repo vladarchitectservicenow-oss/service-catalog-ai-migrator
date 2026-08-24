@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-18 20:30:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070840</sys_id>
+    <name>AI Tower — Metrics Aggregation</name>
+    <active>true</active>
+    <run_type>hourly</run_type>
+    <script><![CDATA[var analytics = new TowerAnalytics();
+var result = analytics.aggregateAll();
+gs.log('AIControlTower metrics aggregation: ' + result.aggregated_count + ' metrics from ' + result.instances_processed + ' instances', 'AIControlTower');]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sysauto_script>
+</unload>

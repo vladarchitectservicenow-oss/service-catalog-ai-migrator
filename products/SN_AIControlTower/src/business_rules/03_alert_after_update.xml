@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-18 20:30:00">
+  <sys_script action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070832</sys_id>
+    <name>AI Tower: Alert After Update</name>
+    <collection>x_snc_ai_tower_alert</collection>
+    <when>after</when>
+    <active>true</active>
+    <insert>false</insert>
+    <update>true</update>
+    <script><![CDATA[(function executeRule(current, previous) {
+    var prevStatus = previous ? previous.getValue('status') : '';
+    var currStatus = current.getValue('status');
+    if (currStatus === 'resolved' && prevStatus !== 'resolved') {
+        if (!current.getValue('resolved_at')) {
+            current.setValue('resolved_at', new GlideDateTime());
+        }
+        if (!current.getValue('resolved_by')) {
+            current.setValue('resolved_by', gs.getUserID());
+        }
+    }
+    if (currStatus === 'acknowledged' && prevStatus !== 'acknowledged') {
+        if (!current.getValue('acknowledged_at')) {
+            current.setValue('acknowledged_at', new GlideDateTime());
+        }
+        if (!current.getValue('acknowledged_by')) {
+            current.setValue('acknowledged_by', gs.getUserID());
+        }
+    }
+})(current, previous);]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_script>
+</unload>

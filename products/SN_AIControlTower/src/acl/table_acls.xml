@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-18 20:30:00">
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070860</sys_id>
+    <name>x_snc_ai_tower_record</name>
+    <operation>read</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070861</sys_id>
+    <name>x_snc_ai_tower_record</name>
+    <operation>write</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070862</sys_id>
+    <name>x_snc_ai_tower_record</name>
+    <operation>create</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070870</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070860</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.user</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070871</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070861</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070872</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070862</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+
+  <!-- Alert ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070863</sys_id>
+    <name>x_snc_ai_tower_alert</name>
+    <operation>read</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070864</sys_id>
+    <name>x_snc_ai_tower_alert</name>
+    <operation>write</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070865</sys_id>
+    <name>x_snc_ai_tower_alert</name>
+    <operation>create</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070873</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070863</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.user</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070874</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070864</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070875</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070865</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+
+  <!-- Config ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070866</sys_id>
+    <name>x_snc_ai_tower_config</name>
+    <operation>read</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070867</sys_id>
+    <name>x_snc_ai_tower_config</name>
+    <operation>write</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070868</sys_id>
+    <name>x_snc_ai_tower_config</name>
+    <operation>create</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070876</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070866</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.user</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070877</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070867</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070878</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070868</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+
+  <!-- REST endpoint ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070869</sys_id>
+    <name>x_snc_ai_tower.execute</name>
+    <operation>execute</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070879</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070869</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+</unload>
