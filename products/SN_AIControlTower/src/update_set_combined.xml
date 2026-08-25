@@ -1,0 +1,2321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-18 20:30:00">
+<sys_app action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070801</sys_id>
+    <name>AIControlTower</name>
+    <scope>x_snc_ai_tower</scope>
+    <version>0.9.0</version>
+    <description>Centralized AI observability and governance for enterprises running ServiceNow AI across multiple instances</description>
+    <active>true</active>
+    <sys_class_name>sys_app</sys_class_name>
+    <license_managed>true</license_managed>
+    <is_coderepo>false</is_coderepo>
+  </sys_app>
+<sys_app_license action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070802</sys_id>
+    <sys_app>a1b2c3d4e5f600010203040506070801</sys_app>
+    <license_type>agpl</license_type>
+    <license_text>Copyright (c) 2026 Vladimir Kapustin. Licensed under AGPL-3.0.</license_text>
+    <sys_class_name>sys_app_license</sys_class_name>
+  </sys_app_license>
+<!-- Table: x_snc_ai_tower_record (polymorphic: usage / execution / metric) -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070811</sys_id>
+    <name>x_snc_ai_tower_record</name>
+    <label>AI Tower Record</label>
+    <scope display_value="AIControlTower">x_snc_ai_tower</scope>
+    <is_extendable>true</is_extendable>
+    <access>package_private</access>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_db_object>
+
+  <!-- Columns for x_snc_ai_tower_record -->
+  <sys_dictionary action="INSERT_OR_UPDATE" element="record_type" label="Record Type" table="x_snc_ai_tower_record">
+    <name>record_type</name>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+    <choice_field>record_type</choice_field>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="instance" label="Instance" table="x_snc_ai_tower_record">
+    <name>instance</name>
+    <internal_type>reference</internal_type>
+    <reference>x_snc_ai_tower_config</reference>
+    <max_length>32</max_length>
+    <mandatory>true</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="product" label="Product" table="x_snc_ai_tower_record">
+    <name>product</name>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <mandatory>true</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="capability" label="Capability" table="x_snc_ai_tower_record">
+    <name>capability</name>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="user_sysid" label="User Sys ID" table="x_snc_ai_tower_record">
+    <name>user_sysid</name>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="user_name" label="User Name" table="x_snc_ai_tower_record">
+    <name>user_name</name>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="department" label="Department" table="x_snc_ai_tower_record">
+    <name>department</name>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_id" label="Source ID" table="x_snc_ai_tower_record">
+    <name>source_id</name>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <mandatory>true</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="outcome" label="Outcome" table="x_snc_ai_tower_record">
+    <name>outcome</name>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="duration_ms" label="Duration (ms)" table="x_snc_ai_tower_record">
+    <name>duration_ms</name>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="request_count" label="Request Count" table="x_snc_ai_tower_record">
+    <name>request_count</name>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+    <default_value>1</default_value>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="success_count" label="Success Count" table="x_snc_ai_tower_record">
+    <name>success_count</name>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="failure_count" label="Failure Count" table="x_snc_ai_tower_record">
+    <name>failure_count</name>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="metadata" label="Metadata (JSON)" table="x_snc_ai_tower_record">
+    <name>metadata</name>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="steps" label="Execution Steps (JSON)" table="x_snc_ai_tower_record">
+    <name>steps</name>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="tools_used" label="Tools Used (JSON)" table="x_snc_ai_tower_record">
+    <name>tools_used</name>
+    <internal_type>string</internal_type>
+    <max_length>1000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="intervention_required" label="Intervention Required" table="x_snc_ai_tower_record">
+    <name>intervention_required</name>
+    <internal_type>boolean</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="metric_type" label="Metric Type" table="x_snc_ai_tower_record">
+    <name>metric_type</name>
+    <internal_type>string</internal_type>
+    <max_length>50</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="metric_value" label="Metric Value" table="x_snc_ai_tower_record">
+    <name>metric_value</name>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="period_start" label="Period Start" table="x_snc_ai_tower_record">
+    <name>period_start</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="period_end" label="Period End" table="x_snc_ai_tower_record">
+    <name>period_end</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_timestamp" label="Source Timestamp" table="x_snc_ai_tower_record">
+    <name>source_timestamp</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="sync_timestamp" label="Sync Timestamp" table="x_snc_ai_tower_record">
+    <name>sync_timestamp</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+
+  <!-- Choice values for record_type -->
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="record_type" value="usage">usage</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="record_type" value="execution">execution</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="record_type" value="metric">metric</sys_choice>
+
+  <!-- Choice values for outcome -->
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="outcome" value="SUCCESS">SUCCESS</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="outcome" value="FAILURE">FAILURE</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="outcome" value="PARTIAL">PARTIAL</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="outcome" value="TIMEOUT">TIMEOUT</sys_choice>
+<!-- Table: x_snc_ai_tower_alert -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070812</sys_id>
+    <name>x_snc_ai_tower_alert</name>
+    <label>AI Tower Alert</label>
+    <scope display_value="AIControlTower">x_snc_ai_tower</scope>
+    <is_extendable>true</is_extendable>
+    <access>package_private</access>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_db_object>
+
+  <!-- Columns -->
+  <sys_dictionary action="INSERT_OR_UPDATE" element="type" label="Alert Type" table="x_snc_ai_tower_alert">
+    <name>type</name>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="severity" label="Severity" table="x_snc_ai_tower_alert">
+    <name>severity</name>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="instance" label="Instance" table="x_snc_ai_tower_alert">
+    <name>instance</name>
+    <internal_type>reference</internal_type>
+    <reference>x_snc_ai_tower_config</reference>
+    <max_length>32</max_length>
+    <mandatory>false</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="product" label="Product" table="x_snc_ai_tower_alert">
+    <name>product</name>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="title" label="Title" table="x_snc_ai_tower_alert">
+    <name>title</name>
+    <internal_type>string</internal_type>
+    <max_length>500</max_length>
+    <mandatory>true</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="description" label="Description" table="x_snc_ai_tower_alert">
+    <name>description</name>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="recommended_action" label="Recommended Action" table="x_snc_ai_tower_alert">
+    <name>recommended_action</name>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="status" label="Status" table="x_snc_ai_tower_alert">
+    <name>status</name>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+    <default_value>new</default_value>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="detected_at" label="Detected At" table="x_snc_ai_tower_alert">
+    <name>detected_at</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="acknowledged_by" label="Acknowledged By" table="x_snc_ai_tower_alert">
+    <name>acknowledged_by</name>
+    <internal_type>reference</internal_type>
+    <reference>sys_user</reference>
+    <max_length>32</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="acknowledged_at" label="Acknowledged At" table="x_snc_ai_tower_alert">
+    <name>acknowledged_at</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="resolved_by" label="Resolved By" table="x_snc_ai_tower_alert">
+    <name>resolved_by</name>
+    <internal_type>reference</internal_type>
+    <reference>sys_user</reference>
+    <max_length>32</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="resolved_at" label="Resolved At" table="x_snc_ai_tower_alert">
+    <name>resolved_at</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="resolution_note" label="Resolution Note" table="x_snc_ai_tower_alert">
+    <name>resolution_note</name>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+
+  <!-- Choice values for type -->
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="type" value="success_rate_drop">success_rate_drop</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="type" value="adoption_gap">adoption_gap</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="type" value="failure_spike">failure_spike</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="type" value="concentration_risk">concentration_risk</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="type" value="stale_data">stale_data</sys_choice>
+
+  <!-- Choice values for severity -->
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="severity" value="critical">critical</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="severity" value="warning">warning</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="severity" value="info">info</sys_choice>
+
+  <!-- Choice values for status -->
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="status" value="new">new</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="status" value="acknowledged">acknowledged</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="status" value="resolved">resolved</sys_choice>
+<!-- Table: x_snc_ai_tower_config (polymorphic: instance / connector / global) -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070813</sys_id>
+    <name>x_snc_ai_tower_config</name>
+    <label>AI Tower Config</label>
+    <scope display_value="AIControlTower">x_snc_ai_tower</scope>
+    <is_extendable>true</is_extendable>
+    <access>package_private</access>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_db_object>
+
+  <!-- Columns -->
+  <sys_dictionary action="INSERT_OR_UPDATE" element="config_type" label="Config Type" table="x_snc_ai_tower_config">
+    <name>config_type</name>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="name" label="Name" table="x_snc_ai_tower_config">
+    <name>name</name>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <mandatory>true</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="url" label="Instance URL" table="x_snc_ai_tower_config">
+    <name>url</name>
+    <internal_type>string</internal_type>
+    <max_length>500</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="instance_type" label="Instance Type" table="x_snc_ai_tower_config">
+    <name>instance_type</name>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="region" label="Region" table="x_snc_ai_tower_config">
+    <name>region</name>
+    <internal_type>string</internal_type>
+    <max_length>50</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="auth_token" label="Auth Token" table="x_snc_ai_tower_config">
+    <name>auth_token</name>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="active" label="Active" table="x_snc_ai_tower_config">
+    <name>active</name>
+    <internal_type>boolean</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+    <default_value>true</default_value>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="last_sync" label="Last Sync" table="x_snc_ai_tower_config">
+    <name>last_sync</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="sync_frequency" label="Sync Frequency (min)" table="x_snc_ai_tower_config">
+    <name>sync_frequency</name>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+    <default_value>15</default_value>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="product_name" label="Product Name" table="x_snc_ai_tower_config">
+    <name>product_name</name>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_tables" label="Source Tables" table="x_snc_ai_tower_config">
+    <name>source_tables</name>
+    <internal_type>string</internal_type>
+    <max_length>1000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="field_mappings" label="Field Mappings (JSON)" table="x_snc_ai_tower_config">
+    <name>field_mappings</name>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="version" label="Version" table="x_snc_ai_tower_config">
+    <name>version</name>
+    <internal_type>string</internal_type>
+    <max_length>20</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="config_value" label="Config Value" table="x_snc_ai_tower_config">
+    <name>config_value</name>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="description" label="Description" table="x_snc_ai_tower_config">
+    <name>description</name>
+    <internal_type>string</internal_type>
+    <max_length>1000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+
+  <!-- Choice values for config_type -->
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_config" field="config_type" value="instance">instance</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_config" field="config_type" value="connector">connector</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_config" field="config_type" value="global">global</sys_choice>
+
+  <!-- Choice values for instance_type -->
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_config" field="instance_type" value="prod">prod</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_config" field="instance_type" value="dev">dev</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_config" field="instance_type" value="test">test</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_config" field="instance_type" value="stage">stage</sys_choice>
+<sys_user_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070850</sys_id>
+    <name>x_snc_ai_tower.admin</name>
+    <label>AIControlTower Admin</label>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070851</sys_id>
+    <name>x_snc_ai_tower.user</name>
+    <label>AIControlTower User</label>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_user_role>
+<sys_script_include action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070809</sys_id>
+    <access>public</access>
+    <active>true</active>
+    <name>TowerCore</name>
+    <script><![CDATA[// Copyright (c) 2026 Vladimir Kapustin. Licensed under AGPL-3.0.
+// AIControlTower — TowerCore Script Include
+// Ingestion engine + connector registry for multi-instance AI telemetry
+
+var TowerCore = Class.create();
+TowerCore.prototype = {
+    initialize: function() {
+        this.TABLE_RECORD = 'x_snc_ai_tower_record';
+        this.TABLE_CONFIG = 'x_snc_ai_tower_config';
+        this.TABLE_INSTANCE = 'x_snc_ai_tower_config';
+        this.errors = [];
+        this.accepted = 0;
+        this.rejected = 0;
+    },
+
+    ingest: function(payload) {
+        this.errors = [];
+        this.accepted = 0;
+        this.rejected = 0;
+        if (!payload || !payload.records || !Array.isArray(payload.records)) {
+            return { accepted: 0, rejected: 0, errors: ['Invalid payload: missing records array'] };
+        }
+        var instanceId = this._validateInstanceToken(payload.instance_token);
+        if (!instanceId) {
+            return { accepted: 0, rejected: payload.records.length, errors: ['Invalid or missing instance token'] };
+        }
+        for (var i = 0; i < payload.records.length; i++) {
+            try {
+                var record = payload.records[i];
+                if (this._validateRecord(record)) {
+                    if (!this._isDuplicate(instanceId, record)) {
+                        this._storeRecord(instanceId, record);
+                        this.accepted++;
+                    } else {
+                        this.rejected++;
+                    }
+                } else {
+                    this.rejected++;
+                    this.errors.push('Invalid record at index ' + i);
+                }
+            } catch (e) {
+                this.rejected++;
+                this.errors.push('Error processing record ' + i + ': ' + e.message);
+            }
+        }
+        this._updateInstanceSync(instanceId);
+        return { accepted: this.accepted, rejected: this.rejected, errors: this.errors };
+    },
+
+    _validateInstanceToken: function(token) {
+        if (!token) return null;
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('config_type', 'instance');
+        gr.addQuery('auth_token', token);
+        gr.addQuery('active', 'true');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) { return gr.getUniqueValue(); }
+        return null;
+    },
+
+    _validateRecord: function(record) {
+        if (!record) return false;
+        if (!record.record_type) return false;
+        var validTypes = ['usage', 'execution', 'metric'];
+        if (validTypes.indexOf(record.record_type) < 0) return false;
+        if (!record.product) return false;
+        if (!record.source_id) return false;
+        return true;
+    },
+
+    _isDuplicate: function(instanceId, record) {
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.addQuery('instance', instanceId);
+        gr.addQuery('source_id', record.source_id);
+        gr.setLimit(1);
+        gr.query();
+        return gr.next();
+    },
+
+    _storeRecord: function(instanceId, record) {
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.initialize();
+        gr.setValue('instance', instanceId);
+        gr.setValue('record_type', record.record_type);
+        gr.setValue('product', record.product);
+        gr.setValue('capability', record.capability || '');
+        gr.setValue('user_sysid', record.user_sysid || '');
+        gr.setValue('user_name', record.user_name || '');
+        gr.setValue('department', record.department || '');
+        gr.setValue('source_id', record.source_id);
+        gr.setValue('outcome', record.outcome || '');
+        gr.setValue('duration_ms', record.duration_ms || 0);
+        gr.setValue('request_count', record.request_count || 1);
+        gr.setValue('success_count', record.success_count || 0);
+        gr.setValue('failure_count', record.failure_count || 0);
+        gr.setValue('metadata', JSON.stringify(record.metadata || {}));
+        if (record.timestamp) { gr.setValue('source_timestamp', record.timestamp); }
+        if (record.steps) { gr.setValue('steps', JSON.stringify(record.steps)); }
+        if (record.tools_used) { gr.setValue('tools_used', JSON.stringify(record.tools_used)); }
+        if (record.intervention_required !== undefined) {
+            gr.setValue('intervention_required', record.intervention_required ? 'true' : 'false');
+        }
+        gr.setValue('sync_timestamp', new GlideDateTime());
+        gr.insert();
+    },
+
+    _updateInstanceSync: function(instanceId) {
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        if (gr.get(instanceId)) {
+            gr.setValue('last_sync', new GlideDateTime());
+            gr.update();
+        }
+    },
+
+    getConnector: function(productName) {
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('config_type', 'connector');
+        gr.addQuery('product_name', productName);
+        gr.addQuery('active', 'true');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            var mappings = {};
+            try { mappings = JSON.parse(gr.getValue('field_mappings') || '{}'); } catch (e) { mappings = {}; }
+            return {
+                sys_id: gr.getUniqueValue(),
+                product_name: gr.getValue('product_name'),
+                source_tables: gr.getValue('source_tables') || '',
+                field_mappings: mappings,
+                version: gr.getValue('version') || '1.0',
+                active: true
+            };
+        }
+        return null;
+    },
+
+    registerConnector: function(config) {
+        if (!config || !config.product_name) { return null; }
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.initialize();
+        gr.setValue('config_type', 'connector');
+        gr.setValue('product_name', config.product_name);
+        gr.setValue('source_tables', config.source_tables || '');
+        gr.setValue('field_mappings', JSON.stringify(config.field_mappings || {}));
+        gr.setValue('version', config.version || '1.0');
+        gr.setValue('active', 'true');
+        gr.setValue('description', 'Connector for ' + config.product_name);
+        return gr.insert();
+    },
+
+    applyMapping: function(rawData, connector) {
+        if (!rawData || !connector || !connector.field_mappings) { return rawData; }
+        var mapped = {};
+        var mappings = connector.field_mappings;
+        for (var targetField in mappings) {
+            if (mappings.hasOwnProperty(targetField)) {
+                var sourceField = mappings[targetField];
+                mapped[targetField] = rawData[sourceField] || '';
+            }
+        }
+        mapped.product = connector.product_name;
+        return mapped;
+    },
+
+    getActiveConnectors: function() {
+        var connectors = [];
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('config_type', 'connector');
+        gr.addQuery('active', 'true');
+        gr.query();
+        while (gr.next()) {
+            var mappings = {};
+            try { mappings = JSON.parse(gr.getValue('field_mappings') || '{}'); } catch (e) { mappings = {}; }
+            connectors.push({
+                sys_id: gr.getUniqueValue(),
+                product_name: gr.getValue('product_name'),
+                source_tables: gr.getValue('source_tables') || '',
+                field_mappings: mappings,
+                version: gr.getValue('version') || '1.0'
+            });
+        }
+        return connectors;
+    },
+
+    getInstanceStatus: function(instanceId) {
+        var result = { instance_id: instanceId, last_sync: null, record_count: 0, pending_alerts: 0 };
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        if (gr.get(instanceId)) {
+            result.last_sync = gr.getValue('last_sync') || null;
+            result.instance_name = gr.getValue('name') || '';
+        }
+        var recGr = new GlideRecord(this.TABLE_RECORD);
+        recGr.addQuery('instance', instanceId);
+        result.record_count = recGr.query().getRowCount();
+        var alertGr = new GlideRecord('x_snc_ai_tower_alert');
+        alertGr.addQuery('instance', instanceId);
+        alertGr.addQuery('status', 'new');
+        result.pending_alerts = alertGr.query().getRowCount();
+        return result;
+    },
+
+    getInstances: function() {
+        var instances = [];
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('config_type', 'instance');
+        gr.addQuery('active', 'true');
+        gr.query();
+        while (gr.next()) {
+            instances.push({
+                sys_id: gr.getUniqueValue(),
+                name: gr.getValue('name') || '',
+                url: gr.getValue('url') || '',
+                instance_type: gr.getValue('instance_type') || 'prod',
+                region: gr.getValue('region') || '',
+                last_sync: gr.getValue('last_sync') || '',
+                sync_frequency: gr.getValue('sync_frequency') || '15'
+            });
+        }
+        return instances;
+    },
+
+    type: 'TowerCore'
+};]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_name>TowerCore</sys_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+    <use_scoped>true</use_scoped>
+    <description>Ingestion engine and connector registry for multi-instance AI telemetry</description>
+  </sys_script_include>
+<sys_script_include action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f60001020304050607080a</sys_id>
+    <access>public</access>
+    <active>true</active>
+    <name>TowerAnalytics</name>
+    <script><![CDATA[// Copyright (c) 2026 Vladimir Kapustin. Licensed under AGPL-3.0.
+// AIControlTower — TowerAnalytics Script Include
+// Metrics aggregation + ROI estimation engine
+
+var TowerAnalytics = Class.create();
+TowerAnalytics.prototype = {
+    initialize: function() {
+        this.TABLE_RECORD = 'x_snc_ai_tower_record';
+        this.TABLE_CONFIG = 'x_snc_ai_tower_config';
+        // Default time-savings matrix (minutes saved per interaction type)
+        this.DEFAULT_SAVINGS_MATRIX = {
+            'Now Assist:Catalog Item Generation': 45,
+            'Now Assist:Flow Generation': 60,
+            'Now Assist:Code Generation': 30,
+            'Now Assist:Case Summarization': 15,
+            'Build Agent:Catalog Item Creation': 120,
+            'Build Agent:Flow Creation': 90,
+            'Build Agent:Script Generation': 60,
+            'AI Agent:Workflow Automation': 30,
+            'AI Agent:Data Lookup': 10,
+            'AI Agent:Notification': 5
+        };
+        this.DEFAULT_HOURLY_RATE = 75; // USD
+    },
+
+    /**
+     * Aggregate all metrics from raw records — called by scheduled job
+     * Reads records since last aggregation, computes metrics per instance/product/capability
+     * @return {Object} { aggregated_count, instances_processed }
+     */
+    aggregateAll: function() {
+        var lastAggregation = this._getLastAggregationTime();
+        var instances = this._getActiveInstances();
+        var totalCount = 0;
+
+        for (var i = 0; i < instances.length; i++) {
+            var count = this.aggregateInstance(instances[i].sys_id, lastAggregation);
+            totalCount += count;
+        }
+
+        this._updateLastAggregationTime();
+        return { aggregated_count: totalCount, instances_processed: instances.length };
+    },
+
+    /**
+     * Aggregate metrics for a single instance
+     * @param {String} instanceId - instance sys_id
+     * @param {GlideDateTime} since - only process records after this time
+     * @return {Number} number of metric records created
+     */
+    aggregateInstance: function(instanceId, since) {
+        var count = 0;
+        var products = this._getProductsForInstance(instanceId, since);
+
+        for (var p = 0; p < products.length; p++) {
+            var capabilities = this._getCapabilitiesForProduct(instanceId, products[p], since);
+            for (var c = 0; c < capabilities.length; c++) {
+                this.computeAndStoreMetric(instanceId, products[p], capabilities[c], since);
+                count++;
+            }
+            // Also compute product-level aggregate (no capability filter)
+            this.computeAndStoreMetric(instanceId, products[p], null, since);
+            count++;
+        }
+        return count;
+    },
+
+    /**
+     * Compute a specific metric type for a set of records
+     * @param {String} metricType - requests|success_rate|active_users|adoption_rate|failure_rate
+     * @param {GlideRecord} records - GlideRecord of usage/execution records
+     * @return {Number} metric value
+     */
+    computeMetric: function(metricType, records) {
+        var value = 0;
+
+        if (metricType === 'requests') {
+            while (records.next()) {
+                value += parseInt(records.getValue('request_count') || '1', 10);
+            }
+        } else if (metricType === 'success_rate') {
+            var totalReq = 0;
+            var successReq = 0;
+            while (records.next()) {
+                totalReq += parseInt(records.getValue('request_count') || '1', 10);
+                successReq += parseInt(records.getValue('success_count') || '0', 10);
+            }
+            value = totalReq > 0 ? Math.round((successReq / totalReq) * 100) : 0;
+        } else if (metricType === 'active_users') {
+            var userIds = {};
+            while (records.next()) {
+                var uid = records.getValue('user_sysid');
+                if (uid) userIds[uid] = true;
+            }
+            value = Object.keys(userIds).length;
+        } else if (metricType === 'failure_rate') {
+            var totalFail = 0;
+            var totalAll = 0;
+            while (records.next()) {
+                totalAll += parseInt(records.getValue('request_count') || '1', 10);
+                totalFail += parseInt(records.getValue('failure_count') || '0', 10);
+            }
+            value = totalAll > 0 ? Math.round((totalFail / totalAll) * 100) : 0;
+        } else if (metricType === 'adoption_rate') {
+            // Adoption = active AI users / total instance users
+            // Total users fetched from sys_user — requires cross-scope privilege
+            var aiUsers = {};
+            while (records.next()) {
+                var userId = records.getValue('user_sysid');
+                if (userId) aiUsers[userId] = true;
+            }
+            var aiUserCount = Object.keys(aiUsers).length;
+            var totalUsers = this._getInstanceTotalUsers();
+            value = totalUsers > 0 ? Math.round((aiUserCount / totalUsers) * 100) : 0;
+        }
+
+        return value;
+    },
+
+    /**
+     * Compute and store a metric record
+     * @param {String} instanceId
+     * @param {String} product
+     * @param {String} capability - null for product-level aggregate
+     * @param {GlideDateTime} since
+     */
+    computeAndStoreMetric: function(instanceId, product, capability, since) {
+        var recordTypes = ['usage', 'execution'];
+        var metricTypes = ['requests', 'success_rate', 'active_users', 'failure_rate'];
+
+        for (var rt = 0; rt < recordTypes.length; rt++) {
+            for (var mt = 0; mt < metricTypes.length; mt++) {
+                var records = this._queryRecords(instanceId, product, capability, recordTypes[rt], since);
+                var value = this.computeMetric(metricTypes[mt], records);
+                this._storeMetric(instanceId, product, capability, metricTypes[mt], value);
+            }
+        }
+    },
+
+    /**
+     * Store a metric record
+     * @param {String} instanceId
+     * @param {String} product
+     * @param {String} capability
+     * @param {String} metricType
+     * @param {Number} value
+     */
+    _storeMetric: function(instanceId, product, capability, metricType, value) {
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.initialize();
+        gr.setValue('record_type', 'metric');
+        gr.setValue('instance', instanceId);
+        gr.setValue('product', product);
+        gr.setValue('capability', capability || '');
+        gr.setValue('metric_type', metricType);
+        gr.setValue('metric_value', value);
+        gr.setValue('period_start', this._getPeriodStart());
+        gr.setValue('period_end', new GlideDateTime());
+        gr.setValue('source_id', 'metric_' + instanceId + '_' + product + '_' + (capability || 'all') + '_' + metricType + '_' + gs.nowDateTime());
+        gr.setValue('sync_timestamp', new GlideDateTime());
+        gr.insert();
+    },
+
+    /**
+     * Query records for metric computation
+     * @param {String} instanceId
+     * @param {String} product
+     * @param {String} capability
+     * @param {String} recordType
+     * @param {GlideDateTime} since
+     * @return {GlideRecord}
+     */
+    _queryRecords: function(instanceId, product, capability, recordType, since) {
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.addQuery('instance', instanceId);
+        gr.addQuery('product', product);
+        gr.addQuery('record_type', recordType);
+        if (capability) {
+            gr.addQuery('capability', capability);
+        }
+        if (since) {
+            gr.addQuery('sync_timestamp', '>=', since);
+        }
+        gr.query();
+        return gr;
+    },
+
+    /**
+     * Query aggregated metrics — used by REST GET /status?type=metrics
+     * @param {Object} filters - { instance, product, time_range }
+     * @return {Array} metric records
+     */
+    queryMetrics: function(filters) {
+        var results = [];
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.addQuery('record_type', 'metric');
+        if (filters && filters.instance) {
+            gr.addQuery('instance', filters.instance);
+        }
+        if (filters && filters.product) {
+            gr.addQuery('product', filters.product);
+        }
+        if (filters && filters.metric_type) {
+            gr.addQuery('metric_type', filters.metric_type);
+        }
+        if (filters && filters.since) {
+            gr.addQuery('period_end', '>=', filters.since);
+        }
+        gr.orderByDesc('period_end');
+        gr.setLimit(filters && filters.limit ? filters.limit : 500);
+        gr.query();
+        while (gr.next()) {
+            results.push({
+                sys_id: gr.getUniqueValue(),
+                instance: gr.getValue('instance') || '',
+                product: gr.getValue('product') || '',
+                capability: gr.getValue('capability') || '',
+                metric_type: gr.getValue('metric_type') || '',
+                metric_value: parseInt(gr.getValue('metric_value') || '0', 10),
+                period_start: gr.getValue('period_start') || '',
+                period_end: gr.getValue('period_end') || ''
+            });
+        }
+        return results;
+    },
+
+    // ─── ROI Engine ───
+
+    /**
+     * Calculate ROI for an instance over a time range
+     * @param {String} instanceId
+     * @param {Object} timeRange - { start, end }
+     * @return {Object} { interactions, hours_saved, cost_saved, annualized_benefit }
+     */
+    calculateROI: function(instanceId, timeRange) {
+        var savingsMatrix = this._getSavingsMatrix();
+        var hourlyRate = this._getHourlyRate();
+        var interactions = 0;
+        var hoursSaved = 0;
+
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.addQuery('instance', instanceId);
+        gr.addQuery('record_type', 'usage');
+        if (timeRange && timeRange.start) {
+            gr.addQuery('sync_timestamp', '>=', timeRange.start);
+        }
+        if (timeRange && timeRange.end) {
+            gr.addQuery('sync_timestamp', '<=', timeRange.end);
+        }
+        gr.query();
+        while (gr.next()) {
+            var product = gr.getValue('product') || '';
+            var capability = gr.getValue('capability') || '';
+            var reqCount = parseInt(gr.getValue('request_count') || '1', 10);
+            interactions += reqCount;
+            var key = product + ':' + capability;
+            var minutesSaved = savingsMatrix[key] || savingsMatrix[product + ':default'] || 20;
+            hoursSaved += (minutesSaved * reqCount) / 60;
+        }
+
+        var costSaved = hoursSaved * hourlyRate;
+        var annualizedBenefit = this._annualize(costSaved, timeRange);
+
+        return {
+            interactions: interactions,
+            hours_saved: Math.round(hoursSaved),
+            cost_saved: Math.round(costSaved),
+            annualized_benefit: Math.round(annualizedBenefit),
+            hourly_rate: hourlyRate
+        };
+    },
+
+    /**
+     * Generate ROI report for executive presentation
+     * @param {String} instanceId
+     * @return {Object} full ROI report
+     */
+    generateReport: function(instanceId) {
+        var now = new GlideDateTime();
+        var thirtyDaysAgo = new GlideDateTime();
+        thirtyDaysAgo.addDaysUTC(-30);
+
+        var roi30 = this.calculateROI(instanceId, { start: thirtyDaysAgo, end: now });
+        var yearAgo = new GlideDateTime();
+        yearAgo.addDaysUTC(-365);
+        var roi365 = this.calculateROI(instanceId, { start: yearAgo, end: now });
+
+        return {
+            instance_id: instanceId,
+            report_date: now.getDisplayValue(),
+            last_30_days: roi30,
+            last_365_days: roi365,
+            summary: {
+                total_interactions: roi365.interactions,
+                total_hours_saved: roi365.hours_saved,
+                total_cost_saved: roi365.cost_saved,
+                annualized_benefit: roi365.annualized_benefit
+            }
+        };
+    },
+
+    /**
+     * Get time-savings matrix from config or default
+     * @return {Object} mapping of product:capability to minutes saved
+     */
+    _getSavingsMatrix: function() {
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('config_type', 'global');
+        gr.addQuery('name', 'savings_matrix');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            try {
+                return JSON.parse(gr.getValue('config_value') || '{}');
+            } catch (e) {
+                return this.DEFAULT_SAVINGS_MATRIX;
+            }
+        }
+        return this.DEFAULT_SAVINGS_MATRIX;
+    },
+
+    /**
+     * Get hourly rate from config or default
+     * @return {Number}
+     */
+    _getHourlyRate: function() {
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('config_type', 'global');
+        gr.addQuery('name', 'hourly_rate');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            var rate = parseInt(gr.getValue('config_value') || '0', 10);
+            return rate > 0 ? rate : this.DEFAULT_HOURLY_RATE;
+        }
+        return this.DEFAULT_HOURLY_RATE;
+    },
+
+    /**
+     * Annualize a cost saving based on time range
+     * @param {Number} costSaved
+     * @param {Object} timeRange
+     * @return {Number} annualized benefit
+     */
+    _annualize: function(costSaved, timeRange) {
+        if (!timeRange || !timeRange.start) {
+            return costSaved * 12; // assume monthly
+        }
+        var start = new GlideDateTime(timeRange.start);
+        var end = timeRange.end ? new GlideDateTime(timeRange.end) : new GlideDateTime();
+        var diffMs = end.getNumericValue() - start.getNumericValue();
+        var diffDays = diffMs / (1000 * 60 * 60 * 24);
+        if (diffDays <= 0) return 0;
+        return costSaved * (365 / diffDays);
+    },
+
+    // ─── Helper Methods ───
+
+    _getLastAggregationTime: function() {
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('config_type', 'global');
+        gr.addQuery('name', 'last_aggregation');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            var val = gr.getValue('config_value');
+            if (val) {
+                return new GlideDateTime(val);
+            }
+        }
+        return null;
+    },
+
+    _updateLastAggregationTime: function() {
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('config_type', 'global');
+        gr.addQuery('name', 'last_aggregation');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            gr.setValue('config_value', gs.nowDateTime());
+            gr.update();
+        } else {
+            var grNew = new GlideRecord(this.TABLE_CONFIG);
+            grNew.initialize();
+            grNew.setValue('config_type', 'global');
+            grNew.setValue('name', 'last_aggregation');
+            grNew.setValue('config_value', gs.nowDateTime());
+            grNew.setValue('description', 'Last metrics aggregation timestamp');
+            grNew.insert();
+        }
+    },
+
+    _getActiveInstances: function() {
+        var instances = [];
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('config_type', 'instance');
+        gr.addQuery('active', 'true');
+        gr.query();
+        while (gr.next()) {
+            instances.push({ sys_id: gr.getUniqueValue(), name: gr.getValue('name') || '' });
+        }
+        return instances;
+    },
+
+    _getProductsForInstance: function(instanceId, since) {
+        var products = {};
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.addQuery('instance', instanceId);
+        gr.addQuery('record_type', 'IN', 'usage,execution');
+        if (since) {
+            gr.addQuery('sync_timestamp', '>=', since);
+        }
+        gr.query();
+        while (gr.next()) {
+            var product = gr.getValue('product');
+            if (product) products[product] = true;
+        }
+        return Object.keys(products);
+    },
+
+    _getCapabilitiesForProduct: function(instanceId, product, since) {
+        var capabilities = {};
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.addQuery('instance', instanceId);
+        gr.addQuery('product', product);
+        gr.addQuery('record_type', 'IN', 'usage,execution');
+        if (since) {
+            gr.addQuery('sync_timestamp', '>=', since);
+        }
+        gr.query();
+        while (gr.next()) {
+            var cap = gr.getValue('capability');
+            if (cap) capabilities[cap] = true;
+        }
+        return Object.keys(capabilities);
+    },
+
+    _getInstanceTotalUsers: function() {
+        // Attempt to get total user count from sys_user (requires cross-scope)
+        try {
+            var gr = new GlideRecord('sys_user');
+            gr.addActiveQuery();
+            return gr.query().getRowCount();
+        } catch (e) {
+            // Cross-scope not configured — return 0 so adoption_rate = 0
+            return 0;
+        }
+    },
+
+    _getPeriodStart: function() {
+        var dt = new GlideDateTime();
+        dt.addDaysUTC(-1); // Last 24 hours by default
+        return dt;
+    },
+
+    type: 'TowerAnalytics'
+};]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_name>TowerAnalytics</sys_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+    <use_scoped>true</use_scoped>
+    <description>Metrics aggregation and ROI estimation engine</description>
+  </sys_script_include>
+<sys_script_include action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f60001020304050607080b</sys_id>
+    <access>public</access>
+    <active>true</active>
+    <name>TowerGovernance</name>
+    <script><![CDATA[// Copyright (c) 2026 Vladimir Kapustin. Licensed under AGPL-3.0.
+// AIControlTower — TowerGovernance Script Include
+// Governance alert detection + alert lifecycle management + NL query
+
+var TowerGovernance = Class.create();
+TowerGovernance.prototype = {
+    initialize: function() {
+        this.TABLE_RECORD = 'x_snc_ai_tower_record';
+        this.TABLE_ALERT = 'x_snc_ai_tower_alert';
+        this.TABLE_CONFIG = 'x_snc_ai_tower_config';
+        this.alertsCreated = 0;
+    },
+
+    /**
+     * Run all governance checks — called by scheduled job (daily 02:00)
+     * @return {Object} { alerts_created, alerts_summary }
+     */
+    detectAll: function() {
+        this.alertsCreated = 0;
+        var instances = this._getActiveInstances();
+        var summary = [];
+
+        for (var i = 0; i < instances.length; i++) {
+            var inst = instances[i];
+            this._checkSuccessRateDrop(inst.sys_id, inst.name);
+            this._checkAdoptionGap(inst.sys_id, inst.name);
+            this._checkFailureSpike(inst.sys_id, inst.name);
+            this._checkConcentrationRisk(inst.sys_id, inst.name);
+            this._checkStaleSync(inst.sys_id, inst.name);
+        }
+
+        return {
+            alerts_created: this.alertsCreated,
+            instances_checked: instances.length
+        };
+    },
+
+    /**
+     * Check: success rate dropped >10% below 30-day rolling average
+     * @param {String} instanceId
+     * @param {String} instanceName
+     */
+    _checkSuccessRateDrop: function(instanceId, instanceName) {
+        var products = this._getProductsForInstance(instanceId);
+        for (var p = 0; p < products.length; p++) {
+            var current = this._getRecentMetric(instanceId, products[p], 'success_rate', 1);
+            var baseline = this._getAverageMetric(instanceId, products[p], 'success_rate', 30);
+            if (current !== null && baseline !== null && baseline > 0) {
+                var drop = baseline - current;
+                if (drop >= 10) {
+                    this.createAlert({
+                        type: 'success_rate_drop',
+                        severity: drop >= 20 ? 'critical' : 'warning',
+                        instance: instanceId,
+                        instance_name: instanceName,
+                        product: products[p],
+                        title: 'Success rate dropped for ' + products[p] + ' on ' + instanceName,
+                        description: products[p] + ' success rate on ' + instanceName + ' dropped from ' +
+                            baseline + '% (30-day avg) to ' + current + '% — a drop of ' + drop + '%.',
+                        recommended_action: 'Review recent changes to ' + products[p] + ' configuration on ' +
+                            instanceName + '. Check for failed executions in the trace viewer.'
+                    });
+                }
+            }
+        }
+    },
+
+    /**
+     * Check: adoption below threshold in any department
+     * @param {String} instanceId
+     * @param {String} instanceName
+     */
+    _checkAdoptionGap: function(instanceId, instanceName) {
+        var threshold = this._getConfigValue('adoption_threshold', '15');
+        var thresholdNum = parseInt(threshold, 10) || 15;
+        var departments = this._getDepartments(instanceId);
+        for (var d = 0; d < departments.length; d++) {
+            var dept = departments[d];
+            var adoptionRate = this._getDepartmentAdoption(instanceId, dept);
+            if (adoptionRate !== null && adoptionRate < thresholdNum) {
+                this.createAlert({
+                    type: 'adoption_gap',
+                    severity: 'warning',
+                    instance: instanceId,
+                    instance_name: instanceName,
+                    title: 'Low AI adoption in ' + dept + ' on ' + instanceName,
+                    description: 'Department "' + dept + '" on ' + instanceName + ' has AI adoption rate of ' +
+                        adoptionRate + '% (threshold: ' + thresholdNum + '%).',
+                    recommended_action: 'Investigate why ' + dept + ' is not adopting AI tools. ' +
+                        'Consider targeted training or workflow integration.'
+                });
+            }
+        }
+    },
+
+    /**
+     * Check: failure count exceeds 2x rolling average
+     * @param {String} instanceId
+     * @param {String} instanceName
+     */
+    _checkFailureSpike: function(instanceId, instanceName) {
+        var products = this._getProductsForInstance(instanceId);
+        for (var p = 0; p < products.length; p++) {
+            var currentFailures = this._getRecentMetric(instanceId, products[p], 'failure_rate', 1);
+            var baselineFailures = this._getAverageMetric(instanceId, products[p], 'failure_rate', 30);
+            if (currentFailures !== null && baselineFailures !== null && baselineFailures > 0) {
+                if (currentFailures >= baselineFailures * 2) {
+                    this.createAlert({
+                        type: 'failure_spike',
+                        severity: currentFailures >= baselineFailures * 3 ? 'critical' : 'warning',
+                        instance: instanceId,
+                        instance_name: instanceName,
+                        product: products[p],
+                        title: 'Failure spike for ' + products[p] + ' on ' + instanceName,
+                        description: products[p] + ' failure rate on ' + instanceName + ' is ' +
+                            currentFailures + '%, which is ' + Math.round(currentFailures / baselineFailures) +
+                            'x the 30-day average of ' + baselineFailures + '%.',
+                        recommended_action: 'Check recent AI execution traces for ' + products[p] +
+                            ' on ' + instanceName + ' for common failure patterns.'
+                    });
+                }
+            }
+        }
+    },
+
+    /**
+     * Check: <5% of users generate >65% of AI usage (concentration risk)
+     * @param {String} instanceId
+     * @param {String} instanceName
+     */
+    _checkConcentrationRisk: function(instanceId, instanceName) {
+        var userUsage = this._getUserUsageDistribution(instanceId);
+        if (!userUsage || userUsage.length === 0) return;
+
+        var totalRequests = 0;
+        for (var i = 0; i < userUsage.length; i++) {
+            totalRequests += userUsage[i].requests;
+        }
+        if (totalRequests === 0) return;
+
+        // Sort by requests descending
+        userUsage.sort(function(a, b) { return b.requests - a.requests; });
+
+        var topUsersCount = Math.max(1, Math.ceil(userUsage.length * 0.05));
+        var topUserRequests = 0;
+        for (var j = 0; j < topUsersCount; j++) {
+            topUserRequests += userUsage[j].requests;
+        }
+        var topPercent = Math.round((topUserRequests / totalRequests) * 100);
+
+        if (topPercent > 65) {
+            this.createAlert({
+                type: 'concentration_risk',
+                severity: 'info',
+                instance: instanceId,
+                instance_name: instanceName,
+                title: 'AI usage concentrated in top users on ' + instanceName,
+                description: topUsersCount + ' users (' + Math.round((topUsersCount / userUsage.length) * 100) +
+                    '% of active users) generated ' + topPercent + '% of all AI usage on ' + instanceName + '.',
+                recommended_action: 'Encourage broader adoption across the organization. ' +
+                    'Top users may also be a bottleneck if they leave.'
+            });
+        }
+    },
+
+    /**
+     * Check: instance hasn't synced in >24 hours
+     * @param {String} instanceId
+     * @param {String} instanceName
+     */
+    _checkStaleSync: function(instanceId, instanceName) {
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        if (!gr.get(instanceId)) return;
+        var lastSyncStr = gr.getValue('last_sync');
+        if (!lastSyncStr) {
+            this.createAlert({
+                type: 'stale_data',
+                severity: 'warning',
+                instance: instanceId,
+                instance_name: instanceName,
+                title: 'No telemetry received from ' + instanceName,
+                description: instanceName + ' has never synced telemetry data.',
+                recommended_action: 'Verify the AIControlTower Collector is installed and the scheduled job is active on ' + instanceName + '.'
+            });
+            return;
+        }
+        var lastSync = new GlideDateTime(lastSyncStr);
+        var now = new GlideDateTime();
+        var diffMs = now.getNumericValue() - lastSync.getNumericValue();
+        var diffHours = diffMs / (1000 * 60 * 60);
+        if (diffHours > 24) {
+            this.createAlert({
+                type: 'stale_data',
+                severity: diffHours >= 48 ? 'critical' : 'warning',
+                instance: instanceId,
+                instance_name: instanceName,
+                title: 'Stale telemetry from ' + instanceName,
+                description: instanceName + ' last synced ' + Math.round(diffHours) +
+                    ' hours ago. Telemetry is stale.',
+                recommended_action: 'Check network connectivity between ' + instanceName +
+                    ' and the hub instance. Verify the collector scheduled job is running.'
+            });
+        }
+    },
+
+    /**
+     * Create a governance alert
+     * @param {Object} alertData - { type, severity, instance, title, description, recommended_action }
+     * @return {String} alert sys_id
+     */
+    createAlert: function(alertData) {
+        // Dedup: check for existing unresolved alert of same type+instance
+        var grExist = new GlideRecord(this.TABLE_ALERT);
+        grExist.addQuery('type', alertData.type);
+        grExist.addQuery('instance', alertData.instance);
+        grExist.addQuery('status', 'new');
+        if (alertData.product) {
+            grExist.addQuery('product', alertData.product);
+        }
+        grExist.setLimit(1);
+        grExist.query();
+        if (grExist.next()) {
+            // Update existing alert with latest data
+            grExist.setValue('description', alertData.description);
+            grExist.setValue('recommended_action', alertData.recommended_action || '');
+            grExist.setValue('detected_at', new GlideDateTime());
+            grExist.update();
+            return grExist.getUniqueValue();
+        }
+
+        var gr = new GlideRecord(this.TABLE_ALERT);
+        gr.initialize();
+        gr.setValue('type', alertData.type);
+        gr.setValue('severity', alertData.severity || 'warning');
+        gr.setValue('instance', alertData.instance);
+        gr.setValue('product', alertData.product || '');
+        gr.setValue('title', alertData.title);
+        gr.setValue('description', alertData.description);
+        gr.setValue('recommended_action', alertData.recommended_action || '');
+        gr.setValue('status', 'new');
+        gr.setValue('detected_at', new GlideDateTime());
+        var alertId = gr.insert();
+        if (alertId) {
+            this.alertsCreated++;
+        }
+        return alertId;
+    },
+
+    /**
+     * Acknowledge an alert
+     * @param {String} alertId - alert sys_id
+     * @param {String} acknowledgedBy - user sys_id
+     * @return {Boolean}
+     */
+    acknowledgeAlert: function(alertId, acknowledgedBy) {
+        var gr = new GlideRecord(this.TABLE_ALERT);
+        if (gr.get(alertId)) {
+            gr.setValue('status', 'acknowledged');
+            gr.setValue('acknowledged_by', acknowledgedBy || gs.getUserID());
+            gr.setValue('acknowledged_at', new GlideDateTime());
+            gr.update();
+            return true;
+        }
+        return false;
+    },
+
+    /**
+     * Resolve an alert
+     * @param {String} alertId - alert sys_id
+     * @param {String} resolvedBy - user sys_id
+     * @param {String} resolutionNote - optional note
+     * @return {Boolean}
+     */
+    resolveAlert: function(alertId, resolvedBy, resolutionNote) {
+        var gr = new GlideRecord(this.TABLE_ALERT);
+        if (gr.get(alertId)) {
+            gr.setValue('status', 'resolved');
+            gr.setValue('resolved_by', resolvedBy || gs.getUserID());
+            gr.setValue('resolved_at', new GlideDateTime());
+            if (resolutionNote) {
+                gr.setValue('resolution_note', resolutionNote);
+            }
+            gr.update();
+            return true;
+        }
+        return false;
+    },
+
+    /**
+     * Get alerts with optional filters — used by REST GET /status?type=alerts
+     * @param {Object} filters - { severity, status, instance, product }
+     * @return {Array}
+     */
+    getAlerts: function(filters) {
+        var results = [];
+        var gr = new GlideRecord(this.TABLE_ALERT);
+        if (filters) {
+            if (filters.severity) gr.addQuery('severity', filters.severity);
+            if (filters.status) gr.addQuery('status', filters.status);
+            if (filters.instance) gr.addQuery('instance', filters.instance);
+            if (filters.product) gr.addQuery('product', filters.product);
+        }
+        gr.orderByDesc('detected_at');
+        gr.setLimit(filters && filters.limit ? filters.limit : 100);
+        gr.query();
+        while (gr.next()) {
+            results.push({
+                sys_id: gr.getUniqueValue(),
+                type: gr.getValue('type') || '',
+                severity: gr.getValue('severity') || '',
+                instance: gr.getValue('instance') || '',
+                product: gr.getValue('product') || '',
+                title: gr.getValue('title') || '',
+                description: gr.getValue('description') || '',
+                recommended_action: gr.getValue('recommended_action') || '',
+                status: gr.getValue('status') || 'new',
+                detected_at: gr.getValue('detected_at') || '',
+                acknowledged_by: gr.getValue('acknowledged_by') || '',
+                resolved_at: gr.getValue('resolved_at') || ''
+            });
+        }
+        return results;
+    },
+
+    // ─── NL Query (Now Assist integration) ───
+
+    /**
+     * Translate a natural language query to encoded query on record table
+     * @param {String} nlQuery - e.g. "show me AI adoption in HR department across all instances"
+     * @return {Object} { encoded_query, explanation }
+     */
+    translateQuery: function(nlQuery) {
+        if (!nlQuery) {
+            return { encoded_query: '', explanation: 'Empty query' };
+        }
+        var query = nlQuery.toLowerCase();
+        var parts = [];
+
+        // Simple keyword-based translation
+        if (query.indexOf('now assist') >= 0) {
+            parts.push('product=Now Assist');
+        } else if (query.indexOf('build agent') >= 0) {
+            parts.push('product=Build Agent');
+        } else if (query.indexOf('ai agent') >= 0) {
+            parts.push('product=AI Agent');
+        }
+
+        if (query.indexOf('hr') >= 0 || query.indexOf('human resources') >= 0) {
+            parts.push('department=HR');
+        } else if (query.indexOf('it') >= 0) {
+            parts.push('department=IT');
+        } else if (query.indexOf('finance') >= 0) {
+            parts.push('department=Finance');
+        }
+
+        if (query.indexOf('success') >= 0) {
+            parts.push('metric_type=success_rate');
+        } else if (query.indexOf('failure') >= 0) {
+            parts.push('metric_type=failure_rate');
+        } else if (query.indexOf('adoption') >= 0) {
+            parts.push('metric_type=adoption_rate');
+        }
+
+        if (query.indexOf('usage') >= 0) {
+            parts.push('record_type=usage');
+        } else if (query.indexOf('execution') >= 0) {
+            parts.push('record_type=execution');
+        } else if (query.indexOf('metric') >= 0) {
+            parts.push('record_type=metric');
+        }
+
+        var encoded = parts.join('^');
+        return {
+            encoded_query: encoded,
+            explanation: 'Translated "' + nlQuery + '" to: ' + (encoded || 'no filters detected')
+        };
+    },
+
+    /**
+     * Execute an encoded query on the record table
+     * @param {String} encodedQuery - ServiceNow encoded query
+     * @param {Number} limit - max results
+     * @return {Array}
+     */
+    executeQuery: function(encodedQuery, limit) {
+        var results = [];
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        if (encodedQuery) {
+            gr.addEncodedQuery(encodedQuery);
+        }
+        gr.orderByDesc('sync_timestamp');
+        gr.setLimit(limit || 100);
+        gr.query();
+        while (gr.next()) {
+            results.push({
+                sys_id: gr.getUniqueValue(),
+                record_type: gr.getValue('record_type') || '',
+                instance: gr.getValue('instance') || '',
+                product: gr.getValue('product') || '',
+                capability: gr.getValue('capability') || '',
+                user_name: gr.getValue('user_name') || '',
+                department: gr.getValue('department') || '',
+                outcome: gr.getValue('outcome') || '',
+                request_count: parseInt(gr.getValue('request_count') || '0', 10),
+                success_count: parseInt(gr.getValue('success_count') || '0', 10),
+                failure_count: parseInt(gr.getValue('failure_count') || '0', 10),
+                sync_timestamp: gr.getValue('sync_timestamp') || ''
+            });
+        }
+        return results;
+    },
+
+    // ─── Helper Methods ───
+
+    _getActiveInstances: function() {
+        var instances = [];
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('config_type', 'instance');
+        gr.addQuery('active', 'true');
+        gr.query();
+        while (gr.next()) {
+            instances.push({ sys_id: gr.getUniqueValue(), name: gr.getValue('name') || '' });
+        }
+        return instances;
+    },
+
+    _getProductsForInstance: function(instanceId) {
+        var products = {};
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.addQuery('instance', instanceId);
+        gr.addQuery('record_type', 'IN', 'usage,execution');
+        gr.query();
+        while (gr.next()) {
+            var product = gr.getValue('product');
+            if (product) products[product] = true;
+        }
+        return Object.keys(products);
+    },
+
+    _getRecentMetric: function(instanceId, product, metricType, days) {
+        var since = new GlideDateTime();
+        since.addDaysUTC(-days);
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.addQuery('record_type', 'metric');
+        gr.addQuery('instance', instanceId);
+        gr.addQuery('product', product);
+        gr.addQuery('metric_type', metricType);
+        gr.addQuery('period_end', '>=', since);
+        gr.orderByDesc('period_end');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return parseInt(gr.getValue('metric_value') || '0', 10);
+        }
+        return null;
+    },
+
+    _getAverageMetric: function(instanceId, product, metricType, days) {
+        var since = new GlideDateTime();
+        since.addDaysUTC(-days);
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.addQuery('record_type', 'metric');
+        gr.addQuery('instance', instanceId);
+        gr.addQuery('product', product);
+        gr.addQuery('metric_type', metricType);
+        gr.addQuery('period_end', '>=', since);
+        gr.query();
+        var sum = 0;
+        var count = 0;
+        while (gr.next()) {
+            sum += parseInt(gr.getValue('metric_value') || '0', 10);
+            count++;
+        }
+        return count > 0 ? Math.round(sum / count) : null;
+    },
+
+    _getDepartments: function(instanceId) {
+        var departments = {};
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.addQuery('instance', instanceId);
+        gr.addQuery('record_type', 'IN', 'usage,execution');
+        gr.query();
+        while (gr.next()) {
+            var dept = gr.getValue('department');
+            if (dept) departments[dept] = true;
+        }
+        return Object.keys(departments);
+    },
+
+    _getDepartmentAdoption: function(instanceId, department) {
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.addQuery('instance', instanceId);
+        gr.addQuery('department', department);
+        gr.addQuery('record_type', 'usage');
+        gr.query();
+        var users = {};
+        while (gr.next()) {
+            var uid = gr.getValue('user_sysid');
+            if (uid) users[uid] = true;
+        }
+        var aiUsers = Object.keys(users).length;
+        if (aiUsers === 0) return null;
+        // Without total department user count, use a rough estimate
+        // In production, this would query cmn_department -> sys_user
+        return Math.min(100, Math.round((aiUsers / Math.max(aiUsers * 3, 10)) * 100));
+    },
+
+    _getUserUsageDistribution: function(instanceId) {
+        var userMap = {};
+        var gr = new GlideRecord(this.TABLE_RECORD);
+        gr.addQuery('instance', instanceId);
+        gr.addQuery('record_type', 'usage');
+        gr.query();
+        while (gr.next()) {
+            var uid = gr.getValue('user_sysid');
+            if (!uid) continue;
+            if (!userMap[uid]) {
+                userMap[uid] = { user_sysid: uid, requests: 0 };
+            }
+            userMap[uid].requests += parseInt(gr.getValue('request_count') || '1', 10);
+        }
+        return Object.keys(userMap).map(function(k) { return userMap[k]; });
+    },
+
+    _getConfigValue: function(key, defaultValue) {
+        var gr = new GlideRecord(this.TABLE_CONFIG);
+        gr.addQuery('config_type', 'global');
+        gr.addQuery('name', key);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getValue('config_value') || defaultValue;
+        }
+        return defaultValue;
+    },
+
+    type: 'TowerGovernance'
+};]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_name>TowerGovernance</sys_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+    <use_scoped>true</use_scoped>
+    <description>Governance alert detection, alert lifecycle management, and NL query translation</description>
+  </sys_script_include>
+<sys_ws_definition action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070820</sys_id>
+    <name>AIControlTower API</name>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+    <base_uri>/api/x_snc_ai_tower/v1</base_uri>
+    <active>true</active>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070821</sys_id>
+    <name>POST execute</name>
+    <http_method>POST</http_method>
+    <operation_uri>/api/x_snc_ai_tower/v1/execute</operation_uri>
+    <operation_script><![CDATA[// Copyright (c) 2026 Vladimir Kapustin. Licensed under AGPL-3.0.
+// AIControlTower — POST /api/x_snc_ai_tower/v1/execute
+// Action-based dispatch: ingest | config_update | alert_ack | alert_resolve | register_instance | register_connector
+
+(function process(request, response) {
+    var body = request.body ? request.body.data : null;
+    if (!body) {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Missing request body' } }));
+        return;
+    }
+
+    var action = body.action || '';
+    response.setHeader('Content-Type', 'application/json');
+
+    try {
+        switch (action) {
+            case 'ingest':
+                _handleIngest(body, response);
+                break;
+            case 'config_update':
+                _handleConfigUpdate(body, response);
+                break;
+            case 'alert_ack':
+                _handleAlertAck(body, response);
+                break;
+            case 'alert_resolve':
+                _handleAlertResolve(body, response);
+                break;
+            case 'register_instance':
+                _handleRegisterInstance(body, response);
+                break;
+            case 'register_connector':
+                _handleRegisterConnector(body, response);
+                break;
+            default:
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ ok: false, error: { message: 'Unknown action: ' + action } }));
+        }
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Internal error: ' + e.message } }));
+    }
+})(request, response);
+
+function _handleIngest(body, response) {
+    var core = new TowerCore();
+    var result = core.ingest(body);
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: result }));
+}
+
+function _handleConfigUpdate(body, response) {
+    var gr = new GlideRecord('x_snc_ai_tower_config');
+    if (!body.instance_id || !gr.get(body.instance_id)) {
+        response.setStatus(404);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Instance not found' } }));
+        return;
+    }
+    if (body.sync_frequency) {
+        gr.setValue('sync_frequency', body.sync_frequency);
+    }
+    if (body.active !== undefined) {
+        gr.setValue('active', body.active ? 'true' : 'false');
+    }
+    if (body.auth_token) {
+        gr.setValue('auth_token', body.auth_token);
+    }
+    gr.update();
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: { instance_id: body.instance_id, updated: true } }));
+}
+
+function _handleAlertAck(body, response) {
+    var gov = new TowerGovernance();
+    var result = gov.acknowledgeAlert(body.alert_id, body.acknowledged_by);
+    response.setStatus(result ? 200 : 404);
+    response.setBody(JSON.stringify({ ok: result, data: { alert_id: body.alert_id, acknowledged: result } }));
+}
+
+function _handleAlertResolve(body, response) {
+    var gov = new TowerGovernance();
+    var result = gov.resolveAlert(body.alert_id, body.resolved_by, body.resolution_note);
+    response.setStatus(result ? 200 : 404);
+    response.setBody(JSON.stringify({ ok: result, data: { alert_id: body.alert_id, resolved: result } }));
+}
+
+function _handleRegisterInstance(body, response) {
+    var gr = new GlideRecord('x_snc_ai_tower_config');
+    gr.initialize();
+    gr.setValue('config_type', 'instance');
+    gr.setValue('name', body.name || '');
+    gr.setValue('url', body.url || '');
+    gr.setValue('instance_type', body.instance_type || 'prod');
+    gr.setValue('region', body.region || '');
+    gr.setValue('auth_token', body.auth_token || gs.generateGUID());
+    gr.setValue('sync_frequency', body.sync_frequency || '15');
+    gr.setValue('active', 'true');
+    var sysId = gr.insert();
+    response.setStatus(201);
+    response.setBody(JSON.stringify({ ok: true, data: { instance_id: sysId, auth_token: gr.getValue('auth_token') } }));
+}
+
+function _handleRegisterConnector(body, response) {
+    var core = new TowerCore();
+    var sysId = core.registerConnector({
+        product_name: body.product_name,
+        source_tables: body.source_tables,
+        field_mappings: body.field_mappings,
+        version: body.version
+    });
+    if (sysId) {
+        response.setStatus(201);
+        response.setBody(JSON.stringify({ ok: true, data: { connector_id: sysId } }));
+    } else {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Failed to register connector' } }));
+    }
+}]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+    <active>true</active>
+    <web_service_definition>a1b2c3d4e5f600010203040506070820</web_service_definition>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070822</sys_id>
+    <name>GET status</name>
+    <http_method>GET</http_method>
+    <operation_uri>/api/x_snc_ai_tower/v1/status</operation_uri>
+    <operation_script><![CDATA[// Copyright (c) 2026 Vladimir Kapustin. Licensed under AGPL-3.0.
+// AIControlTower — GET /api/x_snc_ai_tower/v1/status
+// Query-based dispatch via ?type= parameter
+// type=metrics | alerts | instances | instance_status | connectors | roi | nl_query
+
+(function process(request, response) {
+    var queryParams = request.queryParams || {};
+    var type = queryParams.type || 'instances';
+    response.setHeader('Content-Type', 'application/json');
+
+    try {
+        switch (type) {
+            case 'metrics':
+                _getMetrics(queryParams, response);
+                break;
+            case 'alerts':
+                _getAlerts(queryParams, response);
+                break;
+            case 'instances':
+                _getInstances(response);
+                break;
+            case 'instance_status':
+                _getInstanceStatus(queryParams, response);
+                break;
+            case 'connectors':
+                _getConnectors(response);
+                break;
+            case 'roi':
+                _getROI(queryParams, response);
+                break;
+            case 'nl_query':
+                _getNLQuery(queryParams, response);
+                break;
+            default:
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ ok: false, error: { message: 'Unknown type: ' + type } }));
+        }
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Internal error: ' + e.message } }));
+    }
+})(request, response);
+
+function _getMetrics(queryParams, response) {
+    var analytics = new TowerAnalytics();
+    var filters = {
+        instance: queryParams.instance || null,
+        product: queryParams.product || null,
+        metric_type: queryParams.metric_type || null,
+        since: queryParams.since || null,
+        limit: parseInt(queryParams.limit || '500', 10)
+    };
+    var results = analytics.queryMetrics(filters);
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: results, count: results.length }));
+}
+
+function _getAlerts(queryParams, response) {
+    var gov = new TowerGovernance();
+    var filters = {
+        severity: queryParams.severity || null,
+        status: queryParams.status || null,
+        instance: queryParams.instance || null,
+        product: queryParams.product || null,
+        limit: parseInt(queryParams.limit || '100', 10)
+    };
+    var results = gov.getAlerts(filters);
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: results, count: results.length }));
+}
+
+function _getInstances(response) {
+    var core = new TowerCore();
+    var results = core.getInstances();
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: results, count: results.length }));
+}
+
+function _getInstanceStatus(queryParams, response) {
+    if (!queryParams.instance_id) {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'instance_id parameter required' } }));
+        return;
+    }
+    var core = new TowerCore();
+    var result = core.getInstanceStatus(queryParams.instance_id);
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: result }));
+}
+
+function _getConnectors(response) {
+    var core = new TowerCore();
+    var results = core.getActiveConnectors();
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: results, count: results.length }));
+}
+
+function _getROI(queryParams, response) {
+    if (!queryParams.instance_id) {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'instance_id parameter required' } }));
+        return;
+    }
+    var analytics = new TowerAnalytics();
+    var result;
+    if (queryParams.report === 'full') {
+        result = analytics.generateReport(queryParams.instance_id);
+    } else {
+        var timeRange = {};
+        if (queryParams.start) timeRange.start = queryParams.start;
+        if (queryParams.end) timeRange.end = queryParams.end;
+        result = analytics.calculateROI(queryParams.instance_id, timeRange);
+    }
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: result }));
+}
+
+function _getNLQuery(queryParams, response) {
+    var gov = new TowerGovernance();
+    var query = queryParams.q || '';
+    var translated = gov.translateQuery(query);
+    var results = gov.executeQuery(translated.encoded_query, parseInt(queryParams.limit || '100', 10));
+    response.setStatus(200);
+    response.setBody(JSON.stringify({
+        ok: true,
+        data: {
+            translated: translated,
+            results: results,
+            count: results.length
+        }
+    }));
+}]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+    <active>true</active>
+    <web_service_definition>a1b2c3d4e5f600010203040506070820</web_service_definition>
+  </sys_ws_operation>
+<sys_script action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070830</sys_id>
+    <name>AI Tower: Record Before Insert</name>
+    <collection>x_snc_ai_tower_record</collection>
+    <when>before</when>
+    <active>true</active>
+    <insert>true</insert>
+    <update>false</update>
+    <script><![CDATA[(function executeRule(current, previous) {
+    if (!current.getValue('sync_timestamp')) {
+        current.setValue('sync_timestamp', new GlideDateTime());
+    }
+    if (!current.getValue('request_count')) {
+        current.setValue('request_count', '1');
+    }
+    if (!current.getValue('success_count')) {
+        current.setValue('success_count', '0');
+    }
+    if (!current.getValue('failure_count')) {
+        current.setValue('failure_count', '0');
+    }
+})(current, previous);]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_script>
+<sys_script action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070831</sys_id>
+    <name>AI Tower: Alert Before Insert</name>
+    <collection>x_snc_ai_tower_alert</collection>
+    <when>before</when>
+    <active>true</active>
+    <insert>true</insert>
+    <update>false</update>
+    <script><![CDATA[(function executeRule(current, previous) {
+    if (!current.getValue('detected_at')) {
+        current.setValue('detected_at', new GlideDateTime());
+    }
+    if (!current.getValue('status')) {
+        current.setValue('status', 'new');
+    }
+})(current, previous);]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_script>
+<sys_script action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070832</sys_id>
+    <name>AI Tower: Alert After Update</name>
+    <collection>x_snc_ai_tower_alert</collection>
+    <when>after</when>
+    <active>true</active>
+    <insert>false</insert>
+    <update>true</update>
+    <script><![CDATA[(function executeRule(current, previous) {
+    var prevStatus = previous ? previous.getValue('status') : '';
+    var currStatus = current.getValue('status');
+    if (currStatus === 'resolved' && prevStatus !== 'resolved') {
+        if (!current.getValue('resolved_at')) {
+            current.setValue('resolved_at', new GlideDateTime());
+        }
+        if (!current.getValue('resolved_by')) {
+            current.setValue('resolved_by', gs.getUserID());
+        }
+    }
+    if (currStatus === 'acknowledged' && prevStatus !== 'acknowledged') {
+        if (!current.getValue('acknowledged_at')) {
+            current.setValue('acknowledged_at', new GlideDateTime());
+        }
+        if (!current.getValue('acknowledged_by')) {
+            current.setValue('acknowledged_by', gs.getUserID());
+        }
+    }
+})(current, previous);]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_script>
+<sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070860</sys_id>
+    <name>x_snc_ai_tower_record</name>
+    <operation>read</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070861</sys_id>
+    <name>x_snc_ai_tower_record</name>
+    <operation>write</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070862</sys_id>
+    <name>x_snc_ai_tower_record</name>
+    <operation>create</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070870</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070860</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.user</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070871</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070861</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070872</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070862</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+
+  <!-- Alert ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070863</sys_id>
+    <name>x_snc_ai_tower_alert</name>
+    <operation>read</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070864</sys_id>
+    <name>x_snc_ai_tower_alert</name>
+    <operation>write</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070865</sys_id>
+    <name>x_snc_ai_tower_alert</name>
+    <operation>create</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070873</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070863</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.user</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070874</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070864</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070875</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070865</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+
+  <!-- Config ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070866</sys_id>
+    <name>x_snc_ai_tower_config</name>
+    <operation>read</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070867</sys_id>
+    <name>x_snc_ai_tower_config</name>
+    <operation>write</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070868</sys_id>
+    <name>x_snc_ai_tower_config</name>
+    <operation>create</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070876</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070866</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.user</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070877</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070867</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070878</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070868</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+
+  <!-- REST endpoint ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070869</sys_id>
+    <name>x_snc_ai_tower.execute</name>
+    <operation>execute</operation>
+    <admin>true</admin>
+    <active>true</active>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070879</sys_id>
+    <sys_security_acl>a1b2c3d4e5f600010203040506070869</sys_security_acl>
+    <sys_user_role>x_snc_ai_tower.admin</sys_user_role>
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+  </sys_security_acl_role>
+<sys_scope_privilege action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070890</sys_id>
+    <name>sys_user</name>
+    <operation>read</operation>
+    <source_scope>x_snc_ai_tower</source_scope>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <status>granted</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070891</sys_id>
+    <name>cmn_department</name>
+    <operation>read</operation>
+    <source_scope>x_snc_ai_tower</source_scope>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <status>granted</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070892</sys_id>
+    <name>sn_now_assist_interaction</name>
+    <operation>read</operation>
+    <source_scope>x_snc_ai_tower</source_scope>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <status>granted</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070893</sys_id>
+    <name>sn_now_assist_usage</name>
+    <operation>read</operation>
+    <source_scope>x_snc_ai_tower</source_scope>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <status>granted</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070894</sys_id>
+    <name>sys_ai_agent_run</name>
+    <operation>read</operation>
+    <source_scope>x_snc_ai_tower</source_scope>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <status>granted</status>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070895</sys_id>
+    <name>sys_ai_agent_step</name>
+    <operation>read</operation>
+    <source_scope>x_snc_ai_tower</source_scope>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <status>granted</status>
+  </sys_scope_privilege>
+<sysauto_script action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070840</sys_id>
+    <name>AI Tower — Metrics Aggregation</name>
+    <active>true</active>
+    <run_type>hourly</run_type>
+    <script><![CDATA[var analytics = new TowerAnalytics();
+var result = analytics.aggregateAll();
+gs.log('AIControlTower metrics aggregation: ' + result.aggregated_count + ' metrics from ' + result.instances_processed + ' instances', 'AIControlTower');]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sysauto_script>
+<sysauto_script action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070841</sys_id>
+    <name>AI Tower — Governance Scan</name>
+    <active>true</active>
+    <run_type>daily</run_type>
+    <run_time>1970-01-01 02:00:00</run_time>
+    <script><![CDATA[var gov = new TowerGovernance();
+var result = gov.detectAll();
+gs.log('AIControlTower governance scan: ' + result.alerts_created + ' alerts from ' + result.instances_checked + ' instances', 'AIControlTower');]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sysauto_script>
+</unload>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-18 20:30:00">
+  <!-- Table: x_snc_ai_tower_alert -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070812</sys_id>
+    <name>x_snc_ai_tower_alert</name>
+    <label>AI Tower Alert</label>
+    <scope display_value="AIControlTower">x_snc_ai_tower</scope>
+    <is_extendable>true</is_extendable>
+    <access>package_private</access>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_db_object>
+
+  <!-- Columns -->
+  <sys_dictionary action="INSERT_OR_UPDATE" element="type" label="Alert Type" table="x_snc_ai_tower_alert">
+    <name>type</name>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="severity" label="Severity" table="x_snc_ai_tower_alert">
+    <name>severity</name>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="instance" label="Instance" table="x_snc_ai_tower_alert">
+    <name>instance</name>
+    <internal_type>reference</internal_type>
+    <reference>x_snc_ai_tower_config</reference>
+    <max_length>32</max_length>
+    <mandatory>false</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="product" label="Product" table="x_snc_ai_tower_alert">
+    <name>product</name>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="title" label="Title" table="x_snc_ai_tower_alert">
+    <name>title</name>
+    <internal_type>string</internal_type>
+    <max_length>500</max_length>
+    <mandatory>true</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="description" label="Description" table="x_snc_ai_tower_alert">
+    <name>description</name>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="recommended_action" label="Recommended Action" table="x_snc_ai_tower_alert">
+    <name>recommended_action</name>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="status" label="Status" table="x_snc_ai_tower_alert">
+    <name>status</name>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+    <default_value>new</default_value>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="detected_at" label="Detected At" table="x_snc_ai_tower_alert">
+    <name>detected_at</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="acknowledged_by" label="Acknowledged By" table="x_snc_ai_tower_alert">
+    <name>acknowledged_by</name>
+    <internal_type>reference</internal_type>
+    <reference>sys_user</reference>
+    <max_length>32</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="acknowledged_at" label="Acknowledged At" table="x_snc_ai_tower_alert">
+    <name>acknowledged_at</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="resolved_by" label="Resolved By" table="x_snc_ai_tower_alert">
+    <name>resolved_by</name>
+    <internal_type>reference</internal_type>
+    <reference>sys_user</reference>
+    <max_length>32</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="resolved_at" label="Resolved At" table="x_snc_ai_tower_alert">
+    <name>resolved_at</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="resolution_note" label="Resolution Note" table="x_snc_ai_tower_alert">
+    <name>resolution_note</name>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+
+  <!-- Choice values for type -->
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="type" value="success_rate_drop">success_rate_drop</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="type" value="adoption_gap">adoption_gap</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="type" value="failure_spike">failure_spike</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="type" value="concentration_risk">concentration_risk</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="type" value="stale_data">stale_data</sys_choice>
+
+  <!-- Choice values for severity -->
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="severity" value="critical">critical</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="severity" value="warning">warning</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="severity" value="info">info</sys_choice>
+
+  <!-- Choice values for status -->
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="status" value="new">new</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="status" value="acknowledged">acknowledged</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_alert" field="status" value="resolved">resolved</sys_choice>
+</unload>
