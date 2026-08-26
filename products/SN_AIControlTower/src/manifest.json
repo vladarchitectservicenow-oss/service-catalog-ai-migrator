@@ -1,0 +1,149 @@
+{
+  "name": "AIControlTower",
+  "scope": "x_snc_ai_tower",
+  "version": "0.9.0",
+  "license": "AGPL-3.0",
+  "author": "Vladimir Kapustin",
+  "components": {
+    "tables": [
+      {
+        "name": "x_snc_ai_tower_record",
+        "type": "polymorphic (usage/execution/metric)",
+        "file": "tables/x_snc_ai_tower_record.xml"
+      },
+      {
+        "name": "x_snc_ai_tower_alert",
+        "type": "governance alerts",
+        "file": "tables/x_snc_ai_tower_alert.xml"
+      },
+      {
+        "name": "x_snc_ai_tower_config",
+        "type": "polymorphic (instance/connector/global)",
+        "file": "tables/x_snc_ai_tower_config.xml"
+      }
+    ],
+    "script_includes": [
+      {
+        "name": "TowerCore",
+        "file": "script_includes/TowerCore.js",
+        "purpose": "Ingestion engine + connector registry"
+      },
+      {
+        "name": "TowerAnalytics",
+        "file": "script_includes/TowerAnalytics.js",
+        "purpose": "Metrics aggregation + ROI estimation"
+      },
+      {
+        "name": "TowerGovernance",
+        "file": "script_includes/TowerGovernance.js",
+        "purpose": "Governance alerts + NL query"
+      }
+    ],
+    "rest_api": [
+      {
+        "endpoint": "POST /api/x_snc_ai_tower/v1/execute",
+        "file": "rest_endpoints/post_execute.js",
+        "actions": [
+          "ingest",
+          "config_update",
+          "alert_ack",
+          "alert_resolve",
+          "register_instance",
+          "register_connector"
+        ]
+      },
+      {
+        "endpoint": "GET /api/x_snc_ai_tower/v1/status",
+        "file": "rest_endpoints/get_status.js",
+        "types": [
+          "metrics",
+          "alerts",
+          "instances",
+          "instance_status",
+          "connectors",
+          "roi",
+          "nl_query"
+        ]
+      }
+    ],
+    "business_rules": [
+      {
+        "table": "x_snc_ai_tower_record",
+        "when": "before insert",
+        "file": "business_rules/01_record_before_insert.js"
+      },
+      {
+        "table": "x_snc_ai_tower_alert",
+        "when": "before insert",
+        "file": "business_rules/02_alert_before_insert.js"
+      },
+      {
+        "table": "x_snc_ai_tower_alert",
+        "when": "after update",
+        "file": "business_rules/03_alert_after_update.js"
+      }
+    ],
+    "scheduled_jobs": [
+      {
+        "name": "Metrics Aggregation",
+        "schedule": "hourly",
+        "file": "scheduled_jobs/01_metrics_aggregation.xml"
+      },
+      {
+        "name": "Governance Scan",
+        "schedule": "daily 02:00",
+        "file": "scheduled_jobs/02_governance_scan.xml"
+      }
+    ],
+    "cross_scope_privileges": [
+      {
+        "table": "sys_user",
+        "operation": "read"
+      },
+      {
+        "table": "cmn_department",
+        "operation": "read"
+      },
+      {
+        "table": "sn_now_assist_interaction",
+        "operation": "read"
+      },
+      {
+        "table": "sn_now_assist_usage",
+        "operation": "read"
+      },
+      {
+        "table": "sys_ai_agent_run",
+        "operation": "read"
+      },
+      {
+        "table": "sys_ai_agent_step",
+        "operation": "read"
+      }
+    ],
+    "roles": [
+      {
+        "name": "x_snc_ai_tower.admin",
+        "label": "AIControlTower Admin"
+      },
+      {
+        "name": "x_snc_ai_tower.user",
+        "label": "AIControlTower User"
+      }
+    ]
+  },
+  "constraints": {
+    "max_script_includes": 3,
+    "max_tables": 3,
+    "max_rest_endpoints": 2,
+    "max_business_rules": 3,
+    "actual": {
+      "script_includes": 3,
+      "tables": 3,
+      "rest_endpoints": 2,
+      "business_rules": 3,
+      "scheduled_jobs": 2,
+      "cross_scope_privileges": 6
+    }
+  }
+}

@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-18 20:30:00">
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070820</sys_id>
+    <name>AIControlTower API</name>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+    <base_uri>/api/x_snc_ai_tower/v1</base_uri>
+    <active>true</active>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070821</sys_id>
+    <name>POST execute</name>
+    <http_method>POST</http_method>
+    <operation_uri>/api/x_snc_ai_tower/v1/execute</operation_uri>
+    <operation_script><![CDATA[// Copyright (c) 2026 Vladimir Kapustin. Licensed under AGPL-3.0.
+// AIControlTower — POST /api/x_snc_ai_tower/v1/execute
+// Action-based dispatch: ingest | config_update | alert_ack | alert_resolve | register_instance | register_connector
+
+(function process(request, response) {
+    var body = request.body ? request.body.data : null;
+    if (!body) {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Missing request body' } }));
+        return;
+    }
+
+    var action = body.action || '';
+    response.setHeader('Content-Type', 'application/json');
+
+    try {
+        switch (action) {
+            case 'ingest':
+                _handleIngest(body, response);
+                break;
+            case 'config_update':
+                _handleConfigUpdate(body, response);
+                break;
+            case 'alert_ack':
+                _handleAlertAck(body, response);
+                break;
+            case 'alert_resolve':
+                _handleAlertResolve(body, response);
+                break;
+            case 'register_instance':
+                _handleRegisterInstance(body, response);
+                break;
+            case 'register_connector':
+                _handleRegisterConnector(body, response);
+                break;
+            default:
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ ok: false, error: { message: 'Unknown action: ' + action } }));
+        }
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Internal error: ' + e.message } }));
+    }
+})(request, response);
+
+function _handleIngest(body, response) {
+    var core = new TowerCore();
+    var result = core.ingest(body);
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: result }));
+}
+
+function _handleConfigUpdate(body, response) {
+    var gr = new GlideRecord('x_snc_ai_tower_config');
+    if (!body.instance_id || !gr.get(body.instance_id)) {
+        response.setStatus(404);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Instance not found' } }));
+        return;
+    }
+    if (body.sync_frequency) {
+        gr.setValue('sync_frequency', body.sync_frequency);
+    }
+    if (body.active !== undefined) {
+        gr.setValue('active', body.active ? 'true' : 'false');
+    }
+    if (body.auth_token) {
+        gr.setValue('auth_token', body.auth_token);
+    }
+    gr.update();
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: { instance_id: body.instance_id, updated: true } }));
+}
+
+function _handleAlertAck(body, response) {
+    var gov = new TowerGovernance();
+    var result = gov.acknowledgeAlert(body.alert_id, body.acknowledged_by);
+    response.setStatus(result ? 200 : 404);
+    response.setBody(JSON.stringify({ ok: result, data: { alert_id: body.alert_id, acknowledged: result } }));
+}
+
+function _handleAlertResolve(body, response) {
+    var gov = new TowerGovernance();
+    var result = gov.resolveAlert(body.alert_id, body.resolved_by, body.resolution_note);
+    response.setStatus(result ? 200 : 404);
+    response.setBody(JSON.stringify({ ok: result, data: { alert_id: body.alert_id, resolved: result } }));
+}
+
+function _handleRegisterInstance(body, response) {
+    var gr = new GlideRecord('x_snc_ai_tower_config');
+    gr.initialize();
+    gr.setValue('config_type', 'instance');
+    gr.setValue('name', body.name || '');
+    gr.setValue('url', body.url || '');
+    gr.setValue('instance_type', body.instance_type || 'prod');
+    gr.setValue('region', body.region || '');
+    gr.setValue('auth_token', body.auth_token || gs.generateGUID());
+    gr.setValue('sync_frequency', body.sync_frequency || '15');
+    gr.setValue('active', 'true');
+    var sysId = gr.insert();
+    response.setStatus(201);
+    response.setBody(JSON.stringify({ ok: true, data: { instance_id: sysId, auth_token: gr.getValue('auth_token') } }));
+}
+
+function _handleRegisterConnector(body, response) {
+    var core = new TowerCore();
+    var sysId = core.registerConnector({
+        product_name: body.product_name,
+        source_tables: body.source_tables,
+        field_mappings: body.field_mappings,
+        version: body.version
+    });
+    if (sysId) {
+        response.setStatus(201);
+        response.setBody(JSON.stringify({ ok: true, data: { connector_id: sysId } }));
+    } else {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Failed to register connector' } }));
+    }
+}]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+    <active>true</active>
+    <web_service_definition>a1b2c3d4e5f600010203040506070820</web_service_definition>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070822</sys_id>
+    <name>GET status</name>
+    <http_method>GET</http_method>
+    <operation_uri>/api/x_snc_ai_tower/v1/status</operation_uri>
+    <operation_script><![CDATA[// Copyright (c) 2026 Vladimir Kapustin. Licensed under AGPL-3.0.
+// AIControlTower — GET /api/x_snc_ai_tower/v1/status
+// Query-based dispatch via ?type= parameter
+// type=metrics | alerts | instances | instance_status | connectors | roi | nl_query
+
+(function process(request, response) {
+    var queryParams = request.queryParams || {};
+    var type = queryParams.type || 'instances';
+    response.setHeader('Content-Type', 'application/json');
+
+    try {
+        switch (type) {
+            case 'metrics':
+                _getMetrics(queryParams, response);
+                break;
+            case 'alerts':
+                _getAlerts(queryParams, response);
+                break;
+            case 'instances':
+                _getInstances(response);
+                break;
+            case 'instance_status':
+                _getInstanceStatus(queryParams, response);
+                break;
+            case 'connectors':
+                _getConnectors(response);
+                break;
+            case 'roi':
+                _getROI(queryParams, response);
+                break;
+            case 'nl_query':
+                _getNLQuery(queryParams, response);
+                break;
+            default:
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ ok: false, error: { message: 'Unknown type: ' + type } }));
+        }
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Internal error: ' + e.message } }));
+    }
+})(request, response);
+
+function _getMetrics(queryParams, response) {
+    var analytics = new TowerAnalytics();
+    var filters = {
+        instance: queryParams.instance || null,
+        product: queryParams.product || null,
+        metric_type: queryParams.metric_type || null,
+        since: queryParams.since || null,
+        limit: parseInt(queryParams.limit || '500', 10)
+    };
+    var results = analytics.queryMetrics(filters);
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: results, count: results.length }));
+}
+
+function _getAlerts(queryParams, response) {
+    var gov = new TowerGovernance();
+    var filters = {
+        severity: queryParams.severity || null,
+        status: queryParams.status || null,
+        instance: queryParams.instance || null,
+        product: queryParams.product || null,
+        limit: parseInt(queryParams.limit || '100', 10)
+    };
+    var results = gov.getAlerts(filters);
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: results, count: results.length }));
+}
+
+function _getInstances(response) {
+    var core = new TowerCore();
+    var results = core.getInstances();
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: results, count: results.length }));
+}
+
+function _getInstanceStatus(queryParams, response) {
+    if (!queryParams.instance_id) {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'instance_id parameter required' } }));
+        return;
+    }
+    var core = new TowerCore();
+    var result = core.getInstanceStatus(queryParams.instance_id);
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: result }));
+}
+
+function _getConnectors(response) {
+    var core = new TowerCore();
+    var results = core.getActiveConnectors();
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: results, count: results.length }));
+}
+
+function _getROI(queryParams, response) {
+    if (!queryParams.instance_id) {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'instance_id parameter required' } }));
+        return;
+    }
+    var analytics = new TowerAnalytics();
+    var result;
+    if (queryParams.report === 'full') {
+        result = analytics.generateReport(queryParams.instance_id);
+    } else {
+        var timeRange = {};
+        if (queryParams.start) timeRange.start = queryParams.start;
+        if (queryParams.end) timeRange.end = queryParams.end;
+        result = analytics.calculateROI(queryParams.instance_id, timeRange);
+    }
+    response.setStatus(200);
+    response.setBody(JSON.stringify({ ok: true, data: result }));
+}
+
+function _getNLQuery(queryParams, response) {
+    var gov = new TowerGovernance();
+    var query = queryParams.q || '';
+    var translated = gov.translateQuery(query);
+    var results = gov.executeQuery(translated.encoded_query, parseInt(queryParams.limit || '100', 10));
+    response.setStatus(200);
+    response.setBody(JSON.stringify({
+        ok: true,
+        data: {
+            translated: translated,
+            results: results,
+            count: results.length
+        }
+    }));
+}]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+    <active>true</active>
+    <web_service_definition>a1b2c3d4e5f600010203040506070820</web_service_definition>
+  </sys_ws_operation>
+</unload>

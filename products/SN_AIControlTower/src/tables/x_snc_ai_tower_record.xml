@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-18 20:30:00">
+  <!-- Table: x_snc_ai_tower_record (polymorphic: usage / execution / metric) -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <sys_id>a1b2c3d4e5f600010203040506070811</sys_id>
+    <name>x_snc_ai_tower_record</name>
+    <label>AI Tower Record</label>
+    <scope display_value="AIControlTower">x_snc_ai_tower</scope>
+    <is_extendable>true</is_extendable>
+    <access>package_private</access>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_package>a1b2c3d4e5f600010203040506070801</sys_package>
+    <sys_scope>x_snc_ai_tower</sys_scope>
+  </sys_db_object>
+
+  <!-- Columns for x_snc_ai_tower_record -->
+  <sys_dictionary action="INSERT_OR_UPDATE" element="record_type" label="Record Type" table="x_snc_ai_tower_record">
+    <name>record_type</name>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <mandatory>true</mandatory>
+    <choice_field>record_type</choice_field>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="instance" label="Instance" table="x_snc_ai_tower_record">
+    <name>instance</name>
+    <internal_type>reference</internal_type>
+    <reference>x_snc_ai_tower_config</reference>
+    <max_length>32</max_length>
+    <mandatory>true</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="product" label="Product" table="x_snc_ai_tower_record">
+    <name>product</name>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <mandatory>true</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="capability" label="Capability" table="x_snc_ai_tower_record">
+    <name>capability</name>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="user_sysid" label="User Sys ID" table="x_snc_ai_tower_record">
+    <name>user_sysid</name>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="user_name" label="User Name" table="x_snc_ai_tower_record">
+    <name>user_name</name>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="department" label="Department" table="x_snc_ai_tower_record">
+    <name>department</name>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_id" label="Source ID" table="x_snc_ai_tower_record">
+    <name>source_id</name>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <mandatory>true</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="outcome" label="Outcome" table="x_snc_ai_tower_record">
+    <name>outcome</name>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="duration_ms" label="Duration (ms)" table="x_snc_ai_tower_record">
+    <name>duration_ms</name>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="request_count" label="Request Count" table="x_snc_ai_tower_record">
+    <name>request_count</name>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+    <default_value>1</default_value>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="success_count" label="Success Count" table="x_snc_ai_tower_record">
+    <name>success_count</name>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="failure_count" label="Failure Count" table="x_snc_ai_tower_record">
+    <name>failure_count</name>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="metadata" label="Metadata (JSON)" table="x_snc_ai_tower_record">
+    <name>metadata</name>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="steps" label="Execution Steps (JSON)" table="x_snc_ai_tower_record">
+    <name>steps</name>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="tools_used" label="Tools Used (JSON)" table="x_snc_ai_tower_record">
+    <name>tools_used</name>
+    <internal_type>string</internal_type>
+    <max_length>1000</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="intervention_required" label="Intervention Required" table="x_snc_ai_tower_record">
+    <name>intervention_required</name>
+    <internal_type>boolean</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="metric_type" label="Metric Type" table="x_snc_ai_tower_record">
+    <name>metric_type</name>
+    <internal_type>string</internal_type>
+    <max_length>50</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="metric_value" label="Metric Value" table="x_snc_ai_tower_record">
+    <name>metric_value</name>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="period_start" label="Period Start" table="x_snc_ai_tower_record">
+    <name>period_start</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="period_end" label="Period End" table="x_snc_ai_tower_record">
+    <name>period_end</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_timestamp" label="Source Timestamp" table="x_snc_ai_tower_record">
+    <name>source_timestamp</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="sync_timestamp" label="Sync Timestamp" table="x_snc_ai_tower_record">
+    <name>sync_timestamp</name>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <mandatory>false</mandatory>
+    <index>true</index>
+  </sys_dictionary>
+
+  <!-- Choice values for record_type -->
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="record_type" value="usage">usage</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="record_type" value="execution">execution</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="record_type" value="metric">metric</sys_choice>
+
+  <!-- Choice values for outcome -->
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="outcome" value="SUCCESS">SUCCESS</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="outcome" value="FAILURE">FAILURE</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="outcome" value="PARTIAL">PARTIAL</sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_snc_ai_tower_record" field="outcome" value="TIMEOUT">TIMEOUT</sys_choice>
+</unload>
