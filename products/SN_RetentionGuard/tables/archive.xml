@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RetentionGuard — Archive table (sys_db_object)
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0 -->
+<unload unload_date="2026-08-26 00:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <create_access>true</create_access>
+    <delete_access>true</delete_access>
+    <label>Retention Archive</label>
+    <name>x_snc_retention_guard_archive</name>
+    <read_access>true</read_access>
+    <super_class/>
+    <update_access>true</update_access>
+    <user_role/>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_table">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Source Table</label>
+    <mandatory>true</mandatory>
+    <max_length>80</max_length>
+    <name>x_snc_retention_guard_archive</name>
+    <read_only>false</read_only>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_sys_id">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Source Sys ID</label>
+    <mandatory>true</mandatory>
+    <max_length>32</max_length>
+    <name>x_snc_retention_guard_archive</name>
+    <read_only>false</read_only>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="payload_json">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Payload (JSON)</label>
+    <max_length>4000</max_length>
+    <name>x_snc_retention_guard_archive</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="archived_at">
+    <active>true</active>
+    <internal_type>glide_date_time</internal_type>
+    <label>Archived At</label>
+    <name>x_snc_retention_guard_archive</name>
+  </sys_dictionary>
+</unload>

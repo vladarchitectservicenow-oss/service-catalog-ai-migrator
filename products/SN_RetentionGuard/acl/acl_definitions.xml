@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RetentionGuard — ACLs for custom tables and REST endpoints
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0 -->
+<unload unload_date="2026-08-26 00:00:00">
+  <!-- Policy table: read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_retention_guard_policy</name>
+    <operation>read</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_retention_guard.admin');</script>
+  </sys_security_acl>
+  <!-- Policy table: write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_retention_guard_policy</name>
+    <operation>write</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_retention_guard.admin');</script>
+  </sys_security_acl>
+  <!-- Policy table: create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_retention_guard_policy</name>
+    <operation>create</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_retention_guard.admin');</script>
+  </sys_security_acl>
+  <!-- Policy table: delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_retention_guard_policy</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_retention_guard.admin');</script>
+  </sys_security_acl>
+  <!-- Run table: read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_retention_guard_run</name>
+    <operation>read</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_retention_guard.admin') || gs.hasRole('x_snc_retention_guard.user');</script>
+  </sys_security_acl>
+  <!-- Run table: write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_retention_guard_run</name>
+    <operation>write</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_retention_guard.admin');</script>
+  </sys_security_acl>
+  <!-- Run table: create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_retention_guard_run</name>
+    <operation>create</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_retention_guard.admin');</script>
+  </sys_security_acl>
+  <!-- Run table: delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_retention_guard_run</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_retention_guard.admin');</script>
+  </sys_security_acl>
+  <!-- REST endpoint: execute (POST /execute) -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_retention_guard.post_execute</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_retention_guard.admin');</script>
+  </sys_security_acl>
+  <!-- REST endpoint: execute (GET /status) -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_retention_guard.get_status</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_snc_retention_guard.admin') || gs.hasRole('x_snc_retention_guard.user');</script>
+  </sys_security_acl>
+</unload>

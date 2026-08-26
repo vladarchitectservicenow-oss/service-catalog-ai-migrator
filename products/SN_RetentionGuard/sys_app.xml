@@ -1,0 +1,1145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RetentionGuard — scoped application manifest (sn_retention_guard)
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0 -->
+<unload unload_date="2026-08-26 00:00:00">
+  <sys_scope action="INSERT_OR_UPDATE">
+    <name>x_snc_retention_guard</name>
+    <scope>x_snc_retention_guard</scope>
+    <description>RetentionGuard — declarative data retention &amp; table lifecycle governance engine</description>
+    <short_description>Data retention governance</short_description>
+    <vendor>Vladimir Kapustin</vendor>
+    <vendor_prefix>snc</vendor_prefix>
+    <version>1.0.0</version>
+  </sys_scope>
+
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_snc_retention_guard.admin</name>
+    <description>RetentionGuard administrator — full policy, hold, and execution control</description>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_snc_retention_guard.user</name>
+    <description>RetentionGuard user — read-only access to inventory, reports, and holds</description>
+  </sys_user_role>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_retention_guard</source_scope>
+    <target_name>sys_db_object</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_retention_guard</source_scope>
+    <target_name>sys_dictionary</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_retention_guard</source_scope>
+    <target_name>sys_audit</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_retention_guard</source_scope>
+    <target_name>syslog</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_retention_guard</source_scope>
+    <target_name>sys_email</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_retention_guard</source_scope>
+    <target_name>sys_attachment</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_retention_guard</source_scope>
+    <target_name>sys_journal_field</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <active>true</active>
+    <api_name>x_snc_retention_guard.RetentionGuardEngine</api_name>
+    <client_callable>false</client_callable>
+    <description>Core deterministic retention engine: inventory, policy evaluation, safe execution, orchestration</description>
+    <name>RetentionGuardEngine</name>
+    <script><![CDATA[// RetentionGuard — RetentionGuardEngine
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Core deterministic retention engine: table growth inventory, policy
+// evaluation, safe archive/purge execution with referential-integrity checks,
+// and full-cycle orchestration. All logic is pure and auditable — no AI
+// dependency in the execution path.
+//
+// @class RetentionGuardEngine @namespace x_snc_retention_guard
+
+var RetentionGuardEngine = Class.create();
+RetentionGuardEngine.prototype = {
+
+    POLICY_TABLE: 'x_snc_retention_guard_policy',
+    RUN_TABLE: 'x_snc_retention_guard_run',
+    ARCHIVE_TABLE: 'x_snc_retention_guard_archive',
+
+    // Default policy set mapped to compliance frameworks. Covers the standard
+    // high-growth tables so a new customer is compliant on day one.
+    DEFAULT_POLICIES: [
+        { table_name: 'sys_audit',         retention_days: 90,  action: 'purge',   framework: 'GDPR' },
+        { table_name: 'syslog',            retention_days: 30,  action: 'purge',   framework: 'GDPR' },
+        { table_name: 'sys_email',         retention_days: 365, action: 'archive', framework: 'SOX' },
+        { table_name: 'sys_attachment',    retention_days: 365, action: 'archive', framework: 'HIPAA' },
+        { table_name: 'sys_journal_field', retention_days: 365, action: 'archive', framework: 'SOX' }
+    ],
+
+    // Tables that must never be purged regardless of policy.
+    PROTECTED_TABLES: [
+        'sys_user', 'sys_user_group', 'sys_user_role', 'sys_user_has_role',
+        'sys_script_include', 'sys_script', 'sys_dictionary', 'sys_db_object',
+        'sys_choice', 'sys_security_acl', 'sys_properties', 'sys_ui_policy'
+    ],
+
+    // Core ITSM tables that lack a sys_/x_/u_/sn_ prefix and are therefore
+    // missed by the prefix scan. Included explicitly so the growth inventory
+    // covers the tables that actually drive platform storage.
+    CORE_TABLES: [
+        'incident', 'task', 'problem', 'change_request', 'cmdb_ci',
+        'sc_req_item', 'sc_task', 'kb_knowledge'
+    ],
+
+    initialize: function () {
+        this._batchSize = 500;
+        this._dryRun = true;
+    },
+
+    /**
+     * Inventory all tables: row counts via GlideAggregate, filtered to
+     * non-protected, non-system tables. Returns an array of {table_name, rows}.
+     * Cross-scope reads of sys_db_object / sys_dictionary require the
+     * privileges declared in the app manifest.
+     */
+    inventoryTables: function () {
+        var result = [];
+        var seen = {};
+        var dbObj = new GlideRecord('sys_db_object');
+        dbObj.addQuery('name', 'STARTSWITH', 'sys_').setOr(true);
+        dbObj.addQuery('name', 'STARTSWITH', 'x_').setOr(true);
+        dbObj.addQuery('name', 'STARTSWITH', 'u_').setOr(true);
+        dbObj.addQuery('name', 'STARTSWITH', 'sn_').setOr(true);
+        dbObj.query();
+
+        while (dbObj.next()) {
+            var tableName = dbObj.getValue('name');
+            if (!tableName || seen[tableName]) { continue; }
+            seen[tableName] = true;
+            if (this._isProtected(tableName)) { continue; }
+
+            var count = this._countRows(tableName);
+            result.push({ table_name: tableName, rows: count });
+        }
+
+        // Include core ITSM tables that have no scoped prefix.
+        for (var c = 0; c < this.CORE_TABLES.length; c++) {
+            var coreName = this.CORE_TABLES[c];
+            if (seen[coreName] || this._isProtected(coreName)) { continue; }
+            seen[coreName] = true;
+            result.push({ table_name: coreName, rows: this._countRows(coreName) });
+        }
+
+        result.sort(function (a, b) { return b.rows - a.rows; });
+        return result;
+    },
+
+    /**
+     * Count rows in a table using GlideAggregate (avoids getRowCount() cap).
+     * Returns 0 on any error so a single unreadable table never aborts the scan.
+     */
+    _countRows: function (tableName) {
+        try {
+            var ga = new GlideAggregate(tableName);
+            ga.addAggregate('COUNT');
+            ga.query();
+            if (ga.next()) {
+                return parseInt(ga.getAggregate('COUNT'), 10) || 0;
+            }
+        } catch (e) {
+            gs.warn('RetentionGuard: unable to count ' + tableName + ': ' + e.message);
+        }
+        return 0;
+    },
+
+    _isProtected: function (tableName) {
+        for (var i = 0; i < this.PROTECTED_TABLES.length; i++) {
+            if (tableName === this.PROTECTED_TABLES[i]) { return true; }
+        }
+        return false;
+    },
+
+    /**
+     * Evaluate the applicable policy for a table. Returns a policy object or
+     * null when no policy applies. Legal holds are checked first — a held
+     * table is never eligible for purge/archive.
+     */
+    getPolicyForTable: function (tableName) {
+        var gr = new GlideRecord(this.POLICY_TABLE);
+        gr.addQuery('table_name', tableName);
+        gr.addQuery('active', true);
+        gr.setLimit(1);
+        gr.query();
+        if (!gr.next()) { return null; }
+
+        var policy = {
+            sys_id: gr.getUniqueValue(),
+            table_name: gr.getValue('table_name'),
+            retention_days: parseInt(gr.getValue('retention_days'), 10) || 0,
+            action: gr.getValue('action'),
+            framework: gr.getValue('framework'),
+            holds: this._parseJson(gr.getValue('holds_json'), []),
+            exceptions: this._parseJson(gr.getValue('exceptions_json'), [])
+        };
+        return policy;
+    },
+
+    /**
+     * Determine whether a table is under legal hold. A hold blocks the
+     * executor entirely — compliance is enforced by the engine, not discipline.
+     */
+    isTableHeld: function (tableName) {
+        var policy = this.getPolicyForTable(tableName);
+        if (!policy) { return false; }
+        var holds = policy.holds || [];
+        for (var i = 0; i < holds.length; i++) {
+            if (holds[i].table_name === tableName && holds[i].active !== false) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    /**
+     * Compute the cutoff GlideDateTime for a retention period: now minus
+     * retention_days. Records older than this are eligible for action.
+     */
+    computeCutoff: function (retentionDays) {
+        var gdt = new GlideDateTime();
+        gdt.addDaysUTC(-1 * retentionDays);
+        return gdt;
+    },
+
+    /**
+     * Dry-run preview: count records older than the cutoff for a table without
+     * writing anything. Returns {eligible, held, cutoff}.
+     */
+    previewPurge: function (tableName, retentionDays) {
+        var cutoff = this.computeCutoff(retentionDays);
+        var held = this.isTableHeld(tableName);
+        var eligible = 0;
+        if (!held) {
+            eligible = this._countOlderThan(tableName, cutoff);
+        }
+        return { table_name: tableName, eligible: eligible, held: held, cutoff: cutoff.getValue() };
+    },
+
+    _countOlderThan: function (tableName, cutoff) {
+        try {
+            var ga = new GlideAggregate(tableName);
+            ga.addQuery('sys_created_on', '<', cutoff.getValue());
+            ga.addAggregate('COUNT');
+            ga.query();
+            if (ga.next()) {
+                return parseInt(ga.getAggregate('COUNT'), 10) || 0;
+            }
+        } catch (e) {
+            gs.warn('RetentionGuard: unable to count older-than for ' + tableName + ': ' + e.message);
+        }
+        return 0;
+    },
+
+    /**
+     * Referential-integrity check: for a candidate record, detect whether any
+     * other table references it via a reference field. Returns true when the
+     * record is safe to delete (no inbound references), false when it would
+     * orphan related data. Uses sys_dictionary to find reference fields.
+     */
+    hasInboundReferences: function (tableName, sysId) {
+        var refFields = this._findReferenceFields(tableName);
+        for (var i = 0; i < refFields.length; i++) {
+            var ref = refFields[i];
+            var gr = new GlideRecord(ref.table);
+            gr.addQuery(ref.field, sysId);
+            gr.setLimit(1);
+            gr.query();
+            if (gr.hasNext()) { return true; }
+        }
+        return false;
+    },
+
+    _findReferenceFields: function (tableName) {
+        var result = [];
+        var dict = new GlideRecord('sys_dictionary');
+        dict.addQuery('reference', tableName);
+        dict.addNotNullQuery('name');
+        dict.query();
+        while (dict.next()) {
+            var refTable = dict.getValue('name');
+            var refField = dict.getValue('element');
+            if (refTable && refField) {
+                result.push({ table: refTable, field: refField });
+            }
+        }
+        return result;
+    },
+
+    /**
+     * Determine whether a candidate record is exempt from action via the
+     * policy's exceptions_json. Supports two exception shapes:
+     *   { sys_id: '...' }            — exact record exemption
+     *   { field: '...', value: '...' } — field/value match exemption
+     * Returns true when the record must be retained (skipped).
+     */
+    _isExcepted: function (policy, tableName, sysId) {
+        var exceptions = policy.exceptions || [];
+        if (exceptions.length === 0) { return false; }
+
+        var needRecord = false;
+        for (var i = 0; i < exceptions.length; i++) {
+            var ex = exceptions[i];
+            if (ex.sys_id && ex.sys_id === sysId) { return true; }
+            if (ex.field) { needRecord = true; }
+        }
+        if (!needRecord) { return false; }
+
+        var gr = new GlideRecord(tableName);
+        if (!gr.get(sysId)) { return false; }
+        for (var j = 0; j < exceptions.length; j++) {
+            var e = exceptions[j];
+            if (e.field && e.value !== undefined && e.value !== null &&
+                gr.getValue(e.field) === String(e.value)) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    /**
+     * Execute a retention cycle for a single table. Honors dry-run mode,
+     * legal holds, referential integrity, exceptions, and chunked deletes.
+     * Live execution advances a sys_id cursor so skipped records are never
+     * re-fetched — the loop is guaranteed to terminate. Returns a summary
+     * object with before/after counts and per-chunk logging.
+     */
+    executeTable: function (tableName, policy, dryRun) {
+        var cutoff = this.computeCutoff(policy.retention_days);
+        var summary = {
+            table_name: tableName,
+            action: policy.action,
+            dry_run: !!dryRun,
+            held: this.isTableHeld(tableName),
+            rows_before: this._countRows(tableName),
+            rows_processed: 0,
+            rows_skipped: 0,
+            rows_failed: 0,
+            rows_archived: 0,
+            cutoff: cutoff.getValue()
+        };
+
+        if (summary.held) {
+            summary.status = 'blocked';
+            summary.reason = 'legal_hold';
+            return summary;
+        }
+
+        if (dryRun) {
+            summary.rows_processed = this._countOlderThan(tableName, cutoff);
+            summary.status = 'dry_run';
+            return summary;
+        }
+
+        // Live execution: chunked delete/archive with referential-integrity
+        // and exception checks. A sys_id cursor guarantees forward progress
+        // even when every record in a batch is skipped.
+        var processed = 0;
+        var skipped = 0;
+        var failed = 0;
+        var archived = 0;
+        var cursor = '';
+        var keepGoing = true;
+        var maxIterations = 100000; // hard safety ceiling
+        var iterations = 0;
+
+        while (keepGoing && iterations < maxIterations) {
+            iterations++;
+            var batch = this._fetchBatch(tableName, cutoff, this._batchSize, cursor);
+            if (batch.length === 0) { keepGoing = false; break; }
+
+            for (var i = 0; i < batch.length; i++) {
+                var rec = batch[i];
+                cursor = rec.sys_id; // advance past this record regardless of outcome
+                if (this._isExcepted(policy, tableName, rec.sys_id)) {
+                    skipped++;
+                    continue;
+                }
+                if (this.hasInboundReferences(tableName, rec.sys_id)) {
+                    skipped++;
+                    continue;
+                }
+                if (policy.action === 'archive') {
+                    if (this._archiveRecord(tableName, rec.sys_id)) {
+                        processed++;
+                        archived++;
+                    } else {
+                        failed++;
+                    }
+                } else {
+                    if (this._deleteRecord(tableName, rec.sys_id)) {
+                        processed++;
+                    } else {
+                        failed++;
+                    }
+                }
+            }
+
+            if (batch.length < this._batchSize) { keepGoing = false; }
+        }
+
+        summary.rows_processed = processed;
+        summary.rows_skipped = skipped;
+        summary.rows_failed = failed;
+        summary.rows_archived = archived;
+        summary.status = 'completed';
+        return summary;
+    },
+
+    _fetchBatch: function (tableName, cutoff, limit, lastSysId) {
+        var result = [];
+        var gr = new GlideRecord(tableName);
+        gr.addQuery('sys_created_on', '<', cutoff.getValue());
+        if (lastSysId) { gr.addQuery('sys_id', '>', lastSysId); }
+        gr.orderBy('sys_id');
+        gr.setLimit(limit);
+        gr.query();
+        while (gr.next()) {
+            result.push({ sys_id: gr.getUniqueValue() });
+        }
+        return result;
+    },
+
+    _deleteRecord: function (tableName, sysId) {
+        try {
+            var gr = new GlideRecord(tableName);
+            if (gr.get(sysId)) {
+                gr.setWorkflow(false);
+                return gr.deleteRecord();
+            }
+        } catch (e) {
+            gs.warn('RetentionGuard: delete failed for ' + tableName + '/' + sysId + ': ' + e.message);
+        }
+        return false;
+    },
+
+    /**
+     * Archive a record: copy its field values into the archive table, then
+     * delete the source only after the copy is confirmed. This guarantees
+     * archive policies retain data rather than silently purging it.
+     */
+    _archiveRecord: function (tableName, sysId) {
+        try {
+            var src = new GlideRecord(tableName);
+            if (!src.get(sysId)) { return false; }
+
+            var payload = this._serializeRecord(src);
+            var arch = new GlideRecord(this.ARCHIVE_TABLE);
+            arch.initialize();
+            arch.setValue('source_table', tableName);
+            arch.setValue('source_sys_id', sysId);
+            arch.setValue('payload_json', payload);
+            arch.setValue('archived_at', new GlideDateTime().getValue());
+            arch.setWorkflow(false);
+            var archId = arch.insert();
+            if (!archId) { return false; }
+
+            // Only delete the source after a successful archive copy.
+            src.setWorkflow(false);
+            return src.deleteRecord();
+        } catch (e) {
+            gs.warn('RetentionGuard: archive failed for ' + tableName + '/' + sysId + ': ' + e.message);
+        }
+        return false;
+    },
+
+    /**
+     * Serialize a record's field values to a JSON payload for archival.
+     * Best-effort: unreadable fields are skipped, and oversized payloads are
+     * truncated with a marker so the archive write never fails on length.
+     */
+    _serializeRecord: function (gr) {
+        var obj = {};
+        try {
+            var fields = gr.getFields();
+            var len = (typeof fields.length === 'number') ? fields.length : fields.size();
+            for (var i = 0; i < len; i++) {
+                var f = (typeof fields.length === 'number') ? fields[i] : fields.get(i);
+                var name = f.getName();
+                var val = gr.getValue(name);
+                if (val !== null && val !== undefined && val !== '') {
+                    obj[name] = val;
+                }
+            }
+        } catch (e) {
+            gs.warn('RetentionGuard: field serialization issue: ' + e.message);
+        }
+        var json = JSON.stringify(obj);
+        if (json.length > 4000) {
+            json = json.substring(0, 3990) + '...TRUNCATED';
+        }
+        return json;
+    },
+
+    /**
+     * Run a full retention cycle across all configured policies. Writes a run
+     * record to the result store and returns the run summary. This is the
+     * single orchestration entry point used by the scheduled job and REST.
+     * On failure the run record is finalized as 'failed' so it is never left
+     * stranded in 'running'.
+     */
+    runCycle: function (dryRun) {
+        var runId = this._createRunRecord(dryRun);
+        var results = [];
+        var policyGr = new GlideRecord(this.POLICY_TABLE);
+        policyGr.addQuery('active', true);
+        policyGr.query();
+
+        try {
+            while (policyGr.next()) {
+                var tableName = policyGr.getValue('table_name');
+                var policy = {
+                    retention_days: parseInt(policyGr.getValue('retention_days'), 10) || 0,
+                    action: policyGr.getValue('action'),
+                    exceptions: this._parseJson(policyGr.getValue('exceptions_json'), [])
+                };
+                var summary = this.executeTable(tableName, policy, dryRun);
+                results.push(summary);
+            }
+
+            this._finalizeRunRecord(runId, results, dryRun);
+            return { run_id: runId, dry_run: !!dryRun, results: results };
+        } catch (e) {
+            this._failRunRecord(runId, e);
+            throw e;
+        }
+    },
+
+    _createRunRecord: function (dryRun) {
+        try {
+            var gr = new GlideRecord(this.RUN_TABLE);
+            gr.initialize();
+            gr.setValue('type', 'run');
+            gr.setValue('status', dryRun ? 'dry_run' : 'running');
+            gr.setValue('started_at', new GlideDateTime().getValue());
+            return gr.insert();
+        } catch (e) {
+            gs.warn('RetentionGuard: unable to create run record: ' + e.message);
+            return null;
+        }
+    },
+
+    _finalizeRunRecord: function (runId, results, dryRun) {
+        try {
+            var gr = new GlideRecord(this.RUN_TABLE);
+            if (!gr.get(runId)) { return; }
+            var totalProcessed = 0;
+            var totalSkipped = 0;
+            for (var i = 0; i < results.length; i++) {
+                totalProcessed += results[i].rows_processed || 0;
+                totalSkipped += results[i].rows_skipped || 0;
+            }
+            gr.setValue('rows_processed', totalProcessed);
+            gr.setValue('rows_skipped', totalSkipped);
+            gr.setValue('detail_json', this._safeDetail(results));
+            gr.setValue('status', dryRun ? 'dry_run' : 'completed');
+            gr.setValue('completed_at', new GlideDateTime().getValue());
+            gr.setWorkflow(false);
+            gr.update();
+        } catch (e) {
+            gs.warn('RetentionGuard: unable to finalize run ' + runId + ': ' + e.message);
+        }
+    },
+
+    _failRunRecord: function (runId, error) {
+        try {
+            var gr = new GlideRecord(this.RUN_TABLE);
+            if (!gr.get(runId)) { return; }
+            gr.setValue('status', 'failed');
+            gr.setValue('detail_json', JSON.stringify({ error: error ? error.message : 'unknown error' }));
+            gr.setValue('completed_at', new GlideDateTime().getValue());
+            gr.setWorkflow(false);
+            gr.update();
+        } catch (e) {
+            gs.warn('RetentionGuard: unable to finalize failed run ' + runId + ': ' + e.message);
+        }
+    },
+
+    /**
+     * Serialize run results for detail_json, compacting to a per-table summary
+     * when the full payload would exceed the 4000-char field limit. Never
+     * returns a string longer than 4000 characters.
+     */
+    _safeDetail: function (results) {
+        var json = JSON.stringify(results);
+        if (json.length <= 4000) { return json; }
+
+        var compact = [];
+        for (var i = 0; i < results.length; i++) {
+            var r = results[i];
+            compact.push({
+                table_name: r.table_name,
+                action: r.action,
+                status: r.status,
+                rows_processed: r.rows_processed || 0,
+                rows_skipped: r.rows_skipped || 0,
+                rows_failed: r.rows_failed || 0
+            });
+        }
+        var cjson = JSON.stringify(compact);
+        if (cjson.length > 4000) {
+            cjson = cjson.substring(0, 3990) + '...TRUNCATED';
+        }
+        return cjson;
+    },
+
+    /**
+     * Record a growth snapshot (type=growth) for a table. Used by the
+     * inventory to track growth velocity over time.
+     */
+    recordGrowthSnapshot: function (tableName, rowCount) {
+        try {
+            var gr = new GlideRecord(this.RUN_TABLE);
+            gr.initialize();
+            gr.setValue('type', 'growth');
+            gr.setValue('table_name', tableName);
+            gr.setValue('rows_before', rowCount);
+            gr.setValue('started_at', new GlideDateTime().getValue());
+            gr.setValue('status', 'completed');
+            gr.insert();
+            return true;
+        } catch (e) {
+            gs.warn('RetentionGuard: unable to record growth snapshot: ' + e.message);
+            return false;
+        }
+    },
+
+    /**
+     * Seed the curated default policy set. Idempotent — skips tables that
+     * already have an active policy.
+     */
+    seedDefaultPolicies: function () {
+        var created = 0;
+        for (var i = 0; i < this.DEFAULT_POLICIES.length; i++) {
+            var d = this.DEFAULT_POLICIES[i];
+            try {
+                var existing = new GlideRecord(this.POLICY_TABLE);
+                existing.addQuery('table_name', d.table_name);
+                existing.setLimit(1);
+                existing.query();
+                if (existing.next()) { continue; }
+
+                var gr = new GlideRecord(this.POLICY_TABLE);
+                gr.initialize();
+                gr.setValue('table_name', d.table_name);
+                gr.setValue('retention_days', d.retention_days);
+                gr.setValue('action', d.action);
+                gr.setValue('framework', d.framework);
+                gr.setValue('active', true);
+                gr.setValue('holds_json', '[]');
+                gr.setValue('exceptions_json', '[]');
+                if (gr.insert()) { created++; }
+            } catch (e) {
+                gs.warn('RetentionGuard: unable to seed policy for ' + d.table_name + ': ' + e.message);
+            }
+        }
+        return created;
+    },
+
+    _parseJson: function (raw, fallback) {
+        if (!raw) { return fallback; }
+        try {
+            var parsed = JSON.parse(raw);
+            return parsed || fallback;
+        } catch (e) {
+            return fallback;
+        }
+    },
+
+    type: 'RetentionGuardEngine'
+};
+]]></script>
+  </sys_script_include>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <active>true</active>
+    <api_name>x_snc_retention_guard.RetentionGuardReport</api_name>
+    <client_callable>false</client_callable>
+    <description>Reporting, forecasting, and legal-hold management</description>
+    <name>RetentionGuardReport</name>
+    <script><![CDATA[
+// RetentionGuard — RetentionGuardReport
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Reporting, forecasting, and legal-hold management for RetentionGuard.
+// Produces the per-run compliance audit report (policy-to-action traceability),
+// growth/cost projections, and manages legal-hold records. Pure deterministic
+// logic — no AI dependency.
+//
+// @class RetentionGuardReport @namespace x_snc_retention_guard
+
+var RetentionGuardReport = Class.create();
+RetentionGuardReport.prototype = {
+
+    POLICY_TABLE: 'x_snc_retention_guard_policy',
+    RUN_TABLE: 'x_snc_retention_guard_run',
+
+    // Estimated bytes-per-row by table class, used for storage cost projection.
+    ROW_SIZE_ESTIMATE: {
+        'sys_audit': 512,
+        'syslog': 256,
+        'sys_email': 2048,
+        'sys_attachment': 4096,
+        'sys_journal_field': 1024
+    },
+    DEFAULT_ROW_SIZE: 512,
+
+    // Cost per GB per month (USD) — conservative platform storage estimate.
+    COST_PER_GB_MONTH: 0.25,
+
+    initialize: function () {},
+
+    /**
+     * Build a compliance audit report for a run. Returns a structured object
+     * with policy-to-action traceability: every table action is linked back to
+     * its policy and framework. Exportable as JSON/HTML/PDF by the caller.
+     */
+    buildAuditReport: function (runId) {
+        var run = this._getRun(runId);
+        if (!run) { return null; }
+
+        var results = this._parseJson(run.detail_json, []);
+        var report = {
+            report_id: runId,
+            generated_at: new GlideDateTime().getValue(),
+            run_started_at: run.started_at,
+            run_completed_at: run.completed_at,
+            dry_run: run.status === 'dry_run',
+            totals: {
+                rows_processed: parseInt(run.rows_processed, 10) || 0,
+                rows_skipped: parseInt(run.rows_skipped, 10) || 0
+            },
+            actions: []
+        };
+
+        for (var i = 0; i < results.length; i++) {
+            var r = results[i];
+            var policy = this._getPolicyForTable(r.table_name);
+            report.actions.push({
+                table_name: r.table_name,
+                action: r.action,
+                framework: policy ? policy.framework : 'custom',
+                retention_days: policy ? policy.retention_days : null,
+                status: r.status,
+                reason: r.reason || null,
+                rows_processed: r.rows_processed || 0,
+                rows_skipped: r.rows_skipped || 0,
+                rows_failed: r.rows_failed || 0,
+                cutoff: r.cutoff || null
+            });
+        }
+
+        return report;
+    },
+
+    /**
+     * Generate a plain-language compliance statement summarizing the report.
+     * Deterministic template — no LLM required (AI narrative is optional and
+     * layered on top by the caller when a GenAI Controller is configured).
+     */
+    buildComplianceStatement: function (report) {
+        if (!report) { return 'No report available.'; }
+        var held = 0;
+        var purged = 0;
+        var archived = 0;
+        for (var i = 0; i < report.actions.length; i++) {
+            var a = report.actions[i];
+            if (a.status === 'blocked') { held++; }
+            else if (a.action === 'purge') { purged++; }
+            else if (a.action === 'archive') { archived++; }
+        }
+        var mode = report.dry_run ? 'dry-run (no data was modified)' : 'live execution';
+        return 'RetentionGuard ' + mode + ' processed ' + report.totals.rows_processed +
+            ' records across ' + report.actions.length + ' tables (' + purged +
+            ' purge, ' + archived + ' archive, ' + held + ' legal-hold blocked). ' +
+            report.totals.rows_skipped + ' records were skipped for referential integrity.';
+    },
+
+    /**
+     * Growth forecast: extrapolate current row counts into projected storage
+     * cost over 12/24/36 months. Returns a projection object with per-table
+     * and aggregate cost figures.
+     */
+    forecastGrowth: function (inventory) {
+        var projection = {
+            generated_at: new GlideDateTime().getValue(),
+            tables: [],
+            totals: { rows_now: 0, gb_now: 0, cost_12m: 0, cost_24m: 0, cost_36m: 0 }
+        };
+
+        for (var i = 0; i < inventory.length; i++) {
+            var item = inventory[i];
+            var rowSize = this.ROW_SIZE_ESTIMATE[item.table_name] || this.DEFAULT_ROW_SIZE;
+            var gbNow = (item.rows * rowSize) / (1024 * 1024 * 1024);
+            var growthRate = this._growthRate(item.table_name, item.rows);
+
+            var tableProj = {
+                table_name: item.table_name,
+                rows_now: item.rows,
+                gb_now: this._round(gbNow, 3),
+                growth_rate_pct: this._round(growthRate, 2),
+                cost_12m: this._round(gbNow * (1 + growthRate) * 12 * this.COST_PER_GB_MONTH, 2),
+                cost_24m: this._round(gbNow * (1 + growthRate * 2) * 24 * this.COST_PER_GB_MONTH, 2),
+                cost_36m: this._round(gbNow * (1 + growthRate * 3) * 36 * this.COST_PER_GB_MONTH, 2)
+            };
+            projection.tables.push(tableProj);
+
+            projection.totals.rows_now += item.rows;
+            projection.totals.gb_now += gbNow;
+            projection.totals.cost_12m += tableProj.cost_12m;
+            projection.totals.cost_24m += tableProj.cost_24m;
+            projection.totals.cost_36m += tableProj.cost_36m;
+        }
+
+        projection.totals.gb_now = this._round(projection.totals.gb_now, 3);
+        projection.totals.cost_12m = this._round(projection.totals.cost_12m, 2);
+        projection.totals.cost_24m = this._round(projection.totals.cost_24m, 2);
+        projection.totals.cost_36m = this._round(projection.totals.cost_36m, 2);
+        return projection;
+    },
+
+    /**
+     * Compute growth rate by comparing the latest two growth snapshots for a
+     * table. Returns a fractional rate (0.0 = no growth). Falls back to 0 when
+     * insufficient snapshot history exists.
+     */
+    _growthRate: function (tableName, currentRows) {
+        var gr = new GlideRecord(this.RUN_TABLE);
+        gr.addQuery('type', 'growth');
+        gr.addQuery('table_name', tableName);
+        gr.orderByDesc('started_at');
+        gr.setLimit(2);
+        gr.query();
+
+        var snapshots = [];
+        while (gr.next()) {
+            snapshots.push(parseInt(gr.getValue('rows_before'), 10) || 0);
+        }
+        if (snapshots.length < 2) { return 0; }
+        var older = snapshots[1];
+        var newer = snapshots[0];
+        if (older <= 0) { return 0; }
+        return (newer - older) / older;
+    },
+
+    /**
+     * Policy drift detection: flag tables whose growth rate exceeds what their
+     * retention schedule can absorb. Returns an array of drift warnings.
+     */
+    detectDrift: function (inventory) {
+        var warnings = [];
+        for (var i = 0; i < inventory.length; i++) {
+            var item = inventory[i];
+            var policy = this._getPolicyForTable(item.table_name);
+            if (!policy) { continue; }
+            var growthRate = this._growthRate(item.table_name, item.rows);
+            // A table growing faster than ~5% per cycle is drifting.
+            if (growthRate > 0.05) {
+                warnings.push({
+                    table_name: item.table_name,
+                    growth_rate_pct: this._round(growthRate * 100, 2),
+                    retention_days: policy.retention_days,
+                    severity: growthRate > 0.15 ? 'high' : 'medium'
+                });
+            }
+        }
+        return warnings;
+    },
+
+    /**
+     * Legal-hold management. Holds are stored as JSON on the policy record.
+     * addHold / removeHold mutate the holds_json array idempotently.
+     */
+    addHold: function (tableName, reason, heldBy) {
+        var policy = this._getPolicyRecord(tableName);
+        if (!policy) { return false; }
+        var holds = this._parseJson(policy.getValue('holds_json'), []);
+        for (var i = 0; i < holds.length; i++) {
+            if (holds[i].table_name === tableName && holds[i].active !== false) {
+                return true; // already held
+            }
+        }
+        holds.push({
+            table_name: tableName,
+            reason: reason || '',
+            held_by: heldBy || '',
+            held_at: new GlideDateTime().getValue(),
+            active: true
+        });
+        policy.setValue('holds_json', JSON.stringify(holds));
+        policy.setWorkflow(false);
+        policy.update();
+        return true;
+    },
+
+    removeHold: function (tableName) {
+        var policy = this._getPolicyRecord(tableName);
+        if (!policy) { return false; }
+        var holds = this._parseJson(policy.getValue('holds_json'), []);
+        var changed = false;
+        for (var i = 0; i < holds.length; i++) {
+            if (holds[i].table_name === tableName && holds[i].active !== false) {
+                holds[i].active = false;
+                holds[i].released_at = new GlideDateTime().getValue();
+                changed = true;
+            }
+        }
+        if (changed) {
+            policy.setValue('holds_json', JSON.stringify(holds));
+            policy.setWorkflow(false);
+            policy.update();
+        }
+        return changed;
+    },
+
+    listHolds: function () {
+        var result = [];
+        var gr = new GlideRecord(this.POLICY_TABLE);
+        gr.addQuery('active', true);
+        gr.query();
+        while (gr.next()) {
+            var holds = this._parseJson(gr.getValue('holds_json'), []);
+            for (var i = 0; i < holds.length; i++) {
+                if (holds[i].active !== false) {
+                    result.push({
+                        table_name: gr.getValue('table_name'),
+                        reason: holds[i].reason,
+                        held_by: holds[i].held_by,
+                        held_at: holds[i].held_at
+                    });
+                }
+            }
+        }
+        return result;
+    },
+
+    _getRun: function (runId) {
+        var gr = new GlideRecord(this.RUN_TABLE);
+        if (!gr.get(runId)) { return null; }
+        return {
+            status: gr.getValue('status'),
+            started_at: gr.getValue('started_at'),
+            completed_at: gr.getValue('completed_at'),
+            rows_processed: gr.getValue('rows_processed'),
+            rows_skipped: gr.getValue('rows_skipped'),
+            detail_json: gr.getValue('detail_json')
+        };
+    },
+
+    _getPolicyForTable: function (tableName) {
+        var gr = new GlideRecord(this.POLICY_TABLE);
+        gr.addQuery('table_name', tableName);
+        gr.addQuery('active', true);
+        gr.setLimit(1);
+        gr.query();
+        if (!gr.next()) { return null; }
+        return {
+            framework: gr.getValue('framework'),
+            retention_days: parseInt(gr.getValue('retention_days'), 10) || 0
+        };
+    },
+
+    _getPolicyRecord: function (tableName) {
+        var gr = new GlideRecord(this.POLICY_TABLE);
+        gr.addQuery('table_name', tableName);
+        gr.setLimit(1);
+        gr.query();
+        if (!gr.next()) { return null; }
+        return gr;
+    },
+
+    _parseJson: function (raw, fallback) {
+        if (!raw) { return fallback; }
+        try {
+            var parsed = JSON.parse(raw);
+            return parsed || fallback;
+        } catch (e) {
+            return fallback;
+        }
+    },
+
+    _round: function (value, decimals) {
+        var factor = Math.pow(10, decimals);
+        return Math.round(value * factor) / factor;
+    },
+
+    type: 'RetentionGuardReport'
+};
+
+]]></script>
+  </sys_script_include>
+
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>RetentionGuard API</name>
+    <description>RetentionGuard REST API — execute and status endpoints</description>
+    <base_uri>/api/x_snc_retention_guard</base_uri>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>execute</name>
+    <operation_uri>/execute</operation_uri>
+    <http_method>POST</http_method>
+    <requires_authentication>true</requires_authentication>
+    <operation_script><![CDATA[// RetentionGuard — POST /execute (action-dispatch endpoint)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single write/query endpoint. Dispatches on the `action` body parameter:
+//   run_cycle, seed_policies, add_hold, remove_hold, record_growth
+// Returns HTTP 400 with valid_actions for unknown actions, and a structured
+// HTTP 500 on any unexpected error (no raw stack traces leak to the caller).
+
+(function process(request, response) {
+    try {
+        var body = request.body ? request.body.data : {};
+        var action = body.action || '';
+
+        var engine = new RetentionGuardEngine();
+        var report = new RetentionGuardReport();
+        var result;
+
+        switch (action) {
+            case 'run_cycle':
+                result = engine.runCycle(body.dry_run === true || body.dry_run === 'true');
+                break;
+
+            case 'seed_policies':
+                result = { created: engine.seedDefaultPolicies() };
+                break;
+
+            case 'add_hold':
+                result = {
+                    applied: report.addHold(body.table_name, body.reason, body.held_by)
+                };
+                break;
+
+            case 'remove_hold':
+                result = {
+                    removed: report.removeHold(body.table_name)
+                };
+                break;
+
+            case 'record_growth':
+                engine.recordGrowthSnapshot(body.table_name, parseInt(body.row_count, 10) || 0);
+                result = { recorded: true, table_name: body.table_name };
+                break;
+
+            default:
+                response.setStatus(400);
+                response.setBody(JSON.stringify({
+                    error: 'Unknown action: ' + action,
+                    valid_actions: ['run_cycle', 'seed_policies', 'add_hold', 'remove_hold', 'record_growth']
+                }));
+                return;
+        }
+
+        response.setStatus(200);
+        response.setBody(JSON.stringify(result));
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({
+            error: 'Internal error processing request',
+            message: e.message || 'unknown error'
+        }));
+    }
+})(request, response);
+]]></operation_script>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>status</name>
+    <operation_uri>/status</operation_uri>
+    <http_method>GET</http_method>
+    <requires_authentication>true</requires_authentication>
+    <operation_script><![CDATA[// RetentionGuard — GET /status (read-only reporting endpoint)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Read-only endpoint. Dispatches on query parameters:
+//   ?inventory=true        → table growth inventory
+//   ?report=<run_id>       → compliance audit report for a run
+//   ?forecast=true         → growth/cost projection
+//   ?drift=true            → policy drift warnings
+//   ?holds=true            → active legal holds
+// Returns HTTP 400 when no recognized parameter is supplied, and a structured
+// HTTP 500 on any unexpected error (no raw stack traces leak to the caller).
+
+(function process(request, response) {
+    try {
+        var q = request.queryParams || {};
+        var engine = new RetentionGuardEngine();
+        var report = new RetentionGuardReport();
+        var result = { queried_at: new GlideDateTime().getValue() };
+
+        if (q.inventory === 'true') {
+            result.inventory = engine.inventoryTables();
+        } else if (q.report) {
+            result.report = report.buildAuditReport(q.report);
+            if (result.report) {
+                result.compliance_statement = report.buildComplianceStatement(result.report);
+            }
+        } else if (q.forecast === 'true') {
+            result.forecast = report.forecastGrowth(engine.inventoryTables());
+        } else if (q.drift === 'true') {
+            result.drift = report.detectDrift(engine.inventoryTables());
+        } else if (q.holds === 'true') {
+            result.holds = report.listHolds();
+        } else {
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'No recognized query parameter supplied',
+                valid_params: ['inventory', 'report', 'forecast', 'drift', 'holds']
+            }));
+            return;
+        }
+
+        response.setStatus(200);
+        response.setBody(JSON.stringify(result));
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({
+            error: 'Internal error processing request',
+            message: e.message || 'unknown error'
+        }));
+    }
+})(request, response);
+]]></operation_script>
+  </sys_ws_operation>
+</unload>

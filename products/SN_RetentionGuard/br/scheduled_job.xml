@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RetentionGuard — Scheduled job: daily retention cycle (dry-run)
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0 -->
+<unload unload_date="2026-08-26 00:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Runs the RetentionGuard retention cycle in dry-run mode daily. Produces a preview of eligible records without modifying data. Switch to live execution via the REST endpoint or UI action.</description>
+    <name>RetentionGuard Daily Dry-Run</name>
+    <run_dayofweek>all</run_dayofweek>
+    <run_period>daily</run_period>
+    <run_start>2026-08-26 02:00:00</run_start>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// RetentionGuard — scheduled daily dry-run cycle
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function runRetentionGuardDailyDryRun() {
+    try {
+        var engine = new RetentionGuardEngine();
+        var result = engine.runCycle(true);
+        gs.info('RetentionGuard daily dry-run complete: run_id=' + result.run_id +
+            ', tables=' + result.results.length);
+    } catch (e) {
+        gs.error('RetentionGuard daily dry-run failed: ' + e.message);
+    }
+})();
+]]></script>
+  </sysauto_script>
+</unload>
