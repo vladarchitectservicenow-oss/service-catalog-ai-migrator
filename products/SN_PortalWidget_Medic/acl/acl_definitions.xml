@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-27" unload_user="admin">
+  <!-- PortalWidget Medic — ACL definitions -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin -->
+  <!-- SPDX-License-Identifier: AGPL-3.0 -->
+
+  <!-- ===== x_sn_pwm_finding table ACLs ===== -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_finding</name>
+    <operation>read</operation>
+    <type>record</type>
+    <description>Read access to PortalWidget Medic findings</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin') || gs.hasRole('x_sn_pwm_user');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_finding</name>
+    <operation>write</operation>
+    <type>record</type>
+    <description>Write access to PortalWidget Medic findings</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_finding</name>
+    <operation>create</operation>
+    <type>record</type>
+    <description>Create access to PortalWidget Medic findings</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_finding</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <description>Delete access to PortalWidget Medic findings</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <!-- ===== x_sn_pwm_health table ACLs ===== -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_health</name>
+    <operation>read</operation>
+    <type>record</type>
+    <description>Read access to PortalWidget Medic health records</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin') || gs.hasRole('x_sn_pwm_user');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_health</name>
+    <operation>write</operation>
+    <type>record</type>
+    <description>Write access to PortalWidget Medic health records</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_health</name>
+    <operation>create</operation>
+    <type>record</type>
+    <description>Create access to PortalWidget Medic health records</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_health</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <description>Delete access to PortalWidget Medic health records</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <!-- ===== REST endpoint ACLs ===== -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>PortalWidget Medic Execute API</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <description>Execute access to PortalWidget Medic execute API</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>PortalWidget Medic Query API</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <description>Execute access to PortalWidget Medic query API</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin') || gs.hasRole('x_sn_pwm_user');</script>
+  </sys_security_acl>
+</unload>

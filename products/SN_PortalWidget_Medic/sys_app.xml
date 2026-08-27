@@ -1,0 +1,1566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-27" unload_user="admin">
+  <!-- PortalWidget Medic — Service Portal / Employee Center Widget Health Auditor -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin -->
+  <!-- SPDX-License-Identifier: AGPL-3.0 -->
+
+  <!-- ===== SCOPE DEFINITION ===== -->
+  <sys_app action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <enforce_acl>true</enforce_acl>
+    <name>PortalWidget Medic</name>
+    <scope>x_sn_portal_widget_medic</scope>
+    <short_description>Audits the Service Portal / Employee Center widget estate for reference-integrity breakage, deprecated-API usage, orphans, duplicates, and ACL exposure</short_description>
+    <version>1.0.0</version>
+    <vendor>Vladimir Kapustin</vendor>
+    <vendor_prefix>x_sn_pwm</vendor_prefix>
+    <runtime_access_tracking>tracking</runtime_access_tracking>
+    <restrict_table_choices>false</restrict_table_choices>
+    <is_restricted>false</is_restricted>
+  </sys_app>
+
+  <!-- ===== ROLES ===== -->
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_admin</name>
+    <description>Full CRUD on PortalWidget Medic tables, execute REST API, configure scheduled job</description>
+    <elevated_privilege>true</elevated_privilege>
+    <assignable_by>admin</assignable_by>
+    <suffix>pwm_admin</suffix>
+  </sys_user_role>
+
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_user</name>
+    <description>Read on PortalWidget Medic tables, execute query REST API</description>
+    <elevated_privilege>false</elevated_privilege>
+    <assignable_by>admin</assignable_by>
+    <suffix>pwm_user</suffix>
+  </sys_user_role>
+
+  <!-- ===== CROSS-SCOPE PRIVILEGES (read-only over sp_* estate) ===== -->
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_sn_portal_widget_medic</source_scope>
+    <target_name>sp_widget</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_sn_portal_widget_medic</source_scope>
+    <target_name>sp_page</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_sn_portal_widget_medic</source_scope>
+    <target_name>sp_portal</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_sn_portal_widget_medic</source_scope>
+    <target_name>sp_instance</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <source_scope>x_sn_portal_widget_medic</source_scope>
+    <target_name>sys_script_include</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <status>allowed</status>
+  </sys_scope_privilege>
+
+  <!-- ===== SCRIPT INCLUDES ===== -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_sn_pwm.PwmEngine</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Deterministic scan engine: reference integrity, deprecated-API matching, orphan/duplicate detection, ACL scoring, composite breach-risk score</description>
+    <name>PwmEngine</name>
+    <script><![CDATA[// PortalWidget Medic — PwmEngine
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Deterministic scan engine for the Service Portal / Employee Center widget
+// estate. Walks sp_widget and runs the full detector pipeline: reference
+// integrity, version-aware deprecated-API matching, orphan/duplicate detection,
+// and ACL exposure scoring — then folds everything into a composite 0-100
+// breach-risk score per widget. All writes go to the scoped result tables
+// (x_sn_pwm_finding, x_sn_pwm_health); the sp_* estate is read-only.
+
+var PwmEngine = Class.create();
+PwmEngine.prototype = {
+    initialize: function() {
+        this.BATCH_SIZE = 200;
+        this.FINDING_TABLE = 'x_sn_pwm_finding';
+        this.HEALTH_TABLE = 'x_sn_pwm_health';
+        this._catalog = null; // lazy-loaded deprecated-API catalog
+    },
+
+    /**
+     * Scan every widget in the estate and upsert findings + health records.
+     * @param {boolean} incremental - if true, only scan widgets changed since the last run
+     * @returns {object} {scanned, findings, critical, orphaned, duplicates, acl_exposed}
+     */
+    scanAllWidgets: function(incremental) {
+        var stats = {
+            scanned: 0, findings: 0, critical: 0,
+            orphaned: 0, duplicates: 0, acl_exposed: 0
+        };
+        var scanId = this._beginScan();
+
+        var offset = 0;
+        while (true) {
+            var gr = new GlideRecord('sp_widget');
+            gr.addQuery('active', true);
+            if (incremental) {
+                var since = new GlideDateTime();
+                since.addDaysUTC(-1);
+                gr.addQuery('sys_updated_on', '>=', since.toString());
+            }
+            gr.chooseWindow(offset, offset + this.BATCH_SIZE);
+            gr.query();
+
+            var batchCount = 0;
+            while (gr.next()) {
+                batchCount++;
+                try {
+                    var result = this.scanWidget(gr.getUniqueValue(), scanId);
+                    stats.scanned++;
+                    stats.findings += result.total_findings;
+                    stats.critical += result.critical_findings;
+                    if (result.orphaned) { stats.orphaned++; }
+                    if (result.duplicate) { stats.duplicates++; }
+                    if (result.acl_exposed) { stats.acl_exposed++; }
+                } catch (e) {
+                    gs.error('PwmEngine.scanAllWidgets: failed for widget ' +
+                             gr.getValue('name') + ': ' + e);
+                }
+            }
+
+            if (batchCount < this.BATCH_SIZE) { break; }
+            offset += this.BATCH_SIZE;
+        }
+
+        this._endScan(scanId, stats);
+        return stats;
+    },
+
+    /**
+     * Scan a single widget and persist its findings + health record.
+     * @param {string} widgetId - sys_id of the sp_widget
+     * @param {string} scanId - sys_id of the current scan run
+     * @returns {object} per-widget result summary
+     */
+    scanWidget: function(widgetId, scanId) {
+        var wgr = new GlideRecord('sp_widget');
+        if (!wgr.get(widgetId)) {
+            return { total_findings: 0, critical_findings: 0, orphaned: false, duplicate: false, acl_exposed: false };
+        }
+
+        var name = wgr.getValue('name') || '';
+        var scope = wgr.getValue('sys_scope') || '';
+        var clientScript = wgr.getValue('client_script') || '';
+        var serverScript = wgr.getValue('script') || '';
+        var isPublic = wgr.getValue('public') === 'true' || wgr.getValue('public') === true;
+
+        var findings = [];
+        var aclExposed = false;
+
+        // 1. Reference integrity
+        findings = findings.concat(this._checkReferenceIntegrity(widgetId, name, clientScript, serverScript));
+
+        // 2. Deprecated API (version-aware)
+        findings = findings.concat(this._checkDeprecatedApis(widgetId, name, clientScript, serverScript));
+
+        // 3. Orphan detection
+        var orphaned = this._isOrphan(widgetId);
+        if (orphaned) {
+            findings.push(this._makeFinding(widgetId, name, 'orphan', 'warning', 'high',
+                'Widget is not referenced by any page or portal instance', 'Retire or re-attach to a page'));
+        }
+
+        // 4. Duplicate detection
+        var duplicate = this._isDuplicate(name, scope, widgetId);
+        if (duplicate) {
+            findings.push(this._makeFinding(widgetId, name, 'duplicate', 'warning', 'high',
+                'Near-duplicate widget name exists in another scope', 'Consolidate into a single canonical widget'));
+        }
+
+        // 5. ACL exposure
+        var aclFinding = this._checkAcl(widgetId, name, isPublic);
+        if (aclFinding) {
+            aclExposed = true;
+            findings.push(aclFinding);
+        }
+
+        // Persist findings
+        var criticalCount = 0;
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            if (f.severity === 'critical') { criticalCount++; }
+            this._upsertFinding(f, scanId);
+        }
+
+        // Composite breach-risk score
+        var score = this._scoreWidget(findings, orphaned, duplicate, aclExposed);
+        this._upsertHealth(widgetId, name, scope, score, findings.length, criticalCount,
+            orphaned, duplicate, aclExposed);
+
+        return {
+            total_findings: findings.length,
+            critical_findings: criticalCount,
+            orphaned: orphaned,
+            duplicate: duplicate,
+            acl_exposed: aclExposed
+        };
+    },
+
+    /**
+     * Parse client + server scripts for references to non-existent script
+     * includes and deprecated/removed $sp / spUtil / GlideSPScriptable methods.
+     * @returns {Array} finding objects
+     */
+    _checkReferenceIntegrity: function(widgetId, name, clientScript, serverScript) {
+        var out = [];
+        var combined = (clientScript || '') + '\n' + (serverScript || '');
+
+        // Detect references to script includes that do not exist in the instance.
+        var siRefs = this._extractScriptIncludeRefs(serverScript);
+        for (var i = 0; i < siRefs.length; i++) {
+            var siName = siRefs[i];
+            if (!this._scriptIncludeExists(siName)) {
+                out.push(this._makeFinding(widgetId, name, 'ref_integrity', 'critical', 'high',
+                    'Server script references non-existent script include "' + siName + '"',
+                    'Create the script include or remove the reference'));
+            }
+        }
+
+        // Detect removed server-side methods on GlideSPScriptable / spUtil.
+        var removedMethods = [
+            { re: /spUtil\.get\(/g, label: 'spUtil.get()', fix: 'Use spUtil.getWidget() or a direct GlideRecord query' },
+            { re: /\$sp\.getParameter\(/g, label: '$sp.getParameter()', fix: 'Move $sp.getParameter() to the client controller, or use c.data passed from the server script' }
+        ];
+        for (var m = 0; m < removedMethods.length; m++) {
+            var entry = removedMethods[m];
+            entry.re.lastIndex = 0;
+            if (entry.re.test(combined)) {
+                out.push(this._makeFinding(widgetId, name, 'ref_integrity', 'critical', 'high',
+                    'Widget uses removed/deprecated method ' + entry.label, entry.fix));
+            }
+        }
+
+        return out;
+    },
+
+    /**
+     * Match client + server scripts against the version-aware deprecated-API
+     * catalog (stored as records of type 'deprecated_api' in the finding table).
+     * @returns {Array} finding objects
+     */
+    _checkDeprecatedApis: function(widgetId, name, clientScript, serverScript) {
+        var out = [];
+        var combined = (clientScript || '') + '\n' + (serverScript || '');
+        var catalog = this._getCatalog();
+
+        for (var i = 0; i < catalog.length; i++) {
+            var entry = catalog[i];
+            var re = null;
+            try {
+                re = new RegExp(entry.pattern, 'g');
+            } catch (e) {
+                continue; // skip malformed catalog patterns
+            }
+            if (re.test(combined)) {
+                out.push(this._makeFinding(widgetId, name, 'deprecated_api', 'warning', 'high',
+                    'Widget uses deprecated API "' + entry.api_name + '" (deprecated in ' +
+                    entry.release + '): ' + entry.replacement,
+                    'Replace with ' + entry.replacement + ' before the ' + entry.release + ' upgrade'));
+            }
+        }
+
+        return out;
+    },
+
+    /**
+     * A widget is orphaned if no sp_instance references it.
+     * @returns {boolean}
+     */
+    _isOrphan: function(widgetId) {
+        var gr = new GlideRecord('sp_instance');
+        gr.addQuery('widget', widgetId);
+        gr.setLimit(1);
+        gr.query();
+        return !gr.hasNext();
+    },
+
+    /**
+     * A widget is a near-duplicate if another active widget shares its name in
+     * a different scope.
+     * @returns {boolean}
+     */
+    _isDuplicate: function(name, scope, widgetId) {
+        if (!name) { return false; }
+        var gr = new GlideRecord('sp_widget');
+        gr.addQuery('name', name);
+        gr.addQuery('sys_id', '!=', widgetId);
+        gr.addQuery('active', true);
+        if (scope) { gr.addQuery('sys_scope', '!=', scope); }
+        gr.setLimit(1);
+        gr.query();
+        return gr.hasNext();
+    },
+
+    /**
+     * Flag widgets with no ACL or public (*) role access.
+     * @returns {object|null} finding object, or null if the widget is properly scoped
+     */
+    _checkAcl: function(widgetId, name, isPublic) {
+        if (isPublic) {
+            return this._makeFinding(widgetId, name, 'acl', 'critical', 'high',
+                'Widget is public (no role restriction) — accessible to unauthenticated users',
+                'Set the widget "public" flag to false and assign a least-privilege role');
+        }
+        return null;
+    },
+
+    /**
+     * Composite 0-100 breach-risk score. Higher = worse.
+     * Weights: reference integrity 35, deprecated API 25, ACL 25, orphan/duplicate 15.
+     * @returns {number} 0-100
+     */
+    _scoreWidget: function(findings, orphaned, duplicate, aclExposed) {
+        var score = 0;
+        var hasRef = false, hasDep = false, hasAcl = false;
+        for (var i = 0; i < findings.length; i++) {
+            var t = findings[i].finding_type;
+            if (t === 'ref_integrity') { hasRef = true; }
+            if (t === 'deprecated_api') { hasDep = true; }
+            if (t === 'acl') { hasAcl = true; }
+        }
+        if (hasRef) { score += 35; }
+        if (hasDep) { score += 25; }
+        if (hasAcl) { score += 25; }
+        if (orphaned) { score += 10; }
+        if (duplicate) { score += 5; }
+        if (score > 100) { score = 100; }
+        return score;
+    },
+
+    /**
+     * Build a finding object (not yet persisted).
+     */
+    _makeFinding: function(widgetId, name, type, severity, confidence, detail, remediation) {
+        return {
+            widget_id: widgetId,
+            widget_name: name,
+            finding_type: type,
+            severity: severity,
+            confidence: confidence,
+            detail: detail,
+            remediation: remediation
+        };
+    },
+
+    /**
+     * Upsert a finding record (dedupe by widget + type + detail signature).
+     */
+    _upsertFinding: function(f, scanId) {
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.addQuery('record_type', 'finding');
+        gr.addQuery('widget_id', f.widget_id);
+        gr.addQuery('finding_type', f.finding_type);
+        gr.addQuery('detail', f.detail);
+        gr.setLimit(1);
+        gr.query();
+
+        if (gr.next()) {
+            gr.setValue('last_seen', new GlideDateTime().toString());
+            gr.setValue('scan_id', scanId);
+            gr.setValue('resolved', false);
+            try { gr.update(); } catch (e) { gs.error('PwmEngine._upsertFinding update: ' + e); }
+            return;
+        }
+
+        gr.initialize();
+        gr.setValue('record_type', 'finding');
+        gr.setValue('widget_id', f.widget_id);
+        gr.setValue('widget_name', f.widget_name);
+        gr.setValue('finding_type', f.finding_type);
+        gr.setValue('severity', f.severity);
+        gr.setValue('confidence', f.confidence);
+        gr.setValue('detail', f.detail);
+        gr.setValue('remediation', f.remediation);
+        gr.setValue('first_seen', new GlideDateTime().toString());
+        gr.setValue('last_seen', new GlideDateTime().toString());
+        gr.setValue('scan_id', scanId);
+        gr.setValue('resolved', false);
+        try { gr.insert(); } catch (e) { gs.error('PwmEngine._upsertFinding insert: ' + e); }
+    },
+
+    /**
+     * Upsert the per-widget health record.
+     */
+    _upsertHealth: function(widgetId, name, scope, score, totalFindings, criticalFindings,
+                            orphaned, duplicate, aclExposed) {
+        var gr = new GlideRecord(this.HEALTH_TABLE);
+        gr.addQuery('widget_id', widgetId);
+        gr.setLimit(1);
+        gr.query();
+
+        var status = 'healthy';
+        if (score >= 60) { status = 'critical'; }
+        else if (score >= 25) { status = 'at_risk'; }
+
+        if (gr.next()) {
+            gr.setValue('breach_risk_score', score);
+            gr.setValue('total_findings', totalFindings);
+            gr.setValue('critical_findings', criticalFindings);
+            gr.setValue('orphaned', orphaned);
+            gr.setValue('duplicate', duplicate);
+            gr.setValue('acl_exposed', aclExposed);
+            gr.setValue('status', status);
+            gr.setValue('last_scanned', new GlideDateTime().toString());
+            try { gr.update(); } catch (e) { gs.error('PwmEngine._upsertHealth update: ' + e); }
+            return;
+        }
+
+        gr.initialize();
+        gr.setValue('widget_id', widgetId);
+        gr.setValue('widget_name', name);
+        gr.setValue('widget_scope', scope);
+        gr.setValue('breach_risk_score', score);
+        gr.setValue('total_findings', totalFindings);
+        gr.setValue('critical_findings', criticalFindings);
+        gr.setValue('orphaned', orphaned);
+        gr.setValue('duplicate', duplicate);
+        gr.setValue('acl_exposed', aclExposed);
+        gr.setValue('status', status);
+        gr.setValue('last_scanned', new GlideDateTime().toString());
+        try { gr.insert(); } catch (e) { gs.error('PwmEngine._upsertHealth insert: ' + e); }
+    },
+
+    /**
+     * Begin a scan run and return its sys_id (record_type = 'scan').
+     */
+    _beginScan: function() {
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.initialize();
+        gr.setValue('record_type', 'scan');
+        gr.setValue('scanned_at', new GlideDateTime().toString());
+        gr.setValue('status', 'running');
+        var id = gr.insert();
+        if (!id) {
+            gs.error('PwmEngine._beginScan: insert returned no sys_id');
+            throw new Error('PortalWidget Medic: failed to begin scan run');
+        }
+        return id;
+    },
+
+    /**
+     * Mark a scan run complete with summary stats.
+     */
+    _endScan: function(scanId, stats) {
+        if (!scanId) { return; }
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        if (!gr.get(scanId)) { return; }
+        gr.setValue('status', 'complete');
+        gr.setValue('detail_json', JSON.stringify(stats));
+        gr.setValue('scanned_at', new GlideDateTime().toString());
+        try { gr.update(); } catch (e) { gs.error('PwmEngine._endScan: ' + e); }
+    },
+
+    /**
+     * Extract script-include constructor references from server script text.
+     * Matches `new FooBar(...)` where FooBar is a PascalCase identifier.
+     * @returns {Array} script include names
+     */
+    _extractScriptIncludeRefs: function(serverScript) {
+        var out = [];
+        if (!serverScript) { return out; }
+        var GLOBAL_CLASSES = {
+            'GlideRecord': true, 'GlideDateTime': true, 'GlideSystem': true,
+            'GlideSPScriptable': true, 'GlideElement': true, 'GlideAggregate': true,
+            'GlideDuration': true, 'GlideSchedule': true, 'GlideFilter': true,
+            'GlideSession': true, 'GlideUser': true, 'GlideLocale': true,
+            'GlideDate': true, 'GlideTime': true, 'GlideDigest': true,
+            'GlideSecureRandomUtil': true, 'GlideStringUtil': true,
+            'RegExp': true, 'Date': true, 'Array': true, 'Object': true,
+            'String': true, 'Number': true, 'Boolean': true, 'JSON': true,
+            'Math': true, 'Error': true, 'Promise': true, 'Map': true, 'Set': true
+        };
+        var re = /new\s+([A-Z][A-Za-z0-9_]*)\s*\(/g;
+        var m;
+        var seen = {};
+        while ((m = re.exec(serverScript)) !== null) {
+            var name = m[1];
+            if (GLOBAL_CLASSES[name]) { continue; }
+            if (!seen[name]) {
+                seen[name] = true;
+                out.push(name);
+            }
+        }
+        return out;
+    },
+
+    /**
+     * Check whether a script include exists by name.
+     * @returns {boolean}
+     */
+    _scriptIncludeExists: function(name) {
+        var gr = new GlideRecord('sys_script_include');
+        gr.addQuery('name', name);
+        gr.setLimit(1);
+        gr.query();
+        return gr.hasNext();
+    },
+
+    /**
+     * Load the deprecated-API catalog (records of type 'deprecated_api').
+     * Seeds a baseline catalog on first run if empty.
+     * @returns {Array} [{api_name, pattern, release, replacement}]
+     */
+    _getCatalog: function() {
+        if (this._catalog !== null) { return this._catalog; }
+
+        var catalog = this._queryCatalog();
+
+        if (catalog.length === 0) {
+            this._seedCatalog();
+            catalog = this._queryCatalog();
+        }
+
+        this._catalog = catalog;
+        return catalog;
+    },
+
+    _queryCatalog: function() {
+        var catalog = [];
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.addQuery('record_type', 'deprecated_api');
+        gr.query();
+        while (gr.next()) {
+            catalog.push({
+                api_name: gr.getValue('api_name') || '',
+                pattern: gr.getValue('detail') || '',
+                release: gr.getValue('api_release') || '',
+                replacement: gr.getValue('replacement') || ''
+            });
+        }
+        return catalog;
+    },
+
+    /**
+     * Seed the baseline deprecated-API catalog (version-aware).
+     */
+    _seedCatalog: function() {
+        var seed = [
+            { api_name: 'GlideSPScriptable.getPortalRecord()', pattern: 'getPortalRecord\\(', release: 'Utah', replacement: 'sp_portal GlideRecord query' },
+            { api_name: 'AngularJS $scope.$watch', pattern: '\\$scope\\.\\$watch', release: 'San Diego', replacement: 'c.update() / reactive data binding' },
+            { api_name: 'spUtil.recordWatch()', pattern: 'recordWatch\\(', release: 'Vancouver', replacement: 'c.server.update() polling or UI Builder' }
+        ];
+
+        for (var i = 0; i < seed.length; i++) {
+            var s = seed[i];
+            var gr = new GlideRecord(this.FINDING_TABLE);
+            gr.initialize();
+            gr.setValue('record_type', 'deprecated_api');
+            gr.setValue('api_name', s.api_name);
+            gr.setValue('detail', s.pattern);
+            gr.setValue('api_release', s.release);
+            gr.setValue('replacement', s.replacement);
+            try { gr.insert(); } catch (e) { gs.error('PwmEngine._seedCatalog: ' + e); }
+        }
+    },
+
+    type: 'PwmEngine'
+};
+]]></script>
+  </sys_script_include>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_sn_pwm.PwmApi</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <description>Reporting, dependency-graph, and REST-facing facade: scan trigger, findings/health queries, dependency graph, report generation</description>
+    <name>PwmApi</name>
+    <script><![CDATA[// PortalWidget Medic — PwmApi
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Reporting, dependency-graph, and REST-facing facade for PortalWidget Medic.
+// Builds the widget→page→portal dependency graph from sp_instance / sp_page /
+// sp_portal, and renders audit reports (Markdown / JSON / CSV) from the scoped
+// result tables. Exposes the public methods the Scripted REST endpoints call.
+
+var PwmApi = Class.create();
+PwmApi.prototype = {
+    initialize: function() {
+        this.FINDING_TABLE = 'x_sn_pwm_finding';
+        this.HEALTH_TABLE = 'x_sn_pwm_health';
+    },
+
+    /**
+     * Trigger a full (or incremental) scan via the engine.
+     * @param {boolean} incremental
+     * @returns {object} scan stats
+     */
+    runScan: function(incremental) {
+        var engine = new PwmEngine();
+        return engine.scanAllWidgets(incremental === true);
+    },
+
+    /**
+     * Build the widget→page→portal dependency graph.
+     * @returns {object} {nodes: [...], edges: [...]}
+     */
+    buildDependencyGraph: function() {
+        var nodes = {};
+        var edges = [];
+
+        var inst = new GlideRecord('sp_instance');
+        inst.addQuery('widget', '!=', '');
+        inst.query();
+        while (inst.next()) {
+            var widgetId = inst.getValue('widget') + '';
+            var pageId = inst.getValue('sp_page') + '';
+            var portalId = inst.getValue('sp_portal') + '';
+
+            if (widgetId) {
+                nodes['w:' + widgetId] = { id: 'w:' + widgetId, type: 'widget', name: this._widgetName(widgetId) };
+            }
+            if (pageId) {
+                nodes['p:' + pageId] = { id: 'p:' + pageId, type: 'page', name: this._pageName(pageId) };
+            }
+            if (portalId) {
+                nodes['o:' + portalId] = { id: 'o:' + portalId, type: 'portal', name: this._portalName(portalId) };
+            }
+
+            if (widgetId && pageId) {
+                edges.push({ source: 'w:' + widgetId, target: 'p:' + pageId });
+            }
+            if (pageId && portalId) {
+                edges.push({ source: 'p:' + pageId, target: 'o:' + portalId });
+            }
+        }
+
+        var nodeList = [];
+        for (var k in nodes) {
+            if (nodes.hasOwnProperty(k)) { nodeList.push(nodes[k]); }
+        }
+
+        return { nodes: nodeList, edges: edges };
+    },
+
+    /**
+     * Query findings with optional filters.
+     * @param {object} filters - {severity, finding_type, widget_id, limit}
+     * @returns {Array} finding records as plain objects
+     */
+    getFindings: function(filters) {
+        filters = filters || {};
+        var out = [];
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.addQuery('record_type', 'finding');
+        if (filters.severity) { gr.addQuery('severity', filters.severity); }
+        if (filters.finding_type) { gr.addQuery('finding_type', filters.finding_type); }
+        if (filters.widget_id) { gr.addQuery('widget_id', filters.widget_id); }
+        gr.addQuery('resolved', false);
+        gr.setLimit(filters.limit ? parseInt(filters.limit, 10) : 100);
+        gr.query();
+        while (gr.next()) {
+            out.push({
+                sys_id: gr.getUniqueValue(),
+                widget_id: gr.getValue('widget_id'),
+                widget_name: gr.getValue('widget_name'),
+                finding_type: gr.getValue('finding_type'),
+                severity: gr.getValue('severity'),
+                confidence: gr.getValue('confidence'),
+                detail: gr.getValue('detail'),
+                remediation: gr.getValue('remediation'),
+                first_seen: gr.getValue('first_seen'),
+                last_seen: gr.getValue('last_seen')
+            });
+        }
+
+        var SEVERITY_RANK = { critical: 3, warning: 2, info: 1 };
+        out.sort(function(a, b) {
+            return (SEVERITY_RANK[b.severity] || 0) - (SEVERITY_RANK[a.severity] || 0);
+        });
+        return out;
+    },
+
+    /**
+     * Query the health dashboard (top offenders by breach-risk score).
+     * @param {number} limit
+     * @returns {Array} health records as plain objects
+     */
+    getHealth: function(limit) {
+        var out = [];
+        var gr = new GlideRecord(this.HEALTH_TABLE);
+        gr.orderByDesc('breach_risk_score');
+        gr.setLimit(limit ? parseInt(limit, 10) : 50);
+        gr.query();
+        while (gr.next()) {
+            out.push({
+                sys_id: gr.getUniqueValue(),
+                widget_id: gr.getValue('widget_id'),
+                widget_name: gr.getValue('widget_name'),
+                widget_scope: gr.getValue('widget_scope'),
+                breach_risk_score: parseInt(gr.getValue('breach_risk_score') || '0', 10),
+                total_findings: parseInt(gr.getValue('total_findings') || '0', 10),
+                critical_findings: parseInt(gr.getValue('critical_findings') || '0', 10),
+                orphaned: gr.getValue('orphaned') === 'true' || gr.getValue('orphaned') === '1',
+                duplicate: gr.getValue('duplicate') === 'true' || gr.getValue('duplicate') === '1',
+                acl_exposed: gr.getValue('acl_exposed') === 'true' || gr.getValue('acl_exposed') === '1',
+                status: gr.getValue('status'),
+                last_scanned: gr.getValue('last_scanned')
+            });
+        }
+        return out;
+    },
+
+    /**
+     * Return the latest scan-run status (record_type = 'scan').
+     * @returns {object} {has_scan, sys_id, status, scanned_at, stats}
+     */
+    getScanStatus: function() {
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.addQuery('record_type', 'scan');
+        gr.orderByDesc('scanned_at');
+        gr.setLimit(1);
+        gr.query();
+        if (!gr.next()) {
+            return { has_scan: false, status: null, scanned_at: null, stats: null };
+        }
+        var detailJson = gr.getValue('detail_json') || '';
+        var stats = null;
+        try { stats = JSON.parse(detailJson); } catch (e) { stats = null; }
+        return {
+            has_scan: true,
+            sys_id: gr.getUniqueValue(),
+            status: gr.getValue('status'),
+            scanned_at: gr.getValue('scanned_at'),
+            stats: stats
+        };
+    },
+
+    /**
+     * Render an audit report in the requested format.
+     * @param {string} format - 'json' | 'csv' | 'markdown'
+     * @returns {string} report body
+     */
+    generateReport: function(format) {
+        var findings = this.getFindings({});
+        var health = this.getHealth(200);
+
+        if (format === 'json') {
+            return JSON.stringify({ generated: new GlideDateTime().toString(), findings: findings, health: health });
+        }
+        if (format === 'csv') {
+            return this._toCsv(findings);
+        }
+        return this._toMarkdown(findings, health);
+    },
+
+    /**
+     * Convert findings to CSV.
+     */
+    _toCsv: function(findings) {
+        var header = 'widget_id,widget_name,finding_type,severity,confidence,detail,remediation,first_seen,last_seen';
+        var lines = [header];
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            lines.push([
+                this._csvEscape(f.widget_id), this._csvEscape(f.widget_name),
+                this._csvEscape(f.finding_type), this._csvEscape(f.severity),
+                this._csvEscape(f.confidence), this._csvEscape(f.detail),
+                this._csvEscape(f.remediation), this._csvEscape(f.first_seen),
+                this._csvEscape(f.last_seen)
+            ].join(','));
+        }
+        return lines.join('\n');
+    },
+
+    /**
+     * Convert findings + health to a Markdown report.
+     */
+    _toMarkdown: function(findings, health) {
+        var lines = [];
+        lines.push('# PortalWidget Medic — Audit Report');
+        lines.push('');
+        lines.push('Generated: ' + new GlideDateTime().toString());
+        lines.push('');
+        lines.push('## Top Offenders (by breach-risk score)');
+        lines.push('');
+        lines.push('| Widget | Scope | Score | Findings | Critical | Orphaned | Duplicate | ACL Exposed |');
+        lines.push('|---|---|---|---|---|---|---|---|');
+        for (var i = 0; i < health.length; i++) {
+            var h = health[i];
+            lines.push('| ' + h.widget_name + ' | ' + h.widget_scope + ' | ' + h.breach_risk_score +
+                ' | ' + h.total_findings + ' | ' + h.critical_findings +
+                ' | ' + (h.orphaned ? 'yes' : 'no') + ' | ' + (h.duplicate ? 'yes' : 'no') +
+                ' | ' + (h.acl_exposed ? 'yes' : 'no') + ' |');
+        }
+        lines.push('');
+        lines.push('## Findings');
+        lines.push('');
+        for (var j = 0; j < findings.length; j++) {
+            var f = findings[j];
+            lines.push('### ' + f.widget_name + ' — ' + f.finding_type + ' (' + f.severity + ')');
+            lines.push('- **Detail:** ' + f.detail);
+            lines.push('- **Remediation:** ' + f.remediation);
+            lines.push('- **Confidence:** ' + f.confidence);
+            lines.push('');
+        }
+        return lines.join('\n');
+    },
+
+    /**
+     * CSV field escaping.
+     */
+    _csvEscape: function(v) {
+        if (v === null || v === undefined) { return ''; }
+        var s = String(v);
+        if (s.indexOf(',') >= 0 || s.indexOf('"') >= 0 || s.indexOf('\n') >= 0) {
+            return '"' + s.replace(/"/g, '""') + '"';
+        }
+        return s;
+    },
+
+    _widgetName: function(id) {
+        var gr = new GlideRecord('sp_widget');
+        if (gr.get(id)) { return gr.getValue('name') || id; }
+        return id;
+    },
+
+    _pageName: function(id) {
+        var gr = new GlideRecord('sp_page');
+        if (gr.get(id)) { return gr.getValue('title') || id; }
+        return id;
+    },
+
+    _portalName: function(id) {
+        var gr = new GlideRecord('sp_portal');
+        if (gr.get(id)) { return gr.getValue('title') || id; }
+        return id;
+    },
+
+    type: 'PwmApi'
+};
+]]></script>
+  </sys_script_include>
+
+  <!-- ===== REST API: Execute (POST action-dispatch) ===== -->
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>PortalWidget Medic Execute API</name>
+    <id>pwm_execute</id>
+    <active>true</active>
+    <enforce_acl>true</enforce_acl>
+    <relative_path>/api/x_sn_pwm/pwm_execute</relative_path>
+    <short_description>POST action-dispatch: run_scan, report</short_description>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>execute</name>
+    <active>true</active>
+    <operation_uri>/api/x_sn_pwm/pwm_execute</operation_uri>
+    <http_method>POST</http_method>
+    <web_service_definition>pwm_execute</web_service_definition>
+    <operation_script><![CDATA[// PortalWidget Medic — REST: Execute (POST action-dispatch)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single POST endpoint dispatching on the `action` body parameter:
+//   { "action": "run_scan", "incremental": true }  -> trigger a scan
+//   { "action": "report", "format": "json|csv|markdown" } -> render audit report
+// Unknown or missing action returns HTTP 400.
+
+(function process(request, response) {
+    var api = new PwmApi();
+    var body = request.body ? request.body.data : null;
+    var action = body && body.action ? body.action : '';
+
+    try {
+        if (action === 'run_scan') {
+            var incremental = body.incremental === true || body.incremental === 'true';
+            var stats = api.runScan(incremental);
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ ok: true, data: stats }));
+            return;
+        }
+
+        if (action === 'report') {
+            var format = body.format || 'json';
+            if (format !== 'json' && format !== 'csv' && format !== 'markdown') {
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ ok: false, error: { message: 'Unsupported format: ' + format } }));
+                return;
+            }
+            var report = api.generateReport(format);
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ ok: true, format: format, data: report }));
+            return;
+        }
+
+        response.setStatus(400);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Unknown or missing action. Supported: run_scan, report' } }));
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Internal error: ' + e } }));
+    }
+})(request, response);
+]]></operation_script>
+  </sys_ws_operation>
+
+  <!-- ===== REST API: Query (GET query-parameter dispatch) ===== -->
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>PortalWidget Medic Query API</name>
+    <id>pwm_query</id>
+    <active>true</active>
+    <enforce_acl>true</enforce_acl>
+    <relative_path>/api/x_sn_pwm/pwm_query</relative_path>
+    <short_description>GET query-parameter dispatch: findings, health, dependency, scan</short_description>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>query</name>
+    <active>true</active>
+    <operation_uri>/api/x_sn_pwm/pwm_query</operation_uri>
+    <http_method>GET</http_method>
+    <web_service_definition>pwm_query</web_service_definition>
+    <operation_script><![CDATA[// PortalWidget Medic — REST: Query (GET query-parameter dispatch)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single GET endpoint dispatching on the `resource` query parameter:
+//   ?resource=findings&severity=critical&limit=50   -> findings list
+//   ?resource=health&limit=50                        -> health dashboard
+//   ?resource=dependency                             -> dependency graph
+//   ?resource=scan                                   -> latest scan status
+// Unknown or missing resource returns HTTP 400.
+
+(function process(request, response) {
+    var api = new PwmApi();
+    var qp = request.queryParams || {};
+    var resource = qp.resource || '';
+
+    try {
+        if (resource === 'findings') {
+            var findings = api.getFindings({
+                severity: qp.severity,
+                finding_type: qp.finding_type,
+                widget_id: qp.widget_id,
+                limit: qp.limit
+            });
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ ok: true, count: findings.length, data: findings }));
+            return;
+        }
+
+        if (resource === 'health') {
+            var health = api.getHealth(qp.limit);
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ ok: true, count: health.length, data: health }));
+            return;
+        }
+
+        if (resource === 'dependency') {
+            var graph = api.buildDependencyGraph();
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ ok: true, data: graph }));
+            return;
+        }
+
+        if (resource === 'scan') {
+            var scanStatus = api.getScanStatus();
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ ok: true, data: scanStatus }));
+            return;
+        }
+
+        response.setStatus(400);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Unknown or missing resource. Supported: findings, health, dependency, scan' } }));
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({ ok: false, error: { message: 'Internal error: ' + e } }));
+    }
+})(request, response);
+]]></operation_script>
+  </sys_ws_operation>
+
+  <!-- ===== SCHEDULED JOB ===== -->
+
+  <!-- PortalWidget Medic — Scheduled Job: weekly widget health scan -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin -->
+  <!-- SPDX-License-Identifier: AGPL-3.0 -->
+
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>PortalWidget Medic — Weekly Widget Health Scan</name>
+    <active>true</active>
+    <run_type>periodically</run_type>
+    <run_dayofweek>sunday</run_dayofweek>
+    <run_time>03:00:00</run_time>
+    <run_start>2026-08-27 03:00:00</run_start>
+    <condition/>
+    <description>Runs the PortalWidget Medic scan engine weekly (incremental delta scan) and upserts findings + health records.</description>
+    <script><![CDATA[// PortalWidget Medic — Weekly Widget Health Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function() {
+    try {
+        var engine = new PwmEngine();
+        var stats = engine.scanAllWidgets(true);
+        gs.info('PortalWidget Medic weekly scan complete: ' + JSON.stringify(stats));
+    } catch (e) {
+        gs.error('PortalWidget Medic weekly scan failed: ' + e);
+    }
+})();]]></script>
+  </sysauto_script>
+
+
+  <!-- ===== CUSTOM TABLES ===== -->
+
+  <!-- PortalWidget Medic — x_sn_pwm_finding (polymorphic result store) -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin -->
+  <!-- SPDX-License-Identifier: AGPL-3.0 -->
+
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_finding</name>
+    <label>PortalWidget Medic Finding</label>
+    <super_class/>
+    <access_count>0</access_count>
+    <is_extendable>false</is_extendable>
+    <user_role>x_sn_pwm_admin</user_role>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <alter_access>true</alter_access>
+  </sys_db_object>
+
+  <!-- record_type: finding | scan | deprecated_api -->
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>record_type</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>finding</default_value>
+    <mandatory>true</mandatory>
+    <label>Record Type</label>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>record_type</element>
+    <value>finding</value>
+    <label>Finding</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>record_type</element>
+    <value>scan</value>
+    <label>Scan Run</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>record_type</element>
+    <value>deprecated_api</value>
+    <label>Deprecated API Catalog</label>
+    <sequence>3</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>widget_id</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <label>Widget</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>widget_name</element>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <label>Widget Name</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>finding_type</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <label>Finding Type</label>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>finding_type</element>
+    <value>ref_integrity</value>
+    <label>Reference Integrity</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>finding_type</element>
+    <value>deprecated_api</value>
+    <label>Deprecated API</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>finding_type</element>
+    <value>orphan</value>
+    <label>Orphan</label>
+    <sequence>3</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>finding_type</element>
+    <value>duplicate</value>
+    <label>Duplicate</label>
+    <sequence>4</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>finding_type</element>
+    <value>acl</value>
+    <label>ACL Exposure</label>
+    <sequence>5</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>severity</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>warning</default_value>
+    <label>Severity</label>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>severity</element>
+    <value>critical</value>
+    <label>Critical</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>severity</element>
+    <value>warning</value>
+    <label>Warning</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>severity</element>
+    <value>info</value>
+    <label>Info</label>
+    <sequence>3</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>confidence</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>high</default_value>
+    <label>Confidence</label>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>confidence</element>
+    <value>high</value>
+    <label>High</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>confidence</element>
+    <value>medium</value>
+    <label>Medium</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>confidence</element>
+    <value>low</value>
+    <label>Low</label>
+    <sequence>3</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>detail</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>Detail</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>remediation</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>Remediation</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>detail_json</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>Detail JSON</label>
+  </sys_dictionary>
+
+  <!-- deprecated_api catalog fields -->
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>api_name</element>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <label>API Name</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>api_release</element>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <label>Deprecated In Release</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>replacement</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>Replacement</label>
+  </sys_dictionary>
+
+  <!-- scan run fields -->
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>running</default_value>
+    <label>Status</label>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <value>running</value>
+    <label>Running</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <value>complete</value>
+    <label>Complete</label>
+    <sequence>2</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>scanned_at</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Scanned At</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>first_seen</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>First Seen</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>last_seen</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Last Seen</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>scan_id</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <label>Scan</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>resolved</element>
+    <internal_type>boolean</internal_type>
+    <default_value>false</default_value>
+    <label>Resolved</label>
+  </sys_dictionary>
+
+
+
+  <!-- PortalWidget Medic — x_sn_pwm_health (per-widget health) -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin -->
+  <!-- SPDX-License-Identifier: AGPL-3.0 -->
+
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_health</name>
+    <label>PortalWidget Medic Health</label>
+    <super_class/>
+    <access_count>0</access_count>
+    <is_extendable>false</is_extendable>
+    <user_role>x_sn_pwm_admin</user_role>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <alter_access>true</alter_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>widget_id</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <mandatory>true</mandatory>
+    <label>Widget</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>widget_name</element>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <label>Widget Name</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>widget_scope</element>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <label>Widget Scope</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>breach_risk_score</element>
+    <internal_type>integer</internal_type>
+    <max_length>3</max_length>
+    <label>Breach-Risk Score</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>total_findings</element>
+    <internal_type>integer</internal_type>
+    <max_length>6</max_length>
+    <label>Total Findings</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>critical_findings</element>
+    <internal_type>integer</internal_type>
+    <max_length>6</max_length>
+    <label>Critical Findings</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>orphaned</element>
+    <internal_type>boolean</internal_type>
+    <default_value>false</default_value>
+    <label>Orphaned</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>duplicate</element>
+    <internal_type>boolean</internal_type>
+    <default_value>false</default_value>
+    <label>Duplicate</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>acl_exposed</element>
+    <internal_type>boolean</internal_type>
+    <default_value>false</default_value>
+    <label>ACL Exposed</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>healthy</default_value>
+    <label>Status</label>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <value>healthy</value>
+    <label>Healthy</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <value>at_risk</value>
+    <label>At Risk</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <value>critical</value>
+    <label>Critical</label>
+    <sequence>3</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>last_scanned</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Last Scanned</label>
+  </sys_dictionary>
+
+
+  <!-- ===== ACLs ===== -->
+
+  <!-- PortalWidget Medic — ACL definitions -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin -->
+  <!-- SPDX-License-Identifier: AGPL-3.0 -->
+
+  <!-- ===== x_sn_pwm_finding table ACLs ===== -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_finding</name>
+    <operation>read</operation>
+    <type>record</type>
+    <description>Read access to PortalWidget Medic findings</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin') || gs.hasRole('x_sn_pwm_user');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_finding</name>
+    <operation>write</operation>
+    <type>record</type>
+    <description>Write access to PortalWidget Medic findings</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_finding</name>
+    <operation>create</operation>
+    <type>record</type>
+    <description>Create access to PortalWidget Medic findings</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_finding</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <description>Delete access to PortalWidget Medic findings</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <!-- ===== x_sn_pwm_health table ACLs ===== -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_health</name>
+    <operation>read</operation>
+    <type>record</type>
+    <description>Read access to PortalWidget Medic health records</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin') || gs.hasRole('x_sn_pwm_user');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_health</name>
+    <operation>write</operation>
+    <type>record</type>
+    <description>Write access to PortalWidget Medic health records</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_health</name>
+    <operation>create</operation>
+    <type>record</type>
+    <description>Create access to PortalWidget Medic health records</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_health</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <description>Delete access to PortalWidget Medic health records</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <!-- ===== REST endpoint ACLs ===== -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>PortalWidget Medic Execute API</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <description>Execute access to PortalWidget Medic execute API</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>PortalWidget Medic Query API</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <description>Execute access to PortalWidget Medic query API</description>
+    <script>answer = gs.hasRole('x_sn_pwm_admin') || gs.hasRole('x_sn_pwm_user');</script>
+  </sys_security_acl>
+
+</unload>

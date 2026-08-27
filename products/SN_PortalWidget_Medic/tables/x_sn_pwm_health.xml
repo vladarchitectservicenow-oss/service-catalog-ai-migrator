@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-27" unload_user="admin">
+  <!-- PortalWidget Medic — x_sn_pwm_health (per-widget health) -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin -->
+  <!-- SPDX-License-Identifier: AGPL-3.0 -->
+
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_health</name>
+    <label>PortalWidget Medic Health</label>
+    <super_class/>
+    <access_count>0</access_count>
+    <is_extendable>false</is_extendable>
+    <user_role>x_sn_pwm_admin</user_role>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <alter_access>true</alter_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>widget_id</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <mandatory>true</mandatory>
+    <label>Widget</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>widget_name</element>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <label>Widget Name</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>widget_scope</element>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <label>Widget Scope</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>breach_risk_score</element>
+    <internal_type>integer</internal_type>
+    <max_length>3</max_length>
+    <label>Breach-Risk Score</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>total_findings</element>
+    <internal_type>integer</internal_type>
+    <max_length>6</max_length>
+    <label>Total Findings</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>critical_findings</element>
+    <internal_type>integer</internal_type>
+    <max_length>6</max_length>
+    <label>Critical Findings</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>orphaned</element>
+    <internal_type>boolean</internal_type>
+    <default_value>false</default_value>
+    <label>Orphaned</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>duplicate</element>
+    <internal_type>boolean</internal_type>
+    <default_value>false</default_value>
+    <label>Duplicate</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>acl_exposed</element>
+    <internal_type>boolean</internal_type>
+    <default_value>false</default_value>
+    <label>ACL Exposed</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>healthy</default_value>
+    <label>Status</label>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <value>healthy</value>
+    <label>Healthy</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <value>at_risk</value>
+    <label>At Risk</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <value>critical</value>
+    <label>Critical</label>
+    <sequence>3</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_health">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>last_scanned</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Last Scanned</label>
+  </sys_dictionary>
+</unload>

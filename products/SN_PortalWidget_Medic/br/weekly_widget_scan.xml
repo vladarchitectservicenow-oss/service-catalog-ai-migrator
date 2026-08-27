@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-27" unload_user="admin">
+  <!-- PortalWidget Medic — Scheduled Job: weekly widget health scan -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin -->
+  <!-- SPDX-License-Identifier: AGPL-3.0 -->
+
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>PortalWidget Medic — Weekly Widget Health Scan</name>
+    <active>true</active>
+    <run_type>periodically</run_type>
+    <run_dayofweek>sunday</run_dayofweek>
+    <run_time>03:00:00</run_time>
+    <run_start>2026-08-27 03:00:00</run_start>
+    <condition/>
+    <description>Runs the PortalWidget Medic scan engine weekly (incremental delta scan) and upserts findings + health records.</description>
+    <script><![CDATA[// PortalWidget Medic — Weekly Widget Health Scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+
+(function() {
+    try {
+        var engine = new PwmEngine();
+        var stats = engine.scanAllWidgets(true);
+        gs.info('PortalWidget Medic weekly scan complete: ' + JSON.stringify(stats));
+    } catch (e) {
+        gs.error('PortalWidget Medic weekly scan failed: ' + e);
+    }
+})();]]></script>
+  </sysauto_script>
+</unload>

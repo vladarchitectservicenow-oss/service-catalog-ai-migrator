@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-27" unload_user="admin">
+  <!-- PortalWidget Medic — x_sn_pwm_finding (polymorphic result store) -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin -->
+  <!-- SPDX-License-Identifier: AGPL-3.0 -->
+
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <name>x_sn_pwm_finding</name>
+    <label>PortalWidget Medic Finding</label>
+    <super_class/>
+    <access_count>0</access_count>
+    <is_extendable>false</is_extendable>
+    <user_role>x_sn_pwm_admin</user_role>
+    <create_access>true</create_access>
+    <read_access>true</read_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+    <alter_access>true</alter_access>
+  </sys_db_object>
+
+  <!-- record_type: finding | scan | deprecated_api -->
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>record_type</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>finding</default_value>
+    <mandatory>true</mandatory>
+    <label>Record Type</label>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>record_type</element>
+    <value>finding</value>
+    <label>Finding</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>record_type</element>
+    <value>scan</value>
+    <label>Scan Run</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>record_type</element>
+    <value>deprecated_api</value>
+    <label>Deprecated API Catalog</label>
+    <sequence>3</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>widget_id</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <label>Widget</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>widget_name</element>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <label>Widget Name</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>finding_type</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <label>Finding Type</label>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>finding_type</element>
+    <value>ref_integrity</value>
+    <label>Reference Integrity</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>finding_type</element>
+    <value>deprecated_api</value>
+    <label>Deprecated API</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>finding_type</element>
+    <value>orphan</value>
+    <label>Orphan</label>
+    <sequence>3</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>finding_type</element>
+    <value>duplicate</value>
+    <label>Duplicate</label>
+    <sequence>4</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>finding_type</element>
+    <value>acl</value>
+    <label>ACL Exposure</label>
+    <sequence>5</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>severity</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>warning</default_value>
+    <label>Severity</label>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>severity</element>
+    <value>critical</value>
+    <label>Critical</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>severity</element>
+    <value>warning</value>
+    <label>Warning</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>severity</element>
+    <value>info</value>
+    <label>Info</label>
+    <sequence>3</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>confidence</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>high</default_value>
+    <label>Confidence</label>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>confidence</element>
+    <value>high</value>
+    <label>High</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>confidence</element>
+    <value>medium</value>
+    <label>Medium</label>
+    <sequence>2</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>confidence</element>
+    <value>low</value>
+    <label>Low</label>
+    <sequence>3</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>detail</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>Detail</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>remediation</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>Remediation</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>detail_json</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>Detail JSON</label>
+  </sys_dictionary>
+
+  <!-- deprecated_api catalog fields -->
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>api_name</element>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <label>API Name</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>api_release</element>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <label>Deprecated In Release</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>replacement</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <label>Replacement</label>
+  </sys_dictionary>
+
+  <!-- scan run fields -->
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <choice>1</choice>
+    <default_value>running</default_value>
+    <label>Status</label>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <value>running</value>
+    <label>Running</label>
+    <sequence>1</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>status</element>
+    <value>complete</value>
+    <label>Complete</label>
+    <sequence>2</sequence>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>scanned_at</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Scanned At</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>first_seen</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>First Seen</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>last_seen</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <label>Last Seen</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>scan_id</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <label>Scan</label>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE" table="x_sn_pwm_finding">
+    <sys_scope>x_sn_portal_widget_medic</sys_scope>
+    <element>resolved</element>
+    <internal_type>boolean</internal_type>
+    <default_value>false</default_value>
+    <label>Resolved</label>
+  </sys_dictionary>
+</unload>
