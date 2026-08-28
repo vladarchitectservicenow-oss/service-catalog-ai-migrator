@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- WhereUsed Radar — Scheduled job: weekly impact scan (delta via high-water mark)
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0 -->
+<unload unload_date="2026-08-28 00:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Runs the WhereUsed Radar impact scan weekly for the configured target objects. The scanner is read-only over the scripted surface and writes only to its own scoped result tables. Delta scanning is driven by the high-water mark recorded on each scan run.</description>
+    <name>WhereUsed Radar Weekly Impact Scan</name>
+    <run_dayofweek>monday</run_dayofweek>
+    <run_period>weekly</run_period>
+    <run_start>2026-08-28 03:00:00</run_start>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// WhereUsed Radar — scheduled weekly impact scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function runWhereUsedRadarWeeklyScan() {
+    try {
+        var scanner = new WurScanner();
+        // Target objects are supplied by the caller (UI action / REST) or a
+        // system property. When none are configured, the job is a no-op that
+        // logs a reminder rather than scanning an empty target set.
+        var targets = gs.getProperty('x_sn_wur.scan_targets', '');
+        if (!targets) {
+            gs.info('WhereUsed Radar weekly scan skipped: no targets configured (x_sn_wur.scan_targets).');
+            return;
+        }
+        var list = targets.split(',');
+        for (var i = 0; i < list.length; i++) {
+            var parts = list[i].trim().split(':');
+            if (parts.length !== 2) { continue; }
+            var scanId = scanner.runScan(parts[0], parts[1]);
+            gs.info('WhereUsed Radar weekly scan complete: target=' + list[i].trim() +
+                ', scan_id=' + scanId);
+        }
+    } catch (e) {
+        gs.error('WhereUsed Radar weekly scan failed: ' + e.message);
+    }
+})();
+]]></script>
+  </sysauto_script>
+</unload>

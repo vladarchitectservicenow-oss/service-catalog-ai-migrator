@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- WhereUsed Radar — ACLs for custom tables and REST endpoints
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0 -->
+<unload unload_date="2026-08-28 00:00:00">
+  <!-- Scan table: read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sn_wur_scan</name>
+    <operation>read</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_sn_wur.admin') || gs.hasRole('x_sn_wur.user');</script>
+  </sys_security_acl>
+  <!-- Scan table: write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sn_wur_scan</name>
+    <operation>write</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_sn_wur.admin');</script>
+  </sys_security_acl>
+  <!-- Scan table: create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sn_wur_scan</name>
+    <operation>create</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_sn_wur.admin');</script>
+  </sys_security_acl>
+  <!-- Scan table: delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sn_wur_scan</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_sn_wur.admin');</script>
+  </sys_security_acl>
+  <!-- Reference table: read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sn_wur_reference</name>
+    <operation>read</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_sn_wur.admin') || gs.hasRole('x_sn_wur.user');</script>
+  </sys_security_acl>
+  <!-- Reference table: write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sn_wur_reference</name>
+    <operation>write</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_sn_wur.admin');</script>
+  </sys_security_acl>
+  <!-- Reference table: create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sn_wur_reference</name>
+    <operation>create</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_sn_wur.admin');</script>
+  </sys_security_acl>
+  <!-- Reference table: delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sn_wur_reference</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_sn_wur.admin');</script>
+  </sys_security_acl>
+  <!-- REST endpoint: execute (POST /execute) -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>execute</name>
+    <operation>execute</operation>
+    <type>rest_service</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_sn_wur.admin');</script>
+  </sys_security_acl>
+  <!-- REST endpoint: status (GET /status) -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>status</name>
+    <operation>execute</operation>
+    <type>rest_service</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_sn_wur.admin') || gs.hasRole('x_sn_wur.user');</script>
+  </sys_security_acl>
+</unload>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- WhereUsed Radar — Scan run log table (sys_db_object)
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0
+     Absorbs x_sn_wur_impact via impact_json (per-object aggregate risk scores). -->
+<unload unload_date="2026-08-28 00:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>private</access>
+    <create_access>false</create_access>
+    <delete_access>false</delete_access>
+    <label>WhereUsed Scan</label>
+    <name>x_sn_wur_scan</name>
+    <read_access>false</read_access>
+    <super_class/>
+    <update_access>false</update_access>
+    <user_role/>
+    <ws_access>false</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="target_type">
+    <active>true</active>
+    <choice>1</choice>
+    <internal_type>string</internal_type>
+    <label>Target Type</label>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_wur_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="target_name">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Target Name</label>
+    <mandatory>true</mandatory>
+    <max_length>255</max_length>
+    <name>x_sn_wur_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="status">
+    <active>true</active>
+    <choice>1</choice>
+    <internal_type>string</internal_type>
+    <label>Status</label>
+    <max_length>40</max_length>
+    <name>x_sn_wur_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="started_at">
+    <active>true</active>
+    <internal_type>glide_date_time</internal_type>
+    <label>Started At</label>
+    <name>x_sn_wur_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="completed_at">
+    <active>true</active>
+    <internal_type>glide_date_time</internal_type>
+    <label>Completed At</label>
+    <name>x_sn_wur_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="references_found">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>References Found</label>
+    <name>x_sn_wur_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="break_count">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Break Count</label>
+    <name>x_sn_wur_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="warn_count">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Warn Count</label>
+    <name>x_sn_wur_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="safe_count">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Safe Count</label>
+    <name>x_sn_wur_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="high_water_mark">
+    <active>true</active>
+    <internal_type>glide_date_time</internal_type>
+    <label>High Water Mark</label>
+    <name>x_sn_wur_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="impact_json">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Impact Scores (JSON)</label>
+    <max_length>4000</max_length>
+    <name>x_sn_wur_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="detail_json">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Detail (JSON)</label>
+    <max_length>4000</max_length>
+    <name>x_sn_wur_scan</name>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_scan" value="table">
+    <label>Table</label>
+    <sequence>10</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_scan" value="field">
+    <label>Field</label>
+    <sequence>20</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_scan" value="script_include">
+    <label>Script Include</label>
+    <sequence>30</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_scan" value="business_rule">
+    <label>Business Rule</label>
+    <sequence>40</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_scan" value="ui_policy">
+    <label>UI Policy</label>
+    <sequence>50</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_scan" value="property">
+    <label>System Property</label>
+    <sequence>60</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_scan" value="flow">
+    <label>Flow</label>
+    <sequence>70</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_sn_wur_scan" value="running">
+    <label>Running</label>
+    <sequence>10</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_sn_wur_scan" value="completed">
+    <label>Completed</label>
+    <sequence>20</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_sn_wur_scan" value="failed">
+    <label>Failed</label>
+    <sequence>30</sequence>
+  </sys_choice>
+</unload>

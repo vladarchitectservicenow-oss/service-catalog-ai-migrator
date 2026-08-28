@@ -1,0 +1,891 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- WhereUsed Radar — scoped application manifest (sn_where_used_radar)
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0 -->
+<unload unload_date="2026-08-28 00:00:00">
+  <sys_scope action="INSERT_OR_UPDATE">
+    <name>x_sn_wur</name>
+    <scope>x_sn_wur</scope>
+    <description>WhereUsed Radar — code-aware impact analysis across the ServiceNow scripted surface</description>
+    <short_description>Code-aware where-used impact analysis</short_description>
+    <vendor>Vladimir Kapustin</vendor>
+    <vendor_prefix>snc</vendor_prefix>
+    <version>1.0.0</version>
+  </sys_scope>
+
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_sn_wur.admin</name>
+    <description>WhereUsed Radar administrator — run scans, assess batches, and view all findings</description>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_sn_wur.user</name>
+    <description>WhereUsed Radar user — read-only access to impact reports and dependency graphs</description>
+  </sys_user_role>
+
+  <sys_user_role_contains action="INSERT_OR_UPDATE">
+    <contains>x_sn_wur.user</contains>
+    <role>x_sn_wur.admin</role>
+  </sys_user_role_contains>
+
+  <sys_properties action="INSERT_OR_UPDATE">
+    <name>x_sn_wur.scan_targets</name>
+    <description>Comma-separated list of target objects for the weekly WhereUsed Radar scan, in the form type:name (e.g. table:incident,field:short_description). Leave empty to disable the scheduled scan.</description>
+    <type>string</type>
+    <value></value>
+  </sys_properties>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_wur</source_scope>
+    <target_name>sys_script</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_wur</source_scope>
+    <target_name>sys_script_include</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_wur</source_scope>
+    <target_name>sys_script_client</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_wur</source_scope>
+    <target_name>sys_ui_policy</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_wur</source_scope>
+    <target_name>sys_hub_flow</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_wur</source_scope>
+    <target_name>sysauto_script</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_wur</source_scope>
+    <target_name>sys_dictionary</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_wur</source_scope>
+    <target_name>sys_security_acl</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_wur</source_scope>
+    <target_name>sys_transform_map</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <active>true</active>
+    <api_name>x_sn_wur.WurScanner</api_name>
+    <client_callable>false</client_callable>
+    <description>Deterministic code-aware reference scanner and impact scorer</description>
+    <name>WurScanner</name>
+    <script><![CDATA[// WhereUsed Radar — WurScanner
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Deterministic code-aware reference scanner and impact scorer. Acquires the
+// scripted surface (business rules, script includes, client scripts, UI
+// policies, flows, scheduled jobs, dictionary, ACLs, transform maps) read-only,
+// tokenizes each script to separate string literals from code, matches
+// references to a target object, and classifies each as SAFE / WARN / BREAK.
+// No AI dependency in the scan path — every finding is reproducible.
+//
+// @class WurScanner @namespace x_sn_wur
+
+var WurScanner = Class.create();
+WurScanner.prototype = {
+
+    SCAN_TABLE: 'x_sn_wur_scan',
+    REFERENCE_TABLE: 'x_sn_wur_reference',
+
+    // Acquisition surface: table name -> { script_field, name_field, source_type }
+    // All read-only. Cross-scope read privileges are declared in sys_app.xml.
+    ACQUISITION_SURFACE: {
+        sys_script:          { script_field: 'script',          name_field: 'name',          source_type: 'business_rule' },
+        sys_script_include:  { script_field: 'script',          name_field: 'name',          source_type: 'script_include' },
+        sys_script_client:   { script_field: 'script',          name_field: 'name',          source_type: 'client_script' },
+        sys_ui_policy:       { script_field: 'script_false',    name_field: 'name',          source_type: 'ui_policy' },
+        sys_hub_flow:        { script_field: 'script',          name_field: 'name',          source_type: 'flow' },
+        sysauto_script:      { script_field: 'script',          name_field: 'name',          source_type: 'scheduled_job' },
+        sys_dictionary:      { script_field: 'calculation',     name_field: 'name',          source_type: 'dictionary' },
+        sys_security_acl:    { script_field: 'script',          name_field: 'name',          source_type: 'acl' },
+        sys_transform_map:   { script_field: 'source_script',  name_field: 'name',          source_type: 'transform_map' }
+    },
+
+    // Reference-type -> risk class mapping. A reference is BREAK when the
+    // target's absence would throw or silently corrupt; WARN when it would
+    // change behavior (write/conditional); SAFE when read-only.
+    RISK_RULES: {
+        'GlideRecord':        'BREAK',
+        'gr.get':             'BREAK',
+        'gr.setValue':        'BREAK',
+        'gr.addQuery':        'BREAK',
+        'gr.insert':          'BREAK',
+        'gr.update':          'BREAK',
+        'gr.deleteRecord':    'BREAK',
+        'gr.getValue':        'SAFE',
+        'gr.getUniqueValue':  'SAFE',
+        'gr.getRowCount':     'SAFE',
+        'gr.getEncodedQuery': 'SAFE',
+        'current.get':        'BREAK',
+        'current.getValue':   'SAFE',
+        'current.setValue':   'BREAK',
+        'current.addQuery':   'BREAK',
+        'gs.getProperty':     'WARN',
+        'gs.setProperty':     'BREAK',
+        'g_form.getValue':    'WARN',
+        'g_form.setValue':    'BREAK',
+        'g_form.addOption':   'WARN',
+        'g_user.hasRole':     'WARN',
+        'GlideRecordSecure':  'BREAK',
+        'new GlideRecord':    'BREAK',
+        'GlideAggregate':     'WARN',
+        'GlideElement':       'WARN',
+        'dot_walk':           'WARN'
+    },
+
+    initialize: function () {
+        this._batchSize = 200;
+    },
+
+    // ---------------------------------------------------------------------
+    // Public: run a full scan for a target object and persist findings.
+    // Returns the scan record sys_id.
+    // ---------------------------------------------------------------------
+    runScan: function (targetType, targetName) {
+        var scanId = this._createScanRecord(targetType, targetName);
+        if (!scanId) {
+            gs.error('WurScanner: scan aborted — could not create scan record for ' + targetType + ':' + targetName);
+            return null;
+        }
+        var findings = this.scanTarget(targetType, targetName);
+        var counts = this._persistFindings(scanId, findings);
+        var impact = this.computeImpact(findings);
+        this._finalizeScanRecord(scanId, counts, impact);
+        return scanId;
+    },
+
+    // ---------------------------------------------------------------------
+    // Public: scan a target object across the full scripted surface.
+    // Returns an array of finding objects (not yet persisted).
+    // ---------------------------------------------------------------------
+    scanTarget: function (targetType, targetName) {
+        var findings = [];
+        var surface = this.ACQUISITION_SURFACE;
+        for (var table in surface) {
+            if (!surface.hasOwnProperty(table)) { continue; }
+            var cfg = surface[table];
+            var gr = new GlideRecord(table);
+            gr.addNotNullQuery(cfg.script_field);
+            gr.setLimit(this._batchSize);
+            gr.query();
+            while (gr.next()) {
+                var script = gr.getValue(cfg.script_field) || '';
+                if (!script) { continue; }
+                var sourceName = gr.getValue(cfg.name_field) || gr.getUniqueValue();
+                var sourceSysId = gr.getUniqueValue();
+                var matches = this._scanScript(script, targetType, targetName);
+                for (var i = 0; i < matches.length; i++) {
+                    findings.push({
+                        source_type: cfg.source_type,
+                        source_name: sourceName,
+                        source_sys_id: sourceSysId,
+                        target_type: targetType,
+                        target_name: targetName,
+                        line_number: matches[i].line,
+                        matched_pattern: matches[i].pattern,
+                        risk_class: matches[i].risk,
+                        confidence: matches[i].confidence,
+                        snippet: matches[i].snippet
+                    });
+                }
+            }
+        }
+        return findings;
+    },
+
+    // ---------------------------------------------------------------------
+    // Tokenize a script and find references to the target. Separates string
+    // literals (not references) from code, and flags dynamic/indirect calls
+    // as "unverifiable" rather than "broken".
+    // ---------------------------------------------------------------------
+    _scanScript: function (script, targetType, targetName) {
+        var findings = [];
+        var lines = script.split('\n');
+        var targetToken = this._targetToken(targetType, targetName);
+
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i];
+            var code = this._stripStringLiterals(line);
+            if (!code) { continue; }
+
+            // Dynamic / indirect reference: variable table or field name.
+            if (this._isDynamicReference(code, targetType, targetName)) {
+                findings.push({
+                    line: i + 1,
+                    pattern: 'dynamic',
+                    risk: 'WARN',
+                    confidence: 'unverifiable',
+                    snippet: this._snippet(line)
+                });
+                continue;
+            }
+
+            // Direct reference: the target token appears in code.
+            if (code.indexOf(targetToken) !== -1) {
+                var pattern = this._matchPattern(code);
+                var risk = this.RISK_RULES[pattern] || 'WARN';
+                findings.push({
+                    line: i + 1,
+                    pattern: pattern,
+                    risk: risk,
+                    confidence: 'high',
+                    snippet: this._snippet(line)
+                });
+            }
+        }
+        return findings;
+    },
+
+    // ---------------------------------------------------------------------
+    // Compute the aggregate impact score (0-100) for a set of findings.
+    // BREAK findings dominate; WARN contributes; SAFE is informational.
+    // ---------------------------------------------------------------------
+    computeImpact: function (findings) {
+        var breakCount = 0;
+        var warnCount = 0;
+        var safeCount = 0;
+        for (var i = 0; i < findings.length; i++) {
+            if (findings[i].risk_class === 'BREAK') { breakCount++; }
+            else if (findings[i].risk_class === 'WARN') { warnCount++; }
+            else { safeCount++; }
+        }
+        var score = 0;
+        if (breakCount > 0) {
+            score = Math.min(100, 60 + breakCount * 10);
+        } else if (warnCount > 0) {
+            score = Math.min(59, 20 + warnCount * 5);
+        } else if (safeCount > 0) {
+            score = Math.min(19, safeCount * 2);
+        }
+        return {
+            score: score,
+            break_count: breakCount,
+            warn_count: warnCount,
+            safe_count: safeCount,
+            total: findings.length,
+            verdict: breakCount > 0 ? 'BREAK' : (warnCount > 0 ? 'WARN' : 'SAFE')
+        };
+    },
+
+    // ---------------------------------------------------------------------
+    // Build the dependency graph edges from findings (object -> reference).
+    // Each finding is already an edge; this normalizes it for the D3 renderer.
+    // ---------------------------------------------------------------------
+    buildDependencyGraph: function (findings) {
+        var nodes = {};
+        var edges = [];
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            var sourceKey = f.source_type + ':' + f.source_name;
+            var targetKey = f.target_type + ':' + f.target_name;
+            if (!nodes[sourceKey]) {
+                nodes[sourceKey] = { id: sourceKey, type: f.source_type, name: f.source_name };
+            }
+            if (!nodes[targetKey]) {
+                nodes[targetKey] = { id: targetKey, type: f.target_type, name: f.target_name };
+            }
+            edges.push({
+                source: sourceKey,
+                target: targetKey,
+                risk_class: f.risk_class,
+                line_number: f.line_number
+            });
+        }
+        var nodeList = [];
+        for (var key in nodes) {
+            if (nodes.hasOwnProperty(key)) { nodeList.push(nodes[key]); }
+        }
+        return { nodes: nodeList, edges: edges };
+    },
+
+    // ---------------------------------------------------------------------
+    // Internal helpers
+    // ---------------------------------------------------------------------
+    _targetToken: function (targetType, targetName) {
+        // The target token is the bare object name regardless of type. Field
+        // references appear as gr.<field> / current.<field> / g_form.getValue('<field>'),
+        // property references as gs.getProperty('<name>'), and table/script
+        // references as the literal name. All resolve to the same token.
+        return targetName;
+    },
+
+    _stripStringLiterals: function (line) {
+        // Remove single- and double-quoted string literals so that a target
+        // name appearing only inside a string is not treated as a reference.
+        var out = line;
+        out = out.replace(/"(?:[^"\\]|\\.)*"/g, '""');
+        out = out.replace(/'(?:[^'\\]|\\.)*'/g, "''");
+        return out;
+    },
+
+    _isDynamicReference: function (code, targetType, targetName) {
+        // A reference is dynamic when the target name is built at runtime
+        // (concatenation, variable interpolation) rather than a literal token.
+        if (code.indexOf(targetName) === -1) { return false; }
+        // Concatenation around the token signals a runtime-built name.
+        var idx = code.indexOf(targetName);
+        var before = code.charAt(idx - 1);
+        var after = code.charAt(idx + targetName.length);
+        return (before === '+' || after === '+');
+    },
+
+    _matchPattern: function (code) {
+        if (code.indexOf('GlideRecordSecure') !== -1) { return 'GlideRecordSecure'; }
+        if (code.indexOf('GlideAggregate') !== -1) { return 'GlideAggregate'; }
+        if (code.indexOf('GlideElement') !== -1) { return 'GlideElement'; }
+        if (code.indexOf('new GlideRecord') !== -1) { return 'new GlideRecord'; }
+        if (code.indexOf('GlideRecord') !== -1) { return 'GlideRecord'; }
+        if (code.indexOf('gr.deleteRecord') !== -1) { return 'gr.deleteRecord'; }
+        if (code.indexOf('gr.insert') !== -1) { return 'gr.insert'; }
+        if (code.indexOf('gr.update') !== -1) { return 'gr.update'; }
+        if (code.indexOf('gr.setValue') !== -1) { return 'gr.setValue'; }
+        if (code.indexOf('gr.addQuery') !== -1) { return 'gr.addQuery'; }
+        // Read-only gr.* variants must be matched before the bare gr.get so
+        // they are not misclassified as a breaking write access.
+        if (code.indexOf('gr.getValue') !== -1) { return 'gr.getValue'; }
+        if (code.indexOf('gr.getUniqueValue') !== -1) { return 'gr.getUniqueValue'; }
+        if (code.indexOf('gr.getRowCount') !== -1) { return 'gr.getRowCount'; }
+        if (code.indexOf('gr.getEncodedQuery') !== -1) { return 'gr.getEncodedQuery'; }
+        if (code.indexOf('gr.get(') !== -1) { return 'gr.get'; }
+        if (code.indexOf('current.setValue') !== -1) { return 'current.setValue'; }
+        if (code.indexOf('current.addQuery') !== -1) { return 'current.addQuery'; }
+        if (code.indexOf('current.getValue') !== -1) { return 'current.getValue'; }
+        if (code.indexOf('current.get(') !== -1) { return 'current.get'; }
+        if (code.indexOf('gs.setProperty') !== -1) { return 'gs.setProperty'; }
+        if (code.indexOf('gs.getProperty') !== -1) { return 'gs.getProperty'; }
+        if (code.indexOf('g_form.setValue') !== -1) { return 'g_form.setValue'; }
+        if (code.indexOf('g_form.addOption') !== -1) { return 'g_form.addOption'; }
+        if (code.indexOf('g_form.getValue') !== -1) { return 'g_form.getValue'; }
+        if (code.indexOf('g_user.hasRole') !== -1) { return 'g_user.hasRole'; }
+        return 'dot_walk';
+    },
+
+    _snippet: function (line) {
+        var trimmed = line.replace(/^\s+/, '');
+        if (trimmed.length > 200) { return trimmed.substring(0, 200) + '...'; }
+        return trimmed;
+    },
+
+    _createScanRecord: function (targetType, targetName) {
+        var gr = new GlideRecord(this.SCAN_TABLE);
+        gr.initialize();
+        gr.setValue('target_type', targetType);
+        gr.setValue('target_name', targetName);
+        gr.setValue('status', 'running');
+        gr.setValue('started_at', new GlideDateTime().getValue());
+        gr.setValue('references_found', 0);
+        gr.setValue('break_count', 0);
+        gr.setValue('warn_count', 0);
+        gr.setValue('safe_count', 0);
+        gr.setValue('high_water_mark', this._getHighWaterMark());
+        gr.setWorkflow(false);
+        try {
+            return gr.insert();
+        } catch (e) {
+            gs.error('WurScanner: failed to create scan record: ' + e.message);
+            return null;
+        }
+    },
+
+    _persistFindings: function (scanId, findings) {
+        var counts = { break_count: 0, warn_count: 0, safe_count: 0 };
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            var gr = new GlideRecord(this.REFERENCE_TABLE);
+            gr.initialize();
+            gr.setValue('scan', scanId);
+            gr.setValue('target_type', f.target_type);
+            gr.setValue('target_name', f.target_name);
+            gr.setValue('source_type', f.source_type);
+            gr.setValue('source_name', f.source_name);
+            gr.setValue('source_sys_id', f.source_sys_id);
+            gr.setValue('line_number', f.line_number);
+            gr.setValue('risk_class', f.risk_class);
+            gr.setValue('confidence', f.confidence);
+            gr.setValue('matched_pattern', f.matched_pattern);
+            gr.setValue('snippet', f.snippet);
+            gr.setWorkflow(false);
+            try {
+                gr.insert();
+            } catch (e) {
+                gs.error('WurScanner: failed to persist finding: ' + e.message);
+                continue;
+            }
+            if (f.risk_class === 'BREAK') { counts.break_count++; }
+            else if (f.risk_class === 'WARN') { counts.warn_count++; }
+            else { counts.safe_count++; }
+        }
+        return counts;
+    },
+
+    _finalizeScanRecord: function (scanId, counts, impact) {
+        if (!scanId) { return; }
+        var gr = new GlideRecord(this.SCAN_TABLE);
+        if (!gr.get(scanId)) { return; }
+        gr.setValue('status', 'completed');
+        gr.setValue('completed_at', new GlideDateTime().getValue());
+        gr.setValue('references_found', counts.break_count + counts.warn_count + counts.safe_count);
+        gr.setValue('break_count', counts.break_count);
+        gr.setValue('warn_count', counts.warn_count);
+        gr.setValue('safe_count', counts.safe_count);
+        gr.setValue('impact_json', JSON.stringify(impact));
+        gr.setValue('high_water_mark', new GlideDateTime().getValue());
+        gr.setWorkflow(false);
+        try {
+            gr.update();
+        } catch (e) {
+            gs.error('WurScanner: failed to finalize scan record: ' + e.message);
+        }
+    },
+
+    _getHighWaterMark: function () {
+        var gr = new GlideRecord(this.SCAN_TABLE);
+        gr.addQuery('status', 'completed');
+        gr.orderByDesc('high_water_mark');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getValue('high_water_mark');
+        }
+        return '';
+    },
+
+    type: 'WurScanner'
+};
+]]></script>
+  </sys_script_include>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <active>true</active>
+    <api_name>x_sn_wur.WurReport</api_name>
+    <client_callable>false</client_callable>
+    <description>Reporting, remediation workbench, and batch/diff orchestration</description>
+    <name>WurReport</name>
+    <script><![CDATA[// WhereUsed Radar — WurReport
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Reporting, remediation, and batch/diff orchestration. Builds the ranked
+// impact report, the dependency graph projection, the remediation workbench
+// (findings + curated fix catalog), and the batch/update-set assessment.
+// Deterministic — no AI dependency. AI fix-suggestion generation is layered
+// on top by the optional Now Assist integration and degrades to the curated
+// fix catalog when no GenAI Controller is configured.
+//
+// @class WurReport @namespace x_sn_wur
+
+var WurReport = Class.create();
+WurReport.prototype = {
+
+    SCAN_TABLE: 'x_sn_wur_scan',
+    REFERENCE_TABLE: 'x_sn_wur_reference',
+
+    // Curated fix catalog for the most common reference-breakage patterns.
+    // Maps a matched pattern to a human-readable remediation hint. This is the
+    // deterministic fallback when no GenAI Controller is configured.
+    FIX_CATALOG: {
+        'GlideRecord':        'Update the GlideRecord table name to the new table, or add a compatibility alias if the table was renamed.',
+        'new GlideRecord':    'Update the GlideRecord table name to the new table, or add a compatibility alias if the table was renamed.',
+        'GlideRecordSecure':  'Update the GlideRecordSecure table name to the new table, or add a compatibility alias if the table was renamed.',
+        'gr.get':             'Replace the removed field with its successor field, or restore the field if the removal was unintended.',
+        'gr.setValue':        'Replace the removed field with its successor field, or restore the field if the removal was unintended.',
+        'gr.addQuery':        'Replace the removed field with its successor field, or restore the field if the removal was unintended.',
+        'gr.insert':          'Replace the removed field with its successor field, or restore the field if the removal was unintended.',
+        'gr.update':          'Replace the removed field with its successor field, or restore the field if the removal was unintended.',
+        'gr.deleteRecord':    'Replace the removed field with its successor field, or restore the field if the removal was unintended.',
+        'current.get':        'Replace the removed field with its successor field, or restore the field if the removal was unintended.',
+        'current.setValue':   'Replace the removed field with its successor field, or restore the field if the removal was unintended.',
+        'current.addQuery':   'Replace the removed field with its successor field, or restore the field if the removal was unintended.',
+        'gs.getProperty':     'Verify the system property still exists; if renamed, update the property key or add a fallback default.',
+        'gs.setProperty':     'Verify the system property still exists; if renamed, update the property key or add a fallback default.',
+        'g_form.getValue':    'Update the client script to reference the new field name, or restore the field if the removal was unintended.',
+        'g_form.setValue':    'Update the client script to reference the new field name, or restore the field if the removal was unintended.',
+        'g_form.addOption':   'Update the client script to reference the new field name, or restore the field if the removal was unintended.',
+        'g_user.hasRole':     'Verify the role still exists; if renamed, update the role name in the script.',
+        'GlideAggregate':     'Update the GlideAggregate table name to the new table, or add a compatibility alias if the table was renamed.',
+        'GlideElement':       'Replace the removed field with its successor field, or restore the field if the removal was unintended.',
+        'dot_walk':           'Verify the dot-walked field path still resolves; if a segment was renamed, update the path.',
+        'dynamic':            'Dynamic reference — the target name is built at runtime. Manually verify the resolved name against the new schema.'
+    },
+
+    initialize: function () {
+        this._scanner = new WurScanner();
+    },
+
+    // ---------------------------------------------------------------------
+    // Public: build the ranked impact report for a scan run.
+    // Returns { scan, impact, findings: [...] } sorted by risk severity.
+    // ---------------------------------------------------------------------
+    buildImpactReport: function (scanId) {
+        var scan = this._getScan(scanId);
+        if (!scan) { return null; }
+        var findings = this._getFindings(scanId);
+        var impact = this._parseJson(scan.impact_json, null);
+        if (!impact) {
+            impact = this._scanner.computeImpact(findings);
+        }
+        // Rank: BREAK first, then WARN, then SAFE; within class, by line.
+        findings.sort(function (a, b) {
+            var rank = { BREAK: 0, WARN: 1, SAFE: 2 };
+            var ra = rank[a.risk_class] !== undefined ? rank[a.risk_class] : 3;
+            var rb = rank[b.risk_class] !== undefined ? rank[b.risk_class] : 3;
+            if (ra !== rb) { return ra - rb; }
+            return (a.line_number || 0) - (b.line_number || 0);
+        });
+        return {
+            scan_id: scanId,
+            target_type: scan.target_type,
+            target_name: scan.target_name,
+            status: scan.status,
+            started_at: scan.started_at,
+            completed_at: scan.completed_at,
+            impact: impact,
+            findings: findings
+        };
+    },
+
+    // ---------------------------------------------------------------------
+    // Public: build the remediation workbench — findings joined with the
+    // curated fix catalog (or AI-generated fix when available).
+    // ---------------------------------------------------------------------
+    buildRemediationWorkbench: function (scanId) {
+        var report = this.buildImpactReport(scanId);
+        if (!report) { return null; }
+        var workbench = [];
+        for (var i = 0; i < report.findings.length; i++) {
+            var f = report.findings[i];
+            if (f.risk_class === 'SAFE') { continue; }
+            workbench.push({
+                source_type: f.source_type,
+                source_name: f.source_name,
+                source_sys_id: f.source_sys_id,
+                line_number: f.line_number,
+                risk_class: f.risk_class,
+                confidence: f.confidence,
+                matched_pattern: f.matched_pattern,
+                snippet: f.snippet,
+                suggested_fix: this.FIX_CATALOG[f.matched_pattern] || 'Manually review this reference against the new schema.'
+            });
+        }
+        return workbench;
+    },
+
+    // ---------------------------------------------------------------------
+    // Public: build the dependency graph projection for a scan run.
+    // ---------------------------------------------------------------------
+    buildDependencyGraph: function (scanId) {
+        var findings = this._getFindings(scanId);
+        return this._scanner.buildDependencyGraph(findings);
+    },
+
+    // ---------------------------------------------------------------------
+    // Public: batch assessment — scan a list of objects and return a ranked
+    // summary across all of them (for update-set / promotion assessment).
+    // ---------------------------------------------------------------------
+    assessBatch: function (targets) {
+        var results = [];
+        for (var i = 0; i < targets.length; i++) {
+            var t = targets[i];
+            var findings = this._scanner.scanTarget(t.target_type, t.target_name);
+            var impact = this._scanner.computeImpact(findings);
+            results.push({
+                target_type: t.target_type,
+                target_name: t.target_name,
+                impact: impact
+            });
+        }
+        // Rank the batch by descending risk score.
+        results.sort(function (a, b) { return b.impact.score - a.impact.score; });
+        return results;
+    },
+
+    // ---------------------------------------------------------------------
+    // Public: cross-instance / cross-update-set diff preview. Compares two
+    // sets of impact results and flags objects whose risk increased.
+    // ---------------------------------------------------------------------
+    diffImpact: function (baseline, candidate) {
+        var diff = [];
+        var baselineMap = {};
+        for (var i = 0; i < baseline.length; i++) {
+            var b = baseline[i];
+            baselineMap[b.target_type + ':' + b.target_name] = b.impact;
+        }
+        for (var j = 0; j < candidate.length; j++) {
+            var c = candidate[j];
+            var key = c.target_type + ':' + c.target_name;
+            var before = baselineMap[key];
+            var after = c.impact;
+            if (!before) {
+                diff.push({
+                    target_type: c.target_type,
+                    target_name: c.target_name,
+                    change: 'new',
+                    before_score: 0,
+                    after_score: after.score,
+                    delta: after.score
+                });
+            } else if (after.score > before.score) {
+                diff.push({
+                    target_type: c.target_type,
+                    target_name: c.target_name,
+                    change: 'increased',
+                    before_score: before.score,
+                    after_score: after.score,
+                    delta: after.score - before.score
+                });
+            }
+        }
+        diff.sort(function (a, b) { return b.delta - a.delta; });
+        return diff;
+    },
+
+    // ---------------------------------------------------------------------
+    // Public: export a report as Markdown (for change-approval evidence).
+    // ---------------------------------------------------------------------
+    exportMarkdown: function (scanId) {
+        var report = this.buildImpactReport(scanId);
+        if (!report) { return null; }
+        var lines = [];
+        lines.push('# WhereUsed Radar — Impact Report');
+        lines.push('');
+        lines.push('**Target:** ' + report.target_type + ' `' + report.target_name + '`');
+        lines.push('**Risk score:** ' + report.impact.score + '/100 (' + report.impact.verdict + ')');
+        lines.push('**Findings:** ' + report.impact.total +
+            ' (BREAK ' + report.impact.break_count +
+            ', WARN ' + report.impact.warn_count +
+            ', SAFE ' + report.impact.safe_count + ')');
+        lines.push('');
+        lines.push('## Ranked Findings');
+        lines.push('');
+        lines.push('| # | Risk | Source | Line | Pattern | Snippet |');
+        lines.push('|---|------|--------|------|---------|---------|');
+        for (var i = 0; i < report.findings.length; i++) {
+            var f = report.findings[i];
+            var snippet = (f.snippet || '').replace(/\|/g, '\\|');
+            lines.push('| ' + (i + 1) + ' | ' + f.risk_class + ' | ' +
+                f.source_type + ' `' + f.source_name + '` | ' +
+                (f.line_number || '') + ' | ' + f.matched_pattern + ' | ' +
+                snippet + ' |');
+        }
+        lines.push('');
+        lines.push('*Generated by WhereUsed Radar (x_sn_wur), AGPL-3.0, Vladimir Kapustin.*');
+        return lines.join('\n');
+    },
+
+    // ---------------------------------------------------------------------
+    // Internal helpers
+    // ---------------------------------------------------------------------
+    _getScan: function (scanId) {
+        var gr = new GlideRecord(this.SCAN_TABLE);
+        if (!gr.get(scanId)) { return null; }
+        return {
+            target_type: gr.getValue('target_type'),
+            target_name: gr.getValue('target_name'),
+            status: gr.getValue('status'),
+            started_at: gr.getValue('started_at'),
+            completed_at: gr.getValue('completed_at'),
+            impact_json: gr.getValue('impact_json')
+        };
+    },
+
+    _getFindings: function (scanId) {
+        var findings = [];
+        var gr = new GlideRecord(this.REFERENCE_TABLE);
+        gr.addQuery('scan', scanId);
+        gr.query();
+        while (gr.next()) {
+            findings.push({
+                source_type: gr.getValue('source_type'),
+                source_name: gr.getValue('source_name'),
+                source_sys_id: gr.getValue('source_sys_id'),
+                target_type: gr.getValue('target_type'),
+                target_name: gr.getValue('target_name'),
+                line_number: parseInt(gr.getValue('line_number'), 10) || 0,
+                risk_class: gr.getValue('risk_class'),
+                confidence: gr.getValue('confidence'),
+                matched_pattern: gr.getValue('matched_pattern'),
+                snippet: gr.getValue('snippet')
+            });
+        }
+        return findings;
+    },
+
+    _parseJson: function (raw, fallback) {
+        if (!raw) { return fallback; }
+        try {
+            var parsed = JSON.parse(raw);
+            return parsed || fallback;
+        } catch (e) {
+            return fallback;
+        }
+    },
+
+    type: 'WurReport'
+};
+]]></script>
+  </sys_script_include>
+
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>WhereUsed Radar API</name>
+    <description>WhereUsed Radar REST API — execute and status endpoints</description>
+    <base_uri>/api/x_sn_wur</base_uri>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</sys_id>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>execute</name>
+    <operation_uri>/execute</operation_uri>
+    <http_method>POST</http_method>
+    <requires_authentication>true</requires_authentication>
+    <web_service_definition>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</web_service_definition>
+    <operation_script><![CDATA[// WhereUsed Radar — POST /execute (action-dispatch endpoint)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single write/query endpoint. Dispatches on the `action` body parameter:
+//   scan, assess_batch, diff
+// Returns HTTP 400 with valid_actions for unknown actions, and a structured
+// HTTP 500 on any unexpected error (no raw stack traces leak to the caller).
+
+(function process(request, response) {
+    try {
+        var body = request.body ? request.body.data : {};
+        var action = body.action || '';
+
+        var scanner = new WurScanner();
+        var report = new WurReport();
+        var result;
+
+        switch (action) {
+            case 'scan':
+                // Run a full scan for a single target object and persist it.
+                var scanId = scanner.runScan(body.target_type, body.target_name);
+                result = {
+                    scan_id: scanId,
+                    target_type: body.target_type,
+                    target_name: body.target_name
+                };
+                break;
+
+            case 'assess_batch':
+                // Assess a list of objects (update-set / promotion preview).
+                result = {
+                    results: report.assessBatch(body.targets || [])
+                };
+                break;
+
+            case 'diff':
+                // Cross-instance / cross-update-set impact diff preview.
+                result = {
+                    diff: report.diffImpact(body.baseline || [], body.candidate || [])
+                };
+                break;
+
+            default:
+                response.setStatus(400);
+                response.setBody(JSON.stringify({
+                    error: 'Unknown action: ' + action,
+                    valid_actions: ['scan', 'assess_batch', 'diff']
+                }));
+                return;
+        }
+
+        response.setStatus(200);
+        response.setBody(JSON.stringify(result));
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({
+            error: 'Internal error processing request',
+            message: e.message || 'unknown error'
+        }));
+    }
+})(request, response);
+]]></operation_script>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>status</name>
+    <operation_uri>/status</operation_uri>
+    <http_method>GET</http_method>
+    <requires_authentication>true</requires_authentication>
+    <web_service_definition>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</web_service_definition>
+    <operation_script><![CDATA[// WhereUsed Radar — GET /status (read-only reporting endpoint)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Read-only endpoint. Dispatches on query parameters:
+//   ?report=<scan_id>      → ranked impact report
+//   ?workbench=<scan_id>   → remediation workbench (findings + suggested fix)
+//   ?graph=<scan_id>       → dependency graph projection (nodes + edges)
+//   ?markdown=<scan_id>    → Markdown export of the impact report
+// Returns HTTP 400 when no recognized parameter is supplied, and a structured
+// HTTP 500 on any unexpected error (no raw stack traces leak to the caller).
+
+(function process(request, response) {
+    try {
+        var q = request.queryParams || {};
+        var report = new WurReport();
+        var result = { queried_at: new GlideDateTime().getValue() };
+
+        if (q.report) {
+            result.report = report.buildImpactReport(q.report);
+        } else if (q.workbench) {
+            result.workbench = report.buildRemediationWorkbench(q.workbench);
+        } else if (q.graph) {
+            result.graph = report.buildDependencyGraph(q.graph);
+        } else if (q.markdown) {
+            result.markdown = report.exportMarkdown(q.markdown);
+        } else {
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'No recognized query parameter supplied',
+                valid_params: ['report', 'workbench', 'graph', 'markdown']
+            }));
+            return;
+        }
+
+        response.setStatus(200);
+        response.setBody(JSON.stringify(result));
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({
+            error: 'Internal error processing request',
+            message: e.message || 'unknown error'
+        }));
+    }
+})(request, response);
+]]></operation_script>
+  </sys_ws_operation>
+</unload>

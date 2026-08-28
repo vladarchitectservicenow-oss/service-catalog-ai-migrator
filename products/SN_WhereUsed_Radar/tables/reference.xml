@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- WhereUsed Radar — Reference finding table (sys_db_object)
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0
+     Absorbs x_sn_wur_dependency: each reference record IS a graph edge
+     (source_type/source_name -> target_type/target_name). -->
+<unload unload_date="2026-08-28 00:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>private</access>
+    <create_access>false</create_access>
+    <delete_access>false</delete_access>
+    <label>WhereUsed Reference</label>
+    <name>x_sn_wur_reference</name>
+    <read_access>false</read_access>
+    <super_class/>
+    <update_access>false</update_access>
+    <user_role/>
+    <ws_access>false</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="scan">
+    <active>true</active>
+    <internal_type>reference</internal_type>
+    <label>Scan Sys ID</label>
+    <name>x_sn_wur_reference</name>
+    <reference>x_sn_wur_scan</reference>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="target_type">
+    <active>true</active>
+    <choice>1</choice>
+    <internal_type>string</internal_type>
+    <label>Target Type</label>
+    <max_length>40</max_length>
+    <name>x_sn_wur_reference</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="target_name">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Target Name</label>
+    <max_length>255</max_length>
+    <name>x_sn_wur_reference</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_type">
+    <active>true</active>
+    <choice>1</choice>
+    <internal_type>string</internal_type>
+    <label>Source Type</label>
+    <max_length>40</max_length>
+    <name>x_sn_wur_reference</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_name">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Source Name</label>
+    <max_length>255</max_length>
+    <name>x_sn_wur_reference</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_sys_id">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Source Sys ID</label>
+    <max_length>32</max_length>
+    <name>x_sn_wur_reference</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="line_number">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Line Number</label>
+    <name>x_sn_wur_reference</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="risk_class">
+    <active>true</active>
+    <choice>1</choice>
+    <internal_type>string</internal_type>
+    <label>Risk Class</label>
+    <max_length>20</max_length>
+    <name>x_sn_wur_reference</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="confidence">
+    <active>true</active>
+    <choice>1</choice>
+    <internal_type>string</internal_type>
+    <label>Confidence</label>
+    <max_length>20</max_length>
+    <name>x_sn_wur_reference</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="matched_pattern">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Matched Pattern</label>
+    <max_length>255</max_length>
+    <name>x_sn_wur_reference</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="snippet">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Code Snippet</label>
+    <max_length>4000</max_length>
+    <name>x_sn_wur_reference</name>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_reference" value="table">
+    <label>Table</label>
+    <sequence>10</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_reference" value="field">
+    <label>Field</label>
+    <sequence>20</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_reference" value="script_include">
+    <label>Script Include</label>
+    <sequence>30</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_reference" value="business_rule">
+    <label>Business Rule</label>
+    <sequence>40</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_reference" value="ui_policy">
+    <label>UI Policy</label>
+    <sequence>50</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_reference" value="property">
+    <label>System Property</label>
+    <sequence>60</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="target_type" name="x_sn_wur_reference" value="flow">
+    <label>Flow</label>
+    <sequence>70</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="source_type" name="x_sn_wur_reference" value="business_rule">
+    <label>Business Rule</label>
+    <sequence>10</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="source_type" name="x_sn_wur_reference" value="script_include">
+    <label>Script Include</label>
+    <sequence>20</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="source_type" name="x_sn_wur_reference" value="client_script">
+    <label>Client Script</label>
+    <sequence>30</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="source_type" name="x_sn_wur_reference" value="ui_policy">
+    <label>UI Policy</label>
+    <sequence>40</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="source_type" name="x_sn_wur_reference" value="flow">
+    <label>Flow</label>
+    <sequence>50</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="source_type" name="x_sn_wur_reference" value="scheduled_job">
+    <label>Scheduled Job</label>
+    <sequence>60</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="source_type" name="x_sn_wur_reference" value="dictionary">
+    <label>Dictionary Entry</label>
+    <sequence>70</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="source_type" name="x_sn_wur_reference" value="acl">
+    <label>Access Control</label>
+    <sequence>80</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="source_type" name="x_sn_wur_reference" value="transform_map">
+    <label>Transform Map</label>
+    <sequence>90</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="risk_class" name="x_sn_wur_reference" value="SAFE">
+    <label>Safe (read-only)</label>
+    <sequence>10</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="risk_class" name="x_sn_wur_reference" value="WARN">
+    <label>Warn (write/conditional)</label>
+    <sequence>20</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="risk_class" name="x_sn_wur_reference" value="BREAK">
+    <label>Break (throws/corrupts)</label>
+    <sequence>30</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="confidence" name="x_sn_wur_reference" value="high">
+    <label>High</label>
+    <sequence>10</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="confidence" name="x_sn_wur_reference" value="medium">
+    <label>Medium</label>
+    <sequence>20</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="confidence" name="x_sn_wur_reference" value="unverifiable">
+    <label>Unverifiable (dynamic)</label>
+    <sequence>30</sequence>
+  </sys_choice>
+</unload>
