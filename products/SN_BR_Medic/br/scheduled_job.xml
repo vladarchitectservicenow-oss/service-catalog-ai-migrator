@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- BR Medic — Scheduled job: weekly anti-pattern scan (delta via high-water mark)
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0 -->
+<unload unload_date="2026-08-29 00:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Runs the BR Medic anti-pattern scan weekly. The scanner is read-only over the scripted surface (sys_script, sys_script_include, sys_index) and writes only to its own scoped result tables. Delta scanning is driven by the high-water mark recorded on each scan run, so only changed scripts are re-analyzed.</description>
+    <name>BR Medic Weekly Anti-Pattern Scan</name>
+    <run_dayofweek>sunday</run_dayofweek>
+    <run_period>weekly</run_period>
+    <run_start>2026-08-29 03:00:00</run_start>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// BR Medic — scheduled weekly anti-pattern scan
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function runBrmWeeklyScan() {
+    try {
+        var scanner = new BrmScanner();
+        var scanId = scanner.runDeltaScan();
+        gs.info('BR Medic weekly scan complete: scan_id=' + scanId);
+    } catch (e) {
+        gs.error('BR Medic weekly scan failed: ' + e.message);
+    }
+})();
+]]></script>
+  </sysauto_script>
+</unload>

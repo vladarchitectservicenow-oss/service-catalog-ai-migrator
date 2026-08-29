@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- BR Medic — ACLs for custom tables and REST endpoints
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0 -->
+<unload unload_date="2026-08-29 00:00:00">
+  <!-- Scan table: read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_brmedic_scan</name>
+    <operation>read</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_brmedic.admin') || gs.hasRole('x_brmedic.user');</script>
+  </sys_security_acl>
+  <!-- Scan table: write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_brmedic_scan</name>
+    <operation>write</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_brmedic.admin');</script>
+  </sys_security_acl>
+  <!-- Scan table: create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_brmedic_scan</name>
+    <operation>create</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_brmedic.admin');</script>
+  </sys_security_acl>
+  <!-- Scan table: delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_brmedic_scan</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_brmedic.admin');</script>
+  </sys_security_acl>
+  <!-- Finding table: read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_brmedic_finding</name>
+    <operation>read</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_brmedic.admin') || gs.hasRole('x_brmedic.user');</script>
+  </sys_security_acl>
+  <!-- Finding table: write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_brmedic_finding</name>
+    <operation>write</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_brmedic.admin');</script>
+  </sys_security_acl>
+  <!-- Finding table: create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_brmedic_finding</name>
+    <operation>create</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_brmedic.admin');</script>
+  </sys_security_acl>
+  <!-- Finding table: delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_brmedic_finding</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_brmedic.admin');</script>
+  </sys_security_acl>
+  <!-- REST endpoint: execute (POST /execute) -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>execute</name>
+    <operation>execute</operation>
+    <type>rest_service</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_brmedic.admin');</script>
+  </sys_security_acl>
+  <!-- REST endpoint: status (GET /status) -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>status</name>
+    <operation>execute</operation>
+    <type>rest_service</type>
+    <script>answer = gs.hasRole('admin') || gs.hasRole('x_brmedic.admin') || gs.hasRole('x_brmedic.user');</script>
+  </sys_security_acl>
+</unload>

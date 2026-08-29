@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- BR Medic — Scan run log table (sys_db_object)
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0
+     Absorbs x_brmedic_script_health via health_json (per-script aggregate scores). -->
+<unload unload_date="2026-08-29 00:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>private</access>
+    <create_access>false</create_access>
+    <delete_access>false</delete_access>
+    <label>BR Medic Scan</label>
+    <name>x_brmedic_scan</name>
+    <read_access>false</read_access>
+    <super_class/>
+    <update_access>false</update_access>
+    <user_role/>
+    <ws_access>false</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="scan_type">
+    <active>true</active>
+    <choice>1</choice>
+    <internal_type>string</internal_type>
+    <label>Scan Type</label>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_brmedic_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="status">
+    <active>true</active>
+    <choice>1</choice>
+    <internal_type>string</internal_type>
+    <label>Status</label>
+    <max_length>40</max_length>
+    <name>x_brmedic_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="started_at">
+    <active>true</active>
+    <internal_type>glide_date_time</internal_type>
+    <label>Started At</label>
+    <name>x_brmedic_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="completed_at">
+    <active>true</active>
+    <internal_type>glide_date_time</internal_type>
+    <label>Completed At</label>
+    <name>x_brmedic_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="scripts_scanned">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Scripts Scanned</label>
+    <name>x_brmedic_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="findings_count">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Findings Count</label>
+    <name>x_brmedic_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="critical_count">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Critical Count</label>
+    <name>x_brmedic_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="high_count">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>High Count</label>
+    <name>x_brmedic_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="medium_count">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Medium Count</label>
+    <name>x_brmedic_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="low_count">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Low Count</label>
+    <name>x_brmedic_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="high_water_mark">
+    <active>true</active>
+    <internal_type>glide_date_time</internal_type>
+    <label>High Water Mark</label>
+    <name>x_brmedic_scan</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="health_json">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Script Health (JSON)</label>
+    <max_length>4000</max_length>
+    <name>x_brmedic_scan</name>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" element="scan_type" name="x_brmedic_scan" value="full">
+    <label>Full</label>
+    <sequence>10</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="scan_type" name="x_brmedic_scan" value="delta">
+    <label>Delta</label>
+    <sequence>20</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_brmedic_scan" value="running">
+    <label>Running</label>
+    <sequence>10</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_brmedic_scan" value="completed">
+    <label>Completed</label>
+    <sequence>20</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_brmedic_scan" value="failed">
+    <label>Failed</label>
+    <sequence>30</sequence>
+  </sys_choice>
+</unload>

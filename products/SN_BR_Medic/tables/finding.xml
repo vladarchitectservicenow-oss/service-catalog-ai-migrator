@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- BR Medic — Finding table (sys_db_object)
+     Copyright (C) 2026 Vladimir Kapustin
+     SPDX-License-Identifier: AGPL-3.0
+     One record per anti-pattern finding, with dismiss/acknowledge state. -->
+<unload unload_date="2026-08-29 00:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>private</access>
+    <create_access>false</create_access>
+    <delete_access>false</delete_access>
+    <label>BR Medic Finding</label>
+    <name>x_brmedic_finding</name>
+    <read_access>false</read_access>
+    <super_class/>
+    <update_access>false</update_access>
+    <user_role/>
+    <ws_access>false</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="scan">
+    <active>true</active>
+    <internal_type>reference</internal_type>
+    <label>Scan Sys ID</label>
+    <name>x_brmedic_finding</name>
+    <reference>x_brmedic_scan</reference>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="anti_pattern">
+    <active>true</active>
+    <choice>1</choice>
+    <internal_type>string</internal_type>
+    <label>Anti-Pattern</label>
+    <max_length>40</max_length>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="severity">
+    <active>true</active>
+    <choice>1</choice>
+    <internal_type>string</internal_type>
+    <label>Severity</label>
+    <max_length>20</max_length>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_type">
+    <active>true</active>
+    <choice>1</choice>
+    <internal_type>string</internal_type>
+    <label>Source Type</label>
+    <max_length>40</max_length>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_name">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Source Name</label>
+    <max_length>255</max_length>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="source_sys_id">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Source Sys ID</label>
+    <max_length>32</max_length>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="table_name">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Table Name</label>
+    <max_length>80</max_length>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="line_number">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Line Number</label>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="snippet">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Code Snippet</label>
+    <max_length>4000</max_length>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="detail">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Detail</label>
+    <max_length>4000</max_length>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="impact_score">
+    <active>true</active>
+    <internal_type>integer</internal_type>
+    <label>Impact Score</label>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="status">
+    <active>true</active>
+    <choice>1</choice>
+    <internal_type>string</internal_type>
+    <label>Status</label>
+    <max_length>40</max_length>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="status_updated_at">
+    <active>true</active>
+    <internal_type>glide_date_time</internal_type>
+    <label>Status Updated At</label>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="status_updated_by">
+    <active>true</active>
+    <internal_type>string</internal_type>
+    <label>Status Updated By</label>
+    <max_length>100</max_length>
+    <name>x_brmedic_finding</name>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE" element="anti_pattern" name="x_brmedic_finding" value="n_plus_one">
+    <label>N+1 Query</label>
+    <sequence>10</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="anti_pattern" name="x_brmedic_finding" value="unindexed_where">
+    <label>Unindexed Where</label>
+    <sequence>20</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="anti_pattern" name="x_brmedic_finding" value="sync_heavy_op">
+    <label>Synchronous Heavy Operation</label>
+    <sequence>30</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="anti_pattern" name="x_brmedic_finding" value="recursion">
+    <label>Recursion / Double-Write</label>
+    <sequence>40</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="anti_pattern" name="x_brmedic_finding" value="missing_gating">
+    <label>Missing Gating</label>
+    <sequence>50</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="severity" name="x_brmedic_finding" value="critical">
+    <label>Critical</label>
+    <sequence>10</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="severity" name="x_brmedic_finding" value="high">
+    <label>High</label>
+    <sequence>20</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="severity" name="x_brmedic_finding" value="medium">
+    <label>Medium</label>
+    <sequence>30</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="severity" name="x_brmedic_finding" value="low">
+    <label>Low</label>
+    <sequence>40</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="source_type" name="x_brmedic_finding" value="business_rule">
+    <label>Business Rule</label>
+    <sequence>10</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="source_type" name="x_brmedic_finding" value="script_include">
+    <label>Script Include</label>
+    <sequence>20</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_brmedic_finding" value="open">
+    <label>Open</label>
+    <sequence>10</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_brmedic_finding" value="acknowledged">
+    <label>Acknowledged</label>
+    <sequence>20</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_brmedic_finding" value="dismissed">
+    <label>Dismissed</label>
+    <sequence>30</sequence>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE" element="status" name="x_brmedic_finding" value="fixed">
+    <label>Fixed</label>
+    <sequence>40</sequence>
+  </sys_choice>
+</unload>
