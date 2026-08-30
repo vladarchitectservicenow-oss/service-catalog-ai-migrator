@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-30 00:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <label>MidPulse Snapshot</label>
+    <create_access_controls>true</create_access_controls>
+    <is_extendable>false</is_extendable>
+    <read_access>true</read_access>
+    <create_access>true</create_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <element>taken_at</element>
+    <column_label>Taken At</column_label>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <element>agent_sys_id</element>
+    <column_label>Agent</column_label>
+    <internal_type display_value="Reference">reference</internal_type>
+    <reference display_value="ECC Agent">ecc_agent</reference>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <element>agent_json</element>
+    <max_length>4000</max_length>
+    <column_label>Agent JSON</column_label>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <element>queue_json</element>
+    <max_length>4000</max_length>
+    <column_label>Queue JSON</column_label>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <element>runtime_json</element>
+    <max_length>4000</max_length>
+    <column_label>Runtime JSON</column_label>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <element>routing_json</element>
+    <max_length>4000</max_length>
+    <column_label>Routing JSON</column_label>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <element>health_score</element>
+    <column_label>Health Score</column_label>
+    <internal_type display_value="Integer">integer</internal_type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <element>narrative_text</element>
+    <max_length>4000</max_length>
+    <column_label>Narrative Text</column_label>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+  </sys_dictionary>
+</unload>

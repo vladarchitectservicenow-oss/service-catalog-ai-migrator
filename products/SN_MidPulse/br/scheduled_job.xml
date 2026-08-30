@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-30 00:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <name>MidPulse Health Sweep</name>
+    <active>true</active>
+    <run_type>periodically</run_type>
+    <run_dayofweek/>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_time/>
+    <run_period>15</run_period>
+    <run_start>2026-08-30 00:00:00</run_start>
+    <run_as display_value="MidPulse Collector">x_midpulse_collector</run_as>
+    <condition/>
+    <script><![CDATA[
+// MidPulse — Mid Server Health & Queue Monitor — Scheduled Health Sweep
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function () {
+    var collector = new MidPulseCollector();
+    var analyzer = new MidPulseAnalyzer();
+    var sweep = collector.sweepAll();
+    var result = analyzer.analyze(sweep);
+    gs.info("MidPulse sweep complete: health=" + result.global_health +
+            ", agents=" + result.agent_count +
+            ", snapshots=" + result.snapshots_written +
+            ", alert=" + result.alert_fired);
+})();
+]]></script>
+  </sysauto_script>
+</unload>

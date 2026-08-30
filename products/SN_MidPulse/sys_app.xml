@@ -1,0 +1,867 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-30 00:00:00">
+  <sys_app action="INSERT_OR_UPDATE">
+    <name>MidPulse</name>
+    <scope>x_midpulse</scope>
+    <version>1.0.0</version>
+    <short_description>Mid Server Health &amp; Queue Monitor</short_description>
+    <store_application>false</store_application>
+    <store_correlation_id/>
+    <store_version/>
+  </sys_app>
+
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_midpulse_admin</name>
+    <description>MidPulse administrator — full config and snapshot management</description>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_midpulse_collector</name>
+    <description>MidPulse collector — run sweeps and create snapshots</description>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_midpulse_viewer</name>
+    <description>MidPulse viewer — read-only dashboard and status access</description>
+  </sys_user_role>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <name>ecc_agent</name>
+    <target_name>ecc_agent</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <source_scope>x_midpulse</source_scope>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <name>ecc_queue</name>
+    <target_name>ecc_queue</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <source_scope>x_midpulse</source_scope>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <name>ecc_agent_parameter</name>
+    <target_name>ecc_agent_parameter</target_name>
+    <target_type>table</target_type>
+    <operation>read</operation>
+    <source_scope>x_midpulse</source_scope>
+  </sys_scope_privilege>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <name>MidPulseCollector</name>
+    <api_name>x_midpulse.MidPulseCollector</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <active>true</active>
+    <access>public</access>
+    <script><![CDATA[
+// MidPulse — Mid Server Health & Queue Monitor — MidPulseCollector
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Data collection engine. Reads Mid Server runtime state from the OOTB
+// ecc_agent, ecc_queue, and ecc_agent_parameter tables (read-only cross-scope)
+// and probes each Mid Server's /status endpoint over REST for live JVM
+// thread-pool and memory telemetry that is invisible from the instance UI.
+//
+// @class MidPulseCollector @namespace x_midpulse
+var MidPulseCollector = Class.create();
+MidPulseCollector.prototype = {
+    initialize: function () {
+        this._config = null;
+    },
+
+    /**
+     * Load the active configuration record (x_midpulse_config).
+     * Returns a plain object with defaults applied when no config exists.
+     */
+    _loadConfig: function () {
+        if (this._config) {
+            return this._config;
+        }
+        var cfg = {
+            thresholds: { queue_depth: 1000, heartbeat_age_min: 15, thread_pool_pct: 90, memory_pct: 90, degraded_threshold: 60 },
+            recipients: [],
+            ai_config: { provider: "", model: "", prompt_tmpl: "" },
+            agent_map: []
+        };
+        var gr = new GlideRecord("x_midpulse_config");
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            cfg.thresholds = this._safeParse(gr.getValue("thresholds_json"), cfg.thresholds);
+            cfg.recipients = this._safeParse(gr.getValue("recipients_json"), cfg.recipients);
+            cfg.ai_config = this._safeParse(gr.getValue("ai_config_json"), cfg.ai_config);
+            cfg.agent_map = this._safeParse(gr.getValue("agent_map_json"), cfg.agent_map);
+        }
+        this._config = cfg;
+        return cfg;
+    },
+
+    /**
+     * Tolerant JSON parse. Returns fallback on any malformed input.
+     */
+    _safeParse: function (raw, fallback) {
+        if (!raw) {
+            return fallback;
+        }
+        try {
+            var parsed = JSON.parse(raw);
+            return parsed || fallback;
+        } catch (e) {
+            return fallback;
+        }
+    },
+
+    /**
+     * Generate an AI narrative via the configured GenAI provider (Now Assist /
+     * Generative AI Controller BYOK). Consumes cfg.ai_config (provider, model,
+     * prompt_tmpl). Falls back to null when no provider is configured or the
+     * call fails, so callers can degrade to deterministic prose.
+     */
+    generateAINarrative: function (prompt) {
+        var cfg = this._loadConfig();
+        var ai = cfg.ai_config || {};
+        if (!ai.provider || !ai.model) {
+            return null;
+        }
+        try {
+            var tmpl = ai.prompt_tmpl || "{prompt}";
+            var fullPrompt = tmpl.replace("{prompt}", prompt);
+            var req = new sn_ws.RESTMessageV2();
+            req.setHttpMethod("POST");
+            req.setEndpoint("/api/sn_generative_ai/now_llm/chat/completions");
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json");
+            req.setRequestBody(JSON.stringify({
+                provider: ai.provider,
+                model: ai.model,
+                messages: [{ role: "user", content: fullPrompt }],
+                max_tokens: 300,
+                temperature: 0.2
+            }));
+            var resp = req.execute();
+            var code = resp.getStatusCode();
+            if (code < 200 || code >= 300) {
+                return null;
+            }
+            var data = this._safeParse(resp.getBody(), null);
+            if (!data || !data.choices || data.choices.length === 0) {
+                return null;
+            }
+            var text = data.choices[0].message && data.choices[0].message.content;
+            return text || null;
+        } catch (e) {
+            gs.error("MidPulse generateAINarrative failed: " + e);
+            return null;
+        }
+    },
+
+    /**
+     * Read all registered Mid Servers from ecc_agent.
+     * Returns an array of agent descriptor objects.
+     */
+    collectAgents: function () {
+        var agents = [];
+        var gr = new GlideRecord("ecc_agent");
+        gr.addQuery("status", "Up");
+        gr.query();
+        while (gr.next()) {
+            agents.push({
+                sys_id: gr.getUniqueValue(),
+                name: gr.getValue("name") || "",
+                status: gr.getValue("status") || "",
+                version: gr.getValue("version") || "",
+                host: gr.getValue("host_name") || "",
+                ip: gr.getValue("ip_address") || "",
+                last_updated: gr.getValue("sys_updated_on") || ""
+            });
+        }
+        return agents;
+    },
+
+    /**
+     * Compute queue depth, oldest item age, and stuck-item count per agent
+     * using GlideAggregate (avoids getRowCount() full-scan anti-pattern).
+     * Returns a map keyed by agent sys_id.
+     */
+    collectQueue: function () {
+        var queueMap = {};
+        var ga = new GlideAggregate("ecc_queue");
+        ga.addQuery("state", "ready");
+        ga.groupBy("agent");
+        ga.addAggregate("COUNT");
+        ga.query();
+        while (ga.next()) {
+            var agentId = ga.agent + "";
+            queueMap[agentId] = {
+                depth: parseInt(ga.getAggregate("COUNT"), 10) || 0,
+                oldest_age_min: 0,
+                stuck_count: 0
+            };
+        }
+
+        // Oldest age + stuck count per agent (bounded query window).
+        var gr = new GlideRecord("ecc_queue");
+        gr.addQuery("state", "ready");
+        gr.orderByDesc("sys_created_on");
+        gr.setLimit(5000);
+        gr.query();
+        var now = new GlideDateTime();
+        while (gr.next()) {
+            var agentId = gr.agent + "";
+            if (!queueMap[agentId]) {
+                queueMap[agentId] = { depth: 0, oldest_age_min: 0, stuck_count: 0 };
+            }
+            var created = new GlideDateTime(gr.getValue("sys_created_on"));
+            var ageMs = now.getNumericValue() - created.getNumericValue();
+            var ageMin = Math.floor(ageMs / 60000);
+            if (ageMin > queueMap[agentId].oldest_age_min) {
+                queueMap[agentId].oldest_age_min = ageMin;
+            }
+            if (ageMin > 60) {
+                queueMap[agentId].stuck_count += 1;
+            }
+        }
+        return queueMap;
+    },
+
+    /**
+     * Read IP-range and capability configuration from ecc_agent_parameter.
+     * Returns a map keyed by agent sys_id.
+     */
+    collectParams: function () {
+        var paramMap = {};
+        var gr = new GlideRecord("ecc_agent_parameter");
+        gr.query();
+        while (gr.next()) {
+            var agentId = gr.getValue("agent") + "";
+            if (!paramMap[agentId]) {
+                paramMap[agentId] = { ip_range: "", capabilities: [] };
+            }
+            var name = gr.getValue("name") || "";
+            var value = gr.getValue("value") || "";
+            if (name === "mid.server.ip_range" || name.indexOf("ip_range") > -1) {
+                paramMap[agentId].ip_range = value;
+            } else if (name === "mid.server.capabilities" || name.indexOf("capabilit") > -1) {
+                paramMap[agentId].capabilities = value.split(",");
+            }
+        }
+        return paramMap;
+    },
+
+    /**
+     * Probe a single Mid Server's /status endpoint over REST.
+     * Returns a runtime descriptor or null on failure (graceful degradation).
+     */
+    probeStatus: function (agent) {
+        var host = agent.host || agent.ip;
+        if (!host) {
+            return null;
+        }
+        var cfg = this._loadConfig();
+        var port = 8082;
+        var statusUrl = "";
+        var i;
+        for (i = 0; i < cfg.agent_map.length; i++) {
+            if (cfg.agent_map[i].agent_sys_id === agent.sys_id) {
+                port = cfg.agent_map[i].port || port;
+                statusUrl = cfg.agent_map[i].status_url || "";
+                break;
+            }
+        }
+        if (!statusUrl) {
+            statusUrl = "http://" + host + ":" + port + "/status";
+        }
+        try {
+            var rm = new sn_ws.RESTMessageV2();
+            rm.setHttpMethod("GET");
+            rm.setEndpoint(statusUrl);
+            rm.setRequestHeader("Accept", "application/json");
+            rm.setHttpTimeout(5000);
+            var resp = rm.execute();
+            var code = resp.getStatusCode();
+            if (code < 200 || code >= 300) {
+                return null;
+            }
+            var body = resp.getBody();
+            var data = this._safeParse(body, null);
+            if (!data) {
+                return null;
+            }
+            return {
+                thread_pool_pct: this._num(data.threadPoolUtilization, data.thread_pool_pct, data.threadPool),
+                memory_pct: this._num(data.memoryUtilization, data.memory_pct, data.memory),
+                jvm_uptime: data.jvmUptime || data.uptime || "",
+                reachable: true
+            };
+        } catch (e) {
+            return null;
+        }
+    },
+
+    /**
+     * Coerce a numeric value from several possible keys, defaulting to -1.
+     */
+    _num: function () {
+        var i;
+        for (i = 0; i < arguments.length; i++) {
+            var v = arguments[i];
+            if (v === undefined || v === null || v === "") {
+                continue;
+            }
+            var n = parseFloat(v);
+            if (!isNaN(n)) {
+                return n;
+            }
+        }
+        return -1;
+    },
+
+    /**
+     * Full health sweep: collect agents, queue, params, and probe each agent.
+     * Returns a sweep object consumed by MidPulseAnalyzer.
+     */
+    sweepAll: function () {
+        var agents = this.collectAgents();
+        var queueMap = this.collectQueue();
+        var paramMap = this.collectParams();
+        var i;
+        for (i = 0; i < agents.length; i++) {
+            var a = agents[i];
+            var q = queueMap[a.sys_id] || { depth: 0, oldest_age_min: 0, stuck_count: 0 };
+            var p = paramMap[a.sys_id] || { ip_range: "", capabilities: [] };
+            a.queue = q;
+            a.params = p;
+            a.runtime = this.probeStatus(a);
+        }
+        return {
+            taken_at: new GlideDateTime().getValue(),
+            agents: agents
+        };
+    },
+
+    type: "MidPulseCollector"
+};
+]]></script>
+    <protection>2</protection>
+    <scope display_value="MidPulse">x_midpulse</scope>
+  </sys_script_include>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <name>MidPulseAnalyzer</name>
+    <api_name>x_midpulse.MidPulseAnalyzer</api_name>
+    <caller_access/>
+    <client_callable>false</client_callable>
+    <active>true</active>
+    <access>public</access>
+    <script><![CDATA[
+// MidPulse — Mid Server Health & Queue Monitor — MidPulseAnalyzer
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Analysis, scoring, alerting, and AI narrative generation. Consumes a sweep
+// object produced by MidPulseCollector, computes a weighted global health
+// score, detects backlog / version drift / thread-pool & memory pressure /
+// routing anomalies, persists snapshots, and fires alerts on state transition.
+//
+// @class MidPulseAnalyzer @namespace x_midpulse
+var MidPulseAnalyzer = Class.create();
+MidPulseAnalyzer.prototype = {
+    initialize: function () {
+        this._collector = new MidPulseCollector();
+        this._config = this._collector._loadConfig();
+    },
+
+    /**
+     * Weighted global health score (0-100).
+     * queue 40%, drift 25%, pressure 20%, heartbeat 15%.
+     */
+    scoreHealth: function (sweep) {
+        var agents = sweep.agents;
+        if (!agents || agents.length === 0) {
+            return 0;
+        }
+        var t = this._config.thresholds;
+        var queueScore = 0, driftScore = 0, pressureScore = 0, heartbeatScore = 0;
+        var i, a;
+        // Guard against zero-valued thresholds (division-by-zero → NaN/Infinity).
+        var qThresh = t.queue_depth > 0 ? t.queue_depth : 1;
+        var tpThresh = t.thread_pool_pct > 0 ? t.thread_pool_pct : 1;
+        var memThresh = t.memory_pct > 0 ? t.memory_pct : 1;
+        var hbThresh = t.heartbeat_age_min > 0 ? t.heartbeat_age_min : 1;
+        for (i = 0; i < agents.length; i++) {
+            a = agents[i];
+            // Queue: depth vs threshold (0-100).
+            var depth = a.queue ? a.queue.depth : 0;
+            var qs = depth >= qThresh ? 0 : Math.max(0, 100 - (depth / qThresh) * 100);
+            queueScore += qs;
+            // Pressure: thread pool + memory (0-100).
+            var ps = 100;
+            if (a.runtime && a.runtime.reachable) {
+                var tp = a.runtime.thread_pool_pct;
+                var mem = a.runtime.memory_pct;
+                if (tp >= 0) { ps = Math.min(ps, Math.max(0, 100 - (tp / tpThresh) * 100)); }
+                if (mem >= 0) { ps = Math.min(ps, Math.max(0, 100 - (mem / memThresh) * 100)); }
+            }
+            pressureScore += ps;
+            // Heartbeat: age vs threshold (0-100).
+            var ageMin = this._heartbeatAgeMin(a);
+            var hs = ageMin >= hbThresh ? 0 : Math.max(0, 100 - (ageMin / hbThresh) * 100);
+            heartbeatScore += hs;
+        }
+        queueScore = queueScore / agents.length;
+        pressureScore = pressureScore / agents.length;
+        heartbeatScore = heartbeatScore / agents.length;
+        // Drift: 100 if all versions equal, else scaled by minority ratio.
+        driftScore = this._driftScore(agents);
+        var total = queueScore * 0.40 + driftScore * 0.25 + pressureScore * 0.20 + heartbeatScore * 0.15;
+        return Math.round(total);
+    },
+
+    /**
+     * Heartbeat age in minutes from ecc_agent.sys_updated_on.
+     */
+    _heartbeatAgeMin: function (agent) {
+        if (!agent.last_updated) {
+            return 9999;
+        }
+        var now = new GlideDateTime();
+        var upd = new GlideDateTime(agent.last_updated);
+        return Math.floor((now.getNumericValue() - upd.getNumericValue()) / 60000);
+    },
+
+    /**
+     * Version drift score (0-100). 100 = uniform fleet, lower = more drift.
+     */
+    _driftScore: function (agents) {
+        if (agents.length <= 1) {
+            return 100;
+        }
+        var counts = {};
+        var i;
+        for (i = 0; i < agents.length; i++) {
+            var v = agents[i].version || "unknown";
+            counts[v] = (counts[v] || 0) + 1;
+        }
+        var maxCount = 0;
+        for (var k in counts) {
+            if (counts.hasOwnProperty(k) && counts[k] > maxCount) {
+                maxCount = counts[k];
+            }
+        }
+        return Math.round((maxCount / agents.length) * 100);
+    },
+
+    /**
+     * Detect queue backlog breach. Returns array of breach descriptors.
+     */
+    detectBacklog: function (sweep) {
+        var t = this._config.thresholds;
+        var breaches = [];
+        var i, a;
+        for (i = 0; i < sweep.agents.length; i++) {
+            a = sweep.agents[i];
+            var depth = a.queue ? a.queue.depth : 0;
+            if (depth >= t.queue_depth) {
+                breaches.push({
+                    agent_sys_id: a.sys_id,
+                    agent_name: a.name,
+                    metric: "queue_depth",
+                    value: depth,
+                    threshold: t.queue_depth
+                });
+            }
+        }
+        return breaches;
+    },
+
+    /**
+     * Detect version drift across the fleet. Returns drift descriptor or null.
+     */
+    detectDrift: function (sweep) {
+        var agents = sweep.agents;
+        if (agents.length <= 1) {
+            return null;
+        }
+        var versions = {};
+        var i;
+        for (i = 0; i < agents.length; i++) {
+            var v = agents[i].version || "unknown";
+            if (!versions[v]) { versions[v] = []; }
+            versions[v].push(agents[i].name);
+        }
+        var keys = [];
+        for (var k in versions) {
+            if (versions.hasOwnProperty(k)) { keys.push(k); }
+        }
+        if (keys.length <= 1) {
+            return null;
+        }
+        return { versions: versions, distinct_count: keys.length };
+    },
+
+    /**
+     * Detect thread-pool / memory pressure. Returns array of pressure descriptors.
+     */
+    detectPressure: function (sweep) {
+        var t = this._config.thresholds;
+        var pressures = [];
+        var i, a;
+        for (i = 0; i < sweep.agents.length; i++) {
+            a = sweep.agents[i];
+            if (!a.runtime || !a.runtime.reachable) {
+                continue;
+            }
+            if (a.runtime.thread_pool_pct >= 0 && a.runtime.thread_pool_pct >= t.thread_pool_pct) {
+                pressures.push({
+                    agent_sys_id: a.sys_id, agent_name: a.name,
+                    metric: "thread_pool_pct", value: a.runtime.thread_pool_pct, threshold: t.thread_pool_pct
+                });
+            }
+            if (a.runtime.memory_pct >= 0 && a.runtime.memory_pct >= t.memory_pct) {
+                pressures.push({
+                    agent_sys_id: a.sys_id, agent_name: a.name,
+                    metric: "memory_pct", value: a.runtime.memory_pct, threshold: t.memory_pct
+                });
+            }
+        }
+        return pressures;
+    },
+
+    /**
+     * Detect routing anomalies: an agent whose configured IP range / capability
+     * set does not match the queue items actually routed to it. Heuristic flag.
+     * Returns array of routing anomaly descriptors.
+     */
+    detectRouting: function (sweep) {
+        var anomalies = [];
+        var i, a;
+        // Minimum queue depth before a routing anomaly is considered. A single
+        // queued item on an unconfigured agent is normal Mid Server behavior;
+        // only a non-trivial backlog with no routing configuration is a signal.
+        var minDepth = 10;
+        for (i = 0; i < sweep.agents.length; i++) {
+            a = sweep.agents[i];
+            var p = a.params || { ip_range: "", capabilities: [] };
+            var q = a.queue || { depth: 0 };
+            // Heuristic: an agent with no configured IP range or capabilities
+            // but a non-trivial queue depth is absorbing traffic it cannot
+            // deterministically serve — a routing-selection anomaly.
+            if (q.depth >= minDepth && !p.ip_range && (!p.capabilities || p.capabilities.length === 0)) {
+                anomalies.push({
+                    agent_sys_id: a.sys_id,
+                    agent_name: a.name,
+                    route_mismatch: true,
+                    detail: "No IP range or capability configured, but queue depth is " + q.depth
+                });
+            }
+        }
+        return anomalies;
+    },
+
+    /**
+     * Generate a natural-language root-cause narrative for a breach.
+     * Attempts the configured GenAI provider (Now Assist / GenAI Controller
+     * BYOK) via MidPulseCollector.generateAINarrative(); falls back to
+     * deterministic prose when no provider is configured or the call fails.
+     */
+    generateNarrative: function (breach, sweep) {
+        var agentName = breach.agent_name || "unknown";
+        var metric = breach.metric || "";
+        var value = breach.value;
+        var threshold = breach.threshold;
+        var parts = [];
+        parts.push("Mid Server " + agentName + " breached " + metric + ": " + value + " (threshold " + threshold + ").");
+        var i, a;
+        for (i = 0; i < sweep.agents.length; i++) {
+            a = sweep.agents[i];
+            if (a.sys_id === breach.agent_sys_id) {
+                if (a.runtime && a.runtime.reachable) {
+                    parts.push("Thread pool at " + a.runtime.thread_pool_pct + "% and memory at " + a.runtime.memory_pct + "%.");
+                } else {
+                    parts.push("Runtime probe unreachable — falling back to heartbeat telemetry only.");
+                }
+                break;
+            }
+        }
+        var drift = this.detectDrift(sweep);
+        if (drift) {
+            parts.push("Note: version drift detected across " + drift.distinct_count + " distinct versions.");
+        }
+        parts.push("Recommended action: drain the queue and standardize the Mid Server version before the next Discovery cycle.");
+        var deterministic = parts.join(" ");
+
+        // AI enhancement: if a GenAI provider is configured, ask it to refine
+        // the deterministic brief into a fuller root-cause narrative.
+        var aiPrompt = "You are a ServiceNow Mid Server operations analyst. " +
+            "Given the following telemetry brief, write a concise root-cause " +
+            "narrative and remediation recommendation in 2-3 sentences. " +
+            "Brief: " + deterministic;
+        var aiText = this._collector.generateAINarrative(aiPrompt);
+        if (aiText) {
+            return aiText;
+        }
+        return deterministic;
+    },
+
+    /**
+     * Persist one snapshot record per agent for the sweep.
+     * The AI/root-cause narrative (if any) is stored on the snapshot of the
+     * agent that triggered the breach; other agents get an empty narrative.
+     * Returns the number of records written.
+     */
+    persistSnapshots: function (sweep, healthScore, narrative, breachAgentSysId) {
+        var written = 0;
+        var i, a;
+        for (i = 0; i < sweep.agents.length; i++) {
+            a = sweep.agents[i];
+            var gr = new GlideRecord("x_midpulse_snapshot");
+            gr.initialize();
+            gr.setValue("taken_at", sweep.taken_at);
+            gr.setValue("agent_sys_id", a.sys_id);
+            gr.setValue("agent_json", JSON.stringify({
+                name: a.name, status: a.status, version: a.version,
+                host: a.host, ip: a.ip, heartbeat_age: this._heartbeatAgeMin(a)
+            }));
+            gr.setValue("queue_json", JSON.stringify(a.queue || {}));
+            gr.setValue("runtime_json", JSON.stringify(a.runtime || { reachable: false }));
+            gr.setValue("routing_json", JSON.stringify(a.params || {}));
+            gr.setValue("health_score", healthScore);
+            gr.setValue("narrative_text", (narrative && a.sys_id === breachAgentSysId) ? narrative : "");
+            try {
+                var id = gr.insert();
+                if (id) { written += 1; }
+            } catch (e) {
+                gs.error("MidPulse persistSnapshots failed for agent " + a.sys_id + ": " + e);
+            }
+        }
+        return written;
+    },
+
+    /**
+     * Fire an alert (email) on state transition. Hysteresis: only alerts on
+     * healthy -> degraded transition, tracked via the last snapshot's score.
+     */
+    fireAlert: function (sweep, healthScore, breaches) {
+        if (!breaches || breaches.length === 0) {
+            return false;
+        }
+        var cfg = this._config;
+        if (!cfg.recipients || cfg.recipients.length === 0) {
+            return false;
+        }
+        // Hysteresis: skip if the previous snapshot was already degraded. The
+        // gate uses the same signal as the trigger (a breach was recorded) and
+        // the config-driven degraded threshold, so a single-agent breach in a
+        // large fleet is suppressed consistently with the alert trigger.
+        var degradedThreshold = cfg.thresholds.degraded_threshold;
+        if (typeof degradedThreshold !== "number" || isNaN(degradedThreshold)) {
+            degradedThreshold = 60;
+        }
+        var prev = new GlideRecord("x_midpulse_snapshot");
+        prev.addQuery("health_score", "<", degradedThreshold);
+        prev.orderByDesc("taken_at");
+        prev.setLimit(1);
+        prev.query();
+        if (prev.next()) {
+            return false; // already in degraded state — no re-alert
+        }
+        var narrative = this.generateNarrative(breaches[0], sweep);
+        var mail = new GlideEmailOutbound();
+        mail.setSubject("MidPulse alert: Mid Server health degraded (score " + healthScore + ")");
+        mail.setBody(narrative);
+        var i;
+        for (i = 0; i < cfg.recipients.length; i++) {
+            mail.addAddress("to", cfg.recipients[i].email || cfg.recipients[i]);
+        }
+        try {
+            mail.send();
+            return true;
+        } catch (e) {
+            gs.error("MidPulse fireAlert failed: " + e);
+            return false;
+        }
+    },
+
+    /**
+     * Full analysis pipeline: score, detect, persist, alert.
+     * Returns a result object for REST / scheduled job consumers.
+     */
+    analyze: function (sweep) {
+        var healthScore = this.scoreHealth(sweep);
+        var backlog = this.detectBacklog(sweep);
+        var drift = this.detectDrift(sweep);
+        var pressure = this.detectPressure(sweep);
+        var routing = this.detectRouting(sweep);
+        var breaches = backlog.concat(pressure);
+        // Generate a root-cause narrative for the first breach (if any) and
+        // persist it on the triggering agent's snapshot.
+        var narrative = "";
+        var breachAgentSysId = "";
+        if (breaches.length > 0) {
+            narrative = this.generateNarrative(breaches[0], sweep);
+            breachAgentSysId = breaches[0].agent_sys_id;
+        }
+        var written = this.persistSnapshots(sweep, healthScore, narrative, breachAgentSysId);
+        var alerted = this.fireAlert(sweep, healthScore, breaches);
+        return {
+            taken_at: sweep.taken_at,
+            global_health: healthScore,
+            agent_count: sweep.agents.length,
+            backlog: backlog,
+            drift: drift,
+            pressure: pressure,
+            routing: routing,
+            snapshots_written: written,
+            alert_fired: alerted
+        };
+    },
+
+    /**
+     * Build a report from the most recent snapshot set.
+     */
+    report: function (limit) {
+        var n = limit || 20;
+        var rows = [];
+        var gr = new GlideRecord("x_midpulse_snapshot");
+        gr.orderByDesc("taken_at");
+        gr.setLimit(n);
+        gr.query();
+        while (gr.next()) {
+            rows.push({
+                snapshot_id: gr.getUniqueValue(),
+                taken_at: gr.getValue("taken_at"),
+                agent_sys_id: gr.getValue("agent_sys_id"),
+                agent_json: this._collector._safeParse(gr.getValue("agent_json"), {}),
+                queue_json: this._collector._safeParse(gr.getValue("queue_json"), {}),
+                runtime_json: this._collector._safeParse(gr.getValue("runtime_json"), {}),
+                health_score: parseInt(gr.getValue("health_score"), 10) || 0,
+                narrative_text: gr.getValue("narrative_text") || ""
+            });
+        }
+        return rows;
+    },
+
+    type: "MidPulseAnalyzer"
+};
+]]></script>
+    <protection>2</protection>
+    <scope display_value="MidPulse">x_midpulse</scope>
+  </sys_script_include>
+
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <name>MidPulse API</name>
+    <id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</id>
+    <active>true</active>
+    <base_uri>/api/x_midpulse</base_uri>
+    <enforce_acl>true</enforce_acl>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <name>execute</name>
+    <active>true</active>
+    <operation_uri>/execute</operation_uri>
+    <http_method>POST</http_method>
+    <enforce_acl>true</enforce_acl>
+    <operation_script><![CDATA[
+// MidPulse — Mid Server Health & Queue Monitor — POST /execute
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Action-dispatch endpoint. Accepts a JSON body with an `action` field:
+//   sweep  — run a full health sweep and persist snapshots
+//   report — return the most recent snapshot set
+//   export — return the most recent snapshot set (JSON export)
+(function process(request, response) {
+    try {
+        var body = (request.body && request.body.data) ? request.body.data : {};
+        var action = body.action || "sweep";
+        var collector = new MidPulseCollector();
+        var analyzer = new MidPulseAnalyzer();
+
+        var result;
+        switch (action) {
+            case "sweep":
+                var sweep = collector.sweepAll();
+                result = analyzer.analyze(sweep);
+                break;
+            case "report":
+                result = { snapshots: analyzer.report(body.limit || 20) };
+                break;
+            case "export":
+                result = { exported_at: new GlideDateTime().getValue(), snapshots: analyzer.report(body.limit || 100) };
+                break;
+            default:
+                response.setStatus(400);
+                response.setBody(JSON.stringify({
+                    error: "Unknown action: " + action,
+                    valid_actions: ["sweep", "report", "export"]
+                }));
+                return;
+        }
+        response.setStatus(200);
+        response.setBody(JSON.stringify(result));
+    } catch (e) {
+        gs.error("MidPulse POST /execute failed: " + e);
+        response.setStatus(500);
+        response.setBody(JSON.stringify({
+            error: "Internal error processing request",
+            detail: e.message || String(e)
+        }));
+    }
+})(request, response);
+]]></operation_script>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <name>status</name>
+    <active>true</active>
+    <operation_uri>/status</operation_uri>
+    <http_method>GET</http_method>
+    <enforce_acl>true</enforce_acl>
+    <operation_script><![CDATA[
+// MidPulse — Mid Server Health & Queue Monitor — GET /status
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Read-only status endpoint. Returns the latest sweep summary, global health
+// score, and alert summary. Optional query params:
+//   ?limit=<n>  — number of recent snapshots to include (default 20)
+(function process(request, response) {
+    try {
+        var q = request.queryParams || {};
+        var limit = parseInt(q.limit, 10) || 20;
+        var analyzer = new MidPulseAnalyzer();
+
+        var snapshots = analyzer.report(limit);
+        var globalHealth = 0;
+        var lastSweep = "";
+        if (snapshots.length > 0) {
+            globalHealth = snapshots[0].health_score;
+            lastSweep = snapshots[0].taken_at;
+        }
+
+        var result = {
+            queried_at: new GlideDateTime().getValue(),
+            last_sweep: lastSweep,
+            global_health: globalHealth,
+            snapshot_count: snapshots.length,
+            alert_summary: {
+                degraded: globalHealth < 60,
+                threshold_breaches: 0
+            },
+            snapshots: snapshots
+        };
+        response.setStatus(200);
+        response.setBody(JSON.stringify(result));
+    } catch (e) {
+        gs.error("MidPulse GET /status failed: " + e);
+        response.setStatus(500);
+        response.setBody(JSON.stringify({
+            error: "Internal error processing request",
+            detail: e.message || String(e)
+        }));
+    }
+})(request, response);
+]]></operation_script>
+  </sys_ws_operation>
+</unload>

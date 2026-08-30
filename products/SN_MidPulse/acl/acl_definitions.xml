@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-30 00:00:00">
+  <!-- x_midpulse_snapshot — read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <operation display_value="read">read</operation>
+    <type display_value="record">record</type>
+    <description>Read access to MidPulse snapshots</description>
+    <active>true</active>
+    <advanced>false</advanced>
+    <condition/>
+    <script/>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_midpulse_snapshot">x_midpulse_snapshot</sys_security_acl>
+    <sys_user_role display_value="x_midpulse_viewer">x_midpulse_viewer</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_midpulse_snapshot — create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <operation display_value="create">create</operation>
+    <type display_value="record">record</type>
+    <description>Create access to MidPulse snapshots (collector)</description>
+    <active>true</active>
+    <advanced>false</advanced>
+    <condition/>
+    <script/>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_midpulse_snapshot">x_midpulse_snapshot</sys_security_acl>
+    <sys_user_role display_value="x_midpulse_collector">x_midpulse_collector</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_midpulse_snapshot — write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <operation display_value="write">write</operation>
+    <type display_value="record">record</type>
+    <description>Write access to MidPulse snapshots (admin)</description>
+    <active>true</active>
+    <advanced>false</advanced>
+    <condition/>
+    <script/>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_midpulse_snapshot">x_midpulse_snapshot</sys_security_acl>
+    <sys_user_role display_value="x_midpulse_admin">x_midpulse_admin</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_midpulse_snapshot — delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_midpulse_snapshot</name>
+    <operation display_value="delete">delete</operation>
+    <type display_value="record">record</type>
+    <description>Delete access to MidPulse snapshots (admin)</description>
+    <active>true</active>
+    <advanced>false</advanced>
+    <condition/>
+    <script/>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_midpulse_snapshot">x_midpulse_snapshot</sys_security_acl>
+    <sys_user_role display_value="x_midpulse_admin">x_midpulse_admin</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_midpulse_config — read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_midpulse_config</name>
+    <operation display_value="read">read</operation>
+    <type display_value="record">record</type>
+    <description>Read access to MidPulse config</description>
+    <active>true</active>
+    <advanced>false</advanced>
+    <condition/>
+    <script/>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_midpulse_config">x_midpulse_config</sys_security_acl>
+    <sys_user_role display_value="x_midpulse_admin">x_midpulse_admin</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_midpulse_config — write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_midpulse_config</name>
+    <operation display_value="write">write</operation>
+    <type display_value="record">record</type>
+    <description>Write access to MidPulse config (admin)</description>
+    <active>true</active>
+    <advanced>false</advanced>
+    <condition/>
+    <script/>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_midpulse_config">x_midpulse_config</sys_security_acl>
+    <sys_user_role display_value="x_midpulse_admin">x_midpulse_admin</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_midpulse_config — create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_midpulse_config</name>
+    <operation display_value="create">create</operation>
+    <type display_value="record">record</type>
+    <description>Create access to MidPulse config (admin)</description>
+    <active>true</active>
+    <advanced>false</advanced>
+    <condition/>
+    <script/>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_midpulse_config">x_midpulse_config</sys_security_acl>
+    <sys_user_role display_value="x_midpulse_admin">x_midpulse_admin</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_midpulse_config — delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_midpulse_config</name>
+    <operation display_value="delete">delete</operation>
+    <type display_value="record">record</type>
+    <description>Delete access to MidPulse config (admin)</description>
+    <active>true</active>
+    <advanced>false</advanced>
+    <condition/>
+    <script/>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_midpulse_config">x_midpulse_config</sys_security_acl>
+    <sys_user_role display_value="x_midpulse_admin">x_midpulse_admin</sys_user_role>
+  </sys_security_acl_role>
+</unload>

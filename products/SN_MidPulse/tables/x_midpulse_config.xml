@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-30 00:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <name>x_midpulse_config</name>
+    <label>MidPulse Config</label>
+    <create_access_controls>true</create_access_controls>
+    <is_extendable>false</is_extendable>
+    <read_access>true</read_access>
+    <create_access>true</create_access>
+    <update_access>true</update_access>
+    <delete_access>true</delete_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_midpulse_config</name>
+    <element>thresholds_json</element>
+    <max_length>4000</max_length>
+    <column_label>Thresholds JSON</column_label>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_midpulse_config</name>
+    <element>recipients_json</element>
+    <max_length>4000</max_length>
+    <column_label>Recipients JSON</column_label>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_midpulse_config</name>
+    <element>ai_config_json</element>
+    <max_length>4000</max_length>
+    <column_label>AI Config JSON</column_label>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_midpulse_config</name>
+    <element>agent_map_json</element>
+    <max_length>4000</max_length>
+    <column_label>Agent Map JSON</column_label>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <active>true</active>
+  </sys_dictionary>
+</unload>

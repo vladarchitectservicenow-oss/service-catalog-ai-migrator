@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-08-30 00:00:00">
+  <!-- REST endpoint ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_midpulse_execute</name>
+    <operation display_value="execute">execute</operation>
+    <type display_value="rest_endpoint">rest_endpoint</type>
+    <description>Execute access to MidPulse POST /execute endpoint</description>
+    <active>true</active>
+    <advanced>false</advanced>
+    <condition/>
+    <script/>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_midpulse_execute">x_midpulse_execute</sys_security_acl>
+    <sys_user_role display_value="x_midpulse_collector">x_midpulse_collector</sys_user_role>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_midpulse_execute">x_midpulse_execute</sys_security_acl>
+    <sys_user_role display_value="x_midpulse_admin">x_midpulse_admin</sys_user_role>
+  </sys_security_acl_role>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_midpulse_status</name>
+    <operation display_value="execute">execute</operation>
+    <type display_value="rest_endpoint">rest_endpoint</type>
+    <description>Execute access to MidPulse GET /status endpoint</description>
+    <active>true</active>
+    <advanced>false</advanced>
+    <condition/>
+    <script/>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_midpulse_status">x_midpulse_status</sys_security_acl>
+    <sys_user_role display_value="x_midpulse_viewer">x_midpulse_viewer</sys_user_role>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_midpulse_status">x_midpulse_status</sys_security_acl>
+    <sys_user_role display_value="x_midpulse_admin">x_midpulse_admin</sys_user_role>
+  </sys_security_acl_role>
+</unload>
