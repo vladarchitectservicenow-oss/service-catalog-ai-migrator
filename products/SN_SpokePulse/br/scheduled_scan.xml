@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-05 00:00:00">
+  <!-- Scheduled job: daily SpokePulse scan -->
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <name>SpokePulse Daily Scan</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <active>true</active>
+    <run_dayofweek>all</run_dayofweek>
+    <run_dayofmonth>all</run_dayofmonth>
+    <run_type>periodically</run_type>
+    <run_period>86400</run_period>
+    <run_start>2026-09-05 03:00:00</run_start>
+    <run_as>system</run_as>
+    <condition/>
+    <script><![CDATA[
+// SpokePulse — IntegrationHub Spoke & Connection Health Monitor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Scheduled daily scan: run the full scan, then alert on high-risk findings.
+(function () {
+    try {
+        var engine = new SpokePulseEngine();
+        var summary = engine.runAndSummarize('scheduled');
+        var alert = engine.alertHighRisk(summary.run_id);
+        gs.info('SpokePulse daily scan complete: ' + summary.total_items +
+            ' items, ' + summary.distribution.broken + ' broken, ' +
+            summary.distribution['at-risk'] + ' at-risk.');
+    } catch (e) {
+        gs.error('SpokePulse daily scan failed: ' + e.message);
+    }
+})();
+]]></script>
+  </sysauto_script>
+</unload>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-05 00:00:00">
+  <!-- REST endpoint ACLs -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_spk.execute</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <description>Execute access to the SpokePulse action-dispatch endpoint.</description>
+    <script/>
+    <condition/>
+    <advanced>false</advanced>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk.execute</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.admin</sys_user_role>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk.execute</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.user</sys_user_role>
+  </sys_security_acl_role>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_spk.status</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <description>Execute access to the SpokePulse status endpoint.</description>
+    <script/>
+    <condition/>
+    <advanced>false</advanced>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk.status</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.user</sys_user_role>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk.status</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.admin</sys_user_role>
+  </sys_security_acl_role>
+</unload>

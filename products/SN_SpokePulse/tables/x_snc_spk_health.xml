@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-05 00:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <label>SpokePulse Health</label>
+    <super_class/>
+    <extends_table/>
+    <create_access_controls>true</create_access_controls>
+    <is_extendable>false</is_extendable>
+    <audit>false</audit>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>item_type</element>
+    <max_length>40</max_length>
+    <column_label>Item Type</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="Choice">choice</internal_type>
+    <mandatory>true</mandatory>
+    <active>true</active>
+    <choice>1</choice>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>item_type</element>
+    <value>spoke</value>
+    <label>Spoke</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>item_type</element>
+    <value>connection</value>
+    <label>Connection</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>item_type</element>
+    <value>credential</value>
+    <label>Credential</label>
+    <sequence>30</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>item_type</element>
+    <value>flow_action</value>
+    <label>Flow Action</label>
+    <sequence>40</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>item_sys_id</element>
+    <max_length>32</max_length>
+    <column_label>Item Sys ID</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>item_name</element>
+    <max_length>255</max_length>
+    <column_label>Item Name</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>risk_level</element>
+    <max_length>40</max_length>
+    <column_label>Risk Level</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="Choice">choice</internal_type>
+    <mandatory>true</mandatory>
+    <active>true</active>
+    <choice>1</choice>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>risk_level</element>
+    <value>healthy</value>
+    <label>Healthy</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>risk_level</element>
+    <value>at-risk</value>
+    <label>At Risk</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>risk_level</element>
+    <value>broken</value>
+    <label>Broken</label>
+    <sequence>30</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>risk_score</element>
+    <max_length>40</max_length>
+    <column_label>Risk Score</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="Integer">integer</internal_type>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>finding</element>
+    <max_length>4000</max_length>
+    <column_label>Finding</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="String">string</internal_type>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>last_scanned</element>
+    <max_length>40</max_length>
+    <column_label>Last Scanned</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>scan_run</element>
+    <max_length>32</max_length>
+    <column_label>Scan Run</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="Reference">reference</internal_type>
+    <mandatory>false</mandatory>
+    <active>true</active>
+    <reference>x_snc_spk_scan_run</reference>
+  </sys_dictionary>
+</unload>

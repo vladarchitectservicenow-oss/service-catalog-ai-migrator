@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-05 00:00:00">
+  <!-- Table ACLs: x_snc_spk_health -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <operation>read</operation>
+    <type>record</type>
+    <description>Read access to SpokePulse health records.</description>
+    <script/>
+    <condition/>
+    <advanced>false</advanced>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_health.read</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.user</sys_user_role>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_health.read</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.admin</sys_user_role>
+  </sys_security_acl_role>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <operation>write</operation>
+    <type>record</type>
+    <description>Write access to SpokePulse health records (scanner only).</description>
+    <script/>
+    <condition/>
+    <advanced>false</advanced>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_health.write</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.admin</sys_user_role>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_health.write</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.user</sys_user_role>
+  </sys_security_acl_role>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <operation>create</operation>
+    <type>record</type>
+    <description>Create access to SpokePulse health records (scanner only).</description>
+    <script/>
+    <condition/>
+    <advanced>false</advanced>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_health.create</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.admin</sys_user_role>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_health.create</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.user</sys_user_role>
+  </sys_security_acl_role>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_health</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <operation>delete</operation>
+    <type>record</type>
+    <description>Delete access to SpokePulse health records.</description>
+    <script/>
+    <condition/>
+    <advanced>false</advanced>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_health.delete</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.admin</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- Table ACLs: x_snc_spk_scan_run -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <operation>read</operation>
+    <type>record</type>
+    <description>Read access to SpokePulse scan-run records.</description>
+    <script/>
+    <condition/>
+    <advanced>false</advanced>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_scan_run.read</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.user</sys_user_role>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_scan_run.read</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.admin</sys_user_role>
+  </sys_security_acl_role>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <operation>write</operation>
+    <type>record</type>
+    <description>Write access to SpokePulse scan-run records (scanner only).</description>
+    <script/>
+    <condition/>
+    <advanced>false</advanced>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_scan_run.write</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.admin</sys_user_role>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_scan_run.write</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.user</sys_user_role>
+  </sys_security_acl_role>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <operation>create</operation>
+    <type>record</type>
+    <description>Create access to SpokePulse scan-run records (scanner only).</description>
+    <script/>
+    <condition/>
+    <advanced>false</advanced>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_scan_run.create</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.admin</sys_user_role>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_scan_run.create</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.user</sys_user_role>
+  </sys_security_acl_role>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <operation>delete</operation>
+    <type>record</type>
+    <description>Delete access to SpokePulse scan-run records.</description>
+    <script/>
+    <condition/>
+    <advanced>false</advanced>
+    <requires_role>false</requires_role>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl>x_snc_spk_scan_run.delete</sys_security_acl>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <sys_user_role>x_snc_spk.admin</sys_user_role>
+  </sys_security_acl_role>
+</unload>

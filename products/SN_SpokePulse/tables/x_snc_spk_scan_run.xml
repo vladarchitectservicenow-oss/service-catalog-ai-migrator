@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-05 00:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <label>SpokePulse Scan Run</label>
+    <super_class/>
+    <extends_table/>
+    <create_access_controls>true</create_access_controls>
+    <is_extendable>false</is_extendable>
+    <audit>false</audit>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>trigger</element>
+    <max_length>40</max_length>
+    <column_label>Trigger</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="Choice">choice</internal_type>
+    <mandatory>true</mandatory>
+    <active>true</active>
+    <choice>1</choice>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>trigger</element>
+    <value>scheduled</value>
+    <label>Scheduled</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>trigger</element>
+    <value>manual</value>
+    <label>Manual</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>started_at</element>
+    <max_length>40</max_length>
+    <column_label>Started At</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>completed_at</element>
+    <max_length>40</max_length>
+    <column_label>Completed At</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>items_scanned</element>
+    <max_length>40</max_length>
+    <column_label>Items Scanned</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="Integer">integer</internal_type>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>findings_count</element>
+    <max_length>40</max_length>
+    <column_label>Findings Count</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="Integer">integer</internal_type>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>high_risk_count</element>
+    <max_length>40</max_length>
+    <column_label>High Risk Count</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="Integer">integer</internal_type>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>status</element>
+    <max_length>40</max_length>
+    <column_label>Status</column_label>
+    <read_only>false</read_only>
+    <internal_type display_value="Choice">choice</internal_type>
+    <mandatory>true</mandatory>
+    <active>true</active>
+    <choice>1</choice>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>status</element>
+    <value>running</value>
+    <label>Running</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>status</element>
+    <value>completed</value>
+    <label>Completed</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <name>x_snc_spk_scan_run</name>
+    <sys_scope display_value="SpokePulse">x_snc_spk</sys_scope>
+    <element>status</element>
+    <value>failed</value>
+    <label>Failed</label>
+    <sequence>30</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+</unload>
