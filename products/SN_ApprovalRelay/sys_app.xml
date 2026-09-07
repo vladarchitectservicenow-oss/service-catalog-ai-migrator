@@ -1,0 +1,1409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-07 00:00:00">
+  <sys_scope action="INSERT_OR_UPDATE">
+    <app_scope>x_sn_approval_relay</app_scope>
+    <description>ApprovalRelay — Stalled &amp; Orphaned Approval Detector with Auto-Remediation. Scans sysapproval_approver for silently stalled approvals, classifies the root cause into five buckets, and auto-remediates or escalates before an SLA breaches.</description>
+    <name>ApprovalRelay</name>
+    <private>true</private>
+    <runtime_access_tracking>false</runtime_access_tracking>
+    <scope>x_sn_approval_relay</scope>
+    <sys_class_name>sys_scope</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c1</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ApprovalRelay</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_scope_x_sn_approval_relay</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_scope>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay administrator — full access to configuration, remediation, and alerting.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <name>x_sn_approval_relay.admin</name>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c2</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.admin</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_user_role_x_sn_approval_relay.admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay user — read-only access to stall and alert records.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <name>x_sn_approval_relay.user</name>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c3</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.user</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_user_role_x_sn_approval_relay.user</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_user_role>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_approval_relay</source_scope>
+    <status>allowed</status>
+    <target_name>sysapproval_approver</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c4</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sysapproval_approver</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_scope_privilege_sysapproval_approver</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_approval_relay</source_scope>
+    <status>allowed</status>
+    <target_name>sysapproval_group</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c5</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sysapproval_group</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_scope_privilege_sysapproval_group</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_approval_relay</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_user</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_scope_privilege_sys_user</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_approval_relay</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user_group</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c7</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_user_group</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_scope_privilege_sys_user_group</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_approval_relay</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user_grmember</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c8</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_user_grmember</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_scope_privilege_sys_user_grmember</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_approval_relay</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user_delegate</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c9</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_user_delegate</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_scope_privilege_sys_user_delegate</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_sn_approval_relay</source_scope>
+    <status>allowed</status>
+    <target_name>task</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5ca</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>task</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_scope_privilege_task</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_sn_approval_relay</source_scope>
+    <status>allowed</status>
+    <target_name>incident</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5cb</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>incident</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_scope_privilege_incident</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_sn_approval_relay</source_scope>
+    <status>allowed</status>
+    <target_name>sysapproval_approver</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5cc</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sysapproval_approver</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_scope_privilege_sysapproval_approver</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_sn_approval_relay.ApprovalRelayEngine</api_name>
+    <caller_access>true</caller_access>
+    <client_callable>false</client_callable>
+    <description>Deterministic stalled-approval scanner and five-bucket root-cause classifier.</description>
+    <name>ApprovalRelayEngine</name>
+    <script><![CDATA[
+// ApprovalRelay — Stalled & Orphaned Approval Detector with Auto-Remediation
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// ApprovalRelayEngine — deterministic stalled-approval scanner and five-bucket
+// root-cause classifier. Reads sysapproval_approver / sysapproval_group /
+// sys_user / sys_user_group / sys_user_grmember / sys_user_delegate and
+// assigns every stalled approval to exactly one root cause.
+//
+// Detection and classification are deterministic GlideRecord/GlideAggregate
+// logic. AI is a read-only explainer layered on top — it never classifies a
+// stall and never mutates approval state.
+//
+// @class ApprovalRelayEngine
+// @namespace x_sn_approval_relay
+var ApprovalRelayEngine = Class.create();
+ApprovalRelayEngine.prototype = {
+
+    initialize: function () {
+        this._config = this._loadConfig();
+    },
+
+    // ---- Configuration (system properties, no config table) ----
+
+    _loadConfig: function () {
+        return {
+            stallHours: parseInt(gs.getProperty('x_sn_approval_relay.stall_hours', '48'), 10),
+            orphanedEnabled: gs.getProperty('x_sn_approval_relay.orphaned_enabled', 'true') === 'true',
+            noDelegationEnabled: gs.getProperty('x_sn_approval_relay.no_delegation_enabled', 'true') === 'true',
+            deadGroupEnabled: gs.getProperty('x_sn_approval_relay.dead_group_enabled', 'true') === 'true',
+            deadEndEnabled: gs.getProperty('x_sn_approval_relay.dead_end_enabled', 'true') === 'true',
+            silentEnabled: gs.getProperty('x_sn_approval_relay.silent_enabled', 'true') === 'true',
+            awayLoginHours: parseInt(gs.getProperty('x_sn_approval_relay.away_login_hours', '72'), 10)
+        };
+    },
+
+    // ---- Public entry point: scan all stalled approvals ----
+
+    scanStalled: function () {
+        var results = [];
+        var cutoff = new GlideDateTime();
+        cutoff.addSeconds(-this._config.stallHours * 3600);
+
+        // Individual approver records still in 'requested' state past the cutoff.
+        var gr = new GlideRecord('sysapproval_approver');
+        gr.addQuery('state', 'requested');
+        gr.addQuery('sys_created_on', '<', cutoff.getDisplayValue());
+        gr.orderBy('sys_created_on');
+        gr.query();
+        while (gr.next()) {
+            var stall = this.classifyStall(gr);
+            if (stall) {
+                this._persistStall(stall);
+                results.push(stall);
+            }
+        }
+
+        // Group approval records still in 'requested' state past the cutoff.
+        var ggr = new GlideRecord('sysapproval_group');
+        ggr.addQuery('state', 'requested');
+        ggr.addQuery('sys_created_on', '<', cutoff.getDisplayValue());
+        ggr.orderBy('sys_created_on');
+        ggr.query();
+        while (ggr.next()) {
+            var gstall = this.classifyGroupStall(ggr);
+            if (gstall) {
+                this._persistStall(gstall);
+                results.push(gstall);
+            }
+        }
+
+        return results;
+    },
+
+    // ---- Five-bucket classifier (individual approver) ----
+
+    classifyStall: function (approvalGr) {
+        var approverSysId = approvalGr.getValue('approver') || '';
+        var approvalSysId = approvalGr.getUniqueValue();
+        var approvalNumber = this._approvalNumber(approvalGr);
+
+        // Bucket 4 — Dead-end chain: empty or non-resolving approver reference.
+        // An approval with no approver is a broken chain, not a silent approver.
+        if (this._config.deadEndEnabled && (!approverSysId || !this._userExists(approverSysId))) {
+            return this._buildStall(approvalSysId, approvalNumber, approverSysId, 'dead_end_chain', {
+                reason: approverSysId
+                    ? 'Approver reference does not resolve to an existing sys_user record'
+                    : 'Approval has no approver reference (empty approver field)',
+                approver_sys_id: approverSysId
+            });
+        }
+
+        // Bucket 1 — Orphaned approver: user exists but is inactive/terminated.
+        if (this._config.orphanedEnabled && approverSysId && this._isOrphaned(approverSysId)) {
+            return this._buildStall(approvalSysId, approvalNumber, approverSysId, 'orphaned_approver', {
+                reason: 'Approver user record is inactive or terminated',
+                approver_sys_id: approverSysId
+            });
+        }
+
+        // Bucket 2 — No delegation: active user, away (stale login), no active delegate.
+        if (this._config.noDelegationEnabled && approverSysId && this._isAway(approverSysId) && !this._hasDelegation(approverSysId)) {
+            return this._buildStall(approvalSysId, approvalNumber, approverSysId, 'no_delegation', {
+                reason: 'Approver is away (stale last login) with no active delegation',
+                approver_sys_id: approverSysId
+            });
+        }
+
+        // Bucket 5 — Silent approver: active, responsive-capable, but no action.
+        if (this._config.silentEnabled) {
+            return this._buildStall(approvalSysId, approvalNumber, approverSysId, 'silent_approver', {
+                reason: 'Approver is active but has not acted on the approval',
+                approver_sys_id: approverSysId
+            });
+        }
+
+        // All applicable buckets disabled — do not classify this record.
+        return null;
+    },
+
+    // ---- Five-bucket classifier (group approval) ----
+
+    classifyGroupStall: function (groupGr) {
+        var groupSysId = groupGr.getValue('group') || '';
+        var approvalSysId = groupGr.getUniqueValue();
+        var approvalNumber = this._approvalNumber(groupGr);
+
+        // Bucket 4 — Dead-end chain: empty or non-resolving group reference.
+        // An approval with no group is a broken chain, not a silent approver.
+        if (this._config.deadEndEnabled && (!groupSysId || !this._groupExists(groupSysId))) {
+            return this._buildStall(approvalSysId, approvalNumber, '', 'dead_end_chain', {
+                reason: groupSysId
+                    ? 'Group reference does not resolve to an existing sys_user_group record'
+                    : 'Approval has no group reference (empty group field)',
+                group_sys_id: groupSysId
+            });
+        }
+
+        // Bucket 3 — Dead group: group exists but has zero active members.
+        if (this._config.deadGroupEnabled && groupSysId && this._isDeadGroup(groupSysId)) {
+            return this._buildStall(approvalSysId, approvalNumber, '', 'dead_group', {
+                reason: 'Approval group has zero active members',
+                group_sys_id: groupSysId
+            });
+        }
+
+        // Bucket 5 — Silent approver: group is healthy but no member has acted.
+        if (this._config.silentEnabled) {
+            return this._buildStall(approvalSysId, approvalNumber, '', 'silent_approver', {
+                reason: 'Approval group is healthy but no member has acted',
+                group_sys_id: groupSysId
+            });
+        }
+
+        // All applicable buckets disabled — do not classify this record.
+        return null;
+    },
+
+    // ---- Bucket predicates ----
+
+    // Derive a human-readable approval number. sysapproval_approver and
+    // sysapproval_group have no 'number' field; the parent task (referenced by
+    // 'sysapproval') carries the display number. Fall back to the parent sys_id
+    // and finally to the approval record's own sys_id.
+    _approvalNumber: function (approvalGr) {
+        var taskSysId = approvalGr.getValue('sysapproval') || '';
+        if (taskSysId) {
+            var taskGr = new GlideRecord('task');
+            if (taskGr.get(taskSysId)) {
+                return taskGr.getValue('number') || taskSysId;
+            }
+            return taskSysId;
+        }
+        return approvalGr.getUniqueValue();
+    },
+
+    _userExists: function (userSysId) {
+        var gr = new GlideRecord('sys_user');
+        return gr.get(userSysId);
+    },
+
+    _groupExists: function (groupSysId) {
+        var gr = new GlideRecord('sys_user_group');
+        return gr.get(groupSysId);
+    },
+
+    _isOrphaned: function (userSysId) {
+        var gr = new GlideRecord('sys_user');
+        if (!gr.get(userSysId)) {
+            return false;
+        }
+        return gr.getValue('active') === 'false' || gr.getValue('active') === false;
+    },
+
+    _isAway: function (userSysId) {
+        var gr = new GlideRecord('sys_user');
+        if (!gr.get(userSysId)) {
+            return false;
+        }
+        var lastLogin = gr.getValue('last_login_time') || gr.getValue('last_login') || '';
+        if (!lastLogin) {
+            // No login ever recorded — treat as away (never active on the platform).
+            return true;
+        }
+        var cutoff = new GlideDateTime();
+        cutoff.addSeconds(-this._config.awayLoginHours * 3600);
+        var last = new GlideDateTime(lastLogin);
+        return last.getNumericValue() < cutoff.getNumericValue();
+    },
+
+    _hasDelegation: function (userSysId) {
+        var now = new GlideDateTime();
+        var gr = new GlideRecord('sys_user_delegate');
+        gr.addQuery('user', userSysId);
+        gr.addQuery('starts', '<=', now.getDisplayValue());
+        gr.addQuery('ends', '>=', now.getDisplayValue());
+        gr.setLimit(1);
+        gr.query();
+        return gr.hasNext();
+    },
+
+    _isDeadGroup: function (groupSysId) {
+        var agg = new GlideAggregate('sys_user_grmember');
+        agg.addQuery('group', groupSysId);
+        agg.addQuery('user.active', 'true');
+        agg.addAggregate('COUNT');
+        agg.query();
+        if (agg.next()) {
+            return parseInt(agg.getAggregate('COUNT'), 10) === 0;
+        }
+        // No aggregate row returned — the group has no active members (dead group).
+        return true;
+    },
+
+    // ---- Stall record builder ----
+
+    _buildStall: function (approvalSysId, approvalNumber, approverSysId, bucket, evidence) {
+        var approverName = '';
+        if (approverSysId) {
+            var ugr = new GlideRecord('sys_user');
+            if (ugr.get(approverSysId)) {
+                approverName = ugr.getValue('name') || ugr.getValue('user_name') || approverSysId;
+            }
+        }
+        return {
+            approval: approvalSysId,
+            approval_number: approvalNumber,
+            approver: approverSysId,
+            approver_name: approverName,
+            bucket: bucket,
+            evidence_json: JSON.stringify(evidence),
+            classified_on: new GlideDateTime().getDisplayValue()
+        };
+    },
+
+    // ---- Persistence ----
+
+    _persistStall: function (stall) {
+        try {
+            // Dedup: skip if an open stall already exists for this approval + bucket.
+            var existing = new GlideRecord('x_sn_approval_relay_stall');
+            existing.addQuery('approval', stall.approval);
+            existing.addQuery('bucket', stall.bucket);
+            existing.addQuery('state', 'open');
+            existing.setLimit(1);
+            existing.query();
+            if (existing.hasNext()) {
+                return;
+            }
+
+            var gr = new GlideRecord('x_sn_approval_relay_stall');
+            gr.initialize();
+            gr.setValue('approval', stall.approval);
+            gr.setValue('approval_number', stall.approval_number);
+            gr.setValue('approver', stall.approver);
+            gr.setValue('approver_name', stall.approver_name);
+            gr.setValue('bucket', stall.bucket);
+            gr.setValue('evidence_json', stall.evidence_json ? stall.evidence_json.substring(0, 4000) : '');
+            gr.setValue('classified_on', stall.classified_on);
+            gr.setValue('state', 'open');
+            stall.sys_id = gr.insert();
+        } catch (e) {
+            gs.error('ApprovalRelayEngine._persistStall failed for approval ' + stall.approval + ': ' + e.message);
+        }
+    },
+
+    // ---- Read helpers for REST / AI explainer ----
+
+    getStalls: function (workflowSysId) {
+        var results = [];
+        var gr = new GlideRecord('x_sn_approval_relay_stall');
+        gr.addQuery('state', 'open');
+        if (workflowSysId) {
+            gr.addQuery('approval.sysapproval', workflowSysId);
+        }
+        gr.orderByDesc('classified_on');
+        gr.setLimit(200);
+        gr.query();
+        while (gr.next()) {
+            results.push(this._stallToObject(gr));
+        }
+        return results;
+    },
+
+    getStall: function (stallSysId) {
+        var gr = new GlideRecord('x_sn_approval_relay_stall');
+        if (!gr.get(stallSysId)) {
+            return null;
+        }
+        return this._stallToObject(gr);
+    },
+
+    _stallToObject: function (gr) {
+        return {
+            sys_id: gr.getUniqueValue(),
+            approval: gr.getValue('approval'),
+            approval_number: gr.getValue('approval_number'),
+            approver: gr.getValue('approver'),
+            approver_name: gr.getValue('approver_name'),
+            bucket: gr.getValue('bucket'),
+            evidence_json: gr.getValue('evidence_json'),
+            classified_on: gr.getValue('classified_on'),
+            remediated_on: gr.getValue('remediated_on'),
+            state: gr.getValue('state')
+        };
+    },
+
+    type: 'ApprovalRelayEngine'
+};
+
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5cd</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ApprovalRelayEngine</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_script_include_approvalrelayengine</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_script_include>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_sn_approval_relay.ApprovalRelayRemediate</api_name>
+    <caller_access>true</caller_access>
+    <client_callable>false</client_callable>
+    <description>Per-bucket remediation, alerting, and audit logging.</description>
+    <name>ApprovalRelayRemediate</name>
+    <script><![CDATA[
+// ApprovalRelay — Stalled & Orphaned Approval Detector with Auto-Remediation
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// ApprovalRelayRemediate — per-bucket remediation, alerting, and audit logging.
+// Applies the configured per-bucket action (reassign / escalate / prompt
+// delegation), raises notifications and/or incidents, and records every action
+// on the stall record itself (remediation fields) for compliance. Destructive
+// actions are off-by-default and require explicit per-bucket enablement.
+//
+// @class ApprovalRelayRemediate
+// @namespace x_sn_approval_relay
+var ApprovalRelayRemediate = Class.create();
+ApprovalRelayRemediate.prototype = {
+
+    initialize: function () {
+        this._config = this._loadConfig();
+    },
+
+    _loadConfig: function () {
+        return {
+            reassignEnabled: gs.getProperty('x_sn_approval_relay.reassign_enabled', 'false') === 'true',
+            escalateEnabled: gs.getProperty('x_sn_approval_relay.escalate_enabled', 'false') === 'true',
+            promptEnabled: gs.getProperty('x_sn_approval_relay.prompt_enabled', 'true') === 'true',
+            createIncident: gs.getProperty('x_sn_approval_relay.create_incident', 'true') === 'true',
+            notifyUsers: gs.getProperty('x_sn_approval_relay.notify_users', ''),
+            alertCooldownMinutes: parseInt(gs.getProperty('x_sn_approval_relay.alert_cooldown_minutes', '60'), 10)
+        };
+    },
+
+    // ---- Remediate a single stall ----
+
+    remediate: function (stall) {
+        var action = this._actionForBucket(stall.bucket);
+        var result = { bucket: stall.bucket, action: action, applied: false, detail: '' };
+
+        switch (action) {
+            case 'reassign':
+                result = this._reassignToManager(stall);
+                break;
+            case 'escalate':
+                result = this._escalateToAssigned(stall);
+                break;
+            case 'prompt':
+                result = this._promptDelegation(stall);
+                break;
+            default:
+                result.detail = 'No remediation action configured for bucket ' + stall.bucket;
+                break;
+        }
+
+        this._recordRemediation(stall, action, result);
+        return result;
+    },
+
+    _actionForBucket: function (bucket) {
+        switch (bucket) {
+            case 'orphaned_approver':
+                return this._config.reassignEnabled ? 'reassign' : 'prompt';
+            case 'no_delegation':
+                return this._config.promptEnabled ? 'prompt' : 'none';
+            case 'dead_group':
+                return this._config.escalateEnabled ? 'escalate' : 'prompt';
+            case 'dead_end_chain':
+                return this._config.escalateEnabled ? 'escalate' : 'prompt';
+            case 'silent_approver':
+                return this._config.promptEnabled ? 'prompt' : 'none';
+            default:
+                return 'none';
+        }
+    },
+
+    // ---- Reassign to the approver's manager ----
+
+    _reassignToManager: function (stall) {
+        if (!stall.approver) {
+            return { bucket: stall.bucket, action: 'reassign', applied: false, detail: 'No approver to reassign from' };
+        }
+        var managerSysId = this._managerOf(stall.approver);
+        if (!managerSysId) {
+            return { bucket: stall.bucket, action: 'reassign', applied: false, detail: 'Approver has no manager on record' };
+        }
+        try {
+            var gr = new GlideRecord('sysapproval_approver');
+            if (gr.get(stall.approval)) {
+                gr.setValue('approver', managerSysId);
+                gr.update();
+                return { bucket: stall.bucket, action: 'reassign', applied: true, detail: 'Reassigned to manager ' + managerSysId };
+            }
+            return { bucket: stall.bucket, action: 'reassign', applied: false, detail: 'Approval record not found' };
+        } catch (e) {
+            gs.error('ApprovalRelayRemediate._reassignToManager failed: ' + e.message);
+            return { bucket: stall.bucket, action: 'reassign', applied: false, detail: e.message };
+        }
+    },
+
+    // ---- Escalate to the request's assigned_to ----
+
+    _escalateToAssigned: function (stall) {
+        try {
+            var approvalGr = new GlideRecord('sysapproval_approver');
+            if (!approvalGr.get(stall.approval)) {
+                return { bucket: stall.bucket, action: 'escalate', applied: false, detail: 'Approval record not found' };
+            }
+            var taskSysId = approvalGr.getValue('sysapproval') || '';
+            if (!taskSysId) {
+                return { bucket: stall.bucket, action: 'escalate', applied: false, detail: 'No parent task to escalate to' };
+            }
+            var taskGr = new GlideRecord('task');
+            if (!taskGr.get(taskSysId)) {
+                return { bucket: stall.bucket, action: 'escalate', applied: false, detail: 'Parent task not found' };
+            }
+            var assignedTo = taskGr.getValue('assigned_to') || '';
+            if (!assignedTo) {
+                return { bucket: stall.bucket, action: 'escalate', applied: false, detail: 'Parent task has no assigned_to' };
+            }
+            // Escalation is a notification to the assignee, not a state mutation.
+            gs.eventQueue('x_sn_approval_relay.escalation', null, stall.approval_number, assignedTo);
+            return { bucket: stall.bucket, action: 'escalate', applied: true, detail: 'Escalated to assignee ' + assignedTo };
+        } catch (e) {
+            gs.error('ApprovalRelayRemediate._escalateToAssigned failed: ' + e.message);
+            return { bucket: stall.bucket, action: 'escalate', applied: false, detail: e.message };
+        }
+    },
+
+    // ---- One-click delegation prompt to the approver's manager ----
+
+    _promptDelegation: function (stall) {
+        var managerSysId = stall.approver ? this._managerOf(stall.approver) : '';
+        if (!managerSysId) {
+            return { bucket: stall.bucket, action: 'prompt', applied: false, detail: 'No manager to prompt for delegation' };
+        }
+        try {
+            gs.eventQueue('x_sn_approval_relay.delegation_prompt', null, stall.approval_number, managerSysId);
+            return { bucket: stall.bucket, action: 'prompt', applied: true, detail: 'Delegation prompt sent to manager ' + managerSysId };
+        } catch (e) {
+            gs.error('ApprovalRelayRemediate._promptDelegation failed: ' + e.message);
+            return { bucket: stall.bucket, action: 'prompt', applied: false, detail: e.message };
+        }
+    },
+
+    _managerOf: function (userSysId) {
+        var gr = new GlideRecord('sys_user');
+        if (!gr.get(userSysId)) {
+            return '';
+        }
+        return gr.getValue('manager') || '';
+    },
+
+    // ---- Record remediation + audit trail on the stall record ----
+
+    _recordRemediation: function (stall, action, result) {
+        try {
+            var gr = new GlideRecord('x_sn_approval_relay_stall');
+            if (!gr.get(stall.sys_id)) {
+                return;
+            }
+            if (result.applied) {
+                gr.setValue('state', 'remediated');
+                gr.setValue('remediated_on', new GlideDateTime().getDisplayValue());
+            }
+            gr.setValue('remediation_action', action);
+            gr.setValue('remediation_actor', gs.getUserName());
+            gr.setValue('remediation_detail', result.detail || '');
+            gr.update();
+        } catch (e) {
+            gs.error('ApprovalRelayRemediate._recordRemediation failed: ' + e.message);
+        }
+    },
+
+    // ---- Alerting ----
+
+    raiseAlert: function (stall) {
+        if (this._isInCooldown(stall.approval, stall.bucket)) {
+            return null;
+        }
+        var alertSysId = this._persistAlert(stall);
+        if (stall.bucket === 'orphaned_approver' || stall.bucket === 'dead_group' || stall.bucket === 'dead_end_chain') {
+            if (this._config.createIncident) {
+                this._createIncident(stall, alertSysId);
+            }
+        }
+        this._raiseNotification(stall);
+        return alertSysId;
+    },
+
+    _isInCooldown: function (approvalSysId, bucket) {
+        var cutoff = new GlideDateTime();
+        cutoff.addSeconds(-this._config.alertCooldownMinutes * 60);
+        var gr = new GlideRecord('x_sn_approval_relay_alert');
+        gr.addQuery('approval', approvalSysId);
+        gr.addQuery('bucket', bucket);
+        gr.addQuery('state', 'open');
+        gr.addQuery('sys_created_on', '>', cutoff.getDisplayValue());
+        gr.setLimit(1);
+        gr.query();
+        return gr.hasNext();
+    },
+
+    _persistAlert: function (stall) {
+        try {
+            var gr = new GlideRecord('x_sn_approval_relay_alert');
+            gr.initialize();
+            gr.setValue('approval', stall.approval);
+            gr.setValue('approval_number', stall.approval_number);
+            gr.setValue('bucket', stall.bucket);
+            gr.setValue('severity', this._severityForBucket(stall.bucket));
+            gr.setValue('evidence_json', stall.evidence_json ? stall.evidence_json.substring(0, 4000) : '');
+            gr.setValue('state', 'open');
+            return gr.insert();
+        } catch (e) {
+            gs.error('ApprovalRelayRemediate._persistAlert failed: ' + e.message);
+            return null;
+        }
+    },
+
+    _severityForBucket: function (bucket) {
+        if (bucket === 'orphaned_approver' || bucket === 'dead_group' || bucket === 'dead_end_chain') {
+            return 'critical';
+        }
+        return 'warning';
+    },
+
+    _createIncident: function (stall, alertSysId) {
+        try {
+            var inc = new GlideRecord('incident');
+            inc.initialize();
+            inc.setValue('short_description', 'ApprovalRelay: stalled approval ' + stall.approval_number + ' (' + stall.bucket + ')');
+            inc.setValue('description',
+                'Approval: ' + stall.approval_number + '\n' +
+                'Bucket: ' + stall.bucket + '\n' +
+                'Approver: ' + (stall.approver_name || stall.approver || '(group)') + '\n\n' +
+                'Evidence:\n' + (stall.evidence_json || '')
+            );
+            inc.setValue('impact', this._severityForBucket(stall.bucket) === 'critical' ? '1' : '2');
+            inc.setValue('urgency', this._severityForBucket(stall.bucket) === 'critical' ? '1' : '2');
+            var incSysId = inc.insert();
+            if (incSysId && alertSysId) {
+                var alertGr = new GlideRecord('x_sn_approval_relay_alert');
+                if (alertGr.get(alertSysId)) {
+                    alertGr.setValue('incident', incSysId);
+                    alertGr.update();
+                }
+            }
+            return incSysId;
+        } catch (e) {
+            gs.error('ApprovalRelayRemediate._createIncident failed: ' + e.message);
+            return null;
+        }
+    },
+
+    _raiseNotification: function (stall) {
+        try {
+            var recipients = this._config.notifyUsers;
+            if (!recipients) {
+                return;
+            }
+            var users = recipients.split(',');
+            for (var i = 0; i < users.length; i++) {
+                var user = users[i].trim();
+                if (!user) { continue; }
+                gs.eventQueue('x_sn_approval_relay.alert', null, stall.approval_number, user);
+            }
+        } catch (e) {
+            gs.error('ApprovalRelayRemediate._raiseNotification failed: ' + e.message);
+        }
+    },
+
+    // ---- Acknowledge an alert ----
+
+    acknowledge: function (alertSysId, ackedBy) {
+        var gr = new GlideRecord('x_sn_approval_relay_alert');
+        if (!gr.get(alertSysId)) {
+            return { ok: false, error: 'Alert not found' };
+        }
+        gr.setValue('state', 'acknowledged');
+        gr.setValue('acked_by', ackedBy || '');
+        gr.setValue('acked_on', new GlideDateTime().getDisplayValue());
+        gr.update();
+        return { ok: true, sys_id: alertSysId };
+    },
+
+    type: 'ApprovalRelayRemediate'
+};
+
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5ce</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ApprovalRelayRemediate</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_script_include_approvalrelayremediate</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_script_include>
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>api/x_sn_approval_relay</base_uri>
+    <description>ApprovalRelay stall query and action API.</description>
+    <name>ApprovalRelay API</name>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5cf</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ApprovalRelay API</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_ws_definition_approval_relay_api</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sys_ws_definition>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>stalls</name>
+    <operation_uri>stalls</operation_uri>
+    <relative_path>stalls</relative_path>
+    <request_method>GET</request_method>
+    <operation_script><![CDATA[
+// ApprovalRelay — Stalled & Orphaned Approval Detector with Auto-Remediation
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// REST endpoint: GET /api/x_sn_approval_relay/stalls
+// Returns open stall records, optionally filtered by workflow (sys_id) or
+// bucket. When a stall sys_id is supplied, returns that single record.
+(function process(request, response) {
+
+    var engine = new ApprovalRelayEngine();
+    var stallParam = request.queryParams.sys_id || request.queryParams.stall || '';
+    var workflowParam = request.queryParams.workflow || '';
+    var bucketParam = request.queryParams.bucket || '';
+
+    try {
+        if (stallParam) {
+            var stall = engine.getStall(stallParam);
+            if (!stall) {
+                response.setStatus(404);
+                response.setBody(JSON.stringify({ ok: false, error: 'Stall not found: ' + stallParam }));
+                return;
+            }
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ ok: true, data: stall }));
+            return;
+        }
+
+        var stalls = engine.getStalls(workflowParam);
+        if (bucketParam) {
+            var filtered = [];
+            for (var i = 0; i < stalls.length; i++) {
+                if (stalls[i].bucket === bucketParam) {
+                    filtered.push(stalls[i]);
+                }
+            }
+            stalls = filtered;
+        }
+
+        response.setStatus(200);
+        response.setBody(JSON.stringify({ ok: true, count: stalls.length, data: stalls }));
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({ ok: false, error: e.message }));
+    }
+
+})(request, response);
+
+]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c10</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>stalls</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_ws_operation_stalls</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <sys_web_service_definition display_value="ApprovalRelay API">f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5cf</sys_web_service_definition>
+  </sys_ws_operation>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>execute</name>
+    <operation_uri>execute</operation_uri>
+    <relative_path>execute</relative_path>
+    <request_method>POST</request_method>
+    <operation_script><![CDATA[
+// ApprovalRelay — Stalled & Orphaned Approval Detector with Auto-Remediation
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// REST endpoint: POST /api/x_sn_approval_relay/execute
+// Action dispatch: scan | remediate | ack
+//   scan       — scan for stalled approvals now, classify, alert (returns stalls)
+//   remediate  — apply remediation to a stall (body: { stall_sys_id })
+//   ack        — acknowledge an alert (body: { alert_sys_id, acked_by })
+(function process(request, response) {
+
+    var body = {};
+    try {
+        if (request.body && request.body.data) {
+            body = request.body.data;
+        }
+    } catch (e) {
+        body = {};
+    }
+
+    var action = body.action || request.queryParams.action || '';
+    var engine = new ApprovalRelayEngine();
+    var remediator = new ApprovalRelayRemediate();
+
+    try {
+        switch (action) {
+            case 'scan':
+                var stalls = engine.scanStalled();
+                var alerted = 0;
+                for (var i = 0; i < stalls.length; i++) {
+                    if (remediator.raiseAlert(stalls[i])) {
+                        alerted++;
+                    }
+                }
+                response.setStatus(200);
+                response.setBody(JSON.stringify({ ok: true, action: 'scan', count: stalls.length, alerted: alerted, data: stalls }));
+                break;
+
+            case 'remediate':
+                if (!body.stall_sys_id) {
+                    response.setStatus(400);
+                    response.setBody(JSON.stringify({ ok: false, error: 'Missing stall_sys_id' }));
+                    return;
+                }
+                var stall = engine.getStall(body.stall_sys_id);
+                if (!stall) {
+                    response.setStatus(404);
+                    response.setBody(JSON.stringify({ ok: false, error: 'Stall not found' }));
+                    return;
+                }
+                var result = remediator.remediate(stall);
+                response.setStatus(200);
+                response.setBody(JSON.stringify({ ok: true, action: 'remediate', data: result }));
+                break;
+
+            case 'ack':
+                if (!body.alert_sys_id) {
+                    response.setStatus(400);
+                    response.setBody(JSON.stringify({ ok: false, error: 'Missing alert_sys_id' }));
+                    return;
+                }
+                var ackResult = remediator.acknowledge(body.alert_sys_id, body.acked_by || '');
+                response.setStatus(ackResult.ok ? 200 : 404);
+                response.setBody(JSON.stringify(ackResult));
+                break;
+
+            default:
+                response.setStatus(400);
+                response.setBody(JSON.stringify({ ok: false, error: 'Unknown action: ' + action }));
+                break;
+        }
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody(JSON.stringify({ ok: false, error: e.message }));
+    }
+
+})(request, response);
+
+]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c11</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>execute</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_ws_operation_execute</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <sys_web_service_definition display_value="ApprovalRelay API">f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5cf</sys_web_service_definition>
+  </sys_ws_operation>
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Scans for stalled approvals, classifies root cause, and raises alerts.</description>
+    <name>ApprovalRelay Stall Scan</name>
+    <run_dayofweek/>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_period>86400</run_period>
+    <run_start>2026-09-07 00:00:00</run_start>
+    <run_time/>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+
+// ApprovalRelay — Stalled & Orphaned Approval Detector with Auto-Remediation
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Scheduled job: scan stalled approvals, classify, and raise alerts.
+(function () {
+    var engine = new ApprovalRelayEngine();
+    var remediator = new ApprovalRelayRemediate();
+    var stalls = engine.scanStalled();
+    for (var i = 0; i < stalls.length; i++) {
+        remediator.raiseAlert(stalls[i]);
+    }
+})();
+
+]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c12</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ApprovalRelay Stall Scan</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sysauto_script_approval_relay_stall_scan</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sysauto_script>
+  <sysevent_register action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay alert event — raised when a stalled approval is classified.</description>
+    <event_name>x_sn_approval_relay.alert</event_name>
+    <sys_class_name>sysevent_register</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c13</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.alert</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sysevent_register_x_sn_approval_relay_alert</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sysevent_register>
+  <sysevent_register action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay escalation event — raised when a stall is escalated to the request assignee.</description>
+    <event_name>x_sn_approval_relay.escalation</event_name>
+    <sys_class_name>sysevent_register</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c14</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.escalation</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sysevent_register_x_sn_approval_relay_escalation</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sysevent_register>
+  <sysevent_register action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay delegation prompt event — raised to prompt an approver's manager to configure delegation.</description>
+    <event_name>x_sn_approval_relay.delegation_prompt</event_name>
+    <sys_class_name>sysevent_register</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c15</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.delegation_prompt</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sysevent_register_x_sn_approval_relay_delegation_prompt</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sysevent_register>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — stalled-approval age threshold (hours).</description>
+    <name>x_sn_approval_relay.stall_hours</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c16</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.stall_hours</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_stall_hours</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>integer</type>
+    <value>48</value>
+  </sys_properties>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — away threshold: last login older than this (hours).</description>
+    <name>x_sn_approval_relay.away_login_hours</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c17</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.away_login_hours</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_away_login_hours</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>integer</type>
+    <value>72</value>
+  </sys_properties>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — enable orphaned-approver detection.</description>
+    <name>x_sn_approval_relay.orphaned_enabled</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c18</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.orphaned_enabled</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_orphaned_enabled</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>boolean</type>
+    <value>true</value>
+  </sys_properties>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — enable no-delegation detection.</description>
+    <name>x_sn_approval_relay.no_delegation_enabled</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c19</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.no_delegation_enabled</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_no_delegation_enabled</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>boolean</type>
+    <value>true</value>
+  </sys_properties>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — enable dead-group detection.</description>
+    <name>x_sn_approval_relay.dead_group_enabled</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c1a</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.dead_group_enabled</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_dead_group_enabled</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>boolean</type>
+    <value>true</value>
+  </sys_properties>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — enable dead-end-chain detection.</description>
+    <name>x_sn_approval_relay.dead_end_enabled</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c1b</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.dead_end_enabled</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_dead_end_enabled</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>boolean</type>
+    <value>true</value>
+  </sys_properties>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — enable silent-approver detection.</description>
+    <name>x_sn_approval_relay.silent_enabled</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c1c</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.silent_enabled</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_silent_enabled</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>boolean</type>
+    <value>true</value>
+  </sys_properties>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — enable auto-reassign to manager (destructive, off by default).</description>
+    <name>x_sn_approval_relay.reassign_enabled</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c1d</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.reassign_enabled</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_reassign_enabled</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>boolean</type>
+    <value>false</value>
+  </sys_properties>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — enable auto-escalate to assignee (destructive, off by default).</description>
+    <name>x_sn_approval_relay.escalate_enabled</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c1e</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.escalate_enabled</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_escalate_enabled</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>boolean</type>
+    <value>false</value>
+  </sys_properties>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — enable one-click delegation prompt.</description>
+    <name>x_sn_approval_relay.prompt_enabled</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c1f</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.prompt_enabled</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_prompt_enabled</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>boolean</type>
+    <value>true</value>
+  </sys_properties>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — auto-create incident on critical stall.</description>
+    <name>x_sn_approval_relay.create_incident</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c20</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.create_incident</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_create_incident</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>boolean</type>
+    <value>true</value>
+  </sys_properties>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — comma-separated notification recipients (empty = disabled).</description>
+    <name>x_sn_approval_relay.notify_users</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c21</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.notify_users</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_notify_users</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>string</type>
+    <value></value>
+  </sys_properties>
+  <sys_properties action="INSERT_OR_UPDATE">
+    <description>ApprovalRelay — alert dedup cooldown (minutes).</description>
+    <name>x_sn_approval_relay.alert_cooldown_minutes</name>
+    <sys_class_name>sys_properties</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c22</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sn_approval_relay.alert_cooldown_minutes</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_properties_x_sn_approval_relay_alert_cooldown_minutes</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <type>integer</type>
+    <value>60</value>
+  </sys_properties>
+</unload>

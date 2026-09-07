@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-07 00:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <actions_access>false</actions_access>
+    <alter_access>false</alter_access>
+    <client_scripts_access>false</client_scripts_access>
+    <configuration_access>false</configuration_access>
+    <create_access>false</create_access>
+    <create_access_controls>true</create_access_controls>
+    <delete_access>false</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>Approval Stall</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_sn_approval_relay_stall</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Approval Stall</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_db_object_x_sn_approval_relay_stall</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+    <update_access>false</update_access>
+    <user_role display_value="x_sn_approval_relay.admin" name="x_sn_approval_relay.admin">x_sn_approval_relay.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>approval</element>
+    <internal_type display_value="Reference">reference</internal_type>
+    <label>Approval</label>
+    <mandatory>true</mandatory>
+    <max_length>32</max_length>
+    <name>x_sn_approval_relay_stall</name>
+    <read_only>false</read_only>
+    <reference display_value="Approval" name="sysapproval_approver">sysapproval_approver</reference>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d7</sys_id>
+    <sys_name>Approval</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_approval_relay_stall_approval</sys_update_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>approval_number</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>Approval Number</label>
+    <mandatory>false</mandatory>
+    <max_length>100</max_length>
+    <name>x_sn_approval_relay_stall</name>
+    <read_only>false</read_only>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d8</sys_id>
+    <sys_name>Approval Number</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_approval_relay_stall_approval_number</sys_update_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>approver</element>
+    <internal_type display_value="Reference">reference</internal_type>
+    <label>Approver</label>
+    <mandatory>false</mandatory>
+    <max_length>32</max_length>
+    <name>x_sn_approval_relay_stall</name>
+    <read_only>false</read_only>
+    <reference display_value="User" name="sys_user">sys_user</reference>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d9</sys_id>
+    <sys_name>Approver</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_approval_relay_stall_approver</sys_update_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>approver_name</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>Approver Name</label>
+    <mandatory>false</mandatory>
+    <max_length>255</max_length>
+    <name>x_sn_approval_relay_stall</name>
+    <read_only>false</read_only>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5e0</sys_id>
+    <sys_name>Approver Name</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_approval_relay_stall_approver_name</sys_update_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>bucket</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>Bucket</label>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_approval_relay_stall</name>
+    <read_only>false</read_only>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5e1</sys_id>
+    <sys_name>Bucket</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_approval_relay_stall_bucket</sys_update_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>evidence_json</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>Evidence (JSON)</label>
+    <mandatory>false</mandatory>
+    <max_length>4000</max_length>
+    <name>x_sn_approval_relay_stall</name>
+    <read_only>false</read_only>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5e2</sys_id>
+    <sys_name>Evidence (JSON)</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_approval_relay_stall_evidence_json</sys_update_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>classified_on</element>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <label>Classified On</label>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_approval_relay_stall</name>
+    <read_only>false</read_only>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5e3</sys_id>
+    <sys_name>Classified On</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_approval_relay_stall_classified_on</sys_update_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>remediated_on</element>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <label>Remediated On</label>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_approval_relay_stall</name>
+    <read_only>false</read_only>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5e4</sys_id>
+    <sys_name>Remediated On</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_approval_relay_stall_remediated_on</sys_update_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>State</label>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_approval_relay_stall</name>
+    <read_only>false</read_only>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5e5</sys_id>
+    <sys_name>State</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_approval_relay_stall_state</sys_update_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>remediation_action</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>Remediation Action</label>
+    <mandatory>false</mandatory>
+    <max_length>40</max_length>
+    <name>x_sn_approval_relay_stall</name>
+    <read_only>false</read_only>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5e6</sys_id>
+    <sys_name>Remediation Action</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_approval_relay_stall_remediation_action</sys_update_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>remediation_actor</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>Remediation Actor</label>
+    <mandatory>false</mandatory>
+    <max_length>255</max_length>
+    <name>x_sn_approval_relay_stall</name>
+    <read_only>false</read_only>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5e7</sys_id>
+    <sys_name>Remediation Actor</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_approval_relay_stall_remediation_actor</sys_update_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>remediation_detail</element>
+    <internal_type display_value="String">string</internal_type>
+    <label>Remediation Detail</label>
+    <mandatory>false</mandatory>
+    <max_length>4000</max_length>
+    <name>x_sn_approval_relay_stall</name>
+    <read_only>false</read_only>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5e8</sys_id>
+    <sys_name>Remediation Detail</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sys_dictionary_x_sn_approval_relay_stall_remediation_detail</sys_update_name>
+  </sys_dictionary>
+</unload>

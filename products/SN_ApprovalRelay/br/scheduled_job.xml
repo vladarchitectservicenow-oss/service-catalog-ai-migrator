@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-07 00:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Scans for stalled approvals, classifies root cause, and raises alerts.</description>
+    <name>ApprovalRelay Stall Scan</name>
+    <run_dayofweek/>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_period>86400</run_period>
+    <run_start>2026-09-07 00:00:00</run_start>
+    <run_time/>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// ApprovalRelay — Stalled & Orphaned Approval Detector with Auto-Remediation
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Scheduled job: scan stalled approvals, classify, and raise alerts.
+(function () {
+    var engine = new ApprovalRelayEngine();
+    var remediator = new ApprovalRelayRemediate();
+    var stalls = engine.scanStalled();
+    for (var i = 0; i < stalls.length; i++) {
+        remediator.raiseAlert(stalls[i]);
+    }
+})();
+]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-07 00:00:00</sys_created_on>
+    <sys_id>c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ApprovalRelay Stall Scan</sys_name>
+    <sys_package display_value="ApprovalRelay" source="x_sn_approval_relay">x_sn_approval_relay</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ApprovalRelay">x_sn_approval_relay</sys_scope>
+    <sys_update_name>sysauto_script_approval_relay_stall_scan</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-07 00:00:00</sys_updated_on>
+  </sysauto_script>
+</unload>
