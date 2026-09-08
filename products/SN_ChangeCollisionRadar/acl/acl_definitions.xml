@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-08 07:00:00">
+  <!-- x_snc_ccr_collision — read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Read access to collision records</description>
+    <name>x_snc_ccr_collision</name>
+    <operation display_value="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ccr00000000000000000000000000000050</sys_id>
+    <sys_scope display_value="ChangeCollision Radar">ccr00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ccr00000000000000000000000000000051</sys_id>
+    <sys_security_acl display_value="x_snc_ccr_collision">ccr00000000000000000000000000000050</sys_security_acl>
+    <sys_user_role display_value="x_snc_ccr.user">ccr00000000000000000000000000000003</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ccr_collision — write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Write access to collision records</description>
+    <name>x_snc_ccr_collision</name>
+    <operation display_value="write">write</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ccr00000000000000000000000000000052</sys_id>
+    <sys_scope display_value="ChangeCollision Radar">ccr00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ccr00000000000000000000000000000053</sys_id>
+    <sys_security_acl display_value="x_snc_ccr_collision">ccr00000000000000000000000000000052</sys_security_acl>
+    <sys_user_role display_value="x_snc_ccr.admin">ccr00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ccr_collision — create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Create access to collision records</description>
+    <name>x_snc_ccr_collision</name>
+    <operation display_value="create">create</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ccr00000000000000000000000000000054</sys_id>
+    <sys_scope display_value="ChangeCollision Radar">ccr00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ccr00000000000000000000000000000055</sys_id>
+    <sys_security_acl display_value="x_snc_ccr_collision">ccr00000000000000000000000000000054</sys_security_acl>
+    <sys_user_role display_value="x_snc_ccr.admin">ccr00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ccr_collision — delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Delete access to collision records</description>
+    <name>x_snc_ccr_collision</name>
+    <operation display_value="delete">delete</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ccr00000000000000000000000000000056</sys_id>
+    <sys_scope display_value="ChangeCollision Radar">ccr00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ccr00000000000000000000000000000057</sys_id>
+    <sys_security_acl display_value="x_snc_ccr_collision">ccr00000000000000000000000000000056</sys_security_acl>
+    <sys_user_role display_value="x_snc_ccr.admin">ccr00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ccr_risk — read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Read access to risk records</description>
+    <name>x_snc_ccr_risk</name>
+    <operation display_value="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ccr00000000000000000000000000000060</sys_id>
+    <sys_scope display_value="ChangeCollision Radar">ccr00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ccr00000000000000000000000000000061</sys_id>
+    <sys_security_acl display_value="x_snc_ccr_risk">ccr00000000000000000000000000000060</sys_security_acl>
+    <sys_user_role display_value="x_snc_ccr.user">ccr00000000000000000000000000000003</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ccr_risk — write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Write access to risk records</description>
+    <name>x_snc_ccr_risk</name>
+    <operation display_value="write">write</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ccr00000000000000000000000000000062</sys_id>
+    <sys_scope display_value="ChangeCollision Radar">ccr00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ccr00000000000000000000000000000063</sys_id>
+    <sys_security_acl display_value="x_snc_ccr_risk">ccr00000000000000000000000000000062</sys_security_acl>
+    <sys_user_role display_value="x_snc_ccr.admin">ccr00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ccr_risk — create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Create access to risk records</description>
+    <name>x_snc_ccr_risk</name>
+    <operation display_value="create">create</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ccr00000000000000000000000000000064</sys_id>
+    <sys_scope display_value="ChangeCollision Radar">ccr00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ccr00000000000000000000000000000065</sys_id>
+    <sys_security_acl display_value="x_snc_ccr_risk">ccr00000000000000000000000000000064</sys_security_acl>
+    <sys_user_role display_value="x_snc_ccr.admin">ccr00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ccr_risk — delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Delete access to risk records</description>
+    <name>x_snc_ccr_risk</name>
+    <operation display_value="delete">delete</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ccr00000000000000000000000000000066</sys_id>
+    <sys_scope display_value="ChangeCollision Radar">ccr00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ccr00000000000000000000000000000067</sys_id>
+    <sys_security_acl display_value="x_snc_ccr_risk">ccr00000000000000000000000000000066</sys_security_acl>
+    <sys_user_role display_value="x_snc_ccr.admin">ccr00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- REST endpoint — execute (GET /collisions) -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Execute access to GET /collisions REST endpoint</description>
+    <name>x_snc_ccr.collisions</name>
+    <operation display_value="execute">execute</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ccr00000000000000000000000000000070</sys_id>
+    <sys_scope display_value="ChangeCollision Radar">ccr00000000000000000000000000000000</sys_scope>
+    <type>rest_endpoint</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ccr00000000000000000000000000000071</sys_id>
+    <sys_security_acl display_value="x_snc_ccr.collisions">ccr00000000000000000000000000000070</sys_security_acl>
+    <sys_user_role display_value="x_snc_ccr.user">ccr00000000000000000000000000000003</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- REST endpoint — execute (POST /execute) -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Execute access to POST /execute REST endpoint</description>
+    <name>x_snc_ccr.execute</name>
+    <operation display_value="execute">execute</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ccr00000000000000000000000000000072</sys_id>
+    <sys_scope display_value="ChangeCollision Radar">ccr00000000000000000000000000000000</sys_scope>
+    <type>rest_endpoint</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ccr00000000000000000000000000000073</sys_id>
+    <sys_security_acl display_value="x_snc_ccr.execute">ccr00000000000000000000000000000072</sys_security_acl>
+    <sys_user_role display_value="x_snc_ccr.admin">ccr00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+</unload>
