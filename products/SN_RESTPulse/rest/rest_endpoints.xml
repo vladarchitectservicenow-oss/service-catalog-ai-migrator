@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-09 00:00:00">
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>/api/now/x_snc_restpulse</base_uri>
+    <consumes>application/json</consumes>
+    <description>RESTPulse Scripted REST API — health evaluation and reporting.</description>
+    <name>RESTPulse API</name>
+    <produces>application/json</produces>
+    <relative_path>restpulse</relative_path>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_ws_def</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>RESTPulse API</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_update_name>sys_ws_definition_restpulse</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+  </sys_ws_definition>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <name>execute</name>
+    <operation_uri>execute</operation_uri>
+    <produces>application/json</produces>
+    <request_method>POST</request_method>
+    <operation_script><![CDATA[// RESTPulse — Outbound REST Message & Integration Health Monitor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// POST /execute — action-dispatch endpoint for all write/query operations.
+// Actions: evaluate, snapshot, alert, save_config
+(function process(request, response) {
+    var body = request.body ? request.body.data : {};
+    var action = body.action || 'evaluate';
+    var engine = new RESTPulseEngine();
+    var result;
+
+    switch (action) {
+        case 'evaluate':
+            result = engine.runEvaluation();
+            break;
+        case 'snapshot':
+            result = { snapshots_written: engine.snapshotHistory() };
+            break;
+        case 'alert':
+            var alerter = new RESTPulseAlert();
+            result = alerter.runAlertCycle();
+            break;
+        case 'save_config':
+            var updates = body.config || {};
+            result = { saved: engine.saveConfig(updates), config: engine.getConfig() };
+            break;
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown action: ' + action,
+                valid_actions: ['evaluate', 'snapshot', 'alert', 'save_config']
+            }));
+            return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+})(request, response);
+]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_ws_op_execute</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>execute</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_update_name>sys_ws_operation_restpulse_execute</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <sys_web_service_definition display_value="RESTPulse API">restpulse_ws_def</sys_web_service_definition>
+  </sys_ws_operation>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <name>status</name>
+    <operation_uri>status</operation_uri>
+    <produces>application/json</produces>
+    <request_method>GET</request_method>
+    <operation_script><![CDATA[// RESTPulse — Outbound REST Message & Integration Health Monitor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// GET /status — read-only reporting endpoint. Query params:
+//   ?view=summary        -> all health records (default)
+//   ?message_sys_id=<id> -> single message detail + history
+//   ?view=dependency     -> dependency map (nodes + edges)
+//   ?view=config         -> current configuration
+(function process(request, response) {
+    var q = request.queryParams || {};
+    var view = q.view || 'summary';
+    var engine = new RESTPulseEngine();
+    var result = { queried_at: new GlideDateTime().getValue(), view: view };
+
+    if (view === 'summary') {
+        result.integrations = engine.getHealthSummary();
+    } else if (view === 'dependency') {
+        result.map = engine.buildDependencyMap();
+    } else if (view === 'config') {
+        result.config = engine.getConfig();
+    } else if (view === 'detail') {
+        var msgSysId = q.message_sys_id || '';
+        if (!msgSysId) {
+            response.setStatus(400);
+            response.setBody(JSON.stringify({ error: 'message_sys_id required for view=detail' }));
+            return;
+        }
+        result.integration = engine.getHealthDetail(msgSysId);
+        if (!result.integration) {
+            response.setStatus(404);
+            response.setBody(JSON.stringify({ error: 'No health record found for message_sys_id: ' + msgSysId }));
+            return;
+        }
+        result.history = engine.getHistory(msgSysId, 50);
+    } else {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({
+            error: 'Unknown view: ' + view,
+            valid_views: ['summary', 'dependency', 'config', 'detail']
+        }));
+        return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+})(request, response);
+]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_ws_op_status</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>status</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_update_name>sys_ws_operation_restpulse_status</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <sys_web_service_definition display_value="RESTPulse API">restpulse_ws_def</sys_web_service_definition>
+  </sys_ws_operation>
+</unload>

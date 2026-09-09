@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-09 00:00:00">
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Read access to RESTPulse Health records for admin and user roles.</description>
+    <name>x_snc_restpulse_health</name>
+    <operation display_value="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_health_read_acl</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_restpulse_health</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_update_name>sys_security_acl_restpulse_health_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_health_read_acl_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_restpulse_health</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_security_acl display_value="x_snc_restpulse_health">restpulse_health_read_acl</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_restpulse_health_read_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <sys_user_role display_value="sn_restpulse.admin" name="sn_restpulse.admin">restpulse_admin_role</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_health_read_acl_user</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_restpulse_health</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_security_acl display_value="x_snc_restpulse_health">restpulse_health_read_acl</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_restpulse_health_read_user</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <sys_user_role display_value="sn_restpulse.user" name="sn_restpulse.user">restpulse_user_role</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Write access to RESTPulse Health records for admin role only.</description>
+    <name>x_snc_restpulse_health</name>
+    <operation display_value="write">write</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_health_write_acl</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_restpulse_health</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_update_name>sys_security_acl_restpulse_health_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_health_write_acl_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_restpulse_health</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_security_acl display_value="x_snc_restpulse_health">restpulse_health_write_acl</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_restpulse_health_write_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <sys_user_role display_value="sn_restpulse.admin" name="sn_restpulse.admin">restpulse_admin_role</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Read access to RESTPulse Config records for admin and user roles.</description>
+    <name>x_snc_restpulse_config</name>
+    <operation display_value="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_config_read_acl</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_restpulse_config</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_update_name>sys_security_acl_restpulse_config_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_config_read_acl_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_restpulse_config</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_security_acl display_value="x_snc_restpulse_config">restpulse_config_read_acl</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_restpulse_config_read_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <sys_user_role display_value="sn_restpulse.admin" name="sn_restpulse.admin">restpulse_admin_role</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_config_read_acl_user</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_restpulse_config</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_security_acl display_value="x_snc_restpulse_config">restpulse_config_read_acl</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_restpulse_config_read_user</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <sys_user_role display_value="sn_restpulse.user" name="sn_restpulse.user">restpulse_user_role</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Write access to RESTPulse Config records for admin role only.</description>
+    <name>x_snc_restpulse_config</name>
+    <operation display_value="write">write</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_config_write_acl</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_restpulse_config</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_update_name>sys_security_acl_restpulse_config_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_config_write_acl_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snc_restpulse_config</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_security_acl display_value="x_snc_restpulse_config">restpulse_config_write_acl</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_restpulse_config_write_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <sys_user_role display_value="sn_restpulse.admin" name="sn_restpulse.admin">restpulse_admin_role</sys_user_role>
+    <transaction_id/>
+  </sys_security_acl_role>
+</unload>

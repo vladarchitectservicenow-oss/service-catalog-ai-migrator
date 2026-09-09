@@ -1,0 +1,999 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-09 00:00:00">
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snc_restpulse.RESTPulseEngine</api_name>
+    <caller_access>1</caller_access>
+    <client_callable>false</client_callable>
+    <description>RESTPulse deterministic core: inventory scan, telemetry correlation, credential risk radar, and composite health scoring.</description>
+    <name>RESTPulseEngine</name>
+    <script><![CDATA[// RESTPulse — Outbound REST Message & Integration Health Monitor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// RESTPulseEngine — deterministic core: inventory scan, telemetry correlation,
+// credential risk radar, and composite health scoring. Read-only against all
+// platform tables; writes only to scoped custom tables.
+//
+// @class RESTPulseEngine
+// @namespace x_snc_restpulse
+var RESTPulseEngine = Class.create();
+RESTPulseEngine.prototype = {
+
+    initialize: function () {
+        this.HEALTH_TABLE = 'x_snc_restpulse_health';
+        this.CONFIG_TABLE = 'x_snc_restpulse_config';
+        this.MSG_TABLE = 'sys_rest_message';
+        this.MSG_FN_TABLE = 'sys_rest_message_fn';
+        this.MSG_LOG_TABLE = 'sys_rest_message_log';
+        this.OAUTH_TABLE = 'oauth_credential';
+        this.USER_TABLE = 'sys_user';
+        this._config = null;
+    },
+
+    // ------------------------------------------------------------------
+    // CONFIG
+    // ------------------------------------------------------------------
+
+    /**
+     * Load configuration from the config table (type=config). Falls back to
+     * sensible defaults when no config record exists yet.
+     * @return {Object} config map
+     */
+    getConfig: function () {
+        if (this._config) {
+            return this._config;
+        }
+        var defaults = {
+            error_rate_degraded: 0.05,
+            error_rate_critical: 0.20,
+            latency_p95_degraded_ms: 5000,
+            latency_p95_critical_ms: 10000,
+            timeout_rate_critical: 0.10,
+            credential_expiry_warning_days: 30,
+            credential_expiry_critical_days: 7,
+            unused_credential_days: 90,
+            telemetry_window_days: 7,
+            alert_quiet_hours_start: 22,
+            alert_quiet_hours_end: 7,
+            alert_dedup_minutes: 60,
+            alert_email_recipients: ''
+        };
+        var gr = new GlideRecord(this.CONFIG_TABLE);
+        gr.addQuery('type', 'config');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            var stored = gr.getValue('config_json');
+            if (stored) {
+                try {
+                    var parsed = JSON.parse(stored);
+                    for (var k in defaults) {
+                        if (parsed.hasOwnProperty(k) && parsed[k] !== null && parsed[k] !== undefined) {
+                            defaults[k] = parsed[k];
+                        }
+                    }
+                } catch (e) {
+                    gs.warn('RESTPulse: config_json parse failed, using defaults. ' + e);
+                }
+            }
+        }
+        this._config = defaults;
+        return defaults;
+    },
+
+    /**
+     * Persist configuration. Merges into existing config record.
+     * @param {Object} updates key/value pairs to update
+     * @return {boolean} true on success
+     */
+    saveConfig: function (updates) {
+        var cfg = this.getConfig();
+        for (var k in updates) {
+            if (updates.hasOwnProperty(k)) {
+                cfg[k] = updates[k];
+            }
+        }
+        var gr = new GlideRecord(this.CONFIG_TABLE);
+        gr.addQuery('type', 'config');
+        gr.setLimit(1);
+        gr.query();
+        var isNew = !gr.next();
+        if (isNew) {
+            gr.initialize();
+            gr.setValue('type', 'config');
+        }
+        gr.setValue('config_json', JSON.stringify(cfg));
+        gr.setValue('name', 'RESTPulse Configuration');
+        try {
+            if (isNew) {
+                gr.insert();
+            } else {
+                gr.update();
+            }
+            this._config = cfg;
+            return true;
+        } catch (e) {
+            gs.error('RESTPulse: saveConfig failed. ' + e);
+            return false;
+        }
+    },
+
+    // ------------------------------------------------------------------
+    // 1. INVENTORY — static, code-aware scan of REST messages + usage sites
+    // ------------------------------------------------------------------
+
+    /**
+     * Enumerate every outbound REST message and its invocation sites across
+     * code tables. Returns an array of inventory objects.
+     * @return {Array} inventory records
+     */
+    scanInventory: function () {
+        var inventory = [];
+        var msgGr = new GlideRecord(this.MSG_TABLE);
+        msgGr.addActiveQuery();
+        msgGr.query();
+        while (msgGr.next()) {
+            var msgSysId = msgGr.getUniqueValue();
+            var msgName = msgGr.getValue('name') || '';
+            var endpoint = msgGr.getValue('endpoint') || '';
+            var entry = {
+                message_sys_id: msgSysId,
+                message_name: msgName,
+                endpoint: endpoint,
+                invocation_sites: this._findInvocationSites(msgSysId),
+                credential_refs: this._findCredentialRefs(msgSysId)
+            };
+            inventory.push(entry);
+        }
+        return inventory;
+    },
+
+    /**
+     * Find where a REST message is invoked by scanning code tables for the
+     * message sys_id or name reference.
+     * @param {string} msgSysId message sys_id
+     * @return {Array} list of {table, sys_id, name, type}
+     */
+    _findInvocationSites: function (msgSysId) {
+        var sites = [];
+        var codeTables = [
+            { table: 'sys_script', field: 'script', nameField: 'name', type: 'business_rule' },
+            { table: 'sys_script_include', field: 'script', nameField: 'name', type: 'script_include' },
+            { table: 'sysauto_script', field: 'script', nameField: 'name', type: 'scheduled_job' },
+            { table: 'sys_ui_action', field: 'script', nameField: 'name', type: 'ui_action' }
+        ];
+        for (var i = 0; i < codeTables.length; i++) {
+            var ct = codeTables[i];
+            var gr = new GlideRecord(ct.table);
+            gr.addQuery(ct.field, 'CONTAINS', msgSysId);
+            gr.query();
+            while (gr.next()) {
+                sites.push({
+                    table: ct.table,
+                    sys_id: gr.getUniqueValue(),
+                    name: gr.getValue(ct.nameField) || '',
+                    type: ct.type
+                });
+            }
+        }
+        // Flow Designer flows store actions in a serialized snapshot; scan the
+        // flow table for the message sys_id in the snapshot payload.
+        var flowGr = new GlideRecord('sys_hub_flow');
+        flowGr.addQuery('snapshot', 'CONTAINS', msgSysId);
+        flowGr.query();
+        while (flowGr.next()) {
+            sites.push({
+                table: 'sys_hub_flow',
+                sys_id: flowGr.getUniqueValue(),
+                name: flowGr.getValue('name') || '',
+                type: 'flow'
+            });
+        }
+        return sites;
+    },
+
+    /**
+     * Find credential references for a message by inspecting its HTTP method
+     * functions (basic auth user) and OAuth profile.
+     * @param {string} msgSysId message sys_id
+     * @return {Array} list of credential descriptors
+     */
+    _findCredentialRefs: function (msgSysId) {
+        var refs = [];
+        var fnGr = new GlideRecord(this.MSG_FN_TABLE);
+        fnGr.addQuery('rest_message', msgSysId);
+        fnGr.query();
+        while (fnGr.next()) {
+            var basicUser = fnGr.getValue('basic_auth_user') || '';
+            var oauthProfile = fnGr.getValue('oauth_profile') || '';
+            if (basicUser) {
+                refs.push({ type: 'basic_auth', user_sys_id: basicUser });
+            }
+            if (oauthProfile) {
+                refs.push({ type: 'oauth', profile_sys_id: oauthProfile });
+            }
+        }
+        return refs;
+    },
+
+    // ------------------------------------------------------------------
+    // 2. TELEMETRY — correlate sys_rest_message_log into rolling metrics
+    // ------------------------------------------------------------------
+
+    /**
+     * Compute per-message telemetry over a rolling window.
+     * @param {string} msgSysId message sys_id
+     * @param {number} windowDays rolling window in days
+     * @return {Object} telemetry metrics
+     */
+    computeTelemetry: function (msgSysId, windowDays) {
+        var since = new GlideDateTime();
+        since.addDaysUTC(-1 * (windowDays || 7));
+        var metrics = {
+            total_calls: 0,
+            success_count: 0,
+            error_count: 0,
+            timeout_count: 0,
+            latency_sum_ms: 0,
+            latency_samples: [],
+            error_rate: 0,
+            success_rate: 0,
+            avg_latency_ms: 0,
+            p95_latency_ms: 0,
+            timeout_rate: 0,
+            window_days: windowDays || 7
+        };
+        var gr = new GlideRecord(this.MSG_LOG_TABLE);
+        gr.addQuery('rest_message', msgSysId);
+        gr.addQuery('sys_created_on', '>=', since);
+        gr.query();
+        while (gr.next()) {
+            metrics.total_calls++;
+            var status = parseInt(gr.getValue('status_code') || '0', 10);
+            var duration = parseInt(gr.getValue('response_time') || '0', 10);
+            var isError = status >= 400 || status === 0;
+            if (isError) {
+                metrics.error_count++;
+            } else {
+                metrics.success_count++;
+            }
+            if (status === 0 || status === 408 || status === 504) {
+                metrics.timeout_count++;
+            }
+            if (duration > 0) {
+                metrics.latency_sum_ms += duration;
+                metrics.latency_samples.push(duration);
+            }
+        }
+        if (metrics.total_calls > 0) {
+            metrics.error_rate = metrics.error_count / metrics.total_calls;
+            metrics.success_rate = metrics.success_count / metrics.total_calls;
+            metrics.timeout_rate = metrics.timeout_count / metrics.total_calls;
+        }
+        if (metrics.latency_samples.length > 0) {
+            metrics.avg_latency_ms = Math.round(metrics.latency_sum_ms / metrics.latency_samples.length);
+            metrics.p95_latency_ms = this._percentile(metrics.latency_samples, 0.95);
+        }
+        return metrics;
+    },
+
+    /**
+     * Compute a percentile from a numeric array (ES5, no sort mutation of input).
+     * @param {Array} values numeric array
+     * @param {number} p percentile 0..1
+     * @return {number} percentile value
+     */
+    _percentile: function (values, p) {
+        var sorted = values.slice().sort(function (a, b) { return a - b; });
+        var idx = Math.ceil(p * sorted.length) - 1;
+        if (idx < 0) { idx = 0; }
+        return sorted[idx];
+    },
+
+    // ------------------------------------------------------------------
+    // 3. CREDENTIAL RADAR — expiry, usage, sharing
+    // ------------------------------------------------------------------
+
+    /**
+     * Evaluate credential risk for a message's credential references.
+     * @param {Array} credentialRefs from _findCredentialRefs
+     * @return {Object} risk summary
+     */
+    evaluateCredentialRisk: function (credentialRefs, cfg) {
+        var risk = {
+            has_credentials: false,
+            expiring_soon: false,
+            expiring_critical: false,
+            expired: false,
+            min_expiry_days: null,
+            oauth_count: 0,
+            basic_auth_count: 0,
+            details: []
+        };
+        if (!credentialRefs || credentialRefs.length === 0) {
+            return risk;
+        }
+        risk.has_credentials = true;
+        var warnDays = (cfg && cfg.credential_expiry_warning_days) || 30;
+        var critDays = (cfg && cfg.credential_expiry_critical_days) || 7;
+        for (var i = 0; i < credentialRefs.length; i++) {
+            var ref = credentialRefs[i];
+            if (ref.type === 'oauth') {
+                risk.oauth_count++;
+                var oa = new GlideRecord(this.OAUTH_TABLE);
+                if (oa.get(ref.profile_sys_id)) {
+                    var expires = oa.getValue('expires_on') || '';
+                    var days = this._daysUntil(expires);
+                    var detail = {
+                        type: 'oauth',
+                        sys_id: ref.profile_sys_id,
+                        name: oa.getValue('name') || '',
+                        expires_on: expires,
+                        days_until_expiry: days
+                    };
+                    risk.details.push(detail);
+                    if (days !== null) {
+                        if (risk.min_expiry_days === null || days < risk.min_expiry_days) {
+                            risk.min_expiry_days = days;
+                        }
+                        if (days <= 0) { risk.expired = true; }
+                        else if (days <= critDays) { risk.expiring_critical = true; }
+                        else if (days <= warnDays) { risk.expiring_soon = true; }
+                    }
+                }
+            } else if (ref.type === 'basic_auth') {
+                risk.basic_auth_count++;
+                var usr = new GlideRecord(this.USER_TABLE);
+                if (usr.get(ref.user_sys_id)) {
+                    var lastUpdate = usr.getValue('last_password_update') || '';
+                    var pDays = this._daysSince(lastUpdate);
+                    var d2 = {
+                        type: 'basic_auth',
+                        sys_id: ref.user_sys_id,
+                        name: usr.getValue('user_name') || '',
+                        last_password_update: lastUpdate,
+                        password_age_days: pDays
+                    };
+                    risk.details.push(d2);
+                    if (pDays !== null && pDays >= warnDays) {
+                        risk.expiring_soon = true;
+                    }
+                }
+            }
+        }
+        return risk;
+    },
+
+    /**
+     * Find credentials (OAuth profiles and basic-auth users) that have not
+     * been used by any active REST message within the configured window.
+     * @param {Object} cfg config map
+     * @return {Array} list of {type, sys_id, name, last_used}
+     */
+    findUnusedCredentials: function (cfg) {
+        var days = (cfg && cfg.unused_credential_days) || 90;
+        var since = new GlideDateTime();
+        since.addDaysUTC(-1 * days);
+        var lastUsed = {};
+        var msgGr = new GlideRecord(this.MSG_TABLE);
+        msgGr.addActiveQuery();
+        msgGr.query();
+        while (msgGr.next()) {
+            var msgId = msgGr.getUniqueValue();
+            var refs = this._findCredentialRefs(msgId);
+            if (refs.length === 0) { continue; }
+            var logGr = new GlideRecord(this.MSG_LOG_TABLE);
+            logGr.addQuery('rest_message', msgId);
+            logGr.orderByDesc('sys_created_on');
+            logGr.setLimit(1);
+            logGr.query();
+            var lastTs = '';
+            if (logGr.next()) {
+                lastTs = logGr.getValue('sys_created_on') || '';
+            }
+            for (var i = 0; i < refs.length; i++) {
+                var key = refs[i].type + ':' + (refs[i].user_sys_id || refs[i].profile_sys_id);
+                if (lastTs && (!lastUsed[key] || lastTs > lastUsed[key])) {
+                    lastUsed[key] = lastTs;
+                }
+            }
+        }
+        var unused = [];
+        var oaGr = new GlideRecord(this.OAUTH_TABLE);
+        oaGr.query();
+        while (oaGr.next()) {
+            var oaId = oaGr.getUniqueValue();
+            var oaKey = 'oauth:' + oaId;
+            var oaLu = lastUsed[oaKey] || '';
+            if (!oaLu || oaLu < since.getValue()) {
+                unused.push({ type: 'oauth', sys_id: oaId, name: oaGr.getValue('name') || '', last_used: oaLu });
+            }
+        }
+        var usrGr = new GlideRecord(this.USER_TABLE);
+        usrGr.addNotNullQuery('last_password_update');
+        usrGr.query();
+        while (usrGr.next()) {
+            var uId = usrGr.getUniqueValue();
+            var uKey = 'basic_auth:' + uId;
+            var uLu = lastUsed[uKey] || '';
+            if (!uLu || uLu < since.getValue()) {
+                unused.push({ type: 'basic_auth', sys_id: uId, name: usrGr.getValue('user_name') || '', last_used: uLu });
+            }
+        }
+        return unused;
+    },
+
+    /**
+     * Days until a date string (yyyy-MM-dd HH:mm:ss). Null if unparseable.
+     * @param {string} dateStr
+     * @return {number|null}
+     */
+    _daysUntil: function (dateStr) {
+        if (!dateStr) { return null; }
+        var gdt = new GlideDateTime();
+        gdt.setValue(dateStr);
+        var now = new GlideDateTime();
+        var diffMs = gdt.getNumericValue() - now.getNumericValue();
+        return Math.round(diffMs / 86400000);
+    },
+
+    /**
+     * Days elapsed since a date string (yyyy-MM-dd HH:mm:ss). Null if unparseable.
+     * @param {string} dateStr
+     * @return {number|null}
+     */
+    _daysSince: function (dateStr) {
+        if (!dateStr) { return null; }
+        var gdt = new GlideDateTime();
+        gdt.setValue(dateStr);
+        var now = new GlideDateTime();
+        var diffMs = now.getNumericValue() - gdt.getNumericValue();
+        return Math.round(diffMs / 86400000);
+    },
+
+    // ------------------------------------------------------------------
+    // 4. HEALTH SCORING — composite grade + trend
+    // ------------------------------------------------------------------
+
+    /**
+     * Compute a composite health grade for a message.
+     * @param {Object} telemetry from computeTelemetry
+     * @param {Object} credRisk from evaluateCredentialRisk
+     * @param {Object} cfg config map
+     * @return {Object} {grade, score, reasons}
+     */
+    scoreHealth: function (telemetry, credRisk, cfg) {
+        var reasons = [];
+        var grade = 'healthy';
+        var score = 100;
+
+        // Error rate
+        if (telemetry.error_rate >= cfg.error_rate_critical) {
+            grade = 'critical';
+            reasons.push('error_rate ' + this._pct(telemetry.error_rate) + ' >= critical ' + this._pct(cfg.error_rate_critical));
+        } else if (telemetry.error_rate >= cfg.error_rate_degraded) {
+            if (grade === 'healthy') { grade = 'degraded'; }
+            reasons.push('error_rate ' + this._pct(telemetry.error_rate) + ' >= degraded ' + this._pct(cfg.error_rate_degraded));
+        }
+
+        // Latency p95
+        if (telemetry.p95_latency_ms >= cfg.latency_p95_critical_ms) {
+            grade = 'critical';
+            reasons.push('p95_latency ' + telemetry.p95_latency_ms + 'ms >= critical ' + cfg.latency_p95_critical_ms + 'ms');
+        } else if (telemetry.p95_latency_ms >= cfg.latency_p95_degraded_ms) {
+            if (grade === 'healthy') { grade = 'degraded'; }
+            reasons.push('p95_latency ' + telemetry.p95_latency_ms + 'ms >= degraded ' + cfg.latency_p95_degraded_ms + 'ms');
+        }
+
+        // Timeout rate
+        if (telemetry.timeout_rate >= cfg.timeout_rate_critical) {
+            grade = 'critical';
+            reasons.push('timeout_rate ' + this._pct(telemetry.timeout_rate) + ' >= critical ' + this._pct(cfg.timeout_rate_critical));
+        }
+
+        // Credential expiry
+        if (credRisk.expired) {
+            grade = 'critical';
+            reasons.push('credential expired');
+        } else if (credRisk.expiring_critical) {
+            grade = 'critical';
+            reasons.push('credential expiring within ' + cfg.credential_expiry_critical_days + ' days');
+        } else if (credRisk.expiring_soon) {
+            if (grade === 'healthy') { grade = 'degraded'; }
+            reasons.push('credential expiring within ' + cfg.credential_expiry_warning_days + ' days');
+        }
+
+        // Score mapping
+        if (grade === 'healthy') { score = 100; }
+        else if (grade === 'degraded') { score = 60; }
+        else { score = 20; }
+
+        return { grade: grade, score: score, reasons: reasons };
+    },
+
+    /**
+     * Format a ratio as a percentage string.
+     * @param {number} v
+     * @return {string}
+     */
+    _pct: function (v) {
+        return Math.round(v * 1000) / 10 + '%';
+    },
+
+    // ------------------------------------------------------------------
+    // 5. FULL EVALUATION — run inventory + telemetry + credential + scoring
+    // ------------------------------------------------------------------
+
+    /**
+     * Run the full deterministic evaluation pipeline and persist results to
+     * the health table. Returns summary counts.
+     * @return {Object} {evaluated, healthy, degraded, critical}
+     */
+    runEvaluation: function () {
+        var cfg = this.getConfig();
+        var inventory = this.scanInventory();
+        var summary = { evaluated: 0, healthy: 0, degraded: 0, critical: 0, messages: [], unused_credentials: [] };
+
+        for (var i = 0; i < inventory.length; i++) {
+            var inv = inventory[i];
+            var telemetry = this.computeTelemetry(inv.message_sys_id, cfg.telemetry_window_days);
+            var credRisk = this.evaluateCredentialRisk(inv.credential_refs, cfg);
+            var health = this.scoreHealth(telemetry, credRisk, cfg);
+
+            this._upsertHealth(inv, telemetry, credRisk, health);
+            summary.evaluated++;
+            if (health.grade === 'healthy') { summary.healthy++; }
+            else if (health.grade === 'degraded') { summary.degraded++; }
+            else { summary.critical++; }
+
+            summary.messages.push({
+                message_sys_id: inv.message_sys_id,
+                message_name: inv.message_name,
+                grade: health.grade,
+                score: health.score,
+                error_rate: telemetry.error_rate,
+                p95_latency_ms: telemetry.p95_latency_ms
+            });
+        }
+        summary.unused_credentials = this.findUnusedCredentials(cfg);
+        return summary;
+    },
+
+    /**
+     * Upsert a health record for a message (one record per message).
+     * @param {Object} inv inventory entry
+     * @param {Object} telemetry metrics
+     * @param {Object} credRisk risk
+     * @param {Object} health score
+     */
+    _upsertHealth: function (inv, telemetry, credRisk, health) {
+        var gr = new GlideRecord(this.HEALTH_TABLE);
+        gr.addQuery('message_sys_id', inv.message_sys_id);
+        gr.setLimit(1);
+        gr.query();
+        var isNew = !gr.next();
+        if (isNew) {
+            gr.initialize();
+            gr.setValue('message_sys_id', inv.message_sys_id);
+        }
+        gr.setValue('message_name', inv.message_name);
+        gr.setValue('endpoint', inv.endpoint);
+        gr.setValue('grade', health.grade);
+        gr.setValue('score', health.score);
+        gr.setValue('error_rate', telemetry.error_rate);
+        gr.setValue('p95_latency_ms', telemetry.p95_latency_ms);
+        gr.setValue('timeout_count', telemetry.timeout_count);
+        gr.setValue('total_calls', telemetry.total_calls);
+        gr.setValue('credential_expiry_days', credRisk.min_expiry_days === null ? '' : credRisk.min_expiry_days);
+        gr.setValue('invocation_sites_json', JSON.stringify(inv.invocation_sites));
+        gr.setValue('telemetry_json', JSON.stringify(telemetry));
+        gr.setValue('credential_risk_json', JSON.stringify(credRisk));
+        gr.setValue('reasons_json', JSON.stringify(health.reasons));
+        gr.setValue('last_evaluated', new GlideDateTime().getValue());
+        try {
+            if (isNew) {
+                gr.insert();
+            } else {
+                gr.update();
+            }
+        } catch (e) {
+            gs.error('RESTPulse: _upsertHealth failed for ' + inv.message_name + '. ' + e);
+        }
+    },
+
+    // ------------------------------------------------------------------
+    // 6. DEPENDENCY MAP — lineage graph
+    // ------------------------------------------------------------------
+
+    /**
+     * Build a dependency map: script/job/flow -> message -> endpoint -> credential.
+     * @return {Object} {nodes, edges}
+     */
+    buildDependencyMap: function () {
+        var nodes = [];
+        var edges = [];
+        var gr = new GlideRecord(this.HEALTH_TABLE);
+        gr.query();
+        while (gr.next()) {
+            var msgSysId = gr.getValue('message_sys_id');
+            var msgName = gr.getValue('message_name') || msgSysId;
+            var endpoint = gr.getValue('endpoint') || '';
+            var sites = [];
+            var creds = [];
+            try {
+                sites = JSON.parse(gr.getValue('invocation_sites_json') || '[]');
+                creds = JSON.parse(gr.getValue('credential_risk_json') || '{}').details || [];
+            } catch (e) {
+                // ignore malformed JSON
+            }
+            nodes.push({ id: 'msg_' + msgSysId, label: msgName, kind: 'message', endpoint: endpoint });
+            for (var i = 0; i < sites.length; i++) {
+                var s = sites[i];
+                var siteId = 'site_' + s.sys_id;
+                nodes.push({ id: siteId, label: s.name || s.sys_id, kind: s.type, table: s.table });
+                edges.push({ from: siteId, to: 'msg_' + msgSysId });
+            }
+            for (var j = 0; j < creds.length; j++) {
+                var c = creds[j];
+                var credId = 'cred_' + c.sys_id;
+                nodes.push({ id: credId, label: c.name || c.sys_id, kind: c.type });
+                edges.push({ from: 'msg_' + msgSysId, to: credId });
+            }
+        }
+        return { nodes: this._dedupeNodes(nodes), edges: edges };
+    },
+
+    /**
+     * Deduplicate nodes by id.
+     * @param {Array} nodes
+     * @return {Array}
+     */
+    _dedupeNodes: function (nodes) {
+        var seen = {};
+        var out = [];
+        for (var i = 0; i < nodes.length; i++) {
+            var n = nodes[i];
+            if (!seen[n.id]) {
+                seen[n.id] = true;
+                out.push(n);
+            }
+        }
+        return out;
+    },
+
+    // ------------------------------------------------------------------
+    // 7. HISTORY — snapshot current scores for trend analysis
+    // ------------------------------------------------------------------
+
+    /**
+     * Snapshot current health scores into the config table (type=history).
+     * @return {number} number of history records written
+     */
+    snapshotHistory: function () {
+        var gr = new GlideRecord(this.HEALTH_TABLE);
+        gr.query();
+        var count = 0;
+        while (gr.next()) {
+            var h = new GlideRecord(this.CONFIG_TABLE);
+            h.initialize();
+            h.setValue('type', 'history');
+            h.setValue('name', 'Health Snapshot');
+            h.setValue('config_json', JSON.stringify({
+                message_sys_id: gr.getValue('message_sys_id'),
+                message_name: gr.getValue('message_name'),
+                grade: gr.getValue('grade'),
+                score: parseInt(gr.getValue('score') || '0', 10),
+                error_rate: parseFloat(gr.getValue('error_rate') || '0'),
+                p95_latency_ms: parseInt(gr.getValue('p95_latency_ms') || '0', 10),
+                captured_at: new GlideDateTime().getValue()
+            }));
+            try {
+                h.insert();
+                count++;
+            } catch (e) {
+                gs.error('RESTPulse: snapshotHistory insert failed. ' + e);
+            }
+        }
+        return count;
+    },
+
+    /**
+     * Retrieve health history for a message (for trend analysis).
+     * @param {string} msgSysId
+     * @param {number} limit max records
+     * @return {Array} history entries (oldest first)
+     */
+    getHistory: function (msgSysId, limit) {
+        var out = [];
+        var gr = new GlideRecord(this.CONFIG_TABLE);
+        gr.addQuery('type', 'history');
+        gr.addQuery('config_json', 'CONTAINS', msgSysId);
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(limit || 50);
+        gr.query();
+        while (gr.next()) {
+            try {
+                out.push(JSON.parse(gr.getValue('config_json') || '{}'));
+            } catch (e) {
+                // skip malformed
+            }
+        }
+        return out.reverse();
+    },
+
+    /**
+     * Return a summary of all health records (for the dashboard grid).
+     * @return {Array} health summary entries
+     */
+    getHealthSummary: function () {
+        var out = [];
+        var gr = new GlideRecord(this.HEALTH_TABLE);
+        gr.orderBy('grade');
+        gr.orderByDesc('score');
+        gr.query();
+        while (gr.next()) {
+            out.push({
+                message_sys_id: gr.getValue('message_sys_id'),
+                message_name: gr.getValue('message_name'),
+                endpoint: gr.getValue('endpoint'),
+                grade: gr.getValue('grade'),
+                score: parseInt(gr.getValue('score') || '0', 10),
+                error_rate: parseFloat(gr.getValue('error_rate') || '0'),
+                p95_latency_ms: parseInt(gr.getValue('p95_latency_ms') || '0', 10),
+                total_calls: parseInt(gr.getValue('total_calls') || '0', 10),
+                timeout_count: parseInt(gr.getValue('timeout_count') || '0', 10),
+                credential_expiry_days: gr.getValue('credential_expiry_days') || '',
+                last_evaluated: gr.getValue('last_evaluated') || ''
+            });
+        }
+        return out;
+    },
+
+    /**
+     * Return full detail for a single message, including invocation sites,
+     * telemetry, credential risk, and reasons.
+     * @param {string} msgSysId
+     * @return {Object|null} detail record or null if not found
+     */
+    getHealthDetail: function (msgSysId) {
+        var gr = new GlideRecord(this.HEALTH_TABLE);
+        gr.addQuery('message_sys_id', msgSysId);
+        gr.setLimit(1);
+        gr.query();
+        if (!gr.next()) {
+            return null;
+        }
+        var detail = {
+            message_sys_id: gr.getValue('message_sys_id'),
+            message_name: gr.getValue('message_name'),
+            endpoint: gr.getValue('endpoint'),
+            grade: gr.getValue('grade'),
+            score: parseInt(gr.getValue('score') || '0', 10),
+            error_rate: parseFloat(gr.getValue('error_rate') || '0'),
+            p95_latency_ms: parseInt(gr.getValue('p95_latency_ms') || '0', 10),
+            total_calls: parseInt(gr.getValue('total_calls') || '0', 10),
+            timeout_count: parseInt(gr.getValue('timeout_count') || '0', 10),
+            credential_expiry_days: gr.getValue('credential_expiry_days') || '',
+            last_evaluated: gr.getValue('last_evaluated') || '',
+            invocation_sites: [],
+            telemetry: {},
+            credential_risk: {},
+            reasons: []
+        };
+        try {
+            detail.invocation_sites = JSON.parse(gr.getValue('invocation_sites_json') || '[]');
+            detail.telemetry = JSON.parse(gr.getValue('telemetry_json') || '{}');
+            detail.credential_risk = JSON.parse(gr.getValue('credential_risk_json') || '{}');
+            detail.reasons = JSON.parse(gr.getValue('reasons_json') || '[]');
+        } catch (e) {
+            // ignore malformed JSON
+        }
+        return detail;
+    },
+
+    type: 'RESTPulseEngine'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_engine_si</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>RESTPulseEngine</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_update_name>sys_script_include_restpulse_engine</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+  </sys_script_include>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snc_restpulse.RESTPulseAlert</api_name>
+    <caller_access>1</caller_access>
+    <client_callable>false</client_callable>
+    <description>RESTPulse proactive alerting: threshold breach detection with quiet-hours and dedup windows.</description>
+    <name>RESTPulseAlert</name>
+    <script><![CDATA[// RESTPulse — Outbound REST Message & Integration Health Monitor
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// RESTPulseAlert — proactive alerting: evaluates health scores on a cadence,
+// emits email + event on threshold breach, with quiet-hours and dedup windows.
+//
+// @class RESTPulseAlert
+// @namespace x_snc_restpulse
+var RESTPulseAlert = Class.create();
+RESTPulseAlert.prototype = {
+
+    initialize: function () {
+        this.HEALTH_TABLE = 'x_snc_restpulse_health';
+        this.CONFIG_TABLE = 'x_snc_restpulse_config';
+        this.EVENT_NAME = 'sn_restpulse.health_breach';
+        this._engine = new RESTPulseEngine();
+    },
+
+    /**
+     * Evaluate all health records and emit alerts for any that crossed a
+     * degradation threshold and are not suppressed by quiet-hours or dedup.
+     * @return {Object} {checked, alerted, suppressed_quiet, suppressed_dedup}
+     */
+    runAlertCycle: function () {
+        var cfg = this._engine.getConfig();
+        var result = { checked: 0, alerted: 0, suppressed_quiet: 0, suppressed_dedup: 0, breaches: [] };
+
+        var inQuietHours = this._inQuietHours(cfg);
+        var gr = new GlideRecord(this.HEALTH_TABLE);
+        gr.addQuery('grade', 'IN', 'degraded,critical');
+        gr.query();
+        while (gr.next()) {
+            result.checked++;
+            var msgSysId = gr.getValue('message_sys_id');
+            var msgName = gr.getValue('message_name') || msgSysId;
+            var grade = gr.getValue('grade');
+            var reasons = [];
+            try {
+                reasons = JSON.parse(gr.getValue('reasons_json') || '[]');
+            } catch (e) {
+                // ignore
+            }
+
+            var breach = {
+                message_sys_id: msgSysId,
+                message_name: msgName,
+                grade: grade,
+                reasons: reasons,
+                endpoint: gr.getValue('endpoint') || ''
+            };
+
+            if (inQuietHours) {
+                result.suppressed_quiet++;
+                continue;
+            }
+            if (this._isDeduped(msgSysId, grade, cfg.alert_dedup_minutes)) {
+                result.suppressed_dedup++;
+                continue;
+            }
+
+            this._emitAlert(breach, cfg);
+            this._recordAlert(msgSysId, grade);
+            result.alerted++;
+            result.breaches.push(breach);
+        }
+        return result;
+    },
+
+    /**
+     * Determine if the current time falls within configured quiet hours.
+     * @param {Object} cfg
+     * @return {boolean}
+     */
+    _inQuietHours: function (cfg) {
+        var now = new GlideDateTime();
+        var hour = now.getHourLocalTime();
+        var start = cfg.alert_quiet_hours_start;
+        var end = cfg.alert_quiet_hours_end;
+        if (start === end) { return false; }
+        if (start < end) {
+            return hour >= start && hour < end;
+        }
+        // wraps midnight
+        return hour >= start || hour < end;
+    },
+
+    /**
+     * Check whether an alert for this message+grade was already sent within
+     * the dedup window.
+     * @param {string} msgSysId
+     * @param {string} grade
+     * @param {number} dedupMinutes
+     * @return {boolean}
+     */
+    _isDeduped: function (msgSysId, grade, dedupMinutes) {
+        var since = new GlideDateTime();
+        since.addMinutes(-1 * (dedupMinutes || 60));
+        var gr = new GlideRecord(this.CONFIG_TABLE);
+        gr.addQuery('type', 'alert_log');
+        gr.addQuery('name', msgSysId + ':' + grade);
+        gr.addQuery('sys_created_on', '>=', since);
+        gr.setLimit(1);
+        gr.query();
+        return gr.next();
+    },
+
+    /**
+     * Emit an email and a platform event for a breach.
+     * @param {Object} breach
+     * @param {Object} cfg
+     */
+    _emitAlert: function (breach, cfg) {
+        var subject = 'RESTPulse: ' + breach.grade.toUpperCase() + ' — ' + breach.message_name;
+        var body = 'Integration "' + breach.message_name + '" is ' + breach.grade + '.\n\n' +
+            'Endpoint: ' + (breach.endpoint || '(unknown)') + '\n' +
+            'Reasons:\n' + (breach.reasons.length ? ' - ' + breach.reasons.join('\n - ') : ' - (none)') + '\n\n' +
+            'Review the RESTPulse dashboard for full telemetry and dependency impact.';
+
+        // Email
+        var recipients = cfg.alert_email_recipients;
+        if (recipients) {
+            try {
+                var mail = new GlideEmailOutbound();
+                mail.setTo(recipients);
+                mail.setSubject(subject);
+                mail.setBody(body);
+                mail.send();
+            } catch (e) {
+                gs.error('RESTPulse: email alert failed. ' + e);
+            }
+        }
+
+        // Event
+        try {
+            gs.eventQueue(this.EVENT_NAME, null, breach.message_sys_id, breach.message_name);
+        } catch (e) {
+            gs.error('RESTPulse: eventQueue failed. ' + e);
+        }
+    },
+
+    /**
+     * Record an alert in the config table (type=alert_log) for dedup.
+     * @param {string} msgSysId
+     * @param {string} grade
+     */
+    _recordAlert: function (msgSysId, grade) {
+        var gr = new GlideRecord(this.CONFIG_TABLE);
+        gr.initialize();
+        gr.setValue('type', 'alert_log');
+        gr.setValue('name', msgSysId + ':' + grade);
+        gr.setValue('config_json', JSON.stringify({
+            message_sys_id: msgSysId,
+            grade: grade,
+            alerted_at: new GlideDateTime().getValue()
+        }));
+        try {
+            gr.insert();
+        } catch (e) {
+            gs.error('RESTPulse: _recordAlert insert failed. ' + e);
+        }
+    },
+
+    type: 'RESTPulseAlert'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_alert_si</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>RESTPulseAlert</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_update_name>sys_script_include_restpulse_alert</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+  </sys_script_include>
+</unload>

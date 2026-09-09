@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-09 00:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <actions_access>false</actions_access>
+    <alter_access>false</alter_access>
+    <client_scripts_access>false</client_scripts_access>
+    <configuration_access>false</configuration_access>
+    <create_access>false</create_access>
+    <create_access_controls>true</create_access_controls>
+    <delete_access>false</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>RESTPulse Health</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_snc_restpulse_health</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_health_table</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>RESTPulse Health</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_update_name>sys_db_object_x_snc_restpulse_health</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+    <update_access>false</update_access>
+    <user_role display_value="sn_restpulse.admin" name="sn_restpulse.admin">restpulse_admin_role</user_role>
+    <ws_access>read</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>message_sys_id</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Message Sys ID</label>
+    <mandatory>true</mandatory>
+    <read_only>false</read_only>
+    <unique>true</unique>
+    <sys_name>Message Sys ID</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>message_name</element>
+    <internal_type>string</internal_type>
+    <max_length>255</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Message Name</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>Message Name</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>endpoint</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Endpoint</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>Endpoint</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>grade</element>
+    <internal_type>choice</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Health Grade</label>
+    <mandatory>true</mandatory>
+    <read_only>false</read_only>
+    <choice>1</choice>
+    <sys_name>Health Grade</sys_name>
+    <choice_0>healthy</choice_0>
+    <choice_1>degraded</choice_1>
+    <choice_2>critical</choice_2>
+    <choice_label_0>Healthy</choice_label_0>
+    <choice_label_1>Degraded</choice_label_1>
+    <choice_label_2>Critical</choice_label_2>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>score</element>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Score</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>Score</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>error_rate</element>
+    <internal_type>decimal</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Error Rate</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>Error Rate</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>p95_latency_ms</element>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>P95 Latency (ms)</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>P95 Latency (ms)</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>timeout_count</element>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Timeout Count</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>Timeout Count</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>total_calls</element>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Total Calls</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>Total Calls</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>credential_expiry_days</element>
+    <internal_type>integer</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Credential Expiry (days)</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>Credential Expiry (days)</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>invocation_sites_json</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Invocation Sites (JSON)</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>Invocation Sites (JSON)</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>telemetry_json</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Telemetry (JSON)</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>Telemetry (JSON)</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>credential_risk_json</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Credential Risk (JSON)</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>Credential Risk (JSON)</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>reasons_json</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Reasons (JSON)</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>Reasons (JSON)</sys_name>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>last_evaluated</element>
+    <internal_type>glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_restpulse_health</name>
+    <label>Last Evaluated</label>
+    <mandatory>false</mandatory>
+    <read_only>false</read_only>
+    <sys_name>Last Evaluated</sys_name>
+  </sys_dictionary>
+</unload>

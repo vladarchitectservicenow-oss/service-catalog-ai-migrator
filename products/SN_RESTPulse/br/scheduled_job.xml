@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-09 00:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>RESTPulse scheduled evaluation: runs the deterministic health pipeline (inventory + telemetry + credential radar + scoring) and then the alert cycle.</description>
+    <name>RESTPulse Scheduled Evaluation</name>
+    <run_dayofweek/>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_period>hourly</run_period>
+    <run_start>2026-09-09 00:00:00</run_start>
+    <run_time>00:00:00</run_time>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// RESTPulse — Scheduled Evaluation
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function () {
+    try {
+        var engine = new RESTPulseEngine();
+        var summary = engine.runEvaluation();
+        gs.info('RESTPulse: evaluation complete. evaluated=' + summary.evaluated +
+            ' healthy=' + summary.healthy +
+            ' degraded=' + summary.degraded +
+            ' critical=' + summary.critical);
+
+        var alerter = new RESTPulseAlert();
+        var alertResult = alerter.runAlertCycle();
+        gs.info('RESTPulse: alert cycle complete. checked=' + alertResult.checked +
+            ' alerted=' + alertResult.alerted +
+            ' suppressed_quiet=' + alertResult.suppressed_quiet +
+            ' suppressed_dedup=' + alertResult.suppressed_dedup);
+    } catch (e) {
+        gs.error('RESTPulse: scheduled evaluation failed. ' + e);
+    }
+})();
+]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-09 00:00:00</sys_created_on>
+    <sys_id>restpulse_scheduled_eval</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>RESTPulse Scheduled Evaluation</sys_name>
+    <sys_package display_value="RESTPulse" source="x_snc_restpulse">restpulse_app</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="RESTPulse">restpulse_scope</sys_scope>
+    <sys_update_name>sysauto_script_restpulse_scheduled_eval</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-09 00:00:00</sys_updated_on>
+  </sysauto_script>
+</unload>
