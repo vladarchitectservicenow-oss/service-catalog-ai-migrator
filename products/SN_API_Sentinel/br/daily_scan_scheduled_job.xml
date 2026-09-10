@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-10 05:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>API Sentinel daily scan — inventories the inbound API attack surface, scores each endpoint by risk, and persists the results. Emits a delta report when the surface changes.</description>
+    <name>API Sentinel Daily Scan</name>
+    <run_dayofweek/>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_period>daily</run_period>
+    <run_start>2026-09-10 05:00:00</run_start>
+    <run_time>05:00:00</run_time>
+    <run_type>periodically</run_type>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_scope display_value="API Sentinel">x_snc_api_sentinel</sys_scope>
+    <timezone>America/Argentina/Buenos_Aires</timezone>
+    <script><![CDATA[
+// API Sentinel — Daily Scan scheduled job
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function runDailyScan() {
+    try {
+        var scanner = new ApiSentinelScanner();
+        var engine = new ApiSentinelScoreEngine();
+
+        var previous = _loadPreviousEndpoints();
+        var current = scanner.scan();
+        engine.scoreAll(current);
+
+        var scan = new GlideRecord('x_snc_api_sentinel_scan');
+        scan.initialize();
+        scan.setValue('scan_started', new GlideDateTime());
+        scan.setValue('scan_completed', new GlideDateTime());
+        scan.setValue('endpoints_found', current.length);
+        var counts = _countBands(current);
+        scan.setValue('critical_count', counts.critical);
+        scan.setValue('high_count', counts.high);
+        scan.setValue('medium_count', counts.medium);
+        scan.setValue('low_count', counts.low);
+        var scanId = scan.insert();
+
+        for (var i = 0; i < current.length; i++) {
+            var e = current[i];
+            var gr = new GlideRecord('x_snc_api_sentinel_endpoint');
+            gr.initialize();
+            gr.setValue('endpoint_type', e.endpoint_type);
+            gr.setValue('name', e.name);
+            gr.setValue('path', e.path);
+            gr.setValue('auth_required', e.auth_required);
+            gr.setValue('role_guard', e.role_guard);
+            gr.setValue('tables_touched', JSON.stringify(e.tables_touched || []));
+            gr.setValue('pii_fields', JSON.stringify(e.pii_fields || []));
+            gr.setValue('risk_score', e.risk_score);
+            gr.setValue('risk_band', e.risk_band);
+            gr.setValue('source_table', e.source_table);
+            gr.setValue('source_sys_id', e.source_sys_id);
+            gr.setValue('scan', scanId);
+            gr.insert();
+        }
+
+        var delta = engine.computeDelta(previous, current);
+        if (delta.added.length > 0 || delta.removed.length > 0 || delta.changed.length > 0) {
+            var scanRec = new GlideRecord('x_snc_api_sentinel_scan');
+            if (scanRec.get(scanId)) {
+                scanRec.setValue('delta_json', JSON.stringify(delta));
+                scanRec.update();
+            }
+            gs.info('API Sentinel: delta detected — ' + delta.added.length + ' added, ' +
+                    delta.removed.length + ' removed, ' + delta.changed.length + ' changed.');
+        }
+
+        gs.info('API Sentinel: daily scan complete — ' + current.length + ' endpoints, ' +
+                counts.critical + ' critical.');
+    } catch (e) {
+        gs.error('API Sentinel: daily scan failed — ' + (e.message || String(e)));
+    }
+})();
+
+function _loadPreviousEndpoints() {
+    var endpoints = [];
+    var scan = new GlideRecord('x_snc_api_sentinel_scan');
+    scan.orderByDesc('scan_started');
+    scan.setLimit(2);
+    scan.query();
+    var ids = [];
+    while (scan.next()) {
+        ids.push(scan.getUniqueValue());
+    }
+    if (ids.length < 2) {
+        return endpoints;
+    }
+    var gr = new GlideRecord('x_snc_api_sentinel_endpoint');
+    gr.addQuery('scan', ids[1]);
+    gr.query();
+    while (gr.next()) {
+        endpoints.push({
+            endpoint_type: gr.endpoint_type.toString(),
+            name: gr.name.toString(),
+            path: gr.path.toString(),
+            auth_required: gr.auth_required.toString(),
+            role_guard: gr.role_guard.toString(),
+            tables_touched: _safeParse(gr.tables_touched.toString()),
+            pii_fields: _safeParse(gr.pii_fields.toString()),
+            risk_score: parseInt(gr.risk_score.toString(), 10) || 0,
+            risk_band: gr.risk_band.toString(),
+            source_table: gr.source_table.toString(),
+            source_sys_id: gr.source_sys_id.toString()
+        });
+    }
+    return endpoints;
+}
+
+function _countBands(endpoints) {
+    var counts = { critical: 0, high: 0, medium: 0, low: 0 };
+    for (var i = 0; i < endpoints.length; i++) {
+        var band = endpoints[i].risk_band;
+        if (band === 'Critical') {
+            counts.critical++;
+        } else if (band === 'High') {
+            counts.high++;
+        } else if (band === 'Medium') {
+            counts.medium++;
+        } else {
+            counts.low++;
+        }
+    }
+    return counts;
+}
+
+function _safeParse(s) {
+    if (!s) {
+        return [];
+    }
+    try {
+        return JSON.parse(s);
+    } catch (e) {
+        return [];
+    }
+}
+]]></script>
+  </sysauto_script>
+</unload>

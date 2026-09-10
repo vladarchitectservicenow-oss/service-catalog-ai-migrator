@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-10 05:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <create_access>true</create_access>
+    <delete_access>false</delete_access>
+    <is_extendable>false</is_extendable>
+    <label>API Sentinel Scan</label>
+    <name>x_snc_api_sentinel_scan</name>
+    <read_access>true</read_access>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_name>x_snc_api_sentinel_scan</sys_name>
+    <sys_package display_value="API Sentinel">x_snc_api_sentinel</sys_package>
+    <sys_scope display_value="API Sentinel">x_snc_api_sentinel</sys_scope>
+    <update_access>true</update_access>
+    <user_role display_value="x_snc_api_sentinel.admin">x_snc_api_sentinel.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="scan_started">
+    <active>true</active>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <label>Scan Started</label>
+    <max_length>40</max_length>
+    <name>x_snc_api_sentinel_scan</name>
+    <read_only>false</read_only>
+    <mandatory>true</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="scan_completed">
+    <active>true</active>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <label>Scan Completed</label>
+    <max_length>40</max_length>
+    <name>x_snc_api_sentinel_scan</name>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="endpoints_found">
+    <active>true</active>
+    <internal_type display_value="Integer">integer</internal_type>
+    <label>Endpoints Found</label>
+    <max_length>40</max_length>
+    <name>x_snc_api_sentinel_scan</name>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="critical_count">
+    <active>true</active>
+    <internal_type display_value="Integer">integer</internal_type>
+    <label>Critical Count</label>
+    <max_length>40</max_length>
+    <name>x_snc_api_sentinel_scan</name>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="high_count">
+    <active>true</active>
+    <internal_type display_value="Integer">integer</internal_type>
+    <label>High Count</label>
+    <max_length>40</max_length>
+    <name>x_snc_api_sentinel_scan</name>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="medium_count">
+    <active>true</active>
+    <internal_type display_value="Integer">integer</internal_type>
+    <label>Medium Count</label>
+    <max_length>40</max_length>
+    <name>x_snc_api_sentinel_scan</name>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="low_count">
+    <active>true</active>
+    <internal_type display_value="Integer">integer</internal_type>
+    <label>Low Count</label>
+    <max_length>40</max_length>
+    <name>x_snc_api_sentinel_scan</name>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE" element="delta_json">
+    <active>true</active>
+    <internal_type display_value="String">string</internal_type>
+    <label>Delta JSON</label>
+    <max_length>4000</max_length>
+    <name>x_snc_api_sentinel_scan</name>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+  </sys_dictionary>
+</unload>

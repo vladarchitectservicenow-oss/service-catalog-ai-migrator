@@ -1,0 +1,1076 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-10 05:00:00">
+  <sys_scope action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>API Sentinel — read-only inbound API exposure auditor. Inventories every inbound endpoint, maps authentication and ACL enforcement, flags over-permissive and unauthenticated exposure, scores each endpoint by risk, and exports a compliance-ready security posture report.</description>
+    <name>API Sentinel</name>
+    <scope>x_snc_api_sentinel</scope>
+    <sys_class_name>sys_scope</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <vendor>Vladimir Kapustin</vendor>
+    <version>1.0.0</version>
+  </sys_scope>
+
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_snc_api_sentinel.admin</name>
+    <description>API Sentinel administrator — full access to scans, reports, and configuration.</description>
+    <sys_scope display_value="API Sentinel">x_snc_api_sentinel</sys_scope>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_snc_api_sentinel.viewer</name>
+    <description>API Sentinel viewer — read-only access to scan results and reports.</description>
+    <sys_scope display_value="API Sentinel">x_snc_api_sentinel</sys_scope>
+  </sys_user_role>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_api_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sys_ws_operation</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_api_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sys_ws_definition</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_api_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sys_web_service</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_api_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sys_db_object</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_api_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sys_security_acl</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_api_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>oauth_entity</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_api_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>oauth_entity_profile</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_api_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sys_dictionary</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_api_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sys_trigger</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_api_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sys_security_acl_role</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_api_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sys_scope</target_name>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_snc_api_sentinel</source_scope>
+    <status>allowed</status>
+    <target_name>sn_generative_ai</target_name>
+    <target_type>scriptable</target_type>
+  </sys_scope_privilege>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snc_api_sentinel.ApiSentinelScanner</api_name>
+    <client_callable>false</client_callable>
+    <description>Inventory + enforcement mapping + PII detection for the inbound API attack surface.</description>
+    <name>ApiSentinelScanner</name>
+    <script><![CDATA[// API Sentinel — ApiSentinelScanner
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Inventory + enforcement mapping + PII detection for the inbound API attack
+// surface. All GlideRecord enumeration and ACL resolution lives here. This
+// class is deterministic and read-only: it never writes to production data.
+// @class ApiSentinelScanner @namespace x_snc_api_sentinel
+
+var ApiSentinelScanner = Class.create();
+ApiSentinelScanner.prototype = {
+    initialize: function () {
+        this._sensitiveTerms = [
+            'ssn', 'social_security', 'social security', 'national_id', 'national id',
+            'passport', 'salary', 'compensation', 'bank_account', 'bank account',
+            'iban', 'swift', 'credit_card', 'credit card', 'card_number', 'card number',
+            'cvv', 'dob', 'date_of_birth', 'birth_date', 'birthdate',
+            'email', 'phone', 'mobile', 'address', 'home_address',
+            'medical', 'health', 'diagnosis', 'patient', 'hipaa',
+            'password', 'secret', 'token', 'api_key', 'api key', 'private_key'
+        ];
+    },
+
+    /**
+     * Run a full inventory scan. Returns an array of normalized endpoint
+     * objects. Each object is a plain JS object (no GlideRecord references)
+     * so it can be serialized to JSON and stored in the endpoint table.
+     */
+    scan: function () {
+        var endpoints = [];
+        endpoints = endpoints.concat(this._scanScriptedRest());
+        endpoints = endpoints.concat(this._scanTableApi());
+        endpoints = endpoints.concat(this._scanWebServices());
+        endpoints = endpoints.concat(this._scanOAuthScopes());
+        return endpoints;
+    },
+
+    /**
+     * Enumerate Scripted REST API operations (sys_ws_operation) grouped by
+     * their service definition (sys_ws_definition).
+     */
+    _scanScriptedRest: function () {
+        var results = [];
+        var op = new GlideRecord('sys_ws_operation');
+        op.addActiveQuery();
+        op.query();
+        while (op.next()) {
+            var defSysId = op.web_service_definition.getValue() || '';
+            var script = op.script.toString() || '';
+            var path = this._buildPath(defSysId, op.operation_uri.toString());
+            results.push({
+                endpoint_type: 'scripted_rest',
+                name: op.name.toString(),
+                path: path,
+                auth_required: this._resolveAuth(op),
+                role_guard: this._detectRoleGuard(script),
+                tables_touched: this._extractTables(script),
+                pii_fields: [],
+                source_table: 'sys_ws_operation',
+                source_sys_id: op.getUniqueValue()
+            });
+        }
+        return results;
+    },
+
+    /**
+     * Enumerate tables exposed via the Table API (sys_db_object with read
+     * access enabled) and resolve their ACL enforcement.
+     */
+    _scanTableApi: function () {
+        var results = [];
+        var tbl = new GlideRecord('sys_db_object');
+        tbl.addQuery('read_access', true);
+        tbl.addQuery('name', 'STARTSWITH', 'x_').setOr(true);
+        tbl.addQuery('name', 'STARTSWITH', 'sys_').setOr(true);
+        tbl.addQuery('name', 'STARTSWITH', 'incident').setOr(true);
+        tbl.addQuery('name', 'STARTSWITH', 'sc_').setOr(true);
+        tbl.addQuery('name', 'STARTSWITH', 'sn_').setOr(true);
+        tbl.query();
+        while (tbl.next()) {
+            var tableName = tbl.name.toString();
+            var aclInfo = this._resolveTableAcls(tableName);
+            results.push({
+                endpoint_type: 'table_api',
+                name: tbl.label.toString() || tableName,
+                path: '/api/now/table/' + tableName,
+                auth_required: aclInfo.requires_auth,
+                role_guard: aclInfo.role_guard,
+                tables_touched: [tableName],
+                pii_fields: this._detectPiiFields(tableName),
+                source_table: 'sys_db_object',
+                source_sys_id: tbl.getUniqueValue()
+            });
+        }
+        return results;
+    },
+
+    /**
+     * Enumerate inbound SOAP/REST web services (sys_web_service).
+     */
+    _scanWebServices: function () {
+        var results = [];
+        var ws = new GlideRecord('sys_web_service');
+        ws.addActiveQuery();
+        ws.query();
+        while (ws.next()) {
+            results.push({
+                endpoint_type: 'web_service',
+                name: ws.name.toString(),
+                path: ws.wsdl.toString() || '',
+                auth_required: this._resolveWebServiceAuth(ws),
+                role_guard: '',
+                tables_touched: [],
+                pii_fields: [],
+                source_table: 'sys_web_service',
+                source_sys_id: ws.getUniqueValue()
+            });
+        }
+        return results;
+    },
+
+    /**
+     * Enumerate OAuth clients and their granted scopes (oauth_entity +
+     * oauth_entity_profile). Flags over-broad scope grants.
+     */
+    _scanOAuthScopes: function () {
+        var results = [];
+        var ent = new GlideRecord('oauth_entity');
+        ent.addActiveQuery();
+        ent.query();
+        while (ent.next()) {
+            var scopes = [];
+            var prof = new GlideRecord('oauth_entity_profile');
+            prof.addQuery('oauth_entity', ent.getUniqueValue());
+            prof.query();
+            while (prof.next()) {
+                scopes.push(prof.scope.toString() || prof.name.toString());
+            }
+            results.push({
+                endpoint_type: 'oauth_scope',
+                name: ent.name.toString(),
+                path: 'oauth:' + (ent.client_id.toString() || ent.getUniqueValue()),
+                auth_required: 'authenticated',
+                role_guard: scopes.join(','),
+                tables_touched: [],
+                pii_fields: [],
+                source_table: 'oauth_entity',
+                source_sys_id: ent.getUniqueValue()
+            });
+        }
+        return results;
+    },
+
+    /**
+     * Resolve whether a Scripted REST operation requires authentication.
+     * Returns 'public' or 'authenticated'.
+     */
+    _resolveAuth: function (op) {
+        var requiresAuth = op.requires_authentication.toString();
+        if (requiresAuth === 'false' || requiresAuth === '0') {
+            return 'public';
+        }
+        return 'authenticated';
+    },
+
+    /**
+     * Resolve authentication for an inbound web service.
+     */
+    _resolveWebServiceAuth: function (ws) {
+        var auth = ws.authentication_required.toString();
+        if (auth === 'false' || auth === '0') {
+            return 'public';
+        }
+        return 'authenticated';
+    },
+
+    /**
+     * Detect whether a Scripted REST script contains a role guard
+     * (gs.getUser().hasRole() / gs.hasRole()). Uses word-boundary matching to
+     * avoid flagging unrelated identifiers (e.g. getUserCount).
+     */
+    _detectRoleGuard: function (script) {
+        if (!script) {
+            return '';
+        }
+        if (/\bhasRole\s*\(/.test(script) || /\bgetUser\s*\(/.test(script)) {
+            return 'role_guard_present';
+        }
+        return '';
+    },
+
+    /**
+     * Extract table names referenced in a script via GlideRecord('...').
+     */
+    _extractTables: function (script) {
+        var tables = [];
+        if (!script) {
+            return tables;
+        }
+        var re = /GlideRecord\(\s*['"]([^'"]+)['"]\s*\)/g;
+        var m;
+        while ((m = re.exec(script)) !== null) {
+            if (tables.indexOf(m[1]) === -1) {
+                tables.push(m[1]);
+            }
+        }
+        return tables;
+    },
+
+    /**
+     * Resolve ACL enforcement for a table. Returns { requires_auth, role_guard }
+     * where requires_auth is a normalized string ('public' | 'authenticated').
+     * Roles are resolved via sys_security_acl_role (sys_security_acl has no
+     * role field). A table with no read ACL is treated as public (exposed).
+     */
+    _resolveTableAcls: function (tableName) {
+        var acl = new GlideRecord('sys_security_acl');
+        acl.addQuery('name', tableName);
+        acl.addQuery('operation', 'read');
+        acl.query();
+        var requiresAuth = false;
+        var roleGuard = '';
+        while (acl.next()) {
+            var requiresRole = acl.requires_role.toString();
+            if (requiresRole === 'true' || requiresRole === '1') {
+                requiresAuth = true;
+            }
+            var aclRole = new GlideRecord('sys_security_acl_role');
+            aclRole.addQuery('sys_security_acl', acl.getUniqueValue());
+            aclRole.query();
+            while (aclRole.next()) {
+                var roleName = aclRole.sys_user_role.getDisplayValue() || '';
+                if (roleName) {
+                    roleGuard = roleGuard ? roleGuard + ',' + roleName : roleName;
+                }
+            }
+        }
+        return {
+            requires_auth: requiresAuth ? 'authenticated' : 'public',
+            role_guard: roleGuard
+        };
+    },
+
+    /**
+     * Detect PII/sensitive fields on a table by scanning sys_dictionary
+     * element names and labels against the sensitive-terms dictionary.
+     */
+    _detectPiiFields: function (tableName) {
+        var hits = [];
+        var dict = new GlideRecord('sys_dictionary');
+        dict.addQuery('name', tableName);
+        dict.setLimit(500);
+        dict.query();
+        while (dict.next()) {
+            var element = (dict.element.toString() || '').toLowerCase();
+            var label = (dict.label.toString() || '').toLowerCase();
+            for (var i = 0; i < this._sensitiveTerms.length; i++) {
+                var term = this._sensitiveTerms[i];
+                if (element.indexOf(term) > -1 || label.indexOf(term) > -1) {
+                    if (hits.indexOf(dict.element.toString()) === -1) {
+                        hits.push(dict.element.toString());
+                    }
+                    break;
+                }
+            }
+        }
+        return hits;
+    },
+
+    /**
+     * Build a canonical Scripted REST path from a service definition sys_id and
+     * operation URI: /api/<namespace>/<service_id>/<operation>. The namespace
+     * comes from the definition's scope; the service id is the definition's
+     * `id` field (not its sys_id).
+     */
+    _buildPath: function (defSysId, operationUri) {
+        var serviceId = defSysId;
+        var namespace = '';
+        var def = new GlideRecord('sys_ws_definition');
+        if (def.get(defSysId)) {
+            serviceId = def.id.toString() || defSysId;
+            var scopeGr = new GlideRecord('sys_scope');
+            if (scopeGr.get(def.sys_scope.toString())) {
+                namespace = scopeGr.scope.toString() || '';
+            }
+        }
+        var base = '/api/' + (namespace ? namespace + '/' : '') + serviceId;
+        var uri = operationUri || '';
+        if (uri && uri.charAt(0) !== '/') {
+            uri = '/' + uri;
+        }
+        return base + uri;
+    },
+
+    type: 'ApiSentinelScanner'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_scope display_value="API Sentinel">x_snc_api_sentinel</sys_scope>
+  </sys_script_include>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snc_api_sentinel.ApiSentinelScoreEngine</api_name>
+    <client_callable>false</client_callable>
+    <description>Risk scoring, banding, delta computation, and report/export assembly.</description>
+    <name>ApiSentinelScoreEngine</name>
+    <script><![CDATA[// API Sentinel — ApiSentinelScoreEngine
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Risk scoring, banding, delta computation, and report/export assembly.
+// AI narrative calls are dispatched from here via sn_generative_ai with a
+// graceful fallback when the plugin is absent. Deterministic core: the risk
+// score is reproducible; AI only explains and recommends on top of it.
+// @class ApiSentinelScoreEngine @namespace x_snc_api_sentinel
+
+var ApiSentinelScoreEngine = Class.create();
+ApiSentinelScoreEngine.prototype = {
+    initialize: function () {
+        this._sensitiveTables = [
+            'incident', 'sys_user', 'sys_user_group', 'hr_profile',
+            'sn_hr_core_profile', 'sys_user_has_role', 'oauth_credential',
+            'sys_user_token', 'sys_user_session'
+        ];
+    },
+
+    /**
+     * Score a single normalized endpoint object. Returns the endpoint object
+     * with risk_score and risk_band populated.
+     */
+    scoreEndpoint: function (endpoint) {
+        var exposure = this._exposureFactor(endpoint);
+        var sensitivity = this._sensitivityFactor(endpoint);
+        var authWeakness = this._authWeaknessFactor(endpoint);
+        var raw = exposure * sensitivity * authWeakness;
+        var score = Math.round(raw * 100);
+        if (score > 100) {
+            score = 100;
+        }
+        endpoint.risk_score = score;
+        endpoint.risk_band = this._band(score);
+        return endpoint;
+    },
+
+    /**
+     * Score an array of endpoints and return them sorted by risk descending.
+     */
+    scoreAll: function (endpoints) {
+        for (var i = 0; i < endpoints.length; i++) {
+            this.scoreEndpoint(endpoints[i]);
+        }
+        endpoints.sort(function (a, b) {
+            return b.risk_score - a.risk_score;
+        });
+        return endpoints;
+    },
+
+    /**
+     * Compute a delta between two scans (arrays of endpoint objects keyed by
+     * source_sys_id + endpoint_type). Returns { added, removed, changed }.
+     */
+    computeDelta: function (previous, current) {
+        var prevMap = this._index(previous);
+        var currMap = this._index(current);
+        var added = [];
+        var removed = [];
+        var changed = [];
+        var key;
+        for (key in currMap) {
+            if (!currMap.hasOwnProperty(key)) {
+                continue;
+            }
+            if (!prevMap.hasOwnProperty(key)) {
+                added.push(currMap[key]);
+            } else if (prevMap[key].risk_score !== currMap[key].risk_score ||
+                       prevMap[key].role_guard !== currMap[key].role_guard) {
+                changed.push({
+                    key: key,
+                    name: currMap[key].name,
+                    before: prevMap[key].risk_score,
+                    after: currMap[key].risk_score
+                });
+            }
+        }
+        for (key in prevMap) {
+            if (!prevMap.hasOwnProperty(key)) {
+                continue;
+            }
+            if (!currMap.hasOwnProperty(key)) {
+                removed.push(prevMap[key]);
+            }
+        }
+        return { added: added, removed: removed, changed: changed };
+    },
+
+    /**
+     * Generate a Markdown compliance report from scored endpoints.
+     */
+    buildMarkdownReport: function (endpoints, scanInfo) {
+        var lines = [];
+        lines.push('# API Sentinel — Security Posture Report');
+        lines.push('');
+        lines.push('Generated: ' + (scanInfo && scanInfo.generated_at ? scanInfo.generated_at : new GlideDateTime().getDisplayValue()));
+        lines.push('');
+        var counts = this._countBands(endpoints);
+        lines.push('## Summary');
+        lines.push('');
+        lines.push('| Risk Band | Count |');
+        lines.push('|-----------|-------|');
+        lines.push('| Critical  | ' + counts.critical + ' |');
+        lines.push('| High      | ' + counts.high + ' |');
+        lines.push('| Medium    | ' + counts.medium + ' |');
+        lines.push('| Low       | ' + counts.low + ' |');
+        lines.push('');
+        lines.push('## Findings');
+        lines.push('');
+        lines.push('| # | Endpoint | Type | Path | Risk | Band |');
+        lines.push('|---|----------|------|------|------|------|');
+        for (var i = 0; i < endpoints.length; i++) {
+            var e = endpoints[i];
+            lines.push('| ' + (i + 1) + ' | ' + this._esc(e.name) + ' | ' + e.endpoint_type +
+                       ' | ' + this._esc(e.path) + ' | ' + e.risk_score + ' | ' + e.risk_band + ' |');
+        }
+        return lines.join('\n');
+    },
+
+    /**
+     * Generate a JSON report (compliance / CI-CD ingestion).
+     */
+    buildJsonReport: function (endpoints, scanInfo) {
+        var payload = {
+            product: 'API Sentinel',
+            scope: 'x_snc_api_sentinel',
+            generated_at: scanInfo && scanInfo.generated_at ? scanInfo.generated_at : new GlideDateTime().getDisplayValue(),
+            counts: this._countBands(endpoints),
+            endpoints: endpoints
+        };
+        return JSON.stringify(payload);
+    },
+
+    /**
+     * Generate a CSV report (BI / Excel ingestion).
+     */
+    buildCsvReport: function (endpoints) {
+        var rows = ['name,endpoint_type,path,auth_required,role_guard,risk_score,risk_band'];
+        for (var i = 0; i < endpoints.length; i++) {
+            var e = endpoints[i];
+            rows.push(this._csv(e.name) + ',' + this._csv(e.endpoint_type) + ',' +
+                      this._csv(e.path) + ',' + this._csv(e.auth_required) + ',' +
+                      this._csv(e.role_guard) + ',' + e.risk_score + ',' + e.risk_band);
+        }
+        return rows.join('\n');
+    },
+
+    /**
+     * Generate an AI remediation narrative for a flagged endpoint. Falls back
+     * to a deterministic message when sn_generative_ai is unavailable.
+     */
+    generateNarrative: function (endpoint) {
+        var prompt = 'Explain why this ServiceNow inbound API endpoint is a security risk ' +
+                     'and give a concrete remediation. Endpoint: ' + endpoint.name +
+                     ' (type ' + endpoint.endpoint_type + ', path ' + endpoint.path +
+                     ', risk score ' + endpoint.risk_score + '/' + endpoint.risk_band + ').';
+        try {
+            if (typeof sn_generative_ai !== 'undefined' && sn_generative_ai.GenerativeAI) {
+                var ai = new sn_generative_ai.GenerativeAI();
+                var resp = ai.generate(prompt);
+                if (resp && resp.text) {
+                    return resp.text;
+                }
+            }
+        } catch (e) {
+            // fall through to deterministic fallback
+        }
+        return this._deterministicNarrative(endpoint);
+    },
+
+    /**
+     * Deterministic remediation narrative (no AI dependency).
+     */
+    _deterministicNarrative: function (endpoint) {
+        if (endpoint.auth_required === 'public') {
+            return 'Endpoint "' + endpoint.name + '" is publicly accessible with no authentication. ' +
+                   'Require authentication and add a role guard (gs.getUser().hasRole(...)) before exposing data.';
+        }
+        if (!endpoint.role_guard && endpoint.endpoint_type === 'scripted_rest') {
+            return 'Endpoint "' + endpoint.name + '" has no role guard. Add gs.getUser().hasRole(...) ' +
+                   'to restrict access to authorized roles only.';
+        }
+        if (endpoint.pii_fields && endpoint.pii_fields.length > 0) {
+            return 'Endpoint "' + endpoint.name + '" returns PII/sensitive fields: ' +
+                   endpoint.pii_fields.join(', ') + '. Restrict access and consider field-level ACLs.';
+        }
+        return 'Endpoint "' + endpoint.name + '" scored ' + endpoint.risk_score +
+               ' (' + endpoint.risk_band + '). Review its ACLs and scope grants.';
+    },
+
+    _exposureFactor: function (endpoint) {
+        if (endpoint.auth_required === 'public') {
+            return 1.0;
+        }
+        if (endpoint.auth_required === 'authenticated') {
+            return 0.5;
+        }
+        return 0.2;
+    },
+
+    _sensitivityFactor: function (endpoint) {
+        var factor = 0.2;
+        if (endpoint.pii_fields && endpoint.pii_fields.length > 0) {
+            factor = 1.0;
+        } else if (endpoint.tables_touched && endpoint.tables_touched.length > 0) {
+            for (var i = 0; i < endpoint.tables_touched.length; i++) {
+                if (this._sensitiveTables.indexOf(endpoint.tables_touched[i]) > -1) {
+                    factor = 0.8;
+                    break;
+                }
+            }
+        }
+        if (endpoint.endpoint_type === 'oauth_scope') {
+            var scopes = endpoint.role_guard || '';
+            if (scopes.indexOf('admin') > -1 || scopes.indexOf('snc_platform') > -1) {
+                factor = 1.0;
+            }
+        }
+        return factor;
+    },
+
+    _authWeaknessFactor: function (endpoint) {
+        if (endpoint.auth_required === 'public') {
+            return 1.0;
+        }
+        // OAuth scope lists are NOT role guards: a broad admin/snc_platform
+        // scope grant is itself a weakness, not a protection.
+        if (endpoint.endpoint_type === 'oauth_scope') {
+            var scopes = endpoint.role_guard || '';
+            if (scopes.indexOf('admin') > -1 || scopes.indexOf('snc_platform') > -1) {
+                return 1.0;
+            }
+            return 0.6;
+        }
+        if (endpoint.endpoint_type === 'scripted_rest' && !endpoint.role_guard) {
+            return 1.0;
+        }
+        if (endpoint.role_guard) {
+            return 0.1;
+        }
+        return 0.6;
+    },
+
+    _band: function (score) {
+        if (score >= 80) {
+            return 'Critical';
+        }
+        if (score >= 60) {
+            return 'High';
+        }
+        if (score >= 30) {
+            return 'Medium';
+        }
+        return 'Low';
+    },
+
+    _countBands: function (endpoints) {
+        var counts = { critical: 0, high: 0, medium: 0, low: 0 };
+        for (var i = 0; i < endpoints.length; i++) {
+            var band = endpoints[i].risk_band;
+            if (band === 'Critical') {
+                counts.critical++;
+            } else if (band === 'High') {
+                counts.high++;
+            } else if (band === 'Medium') {
+                counts.medium++;
+            } else {
+                counts.low++;
+            }
+        }
+        return counts;
+    },
+
+    _index: function (endpoints) {
+        var map = {};
+        for (var i = 0; i < endpoints.length; i++) {
+            var e = endpoints[i];
+            var key = e.endpoint_type + ':' + (e.source_sys_id || e.path || e.name);
+            map[key] = e;
+        }
+        return map;
+    },
+
+    _esc: function (s) {
+        if (!s) {
+            return '';
+        }
+        return String(s).replace(/\|/g, '\\|').replace(/\n/g, ' ');
+    },
+
+    _csv: function (s) {
+        if (s === null || s === undefined) {
+            return '';
+        }
+        var str = String(s);
+        // Neutralize CSV formula injection (values beginning with = + - @).
+        if (/^[=+\-@]/.test(str)) {
+            str = "'" + str;
+        }
+        if (str.indexOf(',') > -1 || str.indexOf('"') > -1 || str.indexOf('\n') > -1) {
+            return '"' + str.replace(/"/g, '""') + '"';
+        }
+        return str;
+    },
+
+    type: 'ApiSentinelScoreEngine'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_scope display_value="API Sentinel">x_snc_api_sentinel</sys_scope>
+  </sys_script_include>
+
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>API Sentinel</name>
+    <id>x_snc_api_sentinel</id>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_scope display_value="API Sentinel">x_snc_api_sentinel</sys_scope>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>execute</name>
+    <operation_uri>execute</operation_uri>
+    <relative_path>execute</relative_path>
+    <http_method>POST</http_method>
+    <requires_authentication>true</requires_authentication>
+    <security_type>secure</security_type>
+    <web_service_definition display_value="API Sentinel">x_snc_api_sentinel</web_service_definition>
+    <operation_script><![CDATA[// API Sentinel — POST /execute REST endpoint
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Action-dispatch endpoint. Body: { action: "scan" | "report" | "delta" }.
+// Returns JSON. Requires x_snc_api_sentinel.admin role (enforced by ACL).
+
+(function process(request, response) {
+    var result = { ok: false, error: '' };
+
+    try {
+        var body = request.body ? request.body.data : null;
+        var action = body && body.action ? body.action : '';
+
+        var scanner = new ApiSentinelScanner();
+        var engine = new ApiSentinelScoreEngine();
+
+        if (action === 'scan') {
+            var endpoints = scanner.scan();
+            engine.scoreAll(endpoints);
+            var scanId = _persistScan(endpoints);
+            result = {
+                ok: true,
+                action: 'scan',
+                scan_sys_id: scanId,
+                endpoints_found: endpoints.length,
+                counts: _countBands(endpoints)
+            };
+        } else if (action === 'report') {
+            var format = body.format ? body.format : 'json';
+            var stored = _loadLatestEndpoints();
+            engine.scoreAll(stored);
+            if (format === 'markdown' || format === 'md') {
+                result = {
+                    ok: true,
+                    action: 'report',
+                    format: 'markdown',
+                    report: engine.buildMarkdownReport(stored, { generated_at: new GlideDateTime().getDisplayValue() })
+                };
+            } else if (format === 'csv') {
+                result = {
+                    ok: true,
+                    action: 'report',
+                    format: 'csv',
+                    report: engine.buildCsvReport(stored)
+                };
+            } else {
+                result = {
+                    ok: true,
+                    action: 'report',
+                    format: 'json',
+                    report: engine.buildJsonReport(stored, { generated_at: new GlideDateTime().getDisplayValue() })
+                };
+            }
+        } else if (action === 'delta') {
+            var prev = _loadPreviousEndpoints();
+            var curr = scanner.scan();
+            engine.scoreAll(curr);
+            var delta = engine.computeDelta(prev, curr);
+            var deltaScanId = _persistDelta(delta);
+            result = {
+                ok: true,
+                action: 'delta',
+                scan_sys_id: deltaScanId,
+                added: delta.added.length,
+                removed: delta.removed.length,
+                changed: delta.changed.length,
+                details: delta
+            };
+        } else {
+            response.setStatus(400);
+            result = { ok: false, error: 'Unknown action "' + action + '". Valid actions: scan, report, delta.' };
+        }
+    } catch (e) {
+        response.setStatus(500);
+        result = { ok: false, error: e.message || String(e) };
+    }
+
+    response.setBody(JSON.stringify(result));
+})(request, response);
+
+/**
+ * Persist a scan run: write the scan header and endpoint records.
+ * Returns the scan header sys_id.
+ */
+function _persistScan(endpoints) {
+    var scan = new GlideRecord('x_snc_api_sentinel_scan');
+    scan.initialize();
+    scan.setValue('scan_started', new GlideDateTime());
+    scan.setValue('scan_completed', new GlideDateTime());
+    scan.setValue('endpoints_found', endpoints.length);
+    var counts = _countBands(endpoints);
+    scan.setValue('critical_count', counts.critical);
+    scan.setValue('high_count', counts.high);
+    scan.setValue('medium_count', counts.medium);
+    scan.setValue('low_count', counts.low);
+    var scanId = scan.insert();
+
+    for (var i = 0; i < endpoints.length; i++) {
+        var e = endpoints[i];
+        var gr = new GlideRecord('x_snc_api_sentinel_endpoint');
+        gr.initialize();
+        gr.setValue('endpoint_type', e.endpoint_type);
+        gr.setValue('name', e.name);
+        gr.setValue('path', e.path);
+        gr.setValue('auth_required', e.auth_required);
+        gr.setValue('role_guard', e.role_guard);
+        gr.setValue('tables_touched', JSON.stringify(e.tables_touched || []));
+        gr.setValue('pii_fields', JSON.stringify(e.pii_fields || []));
+        gr.setValue('risk_score', e.risk_score);
+        gr.setValue('risk_band', e.risk_band);
+        gr.setValue('source_table', e.source_table);
+        gr.setValue('source_sys_id', e.source_sys_id);
+        gr.setValue('scan', scanId);
+        gr.insert();
+    }
+    return scanId;
+}
+
+/**
+ * Persist a delta result to the scan table's delta_json field.
+ * Returns the scan header sys_id.
+ */
+function _persistDelta(delta) {
+    var scan = new GlideRecord('x_snc_api_sentinel_scan');
+    scan.initialize();
+    scan.setValue('scan_started', new GlideDateTime());
+    scan.setValue('scan_completed', new GlideDateTime());
+    scan.setValue('delta_json', JSON.stringify(delta));
+    return scan.insert();
+}
+
+/**
+ * Load the most recent scan's endpoints.
+ */
+function _loadLatestEndpoints() {
+    var endpoints = [];
+    var scan = new GlideRecord('x_snc_api_sentinel_scan');
+    scan.orderByDesc('scan_started');
+    scan.setLimit(1);
+    scan.query();
+    if (!scan.next()) {
+        return endpoints;
+    }
+    var gr = new GlideRecord('x_snc_api_sentinel_endpoint');
+    gr.addQuery('scan', scan.getUniqueValue());
+    gr.query();
+    while (gr.next()) {
+        endpoints.push({
+            endpoint_type: gr.endpoint_type.toString(),
+            name: gr.name.toString(),
+            path: gr.path.toString(),
+            auth_required: gr.auth_required.toString(),
+            role_guard: gr.role_guard.toString(),
+            tables_touched: _safeParse(gr.tables_touched.toString()),
+            pii_fields: _safeParse(gr.pii_fields.toString()),
+            risk_score: parseInt(gr.risk_score.toString(), 10) || 0,
+            risk_band: gr.risk_band.toString(),
+            source_table: gr.source_table.toString(),
+            source_sys_id: gr.source_sys_id.toString()
+        });
+    }
+    return endpoints;
+}
+
+/**
+ * Load the second-most-recent scan's endpoints (for delta comparison).
+ */
+function _loadPreviousEndpoints() {
+    var endpoints = [];
+    var scan = new GlideRecord('x_snc_api_sentinel_scan');
+    scan.orderByDesc('scan_started');
+    scan.setLimit(2);
+    scan.query();
+    var ids = [];
+    while (scan.next()) {
+        ids.push(scan.getUniqueValue());
+    }
+    if (ids.length < 2) {
+        return endpoints;
+    }
+    var gr = new GlideRecord('x_snc_api_sentinel_endpoint');
+    gr.addQuery('scan', ids[1]);
+    gr.query();
+    while (gr.next()) {
+        endpoints.push({
+            endpoint_type: gr.endpoint_type.toString(),
+            name: gr.name.toString(),
+            path: gr.path.toString(),
+            auth_required: gr.auth_required.toString(),
+            role_guard: gr.role_guard.toString(),
+            tables_touched: _safeParse(gr.tables_touched.toString()),
+            pii_fields: _safeParse(gr.pii_fields.toString()),
+            risk_score: parseInt(gr.risk_score.toString(), 10) || 0,
+            risk_band: gr.risk_band.toString(),
+            source_table: gr.source_table.toString(),
+            source_sys_id: gr.source_sys_id.toString()
+        });
+    }
+    return endpoints;
+}
+
+function _countBands(endpoints) {
+    var counts = { critical: 0, high: 0, medium: 0, low: 0 };
+    for (var i = 0; i < endpoints.length; i++) {
+        var band = endpoints[i].risk_band;
+        if (band === 'Critical') {
+            counts.critical++;
+        } else if (band === 'High') {
+            counts.high++;
+        } else if (band === 'Medium') {
+            counts.medium++;
+        } else {
+            counts.low++;
+        }
+    }
+    return counts;
+}
+
+function _safeParse(s) {
+    if (!s) {
+        return [];
+    }
+    try {
+        var parsed = JSON.parse(s);
+        return parsed;
+    } catch (e) {
+        return [];
+    }
+}
+]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_scope display_value="API Sentinel">x_snc_api_sentinel</sys_scope>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>status</name>
+    <operation_uri>status</operation_uri>
+    <relative_path>status</relative_path>
+    <http_method>GET</http_method>
+    <requires_authentication>true</requires_authentication>
+    <security_type>secure</security_type>
+    <web_service_definition display_value="API Sentinel">x_snc_api_sentinel</web_service_definition>
+    <operation_script><![CDATA[// API Sentinel — GET /status REST endpoint
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Last scan summary, counts by risk band, and next scheduled scan.
+// Requires x_snc_api_sentinel.viewer (or admin) role (enforced by ACL).
+
+(function process(request, response) {
+    var result = { ok: false, error: '' };
+
+    try {
+        var scan = new GlideRecord('x_snc_api_sentinel_scan');
+        scan.orderByDesc('scan_started');
+        scan.setLimit(1);
+        scan.query();
+
+        if (!scan.next()) {
+            result = {
+                ok: true,
+                has_scan: false,
+                message: 'No scan has been run yet. POST /execute with action "scan" to begin.'
+            };
+        } else {
+            var counts = _countBandsForScan(scan.getUniqueValue());
+            result = {
+                ok: true,
+                has_scan: true,
+                last_scan: scan.scan_started.toString(),
+                endpoints_found: parseInt(scan.endpoints_found.toString(), 10) || 0,
+                critical_count: parseInt(scan.critical_count.toString(), 10) || 0,
+                counts: counts,
+                next_scheduled_scan: _nextScheduledScan()
+            };
+        }
+    } catch (e) {
+        response.setStatus(500);
+        result = { ok: false, error: e.message || String(e) };
+    }
+
+    response.setBody(JSON.stringify(result));
+})(request, response);
+
+function _countBandsForScan(scanId) {
+    var counts = { critical: 0, high: 0, medium: 0, low: 0 };
+    var gr = new GlideRecord('x_snc_api_sentinel_endpoint');
+    gr.addQuery('scan', scanId);
+    gr.query();
+    while (gr.next()) {
+        var band = gr.risk_band.toString();
+        if (band === 'Critical') {
+            counts.critical++;
+        } else if (band === 'High') {
+            counts.high++;
+        } else if (band === 'Medium') {
+            counts.medium++;
+        } else {
+            counts.low++;
+        }
+    }
+    return counts;
+}
+
+function _nextScheduledScan() {
+    var sj = new GlideRecord('sys_trigger');
+    sj.addQuery('name', 'API Sentinel Daily Scan');
+    sj.addQuery('active', true);
+    sj.setLimit(1);
+    sj.query();
+    if (sj.next()) {
+        return sj.next_action.toString();
+    }
+    return '';
+}
+]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_scope display_value="API Sentinel">x_snc_api_sentinel</sys_scope>
+  </sys_ws_operation>
+</unload>

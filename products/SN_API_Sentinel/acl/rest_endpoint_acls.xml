@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-10 05:00:00">
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Execute access to the API Sentinel /execute REST endpoint (admin only).</description>
+    <name>x_snc_api_sentinel.execute</name>
+    <operation display_value="execute">execute</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_scope display_value="API Sentinel">x_snc_api_sentinel</sys_scope>
+    <type display_value="rest_endpoint">rest_endpoint</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_snc_api_sentinel.execute">x_snc_api_sentinel.execute</sys_security_acl>
+    <sys_user_role display_value="x_snc_api_sentinel.admin">x_snc_api_sentinel.admin</sys_user_role>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Execute access to the API Sentinel /status REST endpoint (admin + viewer).</description>
+    <name>x_snc_api_sentinel.status</name>
+    <operation display_value="execute">execute</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_scope display_value="API Sentinel">x_snc_api_sentinel</sys_scope>
+    <type display_value="rest_endpoint">rest_endpoint</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_snc_api_sentinel.status">x_snc_api_sentinel.status</sys_security_acl>
+    <sys_user_role display_value="x_snc_api_sentinel.admin">x_snc_api_sentinel.admin</sys_user_role>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_security_acl display_value="x_snc_api_sentinel.status">x_snc_api_sentinel.status</sys_security_acl>
+    <sys_user_role display_value="x_snc_api_sentinel.viewer">x_snc_api_sentinel.viewer</sys_user_role>
+  </sys_security_acl_role>
+</unload>
