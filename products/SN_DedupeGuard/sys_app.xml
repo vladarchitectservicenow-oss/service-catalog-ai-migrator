@@ -1,0 +1,1077 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-11 07:00:00">
+  <!-- ================================================================ -->
+  <!-- DedupeGuard (x_snc_ddg) — combined scoped app manifest            -->
+  <!-- Copyright (C) 2026 Vladimir Kapustin — SPDX-License-Identifier: AGPL-3.0 -->
+  <!-- ================================================================ -->
+
+  <!-- Scope -->
+  <sys_scope action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>Duplicate record detection and safe merge. Scans configurable tables, scores candidate duplicates with fuzzy matching, and merges them safely with full audit and rollback.</description>
+    <name>DedupeGuard</name>
+    <scope>x_snc_ddg</scope>
+    <sys_class_name>sys_scope</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000000</sys_id>
+    <sys_name>DedupeGuard</sys_name>
+    <vendor>Vladimir Kapustin</vendor>
+    <version>1.0.0</version>
+  </sys_scope>
+
+  <!-- Roles -->
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_snc_ddg.admin</name>
+    <description>DedupeGuard administrator — configure scans, execute merges, roll back.</description>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000002</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>x_snc_ddg.user</name>
+    <description>DedupeGuard user — read duplicate candidates and merge audit.</description>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000003</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_user_role>
+
+  <!-- Cross-scope privileges (read + write on target tables) -->
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000a00</sys_id>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000a01</sys_id>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <target_name>incident</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000a10</sys_id>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <target_name>incident</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000a11</sys_id>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <target_name>cmdb_ci</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000a20</sys_id>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <target_name>cmdb_ci</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000a21</sys_id>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <target_name>sc_req_item</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000a30</sys_id>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <target_name>sc_req_item</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000a31</sys_id>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <target_name>task</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000a50</sys_id>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <target_name>task</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000a51</sys_id>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</source_scope>
+    <status>allowed</status>
+    <target_name>sys_dictionary</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000a4</sys_id>
+  </sys_scope_privilege>
+
+  <!-- Seeded system properties -->
+  <sys_property action="INSERT_OR_UPDATE">
+    <description>Comma-separated list of tables to scan for duplicates.</description>
+    <name>x_snc_ddg.scan.tables</name>
+    <type>string</type>
+    <value>sys_user,incident,cmdb_ci</value>
+    <sys_class_name>sys_property</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000c00</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_property>
+  <sys_property action="INSERT_OR_UPDATE">
+    <description>Maximum records collected per table scan.</description>
+    <name>x_snc_ddg.scan.limit</name>
+    <type>integer</type>
+    <value>2000</value>
+    <sys_class_name>sys_property</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000c01</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_property>
+  <sys_property action="INSERT_OR_UPDATE">
+    <description>Confidence (0-100) at or above which a pair is auto-queued for merge.</description>
+    <name>x_snc_ddg.threshold.auto_merge</name>
+    <type>integer</type>
+    <value>85</value>
+    <sys_class_name>sys_property</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000c02</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_property>
+  <sys_property action="INSERT_OR_UPDATE">
+    <description>Confidence (0-100) at or above which a pair is surfaced for review.</description>
+    <name>x_snc_ddg.threshold.review</name>
+    <type>integer</type>
+    <value>50</value>
+    <sys_class_name>sys_property</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000c03</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_property>
+  <sys_property action="INSERT_OR_UPDATE">
+    <description>Weight of the primary match field.</description>
+    <name>x_snc_ddg.weight.primary</name>
+    <type>integer</type>
+    <value>40</value>
+    <sys_class_name>sys_property</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000c04</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_property>
+  <sys_property action="INSERT_OR_UPDATE">
+    <description>Weight of the secondary match field.</description>
+    <name>x_snc_ddg.weight.secondary</name>
+    <type>integer</type>
+    <value>25</value>
+    <sys_class_name>sys_property</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000c05</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_property>
+  <sys_property action="INSERT_OR_UPDATE">
+    <description>Weight of the tertiary match field.</description>
+    <name>x_snc_ddg.weight.tertiary</name>
+    <type>integer</type>
+    <value>20</value>
+    <sys_class_name>sys_property</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000c06</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_property>
+  <sys_property action="INSERT_OR_UPDATE">
+    <description>Weight of the quaternary match field.</description>
+    <name>x_snc_ddg.weight.quaternary</name>
+    <type>integer</type>
+    <value>15</value>
+    <sys_class_name>sys_property</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000c07</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_property>
+  <sys_property action="INSERT_OR_UPDATE">
+    <description>Comma-separated weight list applied to match fields in order.</description>
+    <name>x_snc_ddg.weight.list</name>
+    <type>string</type>
+    <value>40,25,20,15</value>
+    <sys_class_name>sys_property</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000c08</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_property>
+  <sys_property action="INSERT_OR_UPDATE">
+    <description>Tables blocked from auto-merge.</description>
+    <name>x_snc_ddg.merge.protected_tables</name>
+    <type>string</type>
+    <value>sys_user,cmdb_ci,sys_user_group</value>
+    <sys_class_name>sys_property</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000c09</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_property>
+  <sys_property action="INSERT_OR_UPDATE">
+    <description>Maximum child records re-pointed per reference field.</description>
+    <name>x_snc_ddg.merge.max_repoint</name>
+    <type>integer</type>
+    <value>5000</value>
+    <sys_class_name>sys_property</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000c10</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_property>
+
+  <!-- Script Include: DedupeGuardEngine -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snc_ddg.DedupeGuardEngine</api_name>
+    <caller_access>false</caller_access>
+    <client_callable>false</client_callable>
+    <description>Fuzzy duplicate-detection and scoring engine.</description>
+    <name>DedupeGuardEngine</name>
+    <script><![CDATA[// DedupeGuard — DedupeGuardEngine
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Fuzzy duplicate-detection and scoring engine. Scans configurable tables,
+// normalizes candidate fields, blocks records by Soundex key, scores candidate
+// pairs with field-weighted Levenshtein similarity, and persists ranked
+// candidate pairs to x_snc_ddg_candidate. Read-only with respect to the
+// scanned tables — it never mutates source data.
+//
+// @class DedupeGuardEngine
+// @namespace x_snc_ddg
+var DedupeGuardEngine = Class.create();
+DedupeGuardEngine.prototype = {
+
+    initialize: function () {
+        this._config = this._loadConfig();
+    },
+
+    // ------------------------------------------------------------------
+    // Configuration (system properties — no config table)
+    // ------------------------------------------------------------------
+    _loadConfig: function () {
+        var cfg = {};
+        cfg.tables = this._propStr('x_snc_ddg.scan.tables', 'sys_user,incident,cmdb_ci');
+        cfg.scanLimit = this._propNum('x_snc_ddg.scan.limit', 2000);
+        cfg.autoMergeThreshold = this._propNum('x_snc_ddg.threshold.auto_merge', 85);
+        cfg.reviewThreshold = this._propNum('x_snc_ddg.threshold.review', 50);
+        cfg.weights = {
+            primary: this._propNum('x_snc_ddg.weight.primary', 40),
+            secondary: this._propNum('x_snc_ddg.weight.secondary', 25),
+            tertiary: this._propNum('x_snc_ddg.weight.tertiary', 20),
+            quaternary: this._propNum('x_snc_ddg.weight.quaternary', 15)
+        };
+        cfg.weightList = this._propStr('x_snc_ddg.weight.list', '40,25,20,15');
+        return cfg;
+    },
+
+    _propStr: function (name, def) {
+        var v = gs.getProperty(name);
+        return (v === null || v === undefined || v === '') ? def : v;
+    },
+
+    _propNum: function (name, def) {
+        var v = gs.getProperty(name);
+        if (v === null || v === undefined || v === '') {
+            return def;
+        }
+        var n = parseFloat(v);
+        return isNaN(n) ? def : n;
+    },
+
+    // ------------------------------------------------------------------
+    // Public entry point — scan all configured tables
+    // ------------------------------------------------------------------
+    scanAll: function () {
+        var tables = this._config.tables.split(',');
+        var summary = { tables: [], total_candidates: 0, started_on: new GlideDateTime().toString() };
+        for (var i = 0; i < tables.length; i++) {
+            var t = tables[i].trim();
+            if (!t) {
+                continue;
+            }
+            var r = this.scan(t);
+            summary.tables.push(r);
+            summary.total_candidates += r.candidates;
+        }
+        summary.completed_on = new GlideDateTime().toString();
+        return summary;
+    },
+
+    // ------------------------------------------------------------------
+    // Public entry point — scan a single table
+    // ------------------------------------------------------------------
+    scan: function (tableName) {
+        var fields = this._matchFields(tableName);
+        var records = this._collectRecords(tableName, fields);
+        var blocks = this._block(records, fields);
+        var candidates = this._compareBlocks(blocks, fields, tableName);
+        var persisted = this._persistCandidates(candidates, tableName);
+
+        return {
+            table: tableName,
+            scanned: records.length,
+            blocks: Object.keys(blocks).length,
+            candidates: persisted,
+            started_on: new GlideDateTime().toString()
+        };
+    },
+
+    // ------------------------------------------------------------------
+    // Match-field profiles per table (configurable via properties)
+    // ------------------------------------------------------------------
+    _matchFields: function (tableName) {
+        var override = this._propStr('x_snc_ddg.fields.' + tableName, '');
+        if (override) {
+            return override.split(',');
+        }
+        var profiles = {
+            sys_user: ['name', 'email', 'user_name', 'phone'],
+            incident: ['short_description', 'caller_id', 'location', 'category'],
+            cmdb_ci: ['name', 'serial_number', 'ip_address', 'asset_tag'],
+            sc_req_item: ['short_description', 'request', 'cat_item', 'location'],
+            task: ['short_description', 'caller_id', 'location', 'category']
+        };
+        return profiles[tableName] || ['name', 'short_description', 'number', 'email'];
+    },
+
+    // ------------------------------------------------------------------
+    // Bounded record collection — never a full-table getRowCount()
+    // ------------------------------------------------------------------
+    _collectRecords: function (tableName, fields) {
+        var records = [];
+        var gr = new GlideRecord(tableName);
+        // cmdb_ci and other tables use install_status, not active.
+        if (gr.isValidField('active')) {
+            gr.addActiveQuery();
+        }
+        gr.setLimit(this._config.scanLimit);
+        gr.orderByDesc('sys_updated_on');
+        gr.query();
+        while (gr.next()) {
+            var rec = { sys_id: gr.getUniqueValue(), display: gr.getDisplayValue(), fields: {} };
+            for (var i = 0; i < fields.length; i++) {
+                var f = fields[i];
+                rec.fields[f] = gr.getValue(f) || '';
+            }
+            records.push(rec);
+        }
+        return records;
+    },
+
+    // ------------------------------------------------------------------
+    // Blocking — group by Soundex of the primary field to avoid O(n^2)
+    // ------------------------------------------------------------------
+    _block: function (records, fields) {
+        var blocks = {};
+        if (!fields || fields.length === 0) {
+            return blocks;
+        }
+        for (var i = 0; i < records.length; i++) {
+            var r = records[i];
+            var primary = this._normalize(r.fields[fields[0]]);
+            var key = primary ? this._soundex(primary) : 'EMPTY';
+            if (!blocks[key]) {
+                blocks[key] = [];
+            }
+            blocks[key].push(r);
+        }
+        return blocks;
+    },
+
+    // ------------------------------------------------------------------
+    // Pairwise comparison within blocks
+    // ------------------------------------------------------------------
+    _compareBlocks: function (blocks, fields, tableName) {
+        var candidates = [];
+        var keys = Object.keys(blocks);
+        for (var b = 0; b < keys.length; b++) {
+            var block = blocks[keys[b]];
+            for (var i = 0; i < block.length; i++) {
+                for (var j = i + 1; j < block.length; j++) {
+                    var a = block[i];
+                    var c = block[j];
+                    var scored = this._scorePair(a, c, fields);
+                    if (scored.confidence >= this._config.reviewThreshold) {
+                        candidates.push({
+                            record_a: a.sys_id,
+                            record_a_display: a.display,
+                            record_b: c.sys_id,
+                            record_b_display: c.display,
+                            confidence: scored.confidence,
+                            matched_fields: JSON.stringify(scored.matched),
+                            state: scored.confidence >= this._config.autoMergeThreshold ? 'review' : 'new'
+                        });
+                    }
+                }
+            }
+        }
+        return candidates;
+    },
+
+    // ------------------------------------------------------------------
+    // Field-weighted confidence scoring (0-100)
+    // ------------------------------------------------------------------
+    _scorePair: function (a, b, fields) {
+        var weights = this._weightArray();
+        var totalWeight = 0;
+        var matched = [];
+        var score = 0;
+
+        for (var i = 0; i < fields.length; i++) {
+            var f = fields[i];
+            var w = weights[i] || 10;
+            totalWeight += w;
+            var av = this._normalize(a.fields[f]);
+            var bv = this._normalize(b.fields[f]);
+            if (!av && !bv) {
+                continue;
+            }
+            var sim = this._similarity(av, bv);
+            score += sim * w;
+            if (sim > 0.6) {
+                matched.push({ field: f, similarity: Math.round(sim * 100) });
+            }
+        }
+
+        var confidence = totalWeight > 0 ? Math.round(score / totalWeight * 100) : 0;
+        confidence = Math.min(100, Math.max(0, confidence));
+        return { confidence: confidence, matched: matched };
+    },
+
+    // ------------------------------------------------------------------
+    // Weight array — configurable via x_snc_ddg.weight.list (comma-separated)
+    // ------------------------------------------------------------------
+    _weightArray: function () {
+        var parts = this._config.weightList.split(',');
+        var weights = [];
+        for (var i = 0; i < parts.length; i++) {
+            var n = parseFloat(parts[i]);
+            weights.push(isNaN(n) ? 0 : n);
+        }
+        return weights;
+    },
+
+    // ------------------------------------------------------------------
+    // Normalization — lowercase, trim, collapse whitespace, strip ASCII
+    // punctuation only (preserves accented Latin and Cyrillic letters).
+    // ------------------------------------------------------------------
+    _normalize: function (str) {
+        if (!str) {
+            return '';
+        }
+        return String(str)
+            .toLowerCase()
+            .replace(/[.,;:!?()\[\]{}"'`~@#$%^&*+=|\\<>\/\-_]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    },
+
+    // ------------------------------------------------------------------
+    // Levenshtein distance (dynamic programming)
+    // ------------------------------------------------------------------
+    _levenshtein: function (a, b) {
+        if (a === b) {
+            return 0;
+        }
+        if (!a.length) {
+            return b.length;
+        }
+        if (!b.length) {
+            return a.length;
+        }
+        var prev = [];
+        var curr = [];
+        for (var i = 0; i <= b.length; i++) {
+            prev[i] = i;
+        }
+        for (var i = 1; i <= a.length; i++) {
+            curr[0] = i;
+            for (var j = 1; j <= b.length; j++) {
+                var cost = a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1;
+                curr[j] = Math.min(
+                    prev[j] + 1,
+                    curr[j - 1] + 1,
+                    prev[j - 1] + cost
+                );
+            }
+            var tmp = prev;
+            prev = curr;
+            curr = tmp;
+        }
+        return prev[b.length];
+    },
+
+    // ------------------------------------------------------------------
+    // Similarity 0-1 derived from Levenshtein distance
+    // ------------------------------------------------------------------
+    _similarity: function (a, b) {
+        if (!a && !b) {
+            return 1;
+        }
+        if (!a || !b) {
+            return 0;
+        }
+        var maxLen = Math.max(a.length, b.length);
+        if (maxLen === 0) {
+            return 1;
+        }
+        var dist = this._levenshtein(a, b);
+        return 1 - (dist / maxLen);
+    },
+
+    // ------------------------------------------------------------------
+    // Soundex phonetic key (standard algorithm, with Latin transliteration)
+    // ------------------------------------------------------------------
+    _soundex: function (str) {
+        if (!str) {
+            return '';
+        }
+        var s = str.toUpperCase();
+        // Transliterate common accented Latin characters so phonetic
+        // blocking still works for names like "José" / "García".
+        var map = {
+            'Á': 'A', 'À': 'A', 'Â': 'A', 'Ä': 'A', 'Ã': 'A', 'Å': 'A',
+            'É': 'E', 'È': 'E', 'Ê': 'E', 'Ë': 'E',
+            'Í': 'I', 'Ì': 'I', 'Î': 'I', 'Ï': 'I',
+            'Ó': 'O', 'Ò': 'O', 'Ô': 'O', 'Ö': 'O', 'Õ': 'O',
+            'Ú': 'U', 'Ù': 'U', 'Û': 'U', 'Ü': 'U',
+            'Ñ': 'N', 'Ç': 'C'
+        };
+        s = s.replace(/[ÁÀÂÄÃÅÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜÑÇ]/g, function (c) { return map[c]; });
+        s = s.replace(/[^A-Z]/g, '');
+        if (!s.length) {
+            return '';
+        }
+        var first = s.charAt(0);
+        var codes = { B: '1', F: '1', P: '1', V: '1', C: '2', G: '2', J: '2', K: '2', Q: '2', S: '2', X: '2', Z: '2', D: '3', T: '3', L: '4', M: '5', N: '5', R: '6' };
+        var out = first;
+        var prev = codes[first] || '';
+        for (var i = 1; i < s.length && out.length < 4; i++) {
+            var c = codes[s.charAt(i)] || '';
+            if (c && c !== prev) {
+                out += c;
+            }
+            prev = c;
+        }
+        while (out.length < 4) {
+            out += '0';
+        }
+        return out;
+    },
+
+    // ------------------------------------------------------------------
+    // Persistence — dedupe against existing open candidates
+    // ------------------------------------------------------------------
+    _persistCandidates: function (candidates, tableName) {
+        var persisted = 0;
+        for (var i = 0; i < candidates.length; i++) {
+            var c = candidates[i];
+            if (this._candidateExists(tableName, c.record_a, c.record_b)) {
+                continue;
+            }
+            try {
+                var gr = new GlideRecord('x_snc_ddg_candidate');
+                gr.initialize();
+                gr.setValue('table_name', tableName);
+                gr.setValue('record_a', c.record_a);
+                gr.setValue('record_a_display', c.record_a_display);
+                gr.setValue('record_b', c.record_b);
+                gr.setValue('record_b_display', c.record_b_display);
+                gr.setValue('confidence', c.confidence);
+                gr.setValue('matched_fields', c.matched_fields);
+                gr.setValue('state', c.state);
+                gr.setValue('detected_on', new GlideDateTime().toString());
+                if (gr.insert()) {
+                    persisted++;
+                }
+            } catch (e) {
+                gs.error('x_snc_ddg persist candidate failed: ' + e.message);
+            }
+        }
+        return persisted;
+    },
+
+    _candidateExists: function (tableName, a, b) {
+        var gr = new GlideRecord('x_snc_ddg_candidate');
+        gr.addQuery('table_name', tableName);
+        gr.addQuery('record_a', a);
+        gr.addQuery('record_b', b);
+        gr.addQuery('state', 'IN', 'new,review');
+        gr.setLimit(1);
+        gr.query();
+        return gr.hasNext();
+    },
+
+    // ------------------------------------------------------------------
+    // Snapshot for REST GET — ranked candidate list
+    // ------------------------------------------------------------------
+    snapshot: function (tableName) {
+        var candidates = [];
+        var gr = new GlideRecord('x_snc_ddg_candidate');
+        if (tableName) {
+            gr.addQuery('table_name', tableName);
+        }
+        gr.addQuery('state', 'IN', 'new,review');
+        gr.orderByDesc('confidence');
+        gr.setLimit(200);
+        gr.query();
+        while (gr.next()) {
+            candidates.push({
+                sys_id: gr.getUniqueValue(),
+                table_name: gr.getValue('table_name'),
+                record_a: gr.getValue('record_a'),
+                record_a_display: gr.getValue('record_a_display'),
+                record_b: gr.getValue('record_b'),
+                record_b_display: gr.getValue('record_b_display'),
+                confidence: parseInt(gr.getValue('confidence'), 10) || 0,
+                matched_fields: this._parseMatchedFields(gr.getValue('matched_fields')),
+                state: gr.getValue('state'),
+                detected_on: gr.getValue('detected_on')
+            });
+        }
+        return candidates;
+    },
+
+    _parseMatchedFields: function (json) {
+        if (!json) {
+            return [];
+        }
+        try {
+            var parsed = JSON.parse(json);
+            return parsed || [];
+        } catch (e) {
+            return [];
+        }
+    },
+
+    type: 'DedupeGuardEngine'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000004</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_script_include>
+
+  <!-- Script Include: DedupeGuardMerge -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snc_ddg.DedupeGuardMerge</api_name>
+    <caller_access>false</caller_access>
+    <client_callable>false</client_callable>
+    <description>Safe merge engine with reference re-pointing, audit, and rollback.</description>
+    <name>DedupeGuardMerge</name>
+    <script><![CDATA[// DedupeGuard — DedupeGuardMerge
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Safe merge engine. Re-points child records (reference fields discovered via
+// sys_dictionary introspection) from the loser record to the survivor, flags
+// the loser inactive (never hard-deletes), and writes a full before/after
+// snapshot to x_snc_ddg_merge for audit and rollback.
+//
+// @class DedupeGuardMerge
+// @namespace x_snc_ddg
+var DedupeGuardMerge = Class.create();
+DedupeGuardMerge.prototype = {
+
+    initialize: function () {
+        this._config = this._loadConfig();
+    },
+
+    _loadConfig: function () {
+        var cfg = {};
+        cfg.protectedTables = this._propStr('x_snc_ddg.merge.protected_tables',
+            'sys_user,cmdb_ci,sys_user_group');
+        cfg.maxRepoint = this._propNum('x_snc_ddg.merge.max_repoint', 5000);
+        return cfg;
+    },
+
+    _propStr: function (name, def) {
+        var v = gs.getProperty(name);
+        return (v === null || v === undefined || v === '') ? def : v;
+    },
+
+    _propNum: function (name, def) {
+        var v = gs.getProperty(name);
+        if (v === null || v === undefined || v === '') {
+            return def;
+        }
+        var n = parseFloat(v);
+        return isNaN(n) ? def : n;
+    },
+
+    // ------------------------------------------------------------------
+    // Public entry point — merge a candidate pair
+    //   tableName: source table of the duplicate records
+    //   survivor:  sys_id of the record to keep
+    //   loser:     sys_id of the record to deactivate
+    //   actor:     sys_id of the user performing the merge
+    // ------------------------------------------------------------------
+    merge: function (tableName, survivor, loser, actor) {
+        if (!tableName || !survivor || !loser) {
+            return { ok: false, error: 'tableName, survivor, and loser are required' };
+        }
+        if (survivor === loser) {
+            return { ok: false, error: 'survivor and loser must differ' };
+        }
+
+        var protectedTables = this._config.protectedTables.split(',');
+        for (var i = 0; i < protectedTables.length; i++) {
+            if (protectedTables[i].trim() === tableName) {
+                return { ok: false, error: 'table ' + tableName + ' is protected from auto-merge' };
+            }
+        }
+
+        // Discover reference fields pointing at this table.
+        var refFields = this._discoverReferenceFields(tableName);
+        var repointed = [];
+        var totalRepointed = 0;
+
+        for (var f = 0; f < refFields.length; f++) {
+            var rf = refFields[f];
+            var count = this._repoint(rf.table, rf.field, loser, survivor);
+            if (count > 0) {
+                repointed.push({ table: rf.table, field: rf.field, count: count });
+                totalRepointed += count;
+            }
+        }
+
+        // Flag the loser inactive (never hard-delete).
+        var loserFlagged = this._flagLoser(tableName, loser);
+
+        // Write the audit snapshot.
+        var mergeSysId = this._writeAudit(tableName, survivor, loser, actor, repointed, totalRepointed);
+
+        return {
+            ok: true,
+            merge_sys_id: mergeSysId,
+            survivor: survivor,
+            loser: loser,
+            repointed_fields: repointed,
+            total_repointed: totalRepointed,
+            loser_flagged: loserFlagged
+        };
+    },
+
+    // ------------------------------------------------------------------
+    // Reference-field discovery via sys_dictionary introspection.
+    // Matches both single-reference and multi-reference (glide_list) fields.
+    // ------------------------------------------------------------------
+    _discoverReferenceFields: function (tableName) {
+        var fields = [];
+        var gr = new GlideRecord('sys_dictionary');
+        gr.addQuery('internal_type', 'IN', 'reference,glide_list');
+        gr.addQuery('reference', tableName);
+        gr.addQuery('name', '!=', tableName);
+        gr.query();
+        while (gr.next()) {
+            var refTable = gr.getValue('name');
+            var element = gr.getValue('element');
+            if (refTable && element) {
+                fields.push({ table: refTable, field: element });
+            }
+        }
+        return fields;
+    },
+
+    // ------------------------------------------------------------------
+    // Re-point one reference field from loser to survivor (bounded)
+    // ------------------------------------------------------------------
+    _repoint: function (refTable, refField, loser, survivor) {
+        var count = 0;
+        var gr = new GlideRecord(refTable);
+        gr.addQuery(refField, loser);
+        gr.setLimit(this._config.maxRepoint);
+        gr.query();
+        while (gr.next()) {
+            try {
+                gr.setValue(refField, survivor);
+                if (gr.update()) {
+                    count++;
+                }
+            } catch (e) {
+                gs.error('x_snc_ddg repoint failed on ' + refTable + '.' + refField + ': ' + e.message);
+            }
+        }
+        return count;
+    },
+
+    // ------------------------------------------------------------------
+    // Flag the loser inactive — preserve history, never hard-delete.
+    // Handles tables that use `active` (sys_user, incident, task) and
+    // tables that use `install_status` (cmdb_ci).
+    // ------------------------------------------------------------------
+    _flagLoser: function (tableName, loser) {
+        var gr = new GlideRecord(tableName);
+        if (!gr.get(loser)) {
+            return false;
+        }
+        try {
+            if (gr.isValidField('active')) {
+                gr.setValue('active', false);
+            } else if (gr.isValidField('install_status')) {
+                gr.setValue('install_status', 'retired');
+            }
+            return gr.update();
+        } catch (e) {
+            gs.error('x_snc_ddg flag loser failed: ' + e.message);
+            return false;
+        }
+    },
+
+    // ------------------------------------------------------------------
+    // Audit snapshot — before/after for rollback
+    // ------------------------------------------------------------------
+    _writeAudit: function (tableName, survivor, loser, actor, repointed, totalRepointed) {
+        try {
+            var gr = new GlideRecord('x_snc_ddg_merge');
+            gr.initialize();
+            gr.setValue('table_name', tableName);
+            gr.setValue('survivor', survivor);
+            gr.setValue('loser', loser);
+            gr.setValue('actor', actor);
+            gr.setValue('repointed_fields', JSON.stringify(repointed));
+            gr.setValue('total_repointed', totalRepointed);
+            gr.setValue('state', 'merged');
+            gr.setValue('merged_on', new GlideDateTime().toString());
+            var sysId = gr.insert();
+            return sysId || '';
+        } catch (e) {
+            gs.error('x_snc_ddg write audit failed: ' + e.message);
+            return '';
+        }
+    },
+
+    // ------------------------------------------------------------------
+    // Rollback — reverse a merge by re-pointing back and reactivating
+    // ------------------------------------------------------------------
+    rollback: function (mergeSysId, actor) {
+        var mgr = new GlideRecord('x_snc_ddg_merge');
+        if (!mgr.get(mergeSysId)) {
+            return { ok: false, error: 'merge record not found: ' + mergeSysId };
+        }
+
+        var tableName = mgr.getValue('table_name');
+        var survivor = mgr.getValue('survivor');
+        var loser = mgr.getValue('loser');
+        var repointed = this._parseRepointed(mgr.getValue('repointed_fields'));
+
+        var reversed = [];
+        var totalReversed = 0;
+        for (var i = 0; i < repointed.length; i++) {
+            var rf = repointed[i];
+            var count = this._repoint(rf.table, rf.field, survivor, loser);
+            if (count > 0) {
+                reversed.push({ table: rf.table, field: rf.field, count: count });
+                totalReversed += count;
+            }
+        }
+
+        // Reactivate the loser.
+        var reactivated = this._reactivateLoser(tableName, loser);
+
+        try {
+            mgr.setValue('state', 'rolled_back');
+            mgr.setValue('rolled_back_on', new GlideDateTime().toString());
+            mgr.setValue('rolled_back_by', actor);
+            mgr.update();
+        } catch (e) {
+            gs.error('x_snc_ddg rollback state update failed: ' + e.message);
+        }
+
+        return {
+            ok: true,
+            merge_sys_id: mergeSysId,
+            reversed_fields: reversed,
+            total_reversed: totalReversed,
+            loser_reactivated: reactivated
+        };
+    },
+
+    _parseRepointed: function (json) {
+        if (!json) {
+            return [];
+        }
+        try {
+            var parsed = JSON.parse(json);
+            return parsed || [];
+        } catch (e) {
+            return [];
+        }
+    },
+
+    _reactivateLoser: function (tableName, loser) {
+        var gr = new GlideRecord(tableName);
+        if (!gr.get(loser)) {
+            return false;
+        }
+        try {
+            if (gr.isValidField('active')) {
+                gr.setValue('active', true);
+            } else if (gr.isValidField('install_status')) {
+                gr.setValue('install_status', 'installed');
+            }
+            return gr.update();
+        } catch (e) {
+            gs.error('x_snc_ddg reactivate loser failed: ' + e.message);
+            return false;
+        }
+    },
+
+    type: 'DedupeGuardMerge'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000005</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_script_include>
+
+  <!-- REST API: DedupeGuard API -->
+  <sys_web_service_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <api_namespace>x_snc_ddg</api_namespace>
+    <name>DedupeGuard API</name>
+    <service_id>ddg</service_id>
+    <sys_class_name>sys_web_service_definition</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000b0</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+  </sys_web_service_definition>
+
+  <!-- REST operation: GET /candidates -->
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>GET /candidates</name>
+    <operation_uri>/api/x_snc_ddg/ddg/candidates</operation_uri>
+    <request_method>GET</request_method>
+    <function_name>process</function_name>
+    <script><![CDATA[// DedupeGuard — GET /candidates
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Returns the ranked duplicate-candidate list. Optional ?table=<name>
+// filters to a single source table.
+(function process(request, response) {
+
+    var engine = new DedupeGuardEngine();
+    var table = request.queryParams.get('table') || null;
+
+    var candidates = engine.snapshot(table);
+    var payload = {
+        ok: true,
+        count: candidates.length,
+        candidates: candidates
+    };
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(payload));
+
+})(request, response);
+]]></script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000b1</sys_id>
+    <web_service_definition display_value="DedupeGuard API">ddg000000000000000000000000000000b0</web_service_definition>
+  </sys_ws_operation>
+
+  <!-- REST operation: POST /execute -->
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>POST /execute</name>
+    <operation_uri>/api/x_snc_ddg/ddg/execute</operation_uri>
+    <request_method>POST</request_method>
+    <function_name>process</function_name>
+    <script><![CDATA[// DedupeGuard — POST /execute
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Action dispatch endpoint. Body:
+//   { "action": "scan" }                          — scan all configured tables
+//   { "action": "scan", "table": "sys_user" }     — scan one table
+//   { "action": "merge", "table": "...", "survivor": "...", "loser": "..." }
+//   { "action": "rollback", "merge_sys_id": "..." }
+// Unknown actions return HTTP 400.
+(function process(request, response) {
+
+    // request.body is a RESTAPIRequestBody; the parsed JSON lives in
+    // request.body.data. Tolerate a raw JSON string as well.
+    var body = request.body ? request.body.data : null;
+    if (typeof body === 'string') {
+        try {
+            body = JSON.parse(body);
+        } catch (e) {
+            body = null;
+        }
+    }
+    if (!body) {
+        response.setStatus(400);
+        response.setBody(JSON.stringify({ ok: false, error: 'request body required' }));
+        return;
+    }
+
+    var action = body.action;
+    var engine = new DedupeGuardEngine();
+    var merge = new DedupeGuardMerge();
+    var actor = gs.getUserID();
+
+    switch (action) {
+        case 'scan':
+            var scanResult = body.table ? engine.scan(body.table) : engine.scanAll();
+            response.setStatus(200);
+            response.setBody(JSON.stringify({ ok: true, action: 'scan', result: scanResult }));
+            break;
+
+        case 'merge':
+            var mergeResult = merge.merge(body.table, body.survivor, body.loser, actor);
+            response.setStatus(mergeResult.ok ? 200 : 400);
+            response.setBody(JSON.stringify(mergeResult));
+            break;
+
+        case 'rollback':
+            var rollbackResult = merge.rollback(body.merge_sys_id, actor);
+            response.setStatus(rollbackResult.ok ? 200 : 404);
+            response.setBody(JSON.stringify(rollbackResult));
+            break;
+
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({ ok: false, error: 'unknown action: ' + action }));
+            break;
+    }
+
+})(request, response);
+]]></script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_id>ddg000000000000000000000000000000b2</sys_id>
+    <web_service_definition display_value="DedupeGuard API">ddg000000000000000000000000000000b0</web_service_definition>
+  </sys_ws_operation>
+</unload>

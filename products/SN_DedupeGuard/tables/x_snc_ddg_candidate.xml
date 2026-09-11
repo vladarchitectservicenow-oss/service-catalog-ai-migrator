@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-11 07:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <actions_access>false</actions_access>
+    <alter_access>false</alter_access>
+    <caller_access>false</caller_access>
+    <client_scripts_access>false</client_scripts_access>
+    <configuration_access>false</configuration_access>
+    <create_access>true</create_access>
+    <create_access_controls>true</create_access_controls>
+    <delete_access>true</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>Duplicate Candidate</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_snc_ddg_candidate</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-11 07:00:00</sys_created_on>
+    <sys_id>ddg00000000000000000000000000000001</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Duplicate Candidate</sys_name>
+    <sys_package display_value="DedupeGuard" source="x_snc_ddg">ddg00000000000000000000000000000000</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+    <sys_update_name>sys_db_object_x_snc_ddg_candidate</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-11 07:00:00</sys_updated_on>
+    <update_access>true</update_access>
+    <user_role display_value="x_snc_ddg.admin">ddg00000000000000000000000000000002</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>table_name</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>80</max_length>
+    <name>x_snc_ddg_candidate</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000010</sys_id>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>record_a</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>32</max_length>
+    <name>x_snc_ddg_candidate</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000011</sys_id>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>record_a_display</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>255</max_length>
+    <name>x_snc_ddg_candidate</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000012</sys_id>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>record_b</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>32</max_length>
+    <name>x_snc_ddg_candidate</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000013</sys_id>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>record_b_display</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>255</max_length>
+    <name>x_snc_ddg_candidate</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000014</sys_id>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>confidence</element>
+    <internal_type display_value="Integer">integer</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_ddg_candidate</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000015</sys_id>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>matched_fields</element>
+    <internal_type display_value="String">string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_snc_ddg_candidate</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000016</sys_id>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <internal_type display_value="Choice">choice</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_ddg_candidate</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000017</sys_id>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>detected_on</element>
+    <internal_type display_value="Date/Time">glide_date_time</internal_type>
+    <max_length>40</max_length>
+    <name>x_snc_ddg_candidate</name>
+    <sys_class_name>sys_dictionary</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000018</sys_id>
+  </sys_dictionary>
+
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <label>New</label>
+    <name>x_snc_ddg_candidate</name>
+    <sequence>10</sequence>
+    <value>new</value>
+    <sys_class_name>sys_choice</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000020</sys_id>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <label>Review</label>
+    <name>x_snc_ddg_candidate</name>
+    <sequence>20</sequence>
+    <value>review</value>
+    <sys_class_name>sys_choice</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000021</sys_id>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <label>Merged</label>
+    <name>x_snc_ddg_candidate</name>
+    <sequence>30</sequence>
+    <value>merged</value>
+    <sys_class_name>sys_choice</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000022</sys_id>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <label>Dismissed</label>
+    <name>x_snc_ddg_candidate</name>
+    <sequence>40</sequence>
+    <value>dismissed</value>
+    <sys_class_name>sys_choice</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000023</sys_id>
+  </sys_choice>
+</unload>

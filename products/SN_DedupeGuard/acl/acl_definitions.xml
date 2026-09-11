@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-11 07:00:00">
+  <!-- x_snc_ddg_candidate — read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Read access to duplicate candidate records</description>
+    <name>x_snc_ddg_candidate</name>
+    <operation display_value="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000060</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ddg00000000000000000000000000000061</sys_id>
+    <sys_security_acl display_value="x_snc_ddg_candidate">ddg00000000000000000000000000000060</sys_security_acl>
+    <sys_user_role display_value="x_snc_ddg.user">ddg00000000000000000000000000000003</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ddg_candidate — write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Write access to duplicate candidate records</description>
+    <name>x_snc_ddg_candidate</name>
+    <operation display_value="write">write</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000062</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ddg00000000000000000000000000000063</sys_id>
+    <sys_security_acl display_value="x_snc_ddg_candidate">ddg00000000000000000000000000000062</sys_security_acl>
+    <sys_user_role display_value="x_snc_ddg.admin">ddg00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ddg_candidate — create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Create access to duplicate candidate records</description>
+    <name>x_snc_ddg_candidate</name>
+    <operation display_value="create">create</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000064</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ddg00000000000000000000000000000065</sys_id>
+    <sys_security_acl display_value="x_snc_ddg_candidate">ddg00000000000000000000000000000064</sys_security_acl>
+    <sys_user_role display_value="x_snc_ddg.admin">ddg00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ddg_candidate — delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Delete access to duplicate candidate records</description>
+    <name>x_snc_ddg_candidate</name>
+    <operation display_value="delete">delete</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000066</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ddg00000000000000000000000000000067</sys_id>
+    <sys_security_acl display_value="x_snc_ddg_candidate">ddg00000000000000000000000000000066</sys_security_acl>
+    <sys_user_role display_value="x_snc_ddg.admin">ddg00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ddg_merge — read -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Read access to merge audit records</description>
+    <name>x_snc_ddg_merge</name>
+    <operation display_value="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000070</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ddg00000000000000000000000000000071</sys_id>
+    <sys_security_acl display_value="x_snc_ddg_merge">ddg00000000000000000000000000000070</sys_security_acl>
+    <sys_user_role display_value="x_snc_ddg.user">ddg00000000000000000000000000000003</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ddg_merge — write -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Write access to merge audit records</description>
+    <name>x_snc_ddg_merge</name>
+    <operation display_value="write">write</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000072</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ddg00000000000000000000000000000073</sys_id>
+    <sys_security_acl display_value="x_snc_ddg_merge">ddg00000000000000000000000000000072</sys_security_acl>
+    <sys_user_role display_value="x_snc_ddg.admin">ddg00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ddg_merge — create -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Create access to merge audit records</description>
+    <name>x_snc_ddg_merge</name>
+    <operation display_value="create">create</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000074</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ddg00000000000000000000000000000075</sys_id>
+    <sys_security_acl display_value="x_snc_ddg_merge">ddg00000000000000000000000000000074</sys_security_acl>
+    <sys_user_role display_value="x_snc_ddg.admin">ddg00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- x_snc_ddg_merge — delete -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Delete access to merge audit records</description>
+    <name>x_snc_ddg_merge</name>
+    <operation display_value="delete">delete</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000076</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ddg00000000000000000000000000000077</sys_id>
+    <sys_security_acl display_value="x_snc_ddg_merge">ddg00000000000000000000000000000076</sys_security_acl>
+    <sys_user_role display_value="x_snc_ddg.admin">ddg00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- REST endpoint — execute (GET /candidates) -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Execute access to GET /candidates REST endpoint</description>
+    <name>/api/now/x_snc_ddg/ddg/candidates</name>
+    <operation display_value="execute">execute</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000090</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+    <type>rest_endpoint</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ddg00000000000000000000000000000091</sys_id>
+    <sys_security_acl display_value="/api/now/x_snc_ddg/ddg/candidates">ddg00000000000000000000000000000090</sys_security_acl>
+    <sys_user_role display_value="x_snc_ddg.user">ddg00000000000000000000000000000003</sys_user_role>
+  </sys_security_acl_role>
+
+  <!-- REST endpoint — execute (POST /execute) -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Execute access to POST /execute REST endpoint</description>
+    <name>/api/now/x_snc_ddg/ddg/execute</name>
+    <operation display_value="execute">execute</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_id>ddg00000000000000000000000000000092</sys_id>
+    <sys_scope display_value="DedupeGuard">ddg00000000000000000000000000000000</sys_scope>
+    <type>rest_endpoint</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_id>ddg00000000000000000000000000000093</sys_id>
+    <sys_security_acl display_value="/api/now/x_snc_ddg/ddg/execute">ddg00000000000000000000000000000092</sys_security_acl>
+    <sys_user_role display_value="x_snc_ddg.admin">ddg00000000000000000000000000000002</sys_user_role>
+  </sys_security_acl_role>
+</unload>
