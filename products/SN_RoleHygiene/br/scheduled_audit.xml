@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-17 05:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>RoleHygiene weekly drift audit — runs the deterministic engine, persists findings, and captures a new entitlement snapshot for delta/creep comparison.</description>
+    <name>RoleHygiene Scheduled Audit</name>
+    <run_dayofweek>monday</run_dayofweek>
+    <run_dayofmonth/>
+    <run_monthly>false</run_monthly>
+    <run_period/>
+    <run_start>2026-09-17 05:00:00</run_start>
+    <run_time>05:00:00</run_time>
+    <run_type>weekly</run_type>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_scope>x_snc_role_hygiene</sys_scope>
+    <upgrade_safe>true</upgrade_safe>
+    <script><![CDATA[// RoleHygiene — scheduled weekly audit
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function scheduledAudit() {
+    try {
+        var manager = new RoleHygieneManager();
+        var summary = manager.runFullAudit({ clear_previous: true });
+        gs.info('RoleHygiene audit complete: dormant=' + summary.dormant +
+                ', creep=' + summary.creep + ', sod=' + summary.sod +
+                ', findings=' + summary.findings_created);
+    } catch (e) {
+        gs.error('RoleHygiene scheduled audit failed: ' + e);
+    }
+})();]]></script>
+  </sysauto_script>
+</unload>

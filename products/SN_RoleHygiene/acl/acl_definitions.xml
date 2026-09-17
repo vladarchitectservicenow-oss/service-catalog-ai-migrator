@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-17 05:00:00">
+
+  <!-- ===== Finding table ACLs ===== -->
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_role_hygiene_finding</name>
+    <operation>read</operation>
+    <type>record</type>
+    <description>Read access to Role Hygiene findings for admins and auditors.</description>
+    <script>answer = gs.hasRole('role_hygiene_admin') || gs.hasRole('role_hygiene_auditor') || gs.hasRole('admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_role_hygiene_finding</name>
+    <operation>create</operation>
+    <type>record</type>
+    <description>Create access — restricted to the engine via elevated role.</description>
+    <script>answer = gs.hasRole('role_hygiene_admin') || gs.hasRole('admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_role_hygiene_finding</name>
+    <operation>write</operation>
+    <type>record</type>
+    <description>Write access restricted to administrators only.</description>
+    <script>answer = gs.hasRole('role_hygiene_admin') || gs.hasRole('admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_role_hygiene_finding</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <description>Delete access restricted to administrators only.</description>
+    <script>answer = gs.hasRole('role_hygiene_admin') || gs.hasRole('admin');</script>
+  </sys_security_acl>
+
+  <!-- ===== Config table ACLs ===== -->
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_role_hygiene_config</name>
+    <operation>read</operation>
+    <type>record</type>
+    <description>Read access to Role Hygiene configuration.</description>
+    <script>answer = gs.hasRole('role_hygiene_admin') || gs.hasRole('role_hygiene_auditor') || gs.hasRole('admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_role_hygiene_config</name>
+    <operation>create</operation>
+    <type>record</type>
+    <description>Create access to config — admin only.</description>
+    <script>answer = gs.hasRole('role_hygiene_admin') || gs.hasRole('admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_role_hygiene_config</name>
+    <operation>write</operation>
+    <type>record</type>
+    <description>Write access to config — admin only.</description>
+    <script>answer = gs.hasRole('role_hygiene_admin') || gs.hasRole('admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_role_hygiene_config</name>
+    <operation>delete</operation>
+    <type>record</type>
+    <description>Delete access to config — admin only.</description>
+    <script>answer = gs.hasRole('role_hygiene_admin') || gs.hasRole('admin');</script>
+  </sys_security_acl>
+
+  <!-- ===== REST endpoint ACL ===== -->
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_role_hygiene.audit</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <description>Execute (POST /execute) access — mutating action dispatch; admin only.</description>
+    <script>answer = gs.hasRole('role_hygiene_admin') || gs.hasRole('admin');</script>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_snc_role_hygiene.report</name>
+    <operation>execute</operation>
+    <type>rest_endpoint</type>
+    <description>Report (GET /report) access — read-only compliance export; admin + auditor.</description>
+    <script>answer = gs.hasRole('role_hygiene_admin') || gs.hasRole('role_hygiene_auditor') || gs.hasRole('admin');</script>
+  </sys_security_acl>
+
+</unload>

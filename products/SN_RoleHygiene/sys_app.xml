@@ -1,0 +1,958 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-17 05:00:00">
+
+  <!-- ===================== SCOPE ===================== -->
+  <sys_app action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>RoleHygiene — entitlement-drift audit engine for access reviews.</description>
+    <label>Role Hygiene</label>
+    <name>Role Hygiene</name>
+    <scope>x_snc_role_hygiene</scope>
+    <version>1.0.0</version>
+  </sys_app>
+
+  <!-- ===================== ROLES ===================== -->
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>role_hygiene_admin</name>
+    <description>RoleHygiene administrator — configure rules, run audits, manage remediation.</description>
+    <suffix/>
+    <assignable_by>admin</assignable_by>
+    <elevated_privilege>false</elevated_privilege>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <name>role_hygiene_auditor</name>
+    <description>RoleHygiene auditor — read-only access to findings and reports.</description>
+    <suffix/>
+    <assignable_by>admin</assignable_by>
+    <elevated_privilege>false</elevated_privilege>
+  </sys_user_role>
+
+  <!-- ===================== CROSS-SCOPE PRIVILEGES ===================== -->
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_role_hygiene</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_role_hygiene</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user_has_role</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_role_hygiene</source_scope>
+    <status>allowed</status>
+    <target_name>sys_user_role</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_role_hygiene</source_scope>
+    <status>allowed</status>
+    <target_name>incident</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_role_hygiene</source_scope>
+    <status>allowed</status>
+    <target_name>sc_request</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_role_hygiene</source_scope>
+    <status>allowed</status>
+    <target_name>change_request</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_snc_role_hygiene</source_scope>
+    <status>allowed</status>
+    <target_name>sysapproval_approver</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+  </sys_scope_privilege>
+
+  <!-- ===================== SCRIPT INCLUDES ===================== -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snc_role_hygiene.RoleHygieneEngine</api_name>
+    <client_callable>false</client_callable>
+    <description>Deterministic entitlement-drift detection: dormancy, creep, SoD, scoring.</description>
+    <name>RoleHygieneEngine</name>
+    <script><![CDATA[
+// RoleHygiene — RoleHygieneEngine
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Deterministic entitlement-drift audit engine. Pure GlideRecord + business
+// logic — no AI, no side effects. Every finding produced here is reproducible
+// and defensible under audit. All detection methods return plain objects that
+// the manager layer persists to the finding table.
+//
+// @class RoleHygieneEngine @namespace x_snc_role_hygiene
+var RoleHygieneEngine = Class.create();
+RoleHygieneEngine.prototype = {
+
+    initialize: function () {
+        this.OOTB_USER_TABLE = 'sys_user';
+        this.OOTB_ROLE_TABLE = 'sys_user_has_role';
+    },
+
+    /**
+     * Detect dormant accounts: active users whose last_login_time is older than
+     * thresholdDays (or NULL). Cross-references open incidents/requests/approvals
+     * to suppress false positives ("still owns open tickets — don't flag").
+     *
+     * @param {number} thresholdDays - inactivity threshold in days
+     * @returns {Array} list of { user_sys_id, user_name, last_login, days_inactive,
+     *                            has_roles, open_ticket_count, risk_class }
+     */
+    detectDormantAccounts: function (thresholdDays) {
+        var cutoff = new GlideDateTime();
+        cutoff.addDaysLocalTime(-1 * thresholdDays);
+
+        var findings = [];
+        var gr = new GlideRecord(this.OOTB_USER_TABLE);
+        gr.addActiveQuery();
+        gr.query();
+
+        while (gr.next()) {
+            var userId = gr.getUniqueValue();
+            var lastLoginRaw = gr.getValue('last_login_time');
+
+            var dormant = false;
+            var daysInactive = -1;
+            if (lastLoginRaw) {
+                var lastLogin = new GlideDateTime(lastLoginRaw);
+                if (lastLogin.before(cutoff)) {
+                    dormant = true;
+                    daysInactive = this._daysBetween(lastLogin, new GlideDateTime());
+                }
+            } else {
+                // NULL last_login with no login history — treat as dormant
+                dormant = true;
+            }
+
+            if (!dormant) {
+                continue;
+            }
+
+            // Cross-reference open work to suppress false positives.
+            var openTickets = this._countOpenTickets(userId);
+            if (openTickets > 0) {
+                continue;
+            }
+
+            var hasRoles = this._userHasAnyRole(userId);
+            var riskClass = hasRoles ? 'security-risk' : 'license-waste';
+
+            findings.push({
+                user_sys_id: userId,
+                user_name: gr.getValue('user_name'),
+                last_login: lastLoginRaw || '',
+                days_inactive: daysInactive,
+                has_roles: hasRoles,
+                open_ticket_count: openTickets,
+                risk_class: riskClass
+            });
+        }
+
+        return findings;
+    },
+
+    /**
+     * Analyze privilege creep by comparing the current entitlement set against a
+     * prior snapshot. Reports monotonic role accumulation and per-department
+     * outliers.
+     *
+     * @param {Array} currentEntitlements - [{ user_sys_id, role_sys_id, role_name, department }]
+     * @param {Array} priorSnapshot - [{ user_sys_id, role_sys_id }] from a previous capture
+     * @returns {Array} list of { user_sys_id, user_name, added_roles, department, outlier }
+     */
+    analyzeCreep: function (currentEntitlements, priorSnapshot) {
+        if (!priorSnapshot || priorSnapshot.length === 0) {
+            return []; // no baseline yet — first snapshot is a seed, not a finding
+        }
+
+        var priorIndex = {};
+        for (var i = 0; i < priorSnapshot.length; i++) {
+            var p = priorSnapshot[i];
+            priorIndex[p.user_sys_id + ':' + p.role_sys_id] = true;
+        }
+
+        var additions = {};
+        var order = [];
+        for (var j = 0; j < currentEntitlements.length; j++) {
+            var c = currentEntitlements[j];
+            var key = c.user_sys_id + ':' + c.role_sys_id;
+            if (!priorIndex[key]) {
+                if (!additions[c.user_sys_id]) {
+                    additions[c.user_sys_id] = {
+                        user_sys_id: c.user_sys_id,
+                        user_name: c.user_name || '',
+                        department: c.department || '',
+                        added_roles: [],
+                        outlier: false
+                    };
+                    order.push(c.user_sys_id);
+                }
+                additions[c.user_sys_id].added_roles.push(c.role_name || c.role_sys_id);
+            }
+        }
+
+        // Per-department outlier: flag users who accumulated roles far above the
+        // department median of additions.
+        var deptCounts = {};
+        for (var k = 0; k < order.length; k++) {
+            var rec = additions[order[k]];
+            var dept = rec.department || '(none)';
+            if (!deptCounts[dept]) {
+                deptCounts[dept] = [];
+            }
+            deptCounts[dept].push(rec.added_roles.length);
+        }
+
+        var result = [];
+        for (var m = 0; m < order.length; m++) {
+            var rec2 = additions[order[m]];
+            var dept2 = rec2.department || '(none)';
+            var counts = deptCounts[dept2];
+            var median = this._median(counts);
+            rec2.outlier = (rec2.added_roles.length > median + 2);
+            result.push(rec2);
+        }
+
+        return result;
+    },
+
+    /**
+     * Segregation-of-Duties engine: for each conflict pair, find users holding
+     * both ends. Ranks results by blast radius (number of SoD pairs violated +
+     * whether the user is privileged).
+     *
+     * @param {Array} sodRules - [{ name, role_a_sys_id, role_b_sys_id, description }]
+     * @param {Array} entitlements - [{ user_sys_id, role_sys_id }]
+     * @returns {Array} list of { user_sys_id, user_name, violated_pairs, blast_radius }
+     */
+    findSodConflicts: function (sodRules, entitlements) {
+        if (!sodRules || sodRules.length === 0) {
+            return [];
+        }
+
+        // Build user -> set of role sys_ids (includes direct roles).
+        var userRoles = {};
+        for (var i = 0; i < entitlements.length; i++) {
+            var e = entitlements[i];
+            if (!userRoles[e.user_sys_id]) {
+                userRoles[e.user_sys_id] = {};
+            }
+            userRoles[e.user_sys_id][e.role_sys_id] = true;
+        }
+
+        var violations = {};
+        var userNames = {};
+        var order = [];
+        for (var j = 0; j < entitlements.length; j++) {
+            var en = entitlements[j];
+            if (userNames[en.user_sys_id] === undefined) {
+                userNames[en.user_sys_id] = en.user_name || '';
+            }
+        }
+
+        for (var r = 0; r < sodRules.length; r++) {
+            var rule = sodRules[r];
+            for (var uid in userRoles) {
+                if (!userRoles.hasOwnProperty(uid)) {
+                    continue;
+                }
+                var roles = userRoles[uid];
+                if (roles[rule.role_a_sys_id] && roles[rule.role_b_sys_id]) {
+                    if (!violations[uid]) {
+                        violations[uid] = [];
+                        order.push(uid);
+                    }
+                    violations[uid].push(rule.name || (rule.role_a_sys_id + ' ↔ ' + rule.role_b_sys_id));
+                }
+            }
+        }
+
+        var result = [];
+        for (var q = 0; q < order.length; q++) {
+            var userId = order[q];
+            var pairCount = violations[userId].length;
+            var totalRoles = 0;
+            for (var kk in userRoles[userId]) {
+                if (userRoles[userId].hasOwnProperty(kk)) {
+                    totalRoles++;
+                }
+            }
+            result.push({
+                user_sys_id: userId,
+                user_name: userNames[userId] || '',
+                violated_pairs: violations[userId],
+                blast_radius: pairCount * 10 + totalRoles
+            });
+        }
+
+        // Rank by blast radius descending.
+        result.sort(function (a, b) {
+            return b.blast_radius - a.blast_radius;
+        });
+
+        return result;
+    },
+
+    /**
+     * Compute a drift score (0-100, higher = riskier) for a user given the counts
+     * of dormant flags, creep additions, and SoD violations.
+     *
+     * @param {object} stats - { dormant:number, creep_added:number, sod_violations:number }
+     * @returns {number} 0-100 drift score
+     */
+    scoreDrift: function (stats) {
+        var score = 0;
+        score += (stats.dormant ? 20 : 0);
+        score += Math.min(stats.creep_added || 0, 5) * 8;
+        score += Math.min(stats.sod_violations || 0, 5) * 12;
+        return Math.min(score, 100);
+    },
+
+    // ---- private helpers -------------------------------------------------
+
+    _countOpenTickets: function (userId) {
+        var count = 0;
+        var tables = ['incident', 'sc_request', 'change_request', 'sysapproval_approver'];
+        for (var i = 0; i < tables.length; i++) {
+            var gr = new GlideRecord(tables[i]);
+            if (tables[i] === 'sysapproval_approver') {
+                gr.addQuery('approver', userId);
+                gr.addQuery('state', 'requested');
+            } else {
+                gr.addQuery('caller_id', userId);
+                gr.addActiveQuery();
+            }
+            gr.setLimit(1);
+            gr.query();
+            count += gr.getRowCount();
+        }
+        return count;
+    },
+
+    _userHasAnyRole: function (userId) {
+        var gr = new GlideRecord(this.OOTB_ROLE_TABLE);
+        gr.addQuery('user', userId);
+        gr.setLimit(1);
+        gr.query();
+        return gr.hasNext();
+    },
+
+    _daysBetween: function (earlier, later) {
+        var ms = later.getNumericValue() - earlier.getNumericValue();
+        return Math.floor(ms / 86400000);
+    },
+
+    _median: function (values) {
+        var sorted = values.slice().sort(function (a, b) {
+            return a - b;
+        });
+        var mid = Math.floor(sorted.length / 2);
+        if (sorted.length % 2 === 0) {
+            return Math.round((sorted[mid - 1] + sorted[mid]) / 2);
+        }
+        return sorted[mid];
+    },
+
+    type: 'RoleHygieneEngine'
+};
+
+]]></script>
+  </sys_script_include>
+
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snc_role_hygiene.RoleHygieneManager</api_name>
+    <client_callable>false</client_callable>
+    <description>Orchestration and persistence: audit runs, findings, snapshots, remediation.</description>
+    <name>RoleHygieneManager</name>
+    <script><![CDATA[
+// RoleHygiene — RoleHygieneManager
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Orchestration and persistence layer. Runs the deterministic engine, persists
+// findings to the scoped finding table, captures entitlement snapshots, and
+// generates the compliance-ready report. This is the only Script Include with
+// write access to scoped tables.
+//
+// @class RoleHygieneManager @namespace x_snc_role_hygiene
+var RoleHygieneManager = Class.create();
+RoleHygieneManager.prototype = {
+
+    initialize: function () {
+        this.FINDING_TABLE = 'x_snc_role_hygiene_finding';
+        this.CONFIG_TABLE = 'x_snc_role_hygiene_config';
+        this.engine = new RoleHygieneEngine();
+    },
+
+    /**
+     * Run a full audit pass: dormancy, creep, and SoD in one sweep. Persists
+     * findings and returns a summary object for the caller (REST endpoint or
+     * scheduled job).
+     *
+     * @param {object} [opts] - optional overrides { threshold_days, clear_previous }
+     * @returns {object} { run_sys_id, dormant, creep, sod, findings_created }
+     */
+    runFullAudit: function (opts) {
+        opts = opts || {};
+        var thresholdDays = opts.threshold_days || this._getSetting('dormancy_threshold_days', 90);
+        var sodRules = this._getSodRules();
+        var entitlements = this._getEntitlements();
+
+        var runId = this._createRunRecord('full');
+
+        var dormant = this.engine.detectDormantAccounts(thresholdDays);
+        var priorSnapshot = this._getPriorSnapshot();
+        var creep = this.engine.analyzeCreep(entitlements, priorSnapshot);
+        var sod = this.engine.findSodConflicts(sodRules, entitlements);
+
+        // Persist findings.
+        var created = 0;
+        if (opts.clear_previous) {
+            this._clearFindings();
+        }
+        created += this._persistFindings('dormant', dormant, runId);
+        created += this._persistFindings('creep', creep, runId);
+        created += this._persistFindings('sod', sod, runId);
+
+        // Store current entitlements as the new baseline snapshot.
+        this._storeSnapshot(entitlements, runId);
+
+        return {
+            run_sys_id: runId,
+            dormant: dormant.length,
+            creep: creep.length,
+            sod: sod.length,
+            findings_created: created
+        };
+    },
+
+    /**
+     * Produce a compliance-ready report: every finding with timestamped evidence,
+     * the rule that fired, and drift score.
+     *
+     * @param {string} [runSysId] - filter to a specific run, or null for latest
+     * @returns {Array} list of report rows
+     */
+    generateReport: function (runSysId) {
+        var rows = [];
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        // Only real findings (dormant/creep/sod) belong in a compliance report;
+        // internal run/snapshot/remediation bookkeeping rows are excluded.
+        gr.addQuery('type', 'IN', 'dormant,creep,sod');
+        if (runSysId) {
+            gr.addQuery('run', runSysId);
+        }
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(1000);
+        gr.query();
+
+        while (gr.next()) {
+            rows.push({
+                finding_sys_id: gr.getUniqueValue(),
+                type: gr.getValue('type'),
+                user_sys_id: gr.getValue('user'),
+                user_name: gr.getValue('user_name'),
+                evidence: gr.getValue('evidence'),
+                rule_fired: gr.getValue('rule_fired'),
+                drift_score: gr.getValue('drift_score'),
+                detected_on: gr.getValue('sys_created_on')
+            });
+        }
+
+        return rows;
+    },
+
+    /**
+     * Create a human-approval remediation task. Never silently fixes security
+     * state — always routes through the approval-gated workflow.
+     *
+     * @param {object} req - { finding_sys_id, action: 'deactivate'|'remove_role'|'sod_exception', justification }
+     * @returns {object} { task_sys_id, status }
+     */
+    createRemediationTask: function (req) {
+        if (!req || !req.finding_sys_id || !req.action) {
+            return { task_sys_id: '', status: 'rejected', reason: 'missing_required_fields' };
+        }
+        var allowed = ['deactivate', 'remove_role', 'sod_exception'];
+        if (allowed.indexOf(req.action) === -1) {
+            return { task_sys_id: '', status: 'rejected', reason: 'invalid_action' };
+        }
+
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.addQuery('type', 'remediation');
+        gr.addQuery('finding_ref', req.finding_sys_id);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return { task_sys_id: gr.getUniqueValue(), status: 'exists' };
+        }
+
+        var task = new GlideRecord(this.FINDING_TABLE);
+        task.initialize();
+        task.setValue('type', 'remediation');
+        task.setValue('finding_ref', req.finding_sys_id);
+        task.setValue('rule_fired', 'remediation:' + req.action);
+        task.setValue('evidence', req.justification || '');
+        task.setValue('state', 'pending_approval');
+        try {
+            var sysId = task.insert();
+            return { task_sys_id: sysId, status: 'created' };
+        } catch (e) {
+            return { task_sys_id: '', status: 'error', reason: String(e) };
+        }
+    },
+
+    // ---- persistence helpers ---------------------------------------------
+
+    _persistFindings: function (type, list, runId) {
+        var created = 0;
+        for (var i = 0; i < list.length; i++) {
+            var f = list[i];
+            var stats = {
+                dormant: (type === 'dormant' ? 1 : 0),
+                creep_added: (type === 'creep' ? f.added_roles.length : 0),
+                sod_violations: (type === 'sod' ? f.violated_pairs.length : 0)
+            };
+            var gr = new GlideRecord(this.FINDING_TABLE);
+            gr.initialize();
+            gr.setValue('type', type);
+            gr.setValue('run', runId);
+            gr.setValue('user', f.user_sys_id || '');
+            gr.setValue('user_name', f.user_name || '');
+            gr.setValue('risk_class', f.risk_class || '');
+            gr.setValue('drift_score', this.engine.scoreDrift(stats));
+
+            if (type === 'creep') {
+                gr.setValue('rule_fired', 'privilege_creep');
+                gr.setValue('evidence', JSON.stringify({
+                    added_roles: f.added_roles,
+                    department: f.department,
+                    outlier: f.outlier
+                }));
+            } else if (type === 'sod') {
+                gr.setValue('rule_fired', 'sod_conflict');
+                gr.setValue('evidence', JSON.stringify({
+                    violated_pairs: f.violated_pairs,
+                    blast_radius: f.blast_radius
+                }));
+            } else {
+                gr.setValue('rule_fired', 'dormant_account');
+                gr.setValue('evidence', JSON.stringify({
+                    days_inactive: f.days_inactive,
+                    last_login: f.last_login,
+                    open_ticket_count: f.open_ticket_count
+                }));
+            }
+
+            try {
+                gr.insert();
+                created++;
+            } catch (e) {
+                // Log and continue — a single failed insert must not abort the run.
+                gs.error('RoleHygiene: failed to persist ' + type + ' finding for ' + (f.user_sys_id || '') + ': ' + e);
+            }
+        }
+        return created;
+    },
+
+    _storeSnapshot: function (entitlements, runId) {
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.initialize();
+        gr.setValue('type', 'snapshot');
+        gr.setValue('run', runId);
+        gr.setValue('rule_fired', 'entitlement_snapshot');
+        gr.setValue('evidence', JSON.stringify(entitlements));
+        try {
+            gr.insert();
+        } catch (e) {
+            gs.error('RoleHygiene: failed to store snapshot: ' + e);
+        }
+    },
+
+    _getPriorSnapshot: function () {
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.addQuery('type', 'snapshot');
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            try {
+                return JSON.parse(gr.getValue('evidence'));
+            } catch (e) {
+                return [];
+            }
+        }
+        return [];
+    },
+
+    _getEntitlements: function () {
+        var out = [];
+        var gr = new GlideRecord('sys_user_has_role');
+        gr.query();
+        while (gr.next()) {
+            out.push({
+                user_sys_id: gr.getValue('user') || '',
+                role_sys_id: gr.getValue('role') || '',
+                role_name: gr.getDisplayValue('role') || '',
+                user_name: gr.getDisplayValue('user') || '',
+                department: gr.getDisplayValue('user.department') || ''
+            });
+        }
+        return out;
+    },
+
+    _getSodRules: function () {
+        var rules = [];
+        var gr = new GlideRecord(this.CONFIG_TABLE);
+        gr.addQuery('type', 'sod_rule');
+        gr.addQuery('active', true);
+        gr.query();
+        while (gr.next()) {
+            rules.push({
+                name: gr.getValue('name') || '',
+                role_a_sys_id: gr.getValue('role_a') || '',
+                role_b_sys_id: gr.getValue('role_b') || '',
+                description: gr.getValue('description') || ''
+            });
+        }
+        return rules;
+    },
+
+    _getSetting: function (name, defaultValue) {
+        var gr = new GlideRecord(this.CONFIG_TABLE);
+        gr.addQuery('type', 'setting');
+        gr.addQuery('name', name);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            var v = gr.getValue('value');
+            if (v) {
+                var n = parseInt(v, 10);
+                return isNaN(n) ? defaultValue : n;
+            }
+        }
+        return defaultValue;
+    },
+
+    _createRunRecord: function (mode) {
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.initialize();
+        gr.setValue('type', 'run');
+        gr.setValue('rule_fired', 'audit_run');
+        gr.setValue('evidence', JSON.stringify({ mode: mode, triggered_by: gs.getUserName() }));
+        try {
+            return gr.insert();
+        } catch (e) {
+            gs.error('RoleHygiene: failed to create run record: ' + e);
+            return '';
+        }
+    },
+
+    _clearFindings: function () {
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.addQuery('type', 'IN', 'dormant,creep,sod');
+        gr.query();
+        while (gr.next()) {
+            gr.deleteRecord();
+        }
+    },
+
+    type: 'RoleHygieneManager'
+};
+
+]]></script>
+  </sys_script_include>
+
+  <!-- ===================== REST API ===================== -->
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>x_snc_role_hygiene/audit</base_uri>
+    <consumes>application/json</consumes>
+    <consumes_customized>false</consumes_customized>
+    <description>RoleHygiene audit API — run audits, generate reports, create remediation tasks.</description>
+    <name>RoleHygiene Audit API</name>
+    <produces>application/json</produces>
+    <produces_customized>false</produces_customized>
+    <short_description>RoleHygiene audit API</short_description>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_customized>false</consumes_customized>
+    <name>execute</name>
+    <operation_uri>/execute</operation_uri>
+    <produces>application/json</produces>
+    <produces_customized>false</produces_customized>
+    <request_method>POST</request_method>
+    <web_service_definition>RoleHygiene Audit API</web_service_definition>
+    <operation_script><![CDATA[
+// RoleHygiene — REST API (Scripted REST)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single consolidated endpoint with action dispatch. Read-only by design for
+// the audit surface; the only mutating action is `remediate`, which creates an
+// approval-gated task (never a direct security-state change).
+//
+// POST /api/x_snc_role_hygiene/audit/execute
+//   body: { action: "run"|"remediate", threshold_days?, clear_previous?, finding_sys_id?, remediation_action?, justification? }
+//
+// GET /api/x_snc_role_hygiene/audit/report?run=...
+//   query: run (optional sys_id of a run), limit (optional int)
+(function process(request, response) {
+
+    var manager = new RoleHygieneManager();
+
+    function ok(data) {
+        response.setStatus(200);
+        response.setBody(JSON.stringify({ result: data }));
+    }
+
+    function fail(status, message) {
+        response.setStatus(status);
+        response.setBody(JSON.stringify({ error: { message: message } }));
+    }
+
+    try {
+        var method = request.method || '';
+        var path = request.pathParams || {};
+
+        // GET /report — compliance-ready report export
+        if (method === 'GET') {
+            var runId = request.queryParams.run || null;
+            var limit = parseInt(request.queryParams.limit || '0', 10);
+            var rows = manager.generateReport(runId);
+            if (limit > 0 && rows.length > limit) {
+                rows = rows.slice(0, limit);
+            }
+            ok(rows);
+            return;
+        }
+
+        // POST /execute — action dispatch
+        if (method === 'POST') {
+            var body = request.body ? request.body.data : {};
+            if (!body) {
+                fail(400, 'Request body must be JSON');
+                return;
+            }
+
+            var action = body.action;
+            if (!action) {
+                fail(400, 'Missing "action" field');
+                return;
+            }
+
+            switch (action) {
+                case 'run':
+                    var summary = manager.runFullAudit({
+                        threshold_days: body.threshold_days,
+                        clear_previous: !!body.clear_previous
+                    });
+                    ok(summary);
+                    break;
+
+                case 'remediate':
+                    var task = manager.createRemediationTask({
+                        finding_sys_id: body.finding_sys_id,
+                        action: body.remediation_action,
+                        justification: body.justification
+                    });
+                    if (task.status === 'rejected' || task.status === 'error') {
+                        fail(400, task.reason || 'remediation failed');
+                    } else {
+                        ok(task);
+                    }
+                    break;
+
+                default:
+                    fail(400, 'Unknown action: ' + action);
+                    break;
+            }
+            return;
+        }
+
+        fail(405, 'Method not allowed');
+
+    } catch (e) {
+        gs.error('RoleHygiene REST: ' + e);
+        fail(500, 'Internal error: ' + e.message);
+    }
+
+})(request, response);
+
+]]></operation_script>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <consumes_customized>false</consumes_customized>
+    <name>report</name>
+    <operation_uri>/report</operation_uri>
+    <produces>application/json</produces>
+    <produces_customized>false</produces_customized>
+    <request_method>GET</request_method>
+    <web_service_definition>RoleHygiene Audit API</web_service_definition>
+    <operation_script><![CDATA[
+// RoleHygiene — REST API (Scripted REST)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Single consolidated endpoint with action dispatch. Read-only by design for
+// the audit surface; the only mutating action is `remediate`, which creates an
+// approval-gated task (never a direct security-state change).
+//
+// POST /api/x_snc_role_hygiene/audit/execute
+//   body: { action: "run"|"remediate", threshold_days?, clear_previous?, finding_sys_id?, remediation_action?, justification? }
+//
+// GET /api/x_snc_role_hygiene/audit/report?run=...
+//   query: run (optional sys_id of a run), limit (optional int)
+(function process(request, response) {
+
+    var manager = new RoleHygieneManager();
+
+    function ok(data) {
+        response.setStatus(200);
+        response.setBody(JSON.stringify({ result: data }));
+    }
+
+    function fail(status, message) {
+        response.setStatus(status);
+        response.setBody(JSON.stringify({ error: { message: message } }));
+    }
+
+    try {
+        var method = request.method || '';
+        var path = request.pathParams || {};
+
+        // GET /report — compliance-ready report export
+        if (method === 'GET') {
+            var runId = request.queryParams.run || null;
+            var limit = parseInt(request.queryParams.limit || '0', 10);
+            var rows = manager.generateReport(runId);
+            if (limit > 0 && rows.length > limit) {
+                rows = rows.slice(0, limit);
+            }
+            ok(rows);
+            return;
+        }
+
+        // POST /execute — action dispatch
+        if (method === 'POST') {
+            var body = request.body ? request.body.data : {};
+            if (!body) {
+                fail(400, 'Request body must be JSON');
+                return;
+            }
+
+            var action = body.action;
+            if (!action) {
+                fail(400, 'Missing "action" field');
+                return;
+            }
+
+            switch (action) {
+                case 'run':
+                    var summary = manager.runFullAudit({
+                        threshold_days: body.threshold_days,
+                        clear_previous: !!body.clear_previous
+                    });
+                    ok(summary);
+                    break;
+
+                case 'remediate':
+                    var task = manager.createRemediationTask({
+                        finding_sys_id: body.finding_sys_id,
+                        action: body.remediation_action,
+                        justification: body.justification
+                    });
+                    if (task.status === 'rejected' || task.status === 'error') {
+                        fail(400, task.reason || 'remediation failed');
+                    } else {
+                        ok(task);
+                    }
+                    break;
+
+                default:
+                    fail(400, 'Unknown action: ' + action);
+                    break;
+            }
+            return;
+        }
+
+        fail(405, 'Method not allowed');
+
+    } catch (e) {
+        gs.error('RoleHygiene REST: ' + e);
+        fail(500, 'Internal error: ' + e.message);
+    }
+
+})(request, response);
+
+]]></operation_script>
+  </sys_ws_operation>
+
+  <!-- ===================== SCHEDULED JOB ===================== -->
+
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>RoleHygiene weekly drift audit — runs the deterministic engine, persists findings, and captures a new entitlement snapshot for delta/creep comparison.</description>
+    <name>RoleHygiene Scheduled Audit</name>
+    <run_dayofweek>monday</run_dayofweek>
+    <run_dayofmonth/>
+    <run_monthly>false</run_monthly>
+    <run_period/>
+    <run_start>2026-09-17 05:00:00</run_start>
+    <run_time>05:00:00</run_time>
+    <run_type>weekly</run_type>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_scope>x_snc_role_hygiene</sys_scope>
+    <upgrade_safe>true</upgrade_safe>
+    <script><![CDATA[// RoleHygiene — scheduled weekly audit
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function scheduledAudit() {
+    try {
+        var manager = new RoleHygieneManager();
+        var summary = manager.runFullAudit({ clear_previous: true });
+        gs.info('RoleHygiene audit complete: dormant=' + summary.dormant +
+                ', creep=' + summary.creep + ', sod=' + summary.sod +
+                ', findings=' + summary.findings_created);
+    } catch (e) {
+        gs.error('RoleHygiene scheduled audit failed: ' + e);
+    }
+})();]]></script>
+  </sysauto_script>
+
+
+
+</unload>
