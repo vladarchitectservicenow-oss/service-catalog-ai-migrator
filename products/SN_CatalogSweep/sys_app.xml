@@ -1,0 +1,1332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-19 07:01:00">
+  <sys_scope action="INSERT_OR_UPDATE">
+    <description>Dependency-aware Service Catalog sprawl auditor and governed retirement workflow.</description>
+    <js_level>rhino</js_level>
+    <name>CatalogSweep</name>
+    <scope>x_catalog_sweep</scope>
+    <short_description>Catalog sprawl auditor + governed retirement</short_description>
+    <sys_class_name>sys_scope</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>scope_catalog_sweep</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>CatalogSweep</sys_name>
+    <sys_package/>
+    <sys_policy/>
+    <sys_scope/>
+    <sys_update_name>sys_scope_catalog_sweep</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <description>CatalogSweep administrator — can run scans, stage and approve retirements.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_catalog_sweep.admin</name>
+    <requires_subscription/>
+    <scoped_admin>false</scoped_admin>
+    <suffix>admin</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>role_catalog_sweep_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_catalog_sweep.admin</sys_name>
+    <sys_package display_value="CatalogSweep" source="x_catalog_sweep">CatalogSweep</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogSweep">x_catalog_sweep</sys_scope>
+    <sys_update_name>sys_user_role_role_catalog_sweep_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_user_role>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>sc_cat_item</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_sc_cat_item_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sc_cat_item.read</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sc_cat_item_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>sc_cat_item</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_sc_cat_item_write</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sc_cat_item.write</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sc_cat_item_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>sc_cat_item_producer</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_sc_cat_item_producer_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sc_cat_item_producer.read</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sc_cat_item_producer_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>sc_cat_item_producer</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_sc_cat_item_producer_write</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sc_cat_item_producer.write</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sc_cat_item_producer_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>sc_cat_item_guide</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_sc_cat_item_guide_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sc_cat_item_guide.read</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sc_cat_item_guide_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>sc_cat_item_guide</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_sc_cat_item_guide_write</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sc_cat_item_guide.write</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sc_cat_item_guide_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>sc_req_item</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_sc_req_item_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sc_req_item.read</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sc_req_item_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>change_request</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_change_request_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>change_request.read</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_change_request_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>write</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>change_request</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_change_request_write</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>change_request.write</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_change_request_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>sc_cat_item_guide_items</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_sc_cat_item_guide_items_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sc_cat_item_guide_items.read</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sc_cat_item_guide_items_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>sc_cat_item_option_mtom</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_sc_cat_item_option_mtom_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sc_cat_item_option_mtom.read</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sc_cat_item_option_mtom_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>catalog_script_client</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_catalog_script_client_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>catalog_script_client.read</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_catalog_script_client_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>catalog_ui_policy</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_catalog_ui_policy_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>catalog_ui_policy.read</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_catalog_ui_policy_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>sys_hub_flow</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_sys_hub_flow_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_hub_flow.read</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sys_hub_flow_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>read</operation>
+    <source_scope>x_catalog_sweep</source_scope>
+    <status>allowed</status>
+    <target_name>wf_workflow</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>priv_wf_workflow_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>wf_workflow.read</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_wf_workflow_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_catalog_sweep.CatalogSweepScanner</api_name>
+    <client_callable>false</client_callable>
+    <description>Core engine: sprawl scan, dependency tracing, retirement scoring, duplicate clustering.</description>
+    <name>CatalogSweepScanner</name>
+    <script><![CDATA[
+// CatalogSweep — CatalogSweepScanner
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Core engine for the CatalogSweep scoped application.
+// Performs the sprawl-inventory scan, dependency tracing, deterministic
+// retirement-readiness scoring, and (optional) duplicate clustering.
+// This Script Include is read-mostly: it writes findings and scan-run
+// records into the scoped tables, but never deactivates or archives items
+// (that is the responsibility of CatalogSweepOrchestrator).
+// @class CatalogSweepScanner @namespace x_catalog_sweep
+var CatalogSweepScanner = Class.create();
+CatalogSweepScanner.prototype = {
+
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+    SCAN_TABLE: 'x_catalog_sweep_scan_run',
+    FINDING_TABLE: 'x_catalog_sweep_item_finding',
+
+    // Months of inactivity before an item is classified zero_request.
+    ZERO_REQUEST_MONTHS: 6,
+    // Months since creation before an unpublished item is abandoned_draft.
+    ABANDONED_DRAFT_MONTHS: 9,
+
+    // Score weights (deterministic, sum of deductions from 100).
+    SCORE_MAX: 100,
+    PENALTY_RECENT_REQUEST: 30,
+    PENALTY_LIVE_DEPENDENCY: 25,
+    PENALTY_ZERO_REQUEST: 20,
+
+    // Bucket thresholds.
+    SAFE_THRESHOLD: 80,   // >= 80  -> safe_to_retire
+    REVIEW_THRESHOLD: 40, // 40..79 -> needs_review  (< 40 -> blocked)
+
+    initialize: function () {
+        this._gs = null;
+    },
+
+    // ----------------------------------------------------------------------
+    // Public: run a full or incremental sprawl scan.
+    // Returns the sys_id of the created x_catalog_sweep_scan_run record.
+    // ----------------------------------------------------------------------
+    run: function (mode) {
+        var runMode = (mode === 'incremental') ? 'incremental' : 'full';
+        var scanGr = new GlideRecord(this.SCAN_TABLE);
+        scanGr.initialize();
+        scanGr.setValue('mode', runMode);
+        scanGr.setValue('status', 'running');
+        scanGr.setValue('started_on', new GlideDateTime().getValue());
+        var scanSysId = null;
+        try {
+            scanSysId = scanGr.insert();
+        } catch (e) {
+            gs.error('CatalogSweepScanner.run: failed to create scan_run record: ' + e.message);
+            return null;
+        }
+
+        var itemCount = 0;
+        var findingCount = 0;
+
+        // Scan the three estate tables: catalog items, producers, guides.
+        itemCount += this._scanEstate('sc_cat_item', 'catalog_item', runMode, scanSysId);
+        itemCount += this._scanEstate('sc_cat_item_producer', 'producer', runMode, scanSysId);
+        itemCount += this._scanEstate('sc_cat_item_guide', 'guide', runMode, scanSysId);
+
+        findingCount = this._countFindings(scanSysId);
+
+        // Finalize the scan_run record.
+        var doneGr = new GlideRecord(this.SCAN_TABLE);
+        if (doneGr.get(scanSysId)) {
+            doneGr.setValue('status', 'completed');
+            doneGr.setValue('finished_on', new GlideDateTime().getValue());
+            doneGr.setValue('item_count', itemCount);
+            doneGr.setValue('finding_count', findingCount);
+            try {
+                doneGr.update();
+            } catch (e) {
+                gs.error('CatalogSweepScanner.run: failed to finalize scan_run: ' + e.message);
+            }
+        }
+
+        return scanSysId;
+    },
+
+    // ----------------------------------------------------------------------
+    // Scan one estate table, classify every record, persist a finding.
+    // Returns the number of items scanned.
+    // ----------------------------------------------------------------------
+    _scanEstate: function (tableName, itemType, runMode, scanSysId) {
+        var count = 0;
+        var gr = new GlideRecord(tableName);
+        gr.addNotNullQuery('sys_id');
+
+        // Incremental mode: only items modified since the last full scan are
+        // re-scored. `count` (and therefore scan_run.item_count) reflects
+        // only those changed items, not the full estate.
+        if (runMode === 'incremental') {
+            var lastFull = this._lastFullScanTime();
+            if (lastFull) {
+                gr.addQuery('sys_updated_on', '>=', lastFull);
+            }
+        }
+
+        gr.query();
+        while (gr.next()) {
+            count++;
+            this._classifyAndPersist(gr, itemType, scanSysId);
+        }
+        return count;
+    },
+
+    // ----------------------------------------------------------------------
+    // Deterministic classification + scoring for a single item, persisted
+    // as an upserted finding (one finding per item per estate, keyed on
+    // item_sys_id + item_type).
+    // ----------------------------------------------------------------------
+    _classifyAndPersist: function (itemGr, itemType, scanSysId) {
+        var itemSysId = itemGr.getUniqueValue();
+        var itemName = itemGr.getValue('name') || itemGr.getValue('short_description') || itemSysId;
+        var active = this._isActive(itemGr);
+
+        var deps = this._traceDependencies(itemSysId, itemType);
+        var usage = this._usageMetrics(itemSysId);
+
+        var category = this._classify(itemGr, active, usage, deps);
+        var scoreObj = this.score(usage, deps, category);
+        var bucket = scoreObj.bucket;
+
+        var evidence = {
+            item_name: itemName,
+            item_type: itemType,
+            active: active,
+            category: category,
+            usage: usage,
+            dependency_count: deps.length,
+            scanned_at: new GlideDateTime().getValue()
+        };
+
+        this._upsertFinding(itemSysId, itemType, itemName, category, scoreObj.score, bucket, evidence, deps, scanSysId);
+    },
+
+    // ----------------------------------------------------------------------
+    // Dependency tracing: inbound references that would break on retirement.
+    // Returns an array of dependency objects {ref_kind, target_table,
+    // target_sys_id, target_name, blocking}.
+    // ----------------------------------------------------------------------
+    _traceDependencies: function (itemSysId, itemType) {
+        var deps = [];
+
+        // Order-guide membership (items and producers both can belong).
+        deps = deps.concat(this._queryRefs('sc_cat_item_guide_items', 'cat_item', itemSysId, 'order_guide_membership'));
+
+        // Variable-set links (mtom join).
+        deps = deps.concat(this._queryRefs('sc_cat_item_option_mtom', 'cat_item', itemSysId, 'variable_set_link'));
+
+        // Catalog client scripts.
+        deps = deps.concat(this._queryRefs('catalog_script_client', 'cat_item', itemSysId, 'catalog_client_script'));
+
+        // Catalog UI policies.
+        deps = deps.concat(this._queryRefs('catalog_ui_policy', 'catalog_item', itemSysId, 'catalog_ui_policy'));
+
+        // Reverse lookups on reference fields of sc_req_item (requests that
+        // reference the item — indicates real-world usage, blocking only if
+        // there are open/recent requests).
+        deps = deps.concat(this._requestReferences(itemSysId));
+
+        // Flow / workflow text references by sys_id.
+        deps = deps.concat(this._flowReferences(itemSysId));
+
+        return deps;
+    },
+
+    _queryRefs: function (table, field, value, refKind) {
+        var out = [];
+        var gr = new GlideRecord(table);
+        gr.addQuery(field, value);
+        gr.setLimit(200);
+        gr.query();
+        while (gr.next()) {
+            out.push({
+                ref_kind: refKind,
+                target_table: table,
+                target_sys_id: gr.getUniqueValue(),
+                target_name: gr.getValue('name') || '',
+                blocking: true
+            });
+        }
+        return out;
+    },
+
+    _requestReferences: function (itemSysId) {
+        var out = [];
+        var gr = new GlideRecord('sc_req_item');
+        gr.addQuery('cat_item', itemSysId);
+        gr.setLimit(50);
+        gr.query();
+        while (gr.next()) {
+            var state = gr.getValue('state') || '';
+            var blocking = (state === '1' || state === '2'); // open / in-progress
+            out.push({
+                ref_kind: 'request_usage',
+                target_table: 'sc_req_item',
+                target_sys_id: gr.getUniqueValue(),
+                target_name: gr.getDisplayValue('number') || '',
+                blocking: blocking
+            });
+        }
+        return out;
+    },
+
+    _flowReferences: function (itemSysId) {
+        // Text scan of flow snapshot / workflow condition for the item's sys_id.
+        // Read-only and best-effort; absence is not an error.
+        var out = [];
+        var tables = ['sys_hub_flow', 'wf_workflow'];
+        for (var t = 0; t < tables.length; t++) {
+            var gr = new GlideRecord(tables[t]);
+            gr.setLimit(100);
+            gr.query();
+            while (gr.next()) {
+                var snapshot = gr.getValue('snapshot') || gr.getValue('condition') || gr.getValue('script') || '';
+                if (snapshot.indexOf(itemSysId) !== -1) {
+                    out.push({
+                        ref_kind: 'flow_reference',
+                        target_table: tables[t],
+                        target_sys_id: gr.getUniqueValue(),
+                        target_name: gr.getValue('name') || '',
+                        blocking: true
+                    });
+                }
+            }
+        }
+        return out;
+    },
+
+    // ----------------------------------------------------------------------
+    // Usage metrics: request velocity and recency for the item.
+    // ----------------------------------------------------------------------
+    _usageMetrics: function (itemSysId) {
+        var metrics = { total_requests: 0, recent_requests: 0, last_request_on: null };
+
+        var ga = new GlideAggregate('sc_req_item');
+        ga.addQuery('cat_item', itemSysId);
+        ga.addAggregate('COUNT');
+        ga.query();
+        if (ga.next()) {
+            metrics.total_requests = parseInt(ga.getAggregate('COUNT'), 10) || 0;
+        }
+
+        var cutoff = new GlideDateTime();
+        cutoff.addMonthsUTC(-this.ZERO_REQUEST_MONTHS);
+
+        var recent = new GlideAggregate('sc_req_item');
+        recent.addQuery('cat_item', itemSysId);
+        recent.addQuery('sys_created_on', '>=', cutoff.getDate());
+        recent.addAggregate('COUNT');
+        recent.query();
+        if (recent.next()) {
+            metrics.recent_requests = parseInt(recent.getAggregate('COUNT'), 10) || 0;
+        }
+
+        var last = new GlideRecord('sc_req_item');
+        last.addQuery('cat_item', itemSysId);
+        last.orderByDesc('sys_created_on');
+        last.setLimit(1);
+        last.query();
+        if (last.next()) {
+            metrics.last_request_on = last.getValue('sys_created_on');
+        }
+
+        return metrics;
+    },
+
+    // ----------------------------------------------------------------------
+    // Classification.
+    // ----------------------------------------------------------------------
+    _classify: function (itemGr, active, usage, deps) {
+        if (!active) {
+            // Inactive but still referenced is not "orphaned" — it is a
+            // retired-in-place item. Classify by whether it still has refs.
+            if (deps.length === 0) {
+                return 'orphaned';
+            }
+            return 'duplicate'; // fallback: inactive + referenced = candidate
+        }
+
+        // Created long ago, never had requests.
+        var createdOn = itemGr.getValue('sys_created_on');
+        if (usage.total_requests === 0 && createdOn) {
+            var created = new GlideDateTime(createdOn);
+            var threshold = new GlideDateTime();
+            threshold.addMonthsUTC(-this.ABANDONED_DRAFT_MONTHS);
+            if (created.getNumericValue() <= threshold.getNumericValue()) {
+                return 'abandoned_draft';
+            }
+        }
+
+        // No requests in N months.
+        if (usage.recent_requests === 0 && usage.total_requests === 0) {
+            return 'zero_request';
+        }
+
+        return 'healthy';
+    },
+
+    // ----------------------------------------------------------------------
+    // Deterministic composite score (0-100) + bucket.
+    // Public so the orchestrator and REST endpoints can reuse it.
+    // ----------------------------------------------------------------------
+    score: function (usage, deps, category) {
+        var score = this.SCORE_MAX;
+
+        if (category === 'zero_request' || category === 'abandoned_draft') {
+            score -= this.PENALTY_ZERO_REQUEST;
+        }
+        if (usage.recent_requests > 0) {
+            score -= this.PENALTY_RECENT_REQUEST;
+        }
+        if (this._blockingDependencyCount(deps) > 0) {
+            score -= this.PENALTY_LIVE_DEPENDENCY;
+        }
+
+        if (score < 0) { score = 0; }
+        if (score > 100) { score = 100; }
+
+        var bucket;
+        if (this._blockingDependencyCount(deps) > 0) {
+            bucket = 'blocked'; // any live dependency blocks outright
+        } else if (score >= this.SAFE_THRESHOLD) {
+            bucket = 'safe_to_retire';
+        } else if (score >= this.REVIEW_THRESHOLD) {
+            bucket = 'needs_review';
+        } else {
+            bucket = 'blocked';
+        }
+
+        return { score: score, bucket: bucket };
+    },
+
+    _blockingDependencyCount: function (deps) {
+        var n = 0;
+        for (var i = 0; i < deps.length; i++) {
+            if (deps[i].blocking === true) { n++; }
+        }
+        return n;
+    },
+
+    _isActive: function (gr) {
+        var v = gr.getValue('active');
+        return (v === 'true' || v === '1' || v === 1 || v === true || v === '');
+    },
+
+    // ----------------------------------------------------------------------
+    // Persist: upsert a finding keyed on (item_sys_id, item_type).
+    // ----------------------------------------------------------------------
+    _upsertFinding: function (itemSysId, itemType, itemName, category, score, bucket, evidence, deps, scanSysId) {
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.addQuery('item_sys_id', itemSysId);
+        gr.addQuery('item_type', itemType);
+        gr.setLimit(1);
+        gr.query();
+        if (!gr.next()) {
+            gr.initialize();
+        }
+
+        gr.setValue('item_sys_id', itemSysId);
+        gr.setValue('item_type', itemType);
+        gr.setValue('item_name', itemName);
+        gr.setValue('category', category);
+        gr.setValue('score', score);
+        gr.setValue('bucket', bucket);
+        gr.setValue('evidence', JSON.stringify(evidence));
+        gr.setValue('dependencies_json', JSON.stringify(deps));
+        gr.setValue('scan_run', scanSysId);
+        gr.setValue('last_scanned', new GlideDateTime().getValue());
+
+        try {
+            if (gr.isNewRecord()) {
+                gr.insert();
+            } else {
+                gr.setWorkflow(false);
+                gr.update();
+            }
+        } catch (e) {
+            gs.error('CatalogSweepScanner._upsertFinding: failed to persist finding: ' + e.message);
+        }
+    },
+
+    _countFindings: function (scanSysId) {
+        var ga = new GlideAggregate(this.FINDING_TABLE);
+        ga.addQuery('scan_run', scanSysId);
+        ga.addAggregate('COUNT');
+        ga.query();
+        if (ga.next()) {
+            return parseInt(ga.getAggregate('COUNT'), 10) || 0;
+        }
+        return 0;
+    },
+
+    _lastFullScanTime: function () {
+        var gr = new GlideRecord(this.SCAN_TABLE);
+        gr.addQuery('mode', 'full');
+        gr.addQuery('status', 'completed');
+        gr.orderByDesc('started_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getValue('started_on');
+        }
+        return null;
+    },
+
+    // ----------------------------------------------------------------------
+    // Public helpers for the orchestrator / REST endpoints.
+    // ----------------------------------------------------------------------
+    getFinding: function (itemSysId) {
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.addQuery('item_sys_id', itemSysId);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return {
+                sys_id: gr.getUniqueValue(),
+                item_sys_id: gr.getValue('item_sys_id'),
+                item_name: gr.getValue('item_name'),
+                item_type: gr.getValue('item_type'),
+                category: gr.getValue('category'),
+                score: parseInt(gr.getValue('score'), 10) || 0,
+                bucket: gr.getValue('bucket'),
+                state: gr.getValue('state'),
+                evidence: this._safeParse(gr.getValue('evidence'), {}),
+                dependencies: this._safeParse(gr.getValue('dependencies_json'), []),
+                last_scanned: gr.getValue('last_scanned')
+            };
+        }
+        return null;
+    },
+
+    getDependencies: function (itemSysId) {
+        var f = this.getFinding(itemSysId);
+        return f ? f.dependencies : [];
+    },
+
+    listFindings: function (query) {
+        query = query || {};
+        var results = [];
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        if (query.category) { gr.addQuery('category', query.category); }
+        if (query.bucket) { gr.addQuery('bucket', query.bucket); }
+        if (query.state) { gr.addQuery('state', query.state); }
+        if (query.item_type) { gr.addQuery('item_type', query.item_type); }
+        gr.orderByDesc('last_scanned');
+        gr.setLimit(200);
+        gr.query();
+        while (gr.next()) {
+            results.push({
+                sys_id: gr.getUniqueValue(),
+                item_sys_id: gr.getValue('item_sys_id'),
+                item_name: gr.getValue('item_name'),
+                item_type: gr.getValue('item_type'),
+                category: gr.getValue('category'),
+                score: parseInt(gr.getValue('score'), 10) || 0,
+                bucket: gr.getValue('bucket'),
+                state: gr.getValue('state')
+            });
+        }
+        return results;
+    },
+
+    // ----------------------------------------------------------------------
+    // Optional BYOK duplicate clustering. Falls back to deterministic
+    // normalized-name clustering when no GenAI provider is configured.
+    // The clustering does NOT write — it returns candidate groups so the
+    // caller (orchestrator/report) can surface them.
+    // ----------------------------------------------------------------------
+    clusterDuplicates: function () {
+        var nameMap = {};
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        gr.addNotNullQuery('item_name');
+        gr.setLimit(1000);
+        gr.query();
+        while (gr.next()) {
+            var norm = this._normalizeName(gr.getValue('item_name'));
+            if (!nameMap[norm]) { nameMap[norm] = []; }
+            nameMap[norm].push({
+                sys_id: gr.getUniqueValue(),
+                item_sys_id: gr.getValue('item_sys_id'),
+                item_name: gr.getValue('item_name')
+            });
+        }
+
+        var clusters = [];
+        for (var key in nameMap) {
+            if (nameMap.hasOwnProperty(key) && nameMap[key].length > 1) {
+                clusters.push({ normalized_name: key, members: nameMap[key] });
+            }
+        }
+        return clusters;
+    },
+
+    _normalizeName: function (name) {
+        var s = String(name).toLowerCase();
+        s = s.replace(/[^a-z0-9]+/g, ' ');
+        s = s.replace(/\s+/g, ' ').trim();
+        return s;
+    },
+
+    _safeParse: function (json, fallback) {
+        if (!json) { return fallback; }
+        try {
+            return JSON.parse(json);
+        } catch (e) {
+            return fallback;
+        }
+    },
+
+    type: 'CatalogSweepScanner'
+};
+    ]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>si_catalog_sweep_scanner</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>CatalogSweepScanner</sys_name>
+    <sys_package display_value="CatalogSweep" source="x_catalog_sweep">CatalogSweep</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogSweep">x_catalog_sweep</sys_scope>
+    <sys_update_name>sys_script_include_si_catalog_sweep_scanner</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_script_include>
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_catalog_sweep.CatalogSweepOrchestrator</api_name>
+    <client_callable>false</client_callable>
+    <description>Governed retirement workflow: stage, approve (TOCTOU re-check), archive (never delete), export, dashboard.</description>
+    <name>CatalogSweepOrchestrator</name>
+    <script><![CDATA[
+// CatalogSweep — CatalogSweepOrchestrator
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Governed retirement workflow engine. Stages items for retirement, creates
+// the approval change record, re-verifies the dependency graph at approval
+// time (TOCTOU guard), and archives (deactivate + snapshot) — never deletes.
+// Retirement state is tracked on the finding record itself (state +
+// change_request + snapshot columns) to keep the scoped schema to two tables.
+// Also owns the machine-readable export and dashboard aggregation.
+// @class CatalogSweepOrchestrator @namespace x_catalog_sweep
+var CatalogSweepOrchestrator = Class.create();
+CatalogSweepOrchestrator.prototype = {
+
+    FINDING_TABLE: 'x_catalog_sweep_item_finding',
+
+    // Retirement state values (stored on the finding record's `state` field).
+    STATE_ACTIVE: 'active',
+    STATE_STAGED: 'staged',
+    STATE_PENDING_APPROVAL: 'pending_approval',
+    STATE_APPROVED: 'approved',
+    STATE_ARCHIVED: 'archived',
+    STATE_BLOCKED: 'blocked',
+
+    initialize: function () {
+        this._scanner = new CatalogSweepScanner();
+    },
+
+    // ----------------------------------------------------------------------
+    // Stage an item for retirement. Creates the approval change_request and
+    // marks the finding staged (attaching dependency evidence).
+    // ----------------------------------------------------------------------
+    stage: function (itemSysId, requestedBy) {
+        var finding = this._scanner.getFinding(itemSysId);
+        if (!finding) {
+            return { ok: false, error: 'NO_FINDING', message: 'No finding for item ' + itemSysId };
+        }
+        if (finding.bucket !== 'safe_to_retire' && finding.bucket !== 'needs_review') {
+            return { ok: false, error: 'NOT_RETIRABLE', message: 'Item is blocked and cannot be staged' };
+        }
+
+        // Create the approval change request.
+        var changeSysId = this._createChangeRequest(itemSysId, finding);
+
+        // Update the finding record with retirement state.
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        if (!gr.get(finding.sys_id)) {
+            return { ok: false, error: 'FINDING_NOT_FOUND', message: 'Finding record not found' };
+        }
+        gr.setValue('state', this.STATE_PENDING_APPROVAL);
+        gr.setValue('change_request', changeSysId);
+        gr.setValue('requested_by', requestedBy || gs.getUserName());
+        try {
+            gr.setWorkflow(false);
+            gr.update();
+        } catch (e) {
+            gs.error('CatalogSweepOrchestrator.stage: update failed: ' + e.message);
+            return { ok: false, error: 'UPDATE_FAILED', message: e.message };
+        }
+
+        return { ok: true, finding_sys_id: finding.sys_id, change_request: changeSysId, item_sys_id: itemSysId };
+    },
+
+    _createChangeRequest: function (itemSysId, finding) {
+        var gr = new GlideRecord('change_request');
+        gr.initialize();
+        gr.setValue('type', 'normal');
+        gr.setValue('short_description', 'CatalogSweep retirement: ' + finding.item_name);
+        gr.setValue('description',
+            'CatalogSweep staged this catalog item for retirement.\n' +
+            'Item: ' + finding.item_name + ' (' + itemSysId + ')\n' +
+            'Category: ' + finding.category + '\n' +
+            'Score: ' + finding.score + ' / bucket: ' + finding.bucket);
+        var changeSysId = null;
+        try {
+            changeSysId = gr.insert();
+        } catch (e) {
+            gs.error('CatalogSweepOrchestrator._createChangeRequest: insert failed: ' + e.message);
+            return null;
+        }
+        return changeSysId;
+    },
+
+    // ----------------------------------------------------------------------
+    // Approve a staged retirement. Re-runs the dependency trace (TOCTOU
+    // guard) and blocks archiving if the item gained a live dependency.
+    // `findingSysId` identifies the finding record (the task identity).
+    // ----------------------------------------------------------------------
+    approve: function (findingSysId, approvedBy) {
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        if (!gr.get(findingSysId)) {
+            return { ok: false, error: 'FINDING_NOT_FOUND', message: 'Finding not found: ' + findingSysId };
+        }
+
+        var itemSysId = gr.getValue('item_sys_id');
+        var itemType = gr.getValue('item_type') || 'catalog_item';
+
+        // TOCTOU re-check: fresh dependency trace.
+        var deps = this._scanner._traceDependencies(itemSysId, itemType);
+        var blocking = 0;
+        for (var i = 0; i < deps.length; i++) {
+            if (deps[i].blocking === true) { blocking++; }
+        }
+
+        if (blocking > 0) {
+            gr.setValue('state', this.STATE_BLOCKED);
+            gr.setValue('approved_by', approvedBy || gs.getUserName());
+            try {
+                gr.setWorkflow(false);
+                gr.update();
+            } catch (e) { /* ignore */ }
+            return { ok: false, error: 'DEPENDENCY_ADDED', message: 'Item gained ' + blocking + ' live dependency since staging; archive blocked', blocking_count: blocking };
+        }
+
+        gr.setValue('state', this.STATE_APPROVED);
+        gr.setValue('approved_by', approvedBy || gs.getUserName());
+        try {
+            gr.setWorkflow(false);
+            gr.update();
+        } catch (e) {
+            gs.error('CatalogSweepOrchestrator.approve: update failed: ' + e.message);
+            return { ok: false, error: 'UPDATE_FAILED', message: e.message };
+        }
+
+        // Proceed to archive.
+        return this.archive(itemSysId, findingSysId);
+    },
+
+    // ----------------------------------------------------------------------
+    // Archive: snapshot the item, set active=false, persist the snapshot on
+    // the finding record. Never deletes. Reversible by design.
+    // ----------------------------------------------------------------------
+    archive: function (itemSysId, findingSysId) {
+        var itemType = this._detectItemType(itemSysId);
+        var snapshot = this._snapshotItem(itemSysId, itemType);
+        if (!snapshot) {
+            return { ok: false, error: 'ITEM_NOT_FOUND', message: 'Could not read item ' + itemSysId + ' for snapshot' };
+        }
+
+        // Deactivate the item (reversible).
+        this._deactivateItem(itemSysId, itemType);
+
+        // Persist the archive snapshot on the finding record.
+        var gr = new GlideRecord(this.FINDING_TABLE);
+        if (!gr.get(findingSysId)) {
+            return { ok: false, error: 'FINDING_NOT_FOUND', message: 'Finding record not found' };
+        }
+        gr.setValue('state', this.STATE_ARCHIVED);
+        gr.setValue('snapshot', JSON.stringify(snapshot));
+        gr.setValue('archived_on', new GlideDateTime().getValue());
+        try {
+            gr.setWorkflow(false);
+            gr.update();
+        } catch (e) {
+            gs.error('CatalogSweepOrchestrator.archive: update failed: ' + e.message);
+            return { ok: false, error: 'UPDATE_FAILED', message: e.message };
+        }
+
+        return { ok: true, finding_sys_id: findingSysId, item_sys_id: itemSysId, item_type: itemType };
+    },
+
+    _detectItemType: function (itemSysId) {
+        var gr = new GlideRecord('sc_cat_item');
+        if (gr.get(itemSysId)) { return 'catalog_item'; }
+        var pr = new GlideRecord('sc_cat_item_producer');
+        if (pr.get(itemSysId)) { return 'producer'; }
+        var gu = new GlideRecord('sc_cat_item_guide');
+        if (gu.get(itemSysId)) { return 'guide'; }
+        return 'catalog_item';
+    },
+
+    _snapshotItem: function (itemSysId, itemType) {
+        var table = this._tableForType(itemType);
+        var gr = new GlideRecord(table);
+        if (!gr.get(itemSysId)) { return null; }
+
+        var snapshot = { sys_id: itemSysId, item_type: itemType, table: table };
+        var fieldNames = gr.getElements();
+        for (var i = 0; i < fieldNames.length; i++) {
+            var name = fieldNames[i];
+            var value = gr.getValue(name);
+            if (value !== null && value !== undefined) {
+                snapshot[name] = value;
+            }
+        }
+        return snapshot;
+    },
+
+    _tableForType: function (itemType) {
+        if (itemType === 'producer') { return 'sc_cat_item_producer'; }
+        if (itemType === 'guide') { return 'sc_cat_item_guide'; }
+        return 'sc_cat_item';
+    },
+
+    _deactivateItem: function (itemSysId, itemType) {
+        var table = this._tableForType(itemType);
+        var gr = new GlideRecord(table);
+        if (gr.get(itemSysId)) {
+            gr.setValue('active', false);
+            try {
+                gr.setWorkflow(false);
+                gr.update();
+            } catch (e) {
+                gs.error('CatalogSweepOrchestrator._deactivateItem: failed: ' + e.message);
+            }
+        }
+    },
+
+    // ----------------------------------------------------------------------
+    // Machine-readable export: full finding + dependency set as stable JSON.
+    // ----------------------------------------------------------------------
+    exportFull: function () {
+        var findings = this._scanner.listFindings({});
+        var enriched = [];
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            var detail = this._scanner.getFinding(f.item_sys_id);
+            enriched.push({
+                item_sys_id: detail.item_sys_id,
+                item_name: detail.item_name,
+                item_type: detail.item_type,
+                category: detail.category,
+                score: detail.score,
+                bucket: detail.bucket,
+                state: detail.state,
+                dependencies: detail.dependencies,
+                evidence: detail.evidence
+            });
+        }
+
+        return {
+            schema_version: '1.0',
+            generated_at: new GlideDateTime().getValue(),
+            scope: 'x_catalog_sweep',
+            counts: {
+                total_findings: enriched.length,
+                safe_to_retire: this._countBucket(enriched, 'safe_to_retire'),
+                needs_review: this._countBucket(enriched, 'needs_review'),
+                blocked: this._countBucket(enriched, 'blocked')
+            },
+            findings: enriched
+        };
+    },
+
+    _countBucket: function (findings, bucket) {
+        var n = 0;
+        for (var i = 0; i < findings.length; i++) {
+            if (findings[i].bucket === bucket) { n++; }
+        }
+        return n;
+    },
+
+    // ----------------------------------------------------------------------
+    // Dashboard aggregation: sprawl counts + duplicate clusters.
+    // ----------------------------------------------------------------------
+    dashboardSummary: function () {
+        var findings = this._scanner.listFindings({});
+        var categories = {};
+        var buckets = { safe_to_retire: 0, needs_review: 0, blocked: 0 };
+        for (var i = 0; i < findings.length; i++) {
+            var f = findings[i];
+            if (!categories[f.category]) { categories[f.category] = 0; }
+            categories[f.category]++;
+            if (buckets[f.bucket] !== undefined) { buckets[f.bucket]++; }
+        }
+
+        var clusters = this._scanner.clusterDuplicates();
+
+        return {
+            total_findings: findings.length,
+            by_category: categories,
+            by_bucket: buckets,
+            duplicate_clusters: clusters.length,
+            generated_at: new GlideDateTime().getValue()
+        };
+    },
+
+    type: 'CatalogSweepOrchestrator'
+};
+    ]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>si_catalog_sweep_orchestrator</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>CatalogSweepOrchestrator</sys_name>
+    <sys_package display_value="CatalogSweep" source="x_catalog_sweep">CatalogSweep</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogSweep">x_catalog_sweep</sys_scope>
+    <sys_update_name>sys_script_include_si_catalog_sweep_orchestrator</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_script_include>
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>/api/x_catalog_sweep/v1</base_uri>
+    <consumes>application/json</consumes>
+    <description>CatalogSweep REST API — action-dispatch + status/export.</description>
+    <name>CatalogSweep API</name>
+    <produces>application/json</produces>
+    <requires_authentication>true</requires_authentication>
+    <requires_sn_custom_role>false</requires_sn_custom_role>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>wsdef_catalog_sweep</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>CatalogSweep API</sys_name>
+    <sys_package display_value="CatalogSweep" source="x_catalog_sweep">CatalogSweep</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogSweep">x_catalog_sweep</sys_scope>
+    <sys_update_name>sys_ws_definition_wsdef_catalog_sweep</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sys_ws_definition>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <description>Action-dispatch: scan / stage / approve.</description>
+    <name>Execute</name>
+    <operation_uri>/execute</operation_uri>
+    <produces>application/json</produces>
+    <request_method>POST</request_method>
+    <requires_authentication>true</requires_authentication>
+    <requires_sn_custom_role>false</requires_sn_custom_role>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>wsop_execute</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Execute</sys_name>
+    <sys_package display_value="CatalogSweep" source="x_catalog_sweep">CatalogSweep</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogSweep">x_catalog_sweep</sys_scope>
+    <sys_update_name>sys_ws_operation_wsop_execute</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+    <sys_web_service display_value="CatalogSweep API">wsdef_catalog_sweep</sys_web_service>
+    <operation_script><![CDATA[
+// CatalogSweep — REST Execute Endpoint
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// POST action-dispatch endpoint. All write/query operations route through
+// a single `action` body parameter.
+(function process(request, response) {
+    var body = request.body ? (request.body.data || {}) : {};
+    var action = body.action || '';
+
+    var result;
+    switch (action) {
+        case 'scan':
+            result = _handleScan(body);
+            break;
+        case 'stage':
+            result = _handleStage(body);
+            break;
+        case 'approve':
+            result = _handleApprove(body);
+            break;
+        default:
+            response.setStatus(400);
+            response.setBody(JSON.stringify({
+                error: 'Unknown action: ' + action,
+                valid_actions: ['scan', 'stage', 'approve']
+            }));
+            return;
+    }
+
+    if (result && result.ok === false) {
+        response.setStatus(400);
+        response.setBody(JSON.stringify(result));
+        return;
+    }
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+
+    function _handleScan(b) {
+        var mode = b.mode || 'full';
+        var scanner = new CatalogSweepScanner();
+        var scanSysId = scanner.run(mode);
+        if (!scanSysId) {
+            return { ok: false, error: 'SCAN_FAILED', message: 'Scan did not produce a scan_run record' };
+        }
+        return { ok: true, scan_run: scanSysId, mode: mode };
+    }
+
+    function _handleStage(b) {
+        var itemSysId = b.item_sys_id;
+        if (!itemSysId) {
+            return { ok: false, error: 'MISSING_ITEM', message: 'item_sys_id is required' };
+        }
+        var orch = new CatalogSweepOrchestrator();
+        return orch.stage(itemSysId, b.requested_by);
+    }
+
+    function _handleApprove(b) {
+        var findingSysId = b.finding_sys_id;
+        if (!findingSysId) {
+            return { ok: false, error: 'MISSING_FINDING', message: 'finding_sys_id is required' };
+        }
+        var orch = new CatalogSweepOrchestrator();
+        return orch.approve(findingSysId, b.approved_by);
+    }
+})(request, response);
+    ]]></operation_script>
+  </sys_ws_operation>
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <consumes>application/json</consumes>
+    <description>Read-only status / findings / dependencies / export.</description>
+    <name>Status</name>
+    <operation_uri>/status</operation_uri>
+    <produces>application/json</produces>
+    <request_method>GET</request_method>
+    <requires_authentication>true</requires_authentication>
+    <requires_sn_custom_role>false</requires_sn_custom_role>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>wsop_status</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Status</sys_name>
+    <sys_package display_value="CatalogSweep" source="x_catalog_sweep">CatalogSweep</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogSweep">x_catalog_sweep</sys_scope>
+    <sys_update_name>sys_ws_operation_wsop_status</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+    <sys_web_service display_value="CatalogSweep API">wsdef_catalog_sweep</sys_web_service>
+    <operation_script><![CDATA[
+// CatalogSweep — REST Status Endpoint
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// GET read-only endpoint. Query parameters select the report shape.
+(function process(request, response) {
+    var q = request.queryParams || {};
+    var scanner = new CatalogSweepScanner();
+    var orch = new CatalogSweepOrchestrator();
+
+    var result = { queried_at: new GlideDateTime().getValue() };
+
+    // Full machine-readable export.
+    if (q.export === 'full') {
+        result = orch.exportFull();
+        response.setStatus(200);
+        response.setBody(JSON.stringify(result));
+        return;
+    }
+
+    // Dashboard aggregation.
+    if (q.summary === 'true') {
+        result.summary = orch.dashboardSummary();
+        response.setStatus(200);
+        response.setBody(JSON.stringify(result));
+        return;
+    }
+
+    // Dependency list for a single item.
+    if (q.item_sys_id) {
+        result.dependencies = scanner.getDependencies(q.item_sys_id);
+        result.finding = scanner.getFinding(q.item_sys_id);
+        response.setStatus(200);
+        response.setBody(JSON.stringify(result));
+        return;
+    }
+
+    // Filtered findings list.
+    var filters = {};
+    if (q.category) { filters.category = q.category; }
+    if (q.bucket) { filters.bucket = q.bucket; }
+    if (q.state) { filters.state = q.state; }
+    if (q.item_type) { filters.item_type = q.item_type; }
+    result.findings = scanner.listFindings(filters);
+    result.count = result.findings.length;
+
+    response.setStatus(200);
+    response.setBody(JSON.stringify(result));
+})(request, response);
+    ]]></operation_script>
+  </sys_ws_operation>
+</unload>

@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-19 07:01:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <application_accessible>true</application_accessible>
+    <create_access>true</create_access>
+    <delete_access>false</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>Item Finding</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_catalog_sweep_item_finding</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class name="sys_id"/>
+    <sys_class_code/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Item Finding</sys_name>
+    <sys_package display_value="CatalogSweep" source="x_catalog_sweep">CatalogSweep</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogSweep">x_catalog_sweep</sys_scope>
+    <sys_update_name>sys_db_object_x_catalog_sweep_item_finding</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+    <update_access>true</update_access>
+    <user_role display_value="x_catalog_sweep.admin" name="x_catalog_sweep.admin">x_catalog_sweep.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>item_sys_id</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Item Sys ID</label>
+    <read_only>false</read_only>
+    <mandatory>true</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>item_name</element>
+    <internal_type>string</internal_type>
+    <max_length>255</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Item Name</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>item_type</element>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Item Type</label>
+    <choice>3</choice>
+    <read_only>false</read_only>
+    <mandatory>true</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>item_type</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>catalog_item</value>
+    <label>Catalog Item</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>item_type</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>producer</value>
+    <label>Producer</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>item_type</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>guide</value>
+    <label>Guide</label>
+    <sequence>30</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>category</element>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Category</label>
+    <choice>5</choice>
+    <read_only>false</read_only>
+    <mandatory>true</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>category</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>duplicate</value>
+    <label>Duplicate</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>category</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>abandoned_draft</value>
+    <label>Abandoned Draft</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>category</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>zero_request</value>
+    <label>Zero Request</label>
+    <sequence>30</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>category</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>orphaned</value>
+    <label>Orphaned</label>
+    <sequence>40</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>category</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>healthy</value>
+    <label>Healthy</label>
+    <sequence>50</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>score</element>
+    <internal_type>integer</internal_type>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Retirement Score</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>bucket</element>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Readiness Bucket</label>
+    <choice>3</choice>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>bucket</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>safe_to_retire</value>
+    <label>Safe To Retire</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>bucket</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>needs_review</value>
+    <label>Needs Review</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>bucket</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>blocked</value>
+    <label>Blocked</label>
+    <sequence>30</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Retirement State</label>
+    <choice>6</choice>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>active</value>
+    <label>Active</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>staged</value>
+    <label>Staged</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>pending_approval</value>
+    <label>Pending Approval</label>
+    <sequence>30</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>approved</value>
+    <label>Approved</label>
+    <sequence>40</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>archived</value>
+    <label>Archived</label>
+    <sequence>50</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>state</element>
+    <name>x_catalog_sweep_item_finding</name>
+    <value>blocked</value>
+    <label>Blocked</label>
+    <sequence>60</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>evidence</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Evidence (JSON)</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>dependencies_json</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Dependencies (JSON)</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>snapshot</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Archive Snapshot (JSON)</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>change_request</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Change Request</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>requested_by</element>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Requested By</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>approved_by</element>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Approved By</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>archived_on</element>
+    <internal_type>glide_date_time</internal_type>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Archived On</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>scan_run</element>
+    <internal_type>string</internal_type>
+    <max_length>32</max_length>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Scan Run</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>last_scanned</element>
+    <internal_type>glide_date_time</internal_type>
+    <name>x_catalog_sweep_item_finding</name>
+    <label>Last Scanned</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+</unload>

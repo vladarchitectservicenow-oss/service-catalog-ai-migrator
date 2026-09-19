@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-19 07:01:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Weekly full sprawl-inventory scan across the catalog estate.</description>
+    <name>CatalogSweep Weekly Full Scan</name>
+    <run_dayofweek>sunday</run_dayofweek>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_period>weekly</run_period>
+    <run_start>2026-09-20 02:00:00</run_start>
+    <run_time>02:00:00</run_time>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// CatalogSweep — Weekly Full Scan (Scheduled Job)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+var scanner = new CatalogSweepScanner();
+var runId = scanner.run('full');
+gs.info('CatalogSweep weekly full scan completed. scan_run=' + runId);
+    ]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>catalogsweep_weekly_full_scan</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>CatalogSweep Weekly Full Scan</sys_name>
+    <sys_package display_value="CatalogSweep" source="x_catalog_sweep">CatalogSweep</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogSweep">x_catalog_sweep</sys_scope>
+    <sys_update_name>sysauto_script_catalogsweep_weekly_full_scan</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sysauto_script>
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>Nightly incremental sprawl-inventory scan (changed items only).</description>
+    <name>CatalogSweep Nightly Incremental Scan</name>
+    <run_dayofweek/>
+    <run_dayofmonth/>
+    <run_month/>
+    <run_period>daily</run_period>
+    <run_start>2026-09-20 01:00:00</run_start>
+    <run_time>01:00:00</run_time>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// CatalogSweep — Nightly Incremental Scan (Scheduled Job)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+var scanner = new CatalogSweepScanner();
+var runId = scanner.run('incremental');
+gs.info('CatalogSweep nightly incremental scan completed. scan_run=' + runId);
+    ]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-19 07:01:00</sys_created_on>
+    <sys_id>catalogsweep_nightly_incremental_scan</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>CatalogSweep Nightly Incremental Scan</sys_name>
+    <sys_package display_value="CatalogSweep" source="x_catalog_sweep">CatalogSweep</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogSweep">x_catalog_sweep</sys_scope>
+    <sys_update_name>sysauto_script_catalogsweep_nightly_incremental_scan</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-19 07:01:00</sys_updated_on>
+  </sysauto_script>
+</unload>
