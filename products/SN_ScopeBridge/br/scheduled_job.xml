@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-20 07:00:00">
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>ScopeBridge nightly coverage scan: re-scans every configured target scope and flags newly uncovered cross-scope references so promotion breakage is caught before it ships.</description>
+    <name>ScopeBridge Nightly Coverage Scan</name>
+    <run_as>system</run_as>
+    <run_dayofweek>all</run_dayofweek>
+    <run_dayofmonth>all</run_dayofmonth>
+    <run_period/>
+    <run_start>2026-09-20 02:00:00</run_start>
+    <run_time>02:00:00</run_time>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// ScopeBridge — Nightly Coverage Scan (scheduled job)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Re-runs an incremental scan across the tracked scopes. The set of tracked
+// scopes is read from the x_snb.ai.provider system property in production, or
+// defaults to scanning no scopes (safely no-ops) when none are configured.
+(function runNightlyCoverage() {
+    var scanner = new x_snb.ScopeBridgeScanner();
+
+    // In production, this reads a comma-separated list of scopes to track
+    // from the x_snb.tracked.scopes system property. When unset, it is a
+    // safe no-op (never scans an arbitrary scope without configuration).
+    var tracked = gs.getProperty('x_snb.tracked.scopes', '');
+    if (!tracked) {
+        gs.info('ScopeBridge nightly scan: no tracked scopes configured, skipping');
+        return;
+    }
+
+    var scopes = tracked.split(',');
+    for (var i = 0; i < scopes.length; i++) {
+        var scope = scopes[i].trim();
+        if (!scope) { continue; }
+        try {
+            var scanSysId = scanner.run(scope, 'incremental');
+            if (scanSysId) {
+                gs.info('ScopeBridge nightly scan: completed for ' + scope + ' (scan ' + scanSysId + ')');
+            } else {
+                gs.error('ScopeBridge nightly scan: failed for ' + scope);
+            }
+        } catch (e) {
+            gs.error('ScopeBridge nightly scan: unhandled error for ' + scope + ': ' + e.message);
+        }
+    }
+})();
+]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>sched_scope_bridge_nightly</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ScopeBridge Nightly Coverage Scan</sys_name>
+    <sys_package display_value="ScopeBridge" source="x_snb">ScopeBridge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_update_name>sysauto_script_sched_scope_bridge_nightly</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+  </sysauto_script>
+</unload>

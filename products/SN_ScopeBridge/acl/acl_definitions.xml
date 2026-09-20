@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-20 07:00:00">
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Grant x_snb.admin read access to x_snb_scan records.</description>
+    <name>x_snb_scan</name>
+    <operation display_value="read" name="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_x_snb_scan_read_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_scan</sys_name>
+    <sys_package display_value="ScopeBridge" source="x_snb">ScopeBridge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_update_name>sys_security_acl_acl_x_snb_scan_read_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_role_x_snb_scan_read_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_scan.read.x_snb.admin</sys_name>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_security_acl display_value="x_snb_scan">acl_x_snb_scan_read_admin</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_acl_role_x_snb_scan_read_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Grant x_snb.admin write access to x_snb_scan records.</description>
+    <name>x_snb_scan</name>
+    <operation display_value="write" name="write">write</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_x_snb_scan_write_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_scan</sys_name>
+    <sys_package display_value="ScopeBridge" source="x_snb">ScopeBridge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_update_name>sys_security_acl_acl_x_snb_scan_write_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_role_x_snb_scan_write_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_scan.write.x_snb.admin</sys_name>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_security_acl display_value="x_snb_scan">acl_x_snb_scan_write_admin</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_acl_role_x_snb_scan_write_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Grant x_snb.auditor read access to x_snb_scan records.</description>
+    <name>x_snb_scan</name>
+    <operation display_value="read" name="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_x_snb_scan_read_auditor</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_scan</sys_name>
+    <sys_package display_value="ScopeBridge" source="x_snb">ScopeBridge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_update_name>sys_security_acl_acl_x_snb_scan_read_auditor</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_role_x_snb_scan_read_auditor</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_scan.read.x_snb.auditor</sys_name>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_security_acl display_value="x_snb_scan">acl_x_snb_scan_read_auditor</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_acl_role_x_snb_scan_read_auditor</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Grant x_snb.admin read access to x_snb_reference records.</description>
+    <name>x_snb_reference</name>
+    <operation display_value="read" name="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_x_snb_reference_read_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_reference</sys_name>
+    <sys_package display_value="ScopeBridge" source="x_snb">ScopeBridge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_update_name>sys_security_acl_acl_x_snb_reference_read_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_role_x_snb_reference_read_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_reference.read.x_snb.admin</sys_name>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_security_acl display_value="x_snb_reference">acl_x_snb_reference_read_admin</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_acl_role_x_snb_reference_read_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Grant x_snb.admin write access to x_snb_reference records.</description>
+    <name>x_snb_reference</name>
+    <operation display_value="write" name="write">write</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_x_snb_reference_write_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_reference</sys_name>
+    <sys_package display_value="ScopeBridge" source="x_snb">ScopeBridge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_update_name>sys_security_acl_acl_x_snb_reference_write_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_role_x_snb_reference_write_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_reference.write.x_snb.admin</sys_name>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_security_acl display_value="x_snb_reference">acl_x_snb_reference_write_admin</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_acl_role_x_snb_reference_write_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Grant x_snb.auditor read access to x_snb_reference records.</description>
+    <name>x_snb_reference</name>
+    <operation display_value="read" name="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_x_snb_reference_read_auditor</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_reference</sys_name>
+    <sys_package display_value="ScopeBridge" source="x_snb">ScopeBridge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_update_name>sys_security_acl_acl_x_snb_reference_read_auditor</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_role_x_snb_reference_read_auditor</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_reference.read.x_snb.auditor</sys_name>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_security_acl display_value="x_snb_reference">acl_x_snb_reference_read_auditor</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_acl_role_x_snb_reference_read_auditor</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Grant x_snb.developer read access to x_snb_scan records.</description>
+    <name>x_snb_scan</name>
+    <operation display_value="read" name="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_x_snb_scan_read_developer</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_scan</sys_name>
+    <sys_package display_value="ScopeBridge" source="x_snb">ScopeBridge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_update_name>sys_security_acl_acl_x_snb_scan_read_developer</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_role_x_snb_scan_read_developer</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_scan.read.x_snb.developer</sys_name>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_security_acl display_value="x_snb_scan">acl_x_snb_scan_read_developer</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_acl_role_x_snb_scan_read_developer</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Grant x_snb.developer read access to x_snb_reference records.</description>
+    <name>x_snb_reference</name>
+    <operation display_value="read" name="read">read</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_x_snb_reference_read_developer</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_reference</sys_name>
+    <sys_package display_value="ScopeBridge" source="x_snb">ScopeBridge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_update_name>sys_security_acl_acl_x_snb_reference_read_developer</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <type>record</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_role_x_snb_reference_read_developer</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snb_reference.read.x_snb.developer</sys_name>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_security_acl display_value="x_snb_reference">acl_x_snb_reference_read_developer</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_acl_role_x_snb_reference_read_developer</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <admin_overrides>true</admin_overrides>
+    <advanced>false</advanced>
+    <condition/>
+    <description>Allow x_snb.admin and x_snb.developer to execute the ScopeBridge scripted REST API.</description>
+    <name>ScopeBridge</name>
+    <operation display_value="execute" name="execute">execute</operation>
+    <script/>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_x_snb_rest_execute</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ScopeBridge</sys_name>
+    <sys_package display_value="ScopeBridge" source="x_snb">ScopeBridge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_update_name>sys_security_acl_acl_x_snb_rest_execute</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <type>rest_service</type>
+  </sys_security_acl>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_role_x_snb_rest_execute_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ScopeBridge.execute.x_snb.admin</sys_name>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_security_acl display_value="ScopeBridge">acl_x_snb_rest_execute</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_acl_role_x_snb_rest_execute_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <transaction_id/>
+  </sys_security_acl_role>
+  <sys_security_acl_role action="INSERT_OR_UPDATE">
+    <sys_class_name>sys_security_acl_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-20 07:00:00</sys_created_on>
+    <sys_id>acl_role_x_snb_rest_execute_developer</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>ScopeBridge.execute.x_snb.developer</sys_name>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_security_acl display_value="ScopeBridge">acl_x_snb_rest_execute</sys_security_acl>
+    <sys_update_name>sys_security_acl_role_acl_role_x_snb_rest_execute_developer</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <transaction_id/>
+  </sys_security_acl_role>
+</unload>

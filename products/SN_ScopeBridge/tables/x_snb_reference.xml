@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-20 07:00:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <application_accessible>true</application_accessible>
+    <create_access>true</create_access>
+    <delete_access>false</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>Cross-Scope Reference</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_snb_reference</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class name="sys_id"/>
+    <sys_class_code/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Cross-Scope Reference</sys_name>
+    <sys_package display_value="ScopeBridge" source="x_snb">ScopeBridge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="ScopeBridge">x_snb</sys_scope>
+    <sys_update_name>sys_db_object_x_snb_reference</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-20 07:00:00</sys_updated_on>
+    <update_access>true</update_access>
+    <user_role display_value="x_snb.admin" name="x_snb.admin">x_snb.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>scan</element>
+    <internal_type>reference</internal_type>
+    <max_length>32</max_length>
+    <name>x_snb_reference</name>
+    <label>Scan</label>
+    <reference>x_snb_scan</reference>
+    <read_only>false</read_only>
+    <mandatory>true</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>source_scope</element>
+    <internal_type>string</internal_type>
+    <max_length>80</max_length>
+    <name>x_snb_reference</name>
+    <label>Source Scope</label>
+    <read_only>false</read_only>
+    <mandatory>true</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>source_artifact</element>
+    <internal_type>string</internal_type>
+    <max_length>140</max_length>
+    <name>x_snb_reference</name>
+    <label>Source Artifact</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>artifact_kind</element>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_snb_reference</name>
+    <label>Artifact Kind</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>target_table</element>
+    <internal_type>string</internal_type>
+    <max_length>80</max_length>
+    <name>x_snb_reference</name>
+    <label>Target Table</label>
+    <read_only>false</read_only>
+    <mandatory>true</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>target_scope</element>
+    <internal_type>string</internal_type>
+    <max_length>80</max_length>
+    <name>x_snb_reference</name>
+    <label>Target Scope</label>
+    <read_only>false</read_only>
+    <mandatory>true</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>operations</element>
+    <internal_type>string</internal_type>
+    <max_length>200</max_length>
+    <name>x_snb_reference</name>
+    <label>Operations</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>kind</element>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_snb_reference</name>
+    <label>Kind</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>classification</element>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_snb_reference</name>
+    <label>Classification</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>confidence</element>
+    <internal_type>integer</internal_type>
+    <name>x_snb_reference</name>
+    <label>Confidence</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>status</element>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_snb_reference</name>
+    <label>Coverage Status</label>
+    <choice>3</choice>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>status</element>
+    <name>x_snb_reference</name>
+    <value>covered</value>
+    <label>Covered</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>status</element>
+    <name>x_snb_reference</name>
+    <value>uncovered</value>
+    <label>Uncovered</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>status</element>
+    <name>x_snb_reference</name>
+    <value>overprivileged</value>
+    <label>Over-Privileged</label>
+    <sequence>30</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+</unload>
