@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-21 07:01:00">
+
+  <!-- ============ x_sntf_transform_job ACLs ============ -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <operation>
+      <security_operation name="read" type="operation">read</security_operation>
+    </operation>
+    <type>record</type>
+    <name>x_sntf_transform_job</name>
+    <description>Read access to transform jobs (admin, mapper, viewer).</description>
+    <requires_role>false</requires_role>
+    <script><![CDATA[
+// Allow read for x_sntf.admin, x_sntf.mapper, x_sntf.viewer.
+answer = gs.hasRole('x_sntf.admin') || gs.hasRole('x_sntf.mapper') || gs.hasRole('x_sntf.viewer');
+]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-21 07:01:00</sys_created_on>
+    <sys_id>acl_tf_job_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sntf_transform_job.read</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_security_acl_acl_tf_job_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <operation>
+      <security_operation name="write" type="operation">write</security_operation>
+    </operation>
+    <type>record</type>
+    <name>x_sntf_transform_job</name>
+    <description>Write access to transform jobs (admin, mapper).</description>
+    <requires_role>false</requires_role>
+    <script><![CDATA[
+answer = gs.hasRole('x_sntf.admin') || gs.hasRole('x_sntf.mapper');
+]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-21 07:01:00</sys_created_on>
+    <sys_id>acl_tf_job_write</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sntf_transform_job.write</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_security_acl_acl_tf_job_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <operation>
+      <security_operation name="create" type="operation">create</security_operation>
+    </operation>
+    <type>record</type>
+    <name>x_sntf_transform_job</name>
+    <description>Create access to transform jobs (admin, mapper).</description>
+    <requires_role>false</requires_role>
+    <script><![CDATA[
+answer = gs.hasRole('x_sntf.admin') || gs.hasRole('x_sntf.mapper');
+]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-21 07:01:00</sys_created_on>
+    <sys_id>acl_tf_job_create</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sntf_transform_job.create</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_security_acl_acl_tf_job_create</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <operation>
+      <security_operation name="delete" type="operation">delete</security_operation>
+    </operation>
+    <type>record</type>
+    <name>x_sntf_transform_job</name>
+    <description>Delete access to transform jobs (admin only).</description>
+    <requires_role>false</requires_role>
+    <script><![CDATA[
+answer = gs.hasRole('x_sntf.admin');
+]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-21 07:01:00</sys_created_on>
+    <sys_id>acl_tf_job_delete</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sntf_transform_job.delete</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_security_acl_acl_tf_job_delete</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+  </sys_security_acl>
+
+  <!-- ============ x_sntf_transform_mapping ACLs ============ -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <operation>
+      <security_operation name="read" type="operation">read</security_operation>
+    </operation>
+    <type>record</type>
+    <name>x_sntf_transform_mapping</name>
+    <description>Read access to transform mappings (admin, mapper, viewer).</description>
+    <requires_role>false</requires_role>
+    <script><![CDATA[
+answer = gs.hasRole('x_sntf.admin') || gs.hasRole('x_sntf.mapper') || gs.hasRole('x_sntf.viewer');
+]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-21 07:01:00</sys_created_on>
+    <sys_id>acl_tf_mapping_read</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sntf_transform_mapping.read</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_security_acl_acl_tf_mapping_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <operation>
+      <security_operation name="write" type="operation">write</security_operation>
+    </operation>
+    <type>record</type>
+    <name>x_sntf_transform_mapping</name>
+    <description>Write access to transform mappings (admin, mapper).</description>
+    <requires_role>false</requires_role>
+    <script><![CDATA[
+answer = gs.hasRole('x_sntf.admin') || gs.hasRole('x_sntf.mapper');
+]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-21 07:01:00</sys_created_on>
+    <sys_id>acl_tf_mapping_write</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sntf_transform_mapping.write</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_security_acl_acl_tf_mapping_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <operation>
+      <security_operation name="create" type="operation">create</security_operation>
+    </operation>
+    <type>record</type>
+    <name>x_sntf_transform_mapping</name>
+    <description>Create access to transform mappings (admin, mapper).</description>
+    <requires_role>false</requires_role>
+    <script><![CDATA[
+answer = gs.hasRole('x_sntf.admin') || gs.hasRole('x_sntf.mapper');
+]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-21 07:01:00</sys_created_on>
+    <sys_id>acl_tf_mapping_create</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sntf_transform_mapping.create</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_security_acl_acl_tf_mapping_create</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <operation>
+      <security_operation name="delete" type="operation">delete</security_operation>
+    </operation>
+    <type>record</type>
+    <name>x_sntf_transform_mapping</name>
+    <description>Delete access to transform mappings (admin only).</description>
+    <requires_role>false</requires_role>
+    <script><![CDATA[
+answer = gs.hasRole('x_sntf.admin');
+]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-21 07:01:00</sys_created_on>
+    <sys_id>acl_tf_mapping_delete</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sntf_transform_mapping.delete</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_security_acl_acl_tf_mapping_delete</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+  </sys_security_acl>
+
+  <!-- ============ REST Endpoint ACLs ============ -->
+  <!-- For scripted REST APIs the ACL `name` must equal the operation name -->
+  <!-- (one ACL per operation): here `Execute` (POST /execute) and `Status` -->
+  <!-- (GET /status). -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <operation>
+      <security_operation name="execute" type="operation">execute</security_operation>
+    </operation>
+    <type>rest_endpoint</type>
+    <name>Execute</name>
+    <description>Execute access to the TransformForge REST /execute operation (admin, mapper).</description>
+    <requires_role>false</requires_role>
+    <script><![CDATA[
+answer = gs.hasRole('x_sntf.admin') || gs.hasRole('x_sntf.mapper');
+]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-21 07:01:00</sys_created_on>
+    <sys_id>acl_tf_rest_execute</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Execute.execute</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_security_acl_acl_tf_rest_execute</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+  </sys_security_acl>
+
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <operation>
+      <security_operation name="execute" type="operation">execute</security_operation>
+    </operation>
+    <type>rest_endpoint</type>
+    <name>Status</name>
+    <description>Execute access to the TransformForge REST /status operation (admin, mapper, viewer).</description>
+    <requires_role>false</requires_role>
+    <script><![CDATA[
+answer = gs.hasRole('x_sntf.admin') || gs.hasRole('x_sntf.mapper') || gs.hasRole('x_sntf.viewer');
+]]></script>
+    <sys_class_name>sys_security_acl</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-21 07:01:00</sys_created_on>
+    <sys_id>acl_tf_rest_status</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Status.execute</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_security_acl_acl_tf_rest_status</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+  </sys_security_acl>
+
+</unload>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-21 07:01:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <application_accessible>true</application_accessible>
+    <create_access>true</create_access>
+    <delete_access>false</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>Transform Job</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_sntf_transform_job</name>
+    <number_ref>TF</number_ref>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class name="sys_id"/>
+    <sys_class_code/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Transform Job</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_db_object_x_sntf_transform_job</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+    <update_access>true</update_access>
+    <user_role display_value="x_sntf.admin" name="x_sntf.admin">x_sntf.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>target_table</element>
+    <internal_type>string</internal_type>
+    <max_length>80</max_length>
+    <name>x_sntf_transform_job</name>
+    <label>Target Table</label>
+    <read_only>false</read_only>
+    <mandatory>true</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>number</element>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_sntf_transform_job</name>
+    <label>Number</label>
+    <read_only>true</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+    <display>true</display>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>status</element>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_sntf_transform_job</name>
+    <label>Status</label>
+    <choice>1</choice>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>status</element>
+    <name>x_sntf_transform_job</name>
+    <value>generated</value>
+    <label>Generated</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>engine_version</element>
+    <internal_type>string</internal_type>
+    <max_length>20</max_length>
+    <name>x_sntf_transform_job</name>
+    <label>Engine Version</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>fingerprint_hash</element>
+    <internal_type>string</internal_type>
+    <max_length>80</max_length>
+    <name>x_sntf_transform_job</name>
+    <label>Fingerprint Hash</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>source_column_count</element>
+    <internal_type>integer</internal_type>
+    <name>x_sntf_transform_job</name>
+    <label>Source Column Count</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>source_row_count</element>
+    <internal_type>integer</internal_type>
+    <name>x_sntf_transform_job</name>
+    <label>Source Row Count</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>mapping_count</element>
+    <internal_type>integer</internal_type>
+    <name>x_sntf_transform_job</name>
+    <label>Mapping Count</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>source_signature</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_sntf_transform_job</name>
+    <label>Source Signature (JSON)</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>preview_payload</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_sntf_transform_job</name>
+    <label>Preview Payload (JSON)</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>requested_by</element>
+    <internal_type>string</internal_type>
+    <max_length>80</max_length>
+    <name>x_sntf_transform_job</name>
+    <label>Requested By</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+</unload>

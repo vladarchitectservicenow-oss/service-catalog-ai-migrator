@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-21 07:01:00">
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <application_accessible>true</application_accessible>
+    <create_access>true</create_access>
+    <delete_access>false</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>Transform Mapping</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_sntf_transform_mapping</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <scriptable_table>false</scriptable_table>
+    <super_class name="sys_id"/>
+    <sys_class_code/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Transform Mapping</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_db_object_x_sntf_transform_mapping</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+    <update_access>true</update_access>
+    <user_role display_value="x_sntf.admin" name="x_sntf.admin">x_sntf.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>job</element>
+    <internal_type>reference</internal_type>
+    <reference>x_sntf_transform_job</reference>
+    <name>x_sntf_transform_mapping</name>
+    <label>Job</label>
+    <read_only>false</read_only>
+    <mandatory>true</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>source_column</element>
+    <internal_type>string</internal_type>
+    <max_length>120</max_length>
+    <name>x_sntf_transform_mapping</name>
+    <label>Source Column</label>
+    <read_only>false</read_only>
+    <mandatory>true</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>source_index</element>
+    <internal_type>integer</internal_type>
+    <name>x_sntf_transform_mapping</name>
+    <label>Source Index</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>inferred_type</element>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_sntf_transform_mapping</name>
+    <label>Inferred Type</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>target_field</element>
+    <internal_type>string</internal_type>
+    <max_length>80</max_length>
+    <name>x_sntf_transform_mapping</name>
+    <label>Target Field</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>target_label</element>
+    <internal_type>string</internal_type>
+    <max_length>120</max_length>
+    <name>x_sntf_transform_mapping</name>
+    <label>Target Label</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>confidence</element>
+    <internal_type>string</internal_type>
+    <max_length>20</max_length>
+    <name>x_sntf_transform_mapping</name>
+    <label>Confidence</label>
+    <choice>1</choice>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>confidence</element>
+    <name>x_sntf_transform_mapping</name>
+    <value>high</value>
+    <label>High</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>confidence</element>
+    <name>x_sntf_transform_mapping</name>
+    <value>medium</value>
+    <label>Medium</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>confidence</element>
+    <name>x_sntf_transform_mapping</name>
+    <value>low</value>
+    <label>Low</label>
+    <sequence>30</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>confidence</element>
+    <name>x_sntf_transform_mapping</name>
+    <value>none</value>
+    <label>None</label>
+    <sequence>40</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>status</element>
+    <internal_type>string</internal_type>
+    <max_length>40</max_length>
+    <name>x_sntf_transform_mapping</name>
+    <label>Status</label>
+    <choice>1</choice>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>status</element>
+    <name>x_sntf_transform_mapping</name>
+    <value>confirmed</value>
+    <label>Confirmed</label>
+    <sequence>10</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>status</element>
+    <name>x_sntf_transform_mapping</name>
+    <value>proposed</value>
+    <label>Proposed</label>
+    <sequence>20</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_choice action="INSERT_OR_UPDATE">
+    <element>status</element>
+    <name>x_sntf_transform_mapping</name>
+    <value>unmatched</value>
+    <label>Unmatched</label>
+    <sequence>30</sequence>
+    <inactive>false</inactive>
+  </sys_choice>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>match_score</element>
+    <internal_type>integer</internal_type>
+    <name>x_sntf_transform_mapping</name>
+    <label>Match Score</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>coalesce</element>
+    <internal_type>boolean</internal_type>
+    <name>x_sntf_transform_mapping</name>
+    <label>Coalesce</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>choice_map_json</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_sntf_transform_mapping</name>
+    <label>Choice Map (JSON)</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>orphans_json</element>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <name>x_sntf_transform_mapping</name>
+    <label>Orphan Values (JSON)</label>
+    <read_only>false</read_only>
+    <mandatory>false</mandatory>
+    <active>true</active>
+  </sys_dictionary>
+</unload>

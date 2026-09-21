@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-21 07:01:00">
+
+  <!-- Business rule: enforce non-empty target_table on insert. -->
+  <sys_script action="INSERT_OR_UPDATE">
+    <abort_action>true</abort_action>
+    <access>package_private</access>
+    <action_insert>true</action_insert>
+    <action_query>false</action_query>
+    <action_update>false</action_update>
+    <action_delete>false</action_delete>
+    <active>true</active>
+    <add_message>true</add_message>
+    <advanced>true</advanced>
+    <collection>x_sntf_transform_job</collection>
+    <condition><![CDATA[current.target_table.nil()]]></condition>
+    <description>Abort insert when target_table is empty.</description>
+    <name>TF Validate Target Table</name>
+    <order>100</order>
+    <priority>100</priority>
+    <script><![CDATA[
+(function executeRule(current, previous /*null when async*/) {
+    current.setAbortAction(true);
+    gs.addErrorMessage('TransformForge: target_table is required.');
+})(current, previous);
+]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-21 07:01:00</sys_created_on>
+    <sys_id>br_tf_validate_target</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>TF Validate Target Table</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sys_script_br_tf_validate_target</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+    <when>before</when>
+  </sys_script>
+
+  <!-- Scheduled job: cleanup of stale generated jobs (retention housekeeping). -->
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <description>TransformForge housekeeping — deletes generation jobs older than the retention window (default 90 days) and their mappings.</description>
+    <name>TransformForge Housekeeping</name>
+    <run_dayofweek>all</run_dayofweek>
+    <run_period>daily</run_period>
+    <run_time>03:00:00</run_time>
+    <run_type>periodically</run_type>
+    <script><![CDATA[
+// TransformForge — scheduled housekeeping
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+(function runHousekeeping() {
+    var RETENTION_DAYS = 90;
+    var cutoff = new GlideDateTime();
+    cutoff.addDaysUTC(-RETENTION_DAYS);
+
+    var jobGr = new GlideRecord('x_sntf_transform_job');
+    jobGr.addQuery('sys_created_on', '<', cutoff.getValue());
+    jobGr.setLimit(1000);
+    jobGr.query();
+    var deleted = 0;
+    while (jobGr.next()) {
+        var jobId = jobGr.getUniqueValue();
+        // Delete child mappings first.
+        var mapGr = new GlideRecord('x_sntf_transform_mapping');
+        mapGr.addQuery('job', jobId);
+        mapGr.setLimit(1000);
+        mapGr.query();
+        while (mapGr.next()) {
+            try { mapGr.setWorkflow(false); mapGr.deleteRecord(); } catch (e) { /* best effort */ }
+        }
+        try {
+            jobGr.setWorkflow(false);
+            jobGr.deleteRecord();
+            deleted++;
+        } catch (e) {
+            gs.error('TransformForge housekeeping: delete failed for ' + jobId + ': ' + e.message);
+        }
+    }
+    gs.info('TransformForge housekeeping: deleted ' + deleted + ' stale jobs');
+})();
+]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-21 07:01:00</sys_created_on>
+    <sys_id>sched_tf_housekeeping</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>TransformForge Housekeeping</sys_name>
+    <sys_package display_value="TransformForge" source="x_sntf">TransformForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="TransformForge">x_sntf</sys_scope>
+    <sys_update_name>sysauto_script_sched_tf_housekeeping</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-21 07:01:00</sys_updated_on>
+  </sysauto_script>
+
+</unload>
