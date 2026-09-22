@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-22 05:10:00">
+  <!-- CatalogForge — x_sncf_choice_override
+       Copyright (C) 2026 Vladimir Kapustin
+       SPDX-License-Identifier: AGPL-3.0 -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <actions_access>false</actions_access>
+    <alter_access>false</alter_access>
+    <client_scripts_access>false</client_scripts_access>
+    <configuration_access>false</configuration_access>
+    <create_access>false</create_access>
+    <create_access_controls>true</create_access_controls>
+    <delete_access>false</delete_access>
+    <extension_model/>
+    <is_extendable>false</is_extendable>
+    <label>Catalog Forge Choice Override</label>
+    <live_feed_enabled>false</live_feed_enabled>
+    <name>x_sncf_choice_override</name>
+    <number_ref/>
+    <provider_class/>
+    <read_access>true</read_access>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_override_table</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Catalog Forge Choice Override</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogForge">x_sncf</sys_scope>
+    <sys_update_name>sys_db_object_cf_override_table</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+    <update_access>false</update_access>
+    <user_role display_value="x_sncf.admin" name="x_sncf.admin">x_sncf.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>field_name</element>
+    <internal_type>string</internal_type>
+    <label>Field Name</label>
+    <mandatory>true</mandatory>
+    <max_length>100</max_length>
+    <name>x_sncf_choice_override</name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_override_field_name</sys_id>
+    <sys_name>x_sncf_choice_override.field_name</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_dictionary_cf_override_field_name</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>choice_value</element>
+    <internal_type>string</internal_type>
+    <label>Choice Value</label>
+    <mandatory>true</mandatory>
+    <max_length>160</max_length>
+    <name>x_sncf_choice_override</name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_override_choice_value</sys_id>
+    <sys_name>x_sncf_choice_override.choice_value</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_dictionary_cf_override_choice_value</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>sequence</element>
+    <internal_type>integer</internal_type>
+    <label>Sequence</label>
+    <max_length>40</max_length>
+    <name>x_sncf_choice_override</name>
+    <default_value>0</default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_override_sequence</sys_id>
+    <sys_name>x_sncf_choice_override.sequence</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_dictionary_cf_override_sequence</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>active</element>
+    <internal_type>boolean</internal_type>
+    <label>Active</label>
+    <max_length>40</max_length>
+    <name>x_sncf_choice_override</name>
+    <default_value>true</default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_override_active</sys_id>
+    <sys_name>x_sncf_choice_override.active</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_dictionary_cf_override_active</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_dictionary>
+</unload>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-22 05:10:00">
+  <!-- CatalogForge — Business rules & scheduled job
+       Copyright (C) 2026 Vladimir Kapustin
+       SPDX-License-Identifier: AGPL-3.0 -->
+
+  <!-- Business rule: validate draft name before insert -->
+  <sys_script action="INSERT_OR_UPDATE">
+    <abort_action>true</abort_action>
+    <access>package_private</access>
+    <action_insert>true</action_insert>
+    <action_query>false</action_query>
+    <action_update>false</action_update>
+    <action_delete>false</action_delete>
+    <add_message>true</add_message>
+    <active>true</active>
+    <collection>x_sncf_catalog_forge_draft</collection>
+    <condition><![CDATA[current.name == '']]></condition>
+    <description>Abort insert when a CatalogForge draft has an empty name.</description>
+    <message>CatalogForge draft name is required.</message>
+    <name>CF Validate Draft Name</name>
+    <order>100</order>
+    <script><![CDATA[(function executeRule(current, previous) {
+    // Abort if name is blank — enforced by the BR condition above.
+    gs.addErrorMessage('CatalogForge draft name is required.');
+})(current, previous);]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_br_validate_name</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>CF Validate Draft Name</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogForge">x_sncf</sys_scope>
+    <sys_update_name>sys_script_cf_br_validate_name</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+    <when>before</when>
+  </sys_script>
+
+  <!-- Scheduled job: purge stale proposed drafts older than 30 days -->
+  <sysauto_script action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <condition/>
+    <description>CatalogForge housekeeping — purge proposed drafts older than 30 days.</description>
+    <name>CatalogForge Housekeeping</name>
+    <run_dayofweek>all</run_dayofweek>
+    <run_period>daily</run_period>
+    <run_start>03:00:00</run_start>
+    <run_type>periodically</run_type>
+    <script><![CDATA[(function() {
+    var cutoff = new GlideDateTime();
+    cutoff.addDays(-30);
+    var gr = new GlideRecord('x_sncf_catalog_forge_draft');
+    gr.addQuery('status', 'proposed');
+    gr.addQuery('sys_created_on', '<', cutoff.getDisplayValue());
+    gr.query();
+    var count = 0;
+    while (gr.next()) {
+        try {
+            gr.deleteRecord();
+            count++;
+        } catch (e) {
+            gs.error('CatalogForge housekeeping failed on draft ' + gr.getUniqueValue() + ': ' + e);
+        }
+    }
+    gs.info('CatalogForge housekeeping purged ' + count + ' stale draft(s)');
+})();]]></script>
+    <sys_class_name>sysauto_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_sched_housekeeping</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>CatalogForge Housekeeping</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogForge">x_sncf</sys_scope>
+    <sys_update_name>sysauto_script_cf_sched_housekeeping</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sysauto_script>
+</unload>

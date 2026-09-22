@@ -1,0 +1,1396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-22 05:10:00">
+  <!-- CatalogForge — scoped application manifest (x_sncf)
+       Copyright (C) 2026 Vladimir Kapustin
+       SPDX-License-Identifier: AGPL-3.0 -->
+
+  <sys_scope action="INSERT_OR_UPDATE">
+    <description>Schema-aware catalog-item generator: typed variables, choice lists, variable sets, UI policies, and a starter record-producer flow — ready to import in under a minute.</description>
+    <js_level>rhino</js_level>
+    <name>CatalogForge</name>
+    <scope>x_sncf</scope>
+    <short_description>Generates complete sc_cat_item graphs from a service description</short_description>
+    <sys_class_name>sys_scope</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>scope_cf</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>CatalogForge</sys_name>
+    <sys_package/>
+    <sys_policy/>
+    <sys_scope/>
+    <sys_update_name>sys_scope_scope_cf</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_scope>
+
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <description>CatalogForge administrator — full access, can approve/commit and delete drafts.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_sncf.admin</name>
+    <requires_subscription/>
+    <scoped_admin>false</scoped_admin>
+    <suffix>admin</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>role_cf_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sncf.admin</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogForge">x_sncf</sys_scope>
+    <sys_update_name>sys_user_role_role_cf_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <description>CatalogForge mapper — can propose and preview drafts, cannot commit.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_sncf.mapper</name>
+    <requires_subscription/>
+    <scoped_admin>false</scoped_admin>
+    <suffix>mapper</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>role_cf_mapper</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sncf.mapper</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogForge">x_sncf</sys_scope>
+    <sys_update_name>sys_user_role_role_cf_mapper</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <description>CatalogForge viewer — read-only access to drafts and previews.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_sncf.viewer</name>
+    <requires_subscription/>
+    <scoped_admin>false</scoped_admin>
+    <suffix>viewer</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>role_cf_viewer</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_sncf.viewer</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogForge">x_sncf</sys_scope>
+    <sys_update_name>sys_user_role_role_cf_viewer</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_user_role>
+
+  <!-- Cross-scope privileges (read-only on OOTB catalog tables) -->
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_sncf</source_scope>
+    <status>allowed</status>
+    <target_name>sc_cat_item</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>priv_sc_cat_item</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sc_cat_item</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sc_cat_item</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_sncf</source_scope>
+    <status>allowed</status>
+    <target_name>sc_cat_item_producer</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>priv_sc_cat_item_producer</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sc_cat_item_producer</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sc_cat_item_producer</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_sncf</source_scope>
+    <status>allowed</status>
+    <target_name>item_option_new</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>priv_item_option_new</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>item_option_new</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_item_option_new</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_sncf</source_scope>
+    <status>allowed</status>
+    <target_name>item_option_new_set</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>priv_item_option_new_set</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>item_option_new_set</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_item_option_new_set</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_sncf</source_scope>
+    <status>allowed</status>
+    <target_name>sys_choice</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>priv_sys_choice</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_choice</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sys_choice</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_sncf</source_scope>
+    <status>allowed</status>
+    <target_name>sys_ui_policy</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>priv_sys_ui_policy</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_ui_policy</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sys_ui_policy</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_sncf</source_scope>
+    <status>allowed</status>
+    <target_name>sys_ui_policy_action</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>priv_sys_ui_policy_action</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_ui_policy_action</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_sys_ui_policy_action</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_scope_privilege>
+
+  <!-- Script Include: CatalogForgeEngine -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_sncf.CatalogForgeEngine</api_name>
+    <client_callable>false</client_callable>
+    <description>Deterministic catalog-item graph generator: intake parser, variable-type inference, choice seeding, variable-set wiring, UI-policy/order generation, flow configuration.</description>
+    <name>CatalogForgeEngine</name>
+    <script><![CDATA[// CatalogForge — CatalogForgeEngine
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Deterministic core of the CatalogForge scoped application.
+// Turns a structured service definition (JSON intake + optional plain-language
+// description) into a complete, consistent catalog-item graph: typed variables,
+// choice-list seeds, variable-set wiring, UI-policy/order rules, and a starter
+// record-producer flow configuration.
+//
+// This Script Include is PURE computation — it never writes to scoped tables,
+// never writes to OOTB catalog tables, and never mutates platform records.
+// Persistence and the commit layer are the responsibility of CatalogForgeWriter.
+//
+// All logic is ES5-compatible (Rhino): no arrow functions, no let/const,
+// no template literals, no Object.values, no for...of.
+//
+// @class CatalogForgeEngine @namespace x_sncf
+var CatalogForgeEngine = Class.create();
+CatalogForgeEngine.prototype = {
+
+    ENGINE_VERSION: '1.0.0',
+
+    // ----------------------------------------------------------------------
+    // Type mapping tables (deterministic, curated)
+    // ----------------------------------------------------------------------
+    // Maps normalized field names to (type, reference_table). The key is the
+    // snake_case field name (see _normalizeFieldName) so "Requested For",
+    // "requested_for", and "Requested For (User)" all collapse to the same key.
+    NAME_TYPE_MAP: {
+        'requested_for':     { type: 'reference', ref: 'sys_user' },
+        'requested_by':      { type: 'reference', ref: 'sys_user' },
+        'requester':         { type: 'reference', ref: 'sys_user' },
+        'assigned_to':       { type: 'reference', ref: 'sys_user' },
+        'assignee':          { type: 'reference', ref: 'sys_user' },
+        'cost_center':       { type: 'reference', ref: 'cmn_cost_center' },
+        'department':        { type: 'reference', ref: 'cmn_department' },
+        'location':          { type: 'reference', ref: 'cmn_location' },
+        'company':           { type: 'reference', ref: 'core_company' },
+        'manager':           { type: 'reference', ref: 'sys_user' },
+        'date':              { type: 'glide_date' },
+        'due_date':          { type: 'glide_date' },
+        'needed_by':         { type: 'glide_date' },
+        'required_by':       { type: 'glide_date' },
+        'start_date':        { type: 'glide_date' },
+        'end_date':          { type: 'glide_date' },
+        'serial_number':     { type: 'string' },
+        'justification':     { type: 'string' },
+        'comments':          { type: 'string' },
+        'description':       { type: 'string' },
+        'notes':             { type: 'string' },
+        'quantity':          { type: 'integer' },
+        'count':             { type: 'integer' },
+        'amount':            { type: 'decimal' },
+        'priority':          { type: 'choice' },
+        'urgency':           { type: 'choice' },
+        'impact':            { type: 'choice' },
+        'hardware':          { type: 'choice' },
+        'hardware_tier':     { type: 'choice' },
+        'tier':              { type: 'choice' },
+        'device_type':       { type: 'choice' },
+        'employee_type':     { type: 'choice' },
+        'access_level':      { type: 'choice' },
+        'approval':          { type: 'boolean' },
+        'approved':          { type: 'boolean' },
+        'needs_approval':    { type: 'boolean' },
+        'active':            { type: 'boolean' },
+        'enabled':           { type: 'boolean' },
+        'email':             { type: 'string' },
+        'phone_number':      { type: 'string' }
+    },
+
+    // Curated choice-list seed library. Key = snake_case field name.
+    CHOICE_SEED_LIBRARY: {
+        'priority':       ['4 - Low', '3 - Moderate', '2 - High', '1 - Critical'],
+        'urgency':        ['3 - Low', '2 - Medium', '1 - High'],
+        'impact':         ['3 - Low', '2 - Medium', '1 - High'],
+        'hardware':       ['Laptop', 'Desktop', 'Monitor', 'Docking Station'],
+        'hardware_tier':  ['Standard', 'Power', 'Ultra'],
+        'tier':           ['Standard', 'Premium', 'Executive'],
+        'device_type':    ['Laptop', 'Desktop', 'Mobile', 'Peripheral'],
+        'employee_type':  ['Full-time', 'Contractor', 'Intern', 'Vendor'],
+        'access_level':   ['Read-only', 'Editor', 'Administrator']
+    },
+
+    // Reusable variable clusters. A cluster is emitted as a variable set when
+    // two or more of its members appear in the inferred variable list.
+    VARIABLE_SETS: {
+        'Employee Information': ['requested_for', 'cost_center', 'department', 'manager', 'company'],
+        'Hardware Specification': ['hardware_tier', 'hardware', 'device_type', 'serial_number'],
+        'Access & Approval': ['access_level', 'approval', 'needs_approval', 'justification']
+    },
+
+    initialize: function () {
+    },
+
+    // ----------------------------------------------------------------------
+    // INTAKE PARSER
+    // Accepts a JSON string (structured intake) or a plain-language string.
+    // Returns { ok, intake } with normalized fields.
+    // ----------------------------------------------------------------------
+    parseIntake: function (raw) {
+        var text = (raw === undefined || raw === null) ? '' : String(raw).trim();
+        if (!text) {
+            return { ok: false, error: 'EMPTY_INTAKE', message: 'No service definition provided' };
+        }
+
+        // If it looks like JSON, parse it.
+        if (text.charAt(0) === '{') {
+            var obj = this._safeParse(text);
+            if (obj === null) {
+                return { ok: false, error: 'BAD_JSON', message: 'Intake JSON could not be parsed' };
+            }
+            return this._normalizeIntake(obj, text);
+        }
+
+        // Plain-language fallback: treat the whole string as the description.
+        return this._normalizeIntake({ description: text }, text);
+    },
+
+    _normalizeIntake: function (obj, rawText) {
+        var intake = {
+            name: (obj.name || obj.service_name || obj.title || '').toString().trim(),
+            description: (obj.description || obj.service_description || '').toString().trim(),
+            category: (obj.category || '').toString().trim(),
+            short_description: (obj.short_description || '').toString().trim(),
+            type: (obj.type || 'item').toString().trim(),           // 'item' | 'record_producer'
+            requested_variables: obj.variables || obj.requested_variables || null,
+            raw: rawText
+        };
+
+        if (!intake.name && !intake.description) {
+            return { ok: false, error: 'NO_NAME_OR_DESC', message: 'Provide a service name or a plain-language description' };
+        }
+
+        return { ok: true, intake: intake };
+    },
+
+    // ----------------------------------------------------------------------
+    // VARIABLE-TYPE INFERENCE
+    // Maps a service definition onto a typed variable list. Three sources:
+    //   1. Explicit requested_variables (highest precedence).
+    //   2. Curated name→type mapping (NAME_TYPE_MAP).
+    //   3. A plain-language description scan for known field keywords.
+    // ----------------------------------------------------------------------
+    inferVariables: function (intake) {
+        var variables = [];
+        var seen = {};
+
+        // 1. Explicit variables win.
+        if (intake.requested_variables && this._isArray(intake.requested_variables)) {
+            var req = intake.requested_variables;
+            for (var i = 0; i < req.length; i++) {
+                var v = req[i];
+                if (!v || typeof v !== 'object') { continue; }
+                var name = this._normalizeFieldName(v.name || v.label || ('field_' + (i + 1)));
+                var mapped = this._mapField(name, v);
+                if (!seen[name]) {
+                    seen[name] = true;
+                    variables.push(mapped);
+                }
+            }
+        }
+
+        // 2. Name→type map on the description keywords (only if not already
+        //    captured above). Scan the description for known field tokens.
+        var desc = (intake.description || '') + ' ' + (intake.name || '');
+        var tokens = this._scanFieldTokens(desc);
+        for (var t = 0; t < tokens.length; t++) {
+            var token = tokens[t];
+            var norm = this._normalizeFieldName(token);
+            if (!seen[norm]) {
+                seen[norm] = true;
+                variables.push(this._mapField(token, null));
+            }
+        }
+
+        // 3. Always ensure requested_for is present for record producers —
+        //    it is the single most common variable and a catalog without it
+        //    is almost always a mistake.
+        if (!seen['requested_for']) {
+            variables.unshift({
+                name: 'requested_for',
+                label: 'Requested For',
+                type: 'reference',
+                reference_table: 'sys_user',
+                mandatory: true,
+                read_only: false,
+                choices: [],
+                default_value: 'javascript:gs.getUserID()',
+                variable_set: 'Employee Information',
+                order: 0
+            });
+            seen['requested_for'] = true;
+        }
+
+        // Assign order.
+        for (var o = 0; o < variables.length; o++) {
+            variables[o].order = (o + 1) * 10;
+        }
+
+        return { ok: true, variables: variables };
+    },
+
+    _mapField: function (rawName, override) {
+        var name = this._normalizeFieldName(rawName);
+        var label = this._humanize(rawName);
+        var entry = this.NAME_TYPE_MAP[name];
+        var type = entry ? entry.type : 'string';
+        var refTable = entry ? (entry.ref || '') : '';
+
+        if (override) {
+            if (override.type) { type = override.type; }
+            if (override.reference_table || override.reference) {
+                refTable = override.reference_table || override.reference;
+            }
+            if (override.label) { label = override.label; }
+        }
+
+        return {
+            name: name,
+            label: label,
+            type: type,
+            reference_table: refTable,
+            mandatory: override ? (override.mandatory === true) : (name === 'requested_for'),
+            read_only: override ? (override.read_only === true) : false,
+            choices: [],
+            default_value: override ? (override.default_value || '') : '',
+            variable_set: this._assignVariableSet(name),
+            order: 0
+        };
+    },
+
+    _assignVariableSet: function (name) {
+        for (var setName in this.VARIABLE_SETS) {
+            if (!this.VARIABLE_SETS.hasOwnProperty(setName)) { continue; }
+            var members = this.VARIABLE_SETS[setName];
+            for (var i = 0; i < members.length; i++) {
+                if (members[i] === name) { return setName; }
+            }
+        }
+        return '';
+    },
+
+    // ----------------------------------------------------------------------
+    // CHOICE-LIST SEEDING
+    // Populates choice lists for choice-typed variables from the curated
+    // library, with org-specific overrides merged on top.
+    // ----------------------------------------------------------------------
+    seedChoices: function (variables, overrides) {
+        var ovr = overrides || {};
+        for (var i = 0; i < variables.length; i++) {
+            var v = variables[i];
+            if (v.type !== 'choice') { continue; }
+            var lib = this.CHOICE_SEED_LIBRARY[v.name] || [];
+            var custom = ovr[v.name] || [];
+            var merged = lib.slice();
+            for (var c = 0; c < custom.length; c++) {
+                if (merged.indexOf(custom[c]) === -1) { merged.push(custom[c]); }
+            }
+            v.choices = merged;
+        }
+        return variables;
+    },
+
+    // ----------------------------------------------------------------------
+    // VARIABLE-SET WIRING
+    // Collapses variables sharing a variable_set into a single item_option_new_set
+    // reference so the catalog does not duplicate inline options. Returns a
+    // list of { set_name, members: [variable names] }.
+    // ----------------------------------------------------------------------
+    wireVariableSets: function (variables) {
+        var sets = {};
+        var order = [];
+        for (var i = 0; i < variables.length; i++) {
+            var v = variables[i];
+            if (!v.variable_set) { continue; }
+            if (!sets[v.variable_set]) {
+                sets[v.variable_set] = [];
+                order.push(v.variable_set);
+            }
+            sets[v.variable_set].push(v.name);
+        }
+
+        var result = [];
+        for (var s = 0; s < order.length; s++) {
+            var setName = order[s];
+            if (sets[setName].length >= 2) {
+                result.push({ set_name: setName, members: sets[setName] });
+            }
+        }
+        return result;
+    },
+
+    // ----------------------------------------------------------------------
+    // UI-POLICY & ORDER GENERATION
+    // Emits sys_ui_policy records (visibility/mandatory) and computes option
+    // order. Policies are keyed off the catalog's conditional patterns:
+    //   - "show X only when Y = value"  → visibility policy
+    //   - "require X when Y = value"    → mandatory policy
+    // Deterministic rules are derived from the type graph + a small pattern
+    // table; richer rules arrive via intake.ui_policies (if supplied).
+    // ----------------------------------------------------------------------
+    generatePolicies: function (variables, intake) {
+        var policies = [];
+        var byName = {};
+        for (var i = 0; i < variables.length; i++) { byName[variables[i].name] = variables[i]; }
+
+        // Serial number is only meaningful for hardware choices.
+        if (byName['serial_number']) {
+            var hw = byName['hardware'] || byName['hardware_tier'] || byName['device_type'];
+            if (hw && hw.type === 'choice' && hw.choices.length > 0) {
+                var trigger = hw.choices[0];   // first choice value (e.g. "Laptop")
+                policies.push({
+                    name: 'Show Serial Number for ' + trigger,
+                    type: 'visibility',
+                    target: 'serial_number',
+                    condition_field: hw.name,
+                    condition_operator: 'equals',
+                    condition_value: trigger,
+                    mandatory: false,
+                    order: 100
+                });
+            }
+        }
+
+        // Justification becomes mandatory when impact is High/Critical.
+        if (byName['justification']) {
+            var imp = byName['impact'] || byName['urgency'];
+            if (imp && imp.type === 'choice') {
+                policies.push({
+                    name: 'Require Justification for High Impact',
+                    type: 'mandatory',
+                    target: 'justification',
+                    condition_field: imp.name,
+                    condition_operator: 'one_of',
+                    condition_value: ['1 - High', '2 - High'],
+                    mandatory: true,
+                    order: 200
+                });
+            }
+        }
+
+        // Intake-supplied explicit policies (highest fidelity).
+        if (intake.ui_policies && this._isArray(intake.ui_policies)) {
+            for (var p = 0; p < intake.ui_policies.length; p++) {
+                var ip = intake.ui_policies[p];
+                if (ip && ip.target) {
+                    policies.push({
+                        name: ip.name || ('Policy ' + (policies.length + 1)),
+                        type: ip.type || 'visibility',
+                        target: this._normalizeFieldName(ip.target),
+                        condition_field: this._normalizeFieldName(ip.condition_field || ''),
+                        condition_operator: ip.condition_operator || 'equals',
+                        condition_value: ip.condition_value || '',
+                        mandatory: ip.type === 'mandatory',
+                        order: 300 + (p * 10)
+                    });
+                }
+            }
+        }
+
+        return policies;
+    },
+
+    // ----------------------------------------------------------------------
+    // FLOW CONFIGURATION
+    // Emits a starter record-producer flow config. For record producers the
+    // target table is inferred; for standard items a two-step submit flow.
+    // ----------------------------------------------------------------------
+    configureFlow: function (intake, variables) {
+        var isProducer = (intake.type === 'record_producer');
+        var flow = {
+            kind: isProducer ? 'record_producer' : 'catalog_item',
+            name: (intake.name || intake.description || 'Untitled Service'),
+            short_description: intake.short_description || intake.description || '',
+            category: intake.category || 'Catalog',
+            variables: [],
+            steps: []
+        };
+
+        for (var i = 0; i < variables.length; i++) {
+            flow.variables.push({
+                name: variables[i].name,
+                type: variables[i].type,
+                mandatory: variables[i].mandatory,
+                reference_table: variables[i].reference_table,
+                default_value: variables[i].default_value
+            });
+        }
+
+        if (isProducer) {
+            flow.target_table = intake.target_table || 'incident';
+            flow.steps.push({ order: 1, name: 'Submit', type: 'record_producer_submit' });
+        } else {
+            flow.steps.push({ order: 1, name: 'Submit Request', type: 'submit' });
+            flow.steps.push({ order: 2, name: 'Fulfillment', type: 'fulfillment' });
+        }
+
+        return flow;
+    },
+
+    // ----------------------------------------------------------------------
+    // PROPOSE — the full deterministic pipeline.
+    // Returns the complete proposed item graph ready for preview.
+    // ----------------------------------------------------------------------
+    propose: function (rawIntake, dbOverrides) {
+        var parsed = this.parseIntake(rawIntake);
+        if (!parsed.ok) { return parsed; }
+        var intake = parsed.intake;
+
+        var inferred = this.inferVariables(intake);
+        this.seedChoices(inferred.variables, this._mergeOverrides(intake.choice_overrides, dbOverrides));
+
+        var graph = {
+            ok: true,
+            intake: intake,
+            variables: inferred.variables,
+            variable_sets: this.wireVariableSets(inferred.variables),
+            policies: this.generatePolicies(inferred.variables, intake),
+            flow: this.configureFlow(intake, inferred.variables),
+            engine_version: this.ENGINE_VERSION,
+            variable_count: inferred.variables.length
+        };
+
+        graph.fingerprint = this._fingerprint(graph);
+        return graph;
+    },
+
+    _mergeOverrides: function (intakeOverrides, dbOverrides) {
+        var merged = {};
+        var a = intakeOverrides || {};
+        var b = dbOverrides || {};
+        var k;
+        for (k in a) {
+            if (a.hasOwnProperty(k)) { merged[k] = (Object.prototype.toString.call(a[k]) === '[object Array]') ? a[k].slice() : a[k]; }
+        }
+        for (k in b) {
+            if (!b.hasOwnProperty(k)) { continue; }
+            var vals = b[k];
+            if (!merged[k]) { merged[k] = []; }
+            for (var i = 0; i < vals.length; i++) {
+                if (merged[k].indexOf(vals[i]) === -1) { merged[k].push(vals[i]); }
+            }
+        }
+        return merged;
+    },
+
+    // ----------------------------------------------------------------------
+    // Helpers
+    // ----------------------------------------------------------------------
+    _normalizeFieldName: function (name) {
+        var s = String(name || '').toLowerCase();
+        // CamelCase boundaries first (fooBar → foo Bar), then separators.
+        s = s.replace(/([a-z0-9])([A-Z])/g, '$1 $2');
+        s = s.replace(/[^a-z0-9]+/g, ' ').trim();
+        s = s.replace(/\s+/g, '_');
+        return s;
+    },
+
+    _humanize: function (name) {
+        var s = String(name || '').replace(/[_-]+/g, ' ');
+        s = s.replace(/([a-z])([A-Z])/g, '$1 $2');
+        s = s.replace(/\s+/g, ' ').trim();
+        if (!s) { return ''; }
+        return s.charAt(0).toUpperCase() + s.slice(1);
+    },
+
+    _scanFieldTokens: function (text) {
+        // Look for known field names appearing in the description. Both the
+        // text and each key are reduced to their alphanumeric form so that
+        // "hardware tier", "Hardware Tier", and "hardware_tier" all match the
+        // canonical key "hardware_tier".
+        var found = [];
+        var keys = [];
+        for (var k in this.NAME_TYPE_MAP) {
+            if (this.NAME_TYPE_MAP.hasOwnProperty(k)) { keys.push(k); }
+        }
+        var normText = String(text || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            var normKey = key.replace(/[^a-z0-9]/g, '');
+            if (normText.indexOf(normKey) !== -1 && found.indexOf(key) === -1) {
+                found.push(key);
+            }
+        }
+        return found;
+    },
+
+    _isArray: function (v) {
+        return Object.prototype.toString.call(v) === '[object Array]';
+    },
+
+    _safeParse: function (text) {
+        try {
+            var obj = JSON.parse(text);
+            return obj;
+        } catch (e) {
+            return null;
+        }
+    },
+
+    // Portable FNV-1a 32-bit hash (stable across instances; avoids
+    // GlideStringUtil.hashCode() which is non-standard in scoped apps).
+    _fnv1a: function (str) {
+        var hash = 0x811c9dc5;
+        for (var i = 0; i < str.length; i++) {
+            hash ^= str.charCodeAt(i);
+            hash = (hash + ((hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24))) >>> 0;
+        }
+        return ('00000000' + hash.toString(16)).slice(-8);
+    },
+
+    _fingerprint: function (graph) {
+        var sig = graph.engine_version + '|' + (graph.intake.name || '') + '|';
+        for (var i = 0; i < graph.variables.length; i++) {
+            var v = graph.variables[i];
+            sig += v.name + ':' + v.type + ':' + v.reference_table;
+            if (v.choices && v.choices.length) {
+                sig += '[' + v.choices.join(',') + ']';
+            }
+            sig += ';';
+        }
+        for (var p = 0; p < graph.policies.length; p++) {
+            var pol = graph.policies[p];
+            var cv = pol.condition_value;
+            if (Object.prototype.toString.call(cv) === '[object Array]') { cv = cv.join('+'); }
+            sig += '|P:' + pol.target + ':' + pol.type + ':' + pol.condition_field + ':' + pol.condition_operator + ':' + cv;
+        }
+        for (var s = 0; s < graph.variable_sets.length; s++) {
+            sig += '|S:' + graph.variable_sets[s].set_name + ':' + graph.variable_sets[s].members.join(',');
+        }
+        if (graph.flow) {
+            sig += '|F:' + graph.flow.kind + ':' + (graph.flow.target_table || '');
+        }
+        return 'fnv1a_' + this._fnv1a(sig);
+    }
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>si_cf_engine</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>CatalogForgeEngine</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogForge">x_sncf</sys_scope>
+    <sys_update_name>sys_script_include_si_cf_engine</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_script_include>
+
+  <!-- Script Include: CatalogForgeWriter -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_sncf.CatalogForgeWriter</api_name>
+    <client_callable>false</client_callable>
+    <description>Persistence and commit layer: review-gated propose/preview/commit, atomic writes to OOTB catalog tables with rollback, portable JSON bundle export.</description>
+    <name>CatalogForgeWriter</name>
+    <script><![CDATA[// CatalogForge — CatalogForgeWriter
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Persistence and commit layer for the CatalogForge scoped application.
+// Wraps the pure CatalogForgeEngine with side effects: it writes review
+// records to the scoped tables, and on explicit approval commits the proposed
+// item graph to the OOTB catalog tables (sc_cat_item, sc_cat_item_producer,
+// item_option_new, item_option_new_set, sys_choice, sys_ui_policy).
+//
+// Every write is review-gated: propose → preview → approve → commit. The
+// commit layer writes atomically with rollback on any partial failure.
+//
+// ES5-compatible (Rhino). No arrow functions, no let/const, no template
+// literals, no Object.values, no for...of.
+//
+// @class CatalogForgeWriter @namespace x_sncf
+var CatalogForgeWriter = Class.create();
+CatalogForgeWriter.prototype = {
+
+    MAX_PREVIEW_CHARS: 4000000,
+
+    // ----------------------------------------------------------------------
+    initialize: function () {
+        this._engine = new CatalogForgeEngine();
+    },
+
+    // ----------------------------------------------------------------------
+    // PROPOSE + PERSIST REVIEW RECORD
+    // Runs the engine, stores the graph as a reviewable record, and returns
+    // the record with its sys_id for later approval.
+    // ----------------------------------------------------------------------
+    propose: function (rawIntake, requestorId) {
+        var graph = this._engine.propose(rawIntake, this._loadChoiceOverrides());
+        if (!graph.ok) { return graph; }
+
+        var previewJson = this._safeStringify(graph);
+        if (previewJson.length > this.MAX_PREVIEW_CHARS) {
+            return { ok: false, error: 'GRAPH_TOO_LARGE', message: 'Proposed graph (' + previewJson.length + ' chars) exceeds the preview storage limit' };
+        }
+
+        var gr = new GlideRecord('x_sncf_catalog_forge_draft');
+        gr.initialize();
+        gr.setValue('name', graph.intake.name || graph.intake.description || 'Untitled Service');
+        gr.setValue('type', graph.intake.type || 'item');
+        gr.setValue('category', graph.intake.category || '');
+        gr.setValue('status', 'proposed');
+        gr.setValue('requestor', requestorId || '');
+        gr.setValue('variable_count', graph.variable_count);
+        gr.setValue('fingerprint', graph.fingerprint);
+        gr.setValue('preview_json', previewJson);
+        gr.setValue('engine_version', graph.engine_version);
+
+        var sysId = null;
+        try {
+            sysId = gr.insert();
+        } catch (e) {
+            return { ok: false, error: 'INSERT_FAILED', message: String(e) };
+        }
+
+        return {
+            ok: true,
+            draft_sys_id: sysId,
+            fingerprint: graph.fingerprint,
+            variable_count: graph.variable_count,
+            graph: graph
+        };
+    },
+
+    // ----------------------------------------------------------------------
+    // PREVIEW
+    // Returns the stored graph for a draft (or a fresh graph if rawIntake is
+    // supplied directly). Never writes.
+    // ----------------------------------------------------------------------
+    preview: function (draftSysId, rawIntake) {
+        if (draftSysId) {
+            var gr = new GlideRecord('x_sncf_catalog_forge_draft');
+            if (!gr.get(draftSysId)) {
+                return { ok: false, error: 'NOT_FOUND', message: 'Draft not found' };
+            }
+            var parsed = this._safeParse(gr.getValue('preview_json'));
+            if (parsed === null) {
+                return { ok: false, error: 'BAD_PREVIEW', message: 'Stored preview is not valid JSON' };
+            }
+            parsed.draft_sys_id = draftSysId;
+            parsed.status = gr.getValue('status');
+            return parsed;
+        }
+
+        return this._engine.propose(rawIntake);
+    },
+
+    // ----------------------------------------------------------------------
+    // COMMIT — atomic write of the full item graph to OOTB catalog tables.
+    // Writes:
+    //   sc_cat_item          — the catalog item
+    //   sc_cat_item_producer — the record producer (if type=record_producer)
+    //   item_option_new      — one record per variable
+    //   item_option_new_set  — one record per variable set
+    //   sys_choice           — one record per seeded choice value
+    //   sys_ui_policy        — one record per UI policy
+    // Rollback is performed on any failure; the draft is marked 'committed'
+    // only after every write succeeds.
+    // ----------------------------------------------------------------------
+    commit: function (draftSysId) {
+        var gr = new GlideRecord('x_sncf_catalog_forge_draft');
+        if (!gr.get(draftSysId)) {
+            return { ok: false, error: 'NOT_FOUND', message: 'Draft not found' };
+        }
+        if (gr.getValue('status') === 'committed') {
+            return { ok: false, error: 'ALREADY_COMMITTED', message: 'Draft already committed' };
+        }
+        if (!gs.hasRole('x_sncf.admin')) {
+            return { ok: false, error: 'FORBIDDEN', message: 'Commit requires the x_sncf.admin role' };
+        }
+
+        var graph = this._safeParse(gr.getValue('preview_json'));
+        if (graph === null) {
+            return { ok: false, error: 'BAD_PREVIEW', message: 'Stored preview is not valid JSON' };
+        }
+
+        var written = { items: [], variables: [], variable_sets: [], choices: [], policies: [] };
+        var rollbackIds = [];
+
+        try {
+            var itemSysId = this._writeItem(graph, written, rollbackIds);
+
+            this._writeVariables(itemSysId, graph, written, rollbackIds);
+            this._writeVariableSets(itemSysId, graph, written, rollbackIds);
+            this._writeChoices(graph, written, rollbackIds);
+            this._writePolicies(itemSysId, graph, written, rollbackIds);
+        } catch (e) {
+            this._rollback(rollbackIds);
+            return { ok: false, error: 'COMMIT_FAILED', message: String(e) };
+        }
+
+        // Mark the draft committed.
+        gr.setValue('status', 'committed');
+        gr.setValue('committed_item_sys_id', written.items[0] || '');
+        try {
+            gr.update();
+        } catch (e2) {
+            this._rollback(rollbackIds);
+            return { ok: false, error: 'STATUS_UPDATE_FAILED', message: String(e2) };
+        }
+
+        return {
+            ok: true,
+            item_sys_id: written.items[0] || '',
+            variables: written.variables.length,
+            variable_sets: written.variable_sets.length,
+            choices: written.choices.length,
+            policies: written.policies.length
+        };
+    },
+
+    // ----------------------------------------------------------------------
+    // EXPORT — emit a portable JSON bundle for review, versioning, re-import.
+    // ----------------------------------------------------------------------
+    exportBundle: function (draftSysId) {
+        var graph = this.preview(draftSysId, null);
+        if (!graph || !graph.ok) {
+            return graph || { ok: false, error: 'BAD_PREVIEW', message: 'Could not load graph for export' };
+        }
+
+        var bundle = {
+            format_version: '1.0.0',
+            exported_at: new GlideDateTime().getDisplayValue(),
+            engine_version: graph.engine_version || this._engine.ENGINE_VERSION,
+            fingerprint: graph.fingerprint || '',
+            item: {
+                name: graph.intake.name,
+                short_description: graph.intake.short_description || graph.intake.description,
+                category: graph.intake.category,
+                type: graph.intake.type
+            },
+            variables: graph.variables,
+            variable_sets: graph.variable_sets,
+            policies: graph.policies,
+            flow: graph.flow
+        };
+
+        return { ok: true, bundle: bundle };
+    },
+
+    // ----------------------------------------------------------------------
+    // LIST — return recent drafts (bounded).
+    // ----------------------------------------------------------------------
+    listDrafts: function (limit) {
+        var cap = Math.min(parseInt(limit, 10) || 25, 100);
+        var out = [];
+        var gr = new GlideRecord('x_sncf_catalog_forge_draft');
+        gr.orderByDesc('sys_created_on');
+        gr.setLimit(cap);
+        gr.query();
+        while (gr.next()) {
+            out.push({
+                sys_id: gr.getValue('sys_id'),
+                name: gr.getValue('name'),
+                type: gr.getValue('type'),
+                status: gr.getValue('status'),
+                variable_count: gr.getValue('variable_count'),
+                fingerprint: gr.getValue('fingerprint'),
+                created_on: gr.getValue('sys_created_on')
+            });
+        }
+        return { ok: true, drafts: out };
+    },
+
+    // ----------------------------------------------------------------------
+    // Internal writers
+    // ----------------------------------------------------------------------
+    _writeItem: function (graph, written, rollbackIds) {
+        var isProducer = (graph.intake.type === 'record_producer');
+        var table = isProducer ? 'sc_cat_item_producer' : 'sc_cat_item';
+        var item = new GlideRecord(table);
+        item.initialize();
+        item.setValue('name', graph.intake.name || graph.intake.description || 'Untitled Service');
+        item.setValue('short_description', graph.intake.short_description || graph.intake.description || '');
+        item.setValue('active', 'false');   // stays inactive until a human reviews it
+        if (isProducer) {
+            item.setValue('table', (graph.flow && graph.flow.target_table) ? graph.flow.target_table : 'incident');
+        } else {
+            item.setValue('type', 'item');
+        }
+        if (graph.intake.category) {
+            item.setValue('category', graph.intake.category);
+        }
+        var sysId = item.insert();
+        written.items.push(sysId);
+        rollbackIds.push({ table: table, sys_id: sysId });
+        return sysId;
+    },
+
+    _writeVariables: function (itemSysId, graph, written, rollbackIds) {
+        var vars = graph.variables || [];
+        for (var i = 0; i < vars.length; i++) {
+            var v = vars[i];
+            var opt = new GlideRecord('item_option_new');
+            opt.initialize();
+            opt.setValue('cat_item', itemSysId);
+            opt.setValue('name', v.name);
+            opt.setValue('question_text', v.label);
+            opt.setValue('type', this._mapType(v.type));
+            opt.setValue('mandatory', v.mandatory ? 'true' : 'false');
+            opt.setValue('order', v.order);
+            opt.setValue('active', 'true');
+            if (v.type === 'reference' && v.reference_table) {
+                opt.setValue('reference', v.reference_table);
+            }
+            if (v.default_value) {
+                opt.setValue('default_value', v.default_value);
+            }
+            if (v.read_only) {
+                opt.setValue('read_only', 'true');
+            }
+            var optSysId = opt.insert();
+            written.variables.push(optSysId);
+            rollbackIds.push({ table: 'item_option_new', sys_id: optSysId });
+        }
+    },
+
+    _writeVariableSets: function (itemSysId, graph, written, rollbackIds) {
+        var sets = graph.variable_sets || [];
+        for (var s = 0; s < sets.length; s++) {
+            var set = sets[s];
+            var vs = new GlideRecord('item_option_new_set');
+            vs.initialize();
+            vs.setValue('name', set.set_name);
+            vs.setValue('cat_item', itemSysId);
+            vs.setValue('active', 'true');
+            var vsSysId = vs.insert();
+            written.variable_sets.push(vsSysId);
+            rollbackIds.push({ table: 'item_option_new_set', sys_id: vsSysId });
+
+            // Attach member variables to the set.
+            for (var m = 0; m < set.members.length; m++) {
+                var memberName = set.members[m];
+                var mv = new GlideRecord('item_option_new');
+                mv.addQuery('cat_item', itemSysId);
+                mv.addQuery('name', memberName);
+                mv.setLimit(1);
+                mv.query();
+                if (mv.next()) {
+                    mv.setValue('variable_set', vsSysId);
+                    try { mv.update(); } catch (e) { /* non-fatal */ }
+                }
+            }
+        }
+    },
+
+    _writeChoices: function (graph, written, rollbackIds) {
+        var vars = graph.variables || [];
+        var itemName = graph.intake.name || graph.intake.description || '';
+        for (var i = 0; i < vars.length; i++) {
+            var v = vars[i];
+            if (v.type !== 'choice' || !v.choices || v.choices.length === 0) { continue; }
+            for (var c = 0; c < v.choices.length; c++) {
+                var ch = new GlideRecord('sys_choice');
+                ch.initialize();
+                ch.setValue('name', 'item_option_new');       // catalog variable choices
+                ch.setValue('element', v.name);
+                ch.setValue('label', v.choices[c]);
+                ch.setValue('value', v.choices[c]);
+                ch.setValue('sequence', c);
+                ch.setValue('inactive', 'false');
+                ch.setValue('language', 'en');
+                var chSysId = ch.insert();
+                written.choices.push(chSysId);
+                rollbackIds.push({ table: 'sys_choice', sys_id: chSysId });
+            }
+        }
+    },
+
+    _writePolicies: function (itemSysId, graph, written, rollbackIds) {
+        var policies = graph.policies || [];
+        for (var p = 0; p < policies.length; p++) {
+            var pol = policies[p];
+            var ui = new GlideRecord('sys_ui_policy');
+            ui.initialize();
+            ui.setValue('name', pol.name);
+            ui.setValue('table', 'sc_cat_item');
+            ui.setValue('catalog_item', itemSysId);
+            ui.setValue('active', 'true');
+            ui.setValue('order', pol.order);
+            ui.setValue('on_load', 'false');
+            ui.setValue('short_description', 'CatalogForge-generated policy');
+            if (pol.condition_field) {
+                ui.setValue('condition', this._buildCondition(pol));
+            }
+            var uiSysId = ui.insert();
+            written.policies.push(uiSysId);
+            rollbackIds.push({ table: 'sys_ui_policy', sys_id: uiSysId });
+
+            // Child action — without this the policy is inert at runtime.
+            var act = new GlideRecord('sys_ui_policy_action');
+            act.initialize();
+            act.setValue('ui_policy', uiSysId);
+            act.setValue('field', pol.target);
+            act.setValue('visible', 'true');
+            act.setValue('mandatory', pol.type === 'mandatory' ? 'true' : 'false');
+            act.setValue('read_only', 'false');
+            act.setValue('disabled', 'false');
+            var actSysId = act.insert();
+            rollbackIds.push({ table: 'sys_ui_policy_action', sys_id: actSysId });
+        }
+    },
+
+    _buildCondition: function (pol) {
+        var field = 'variables.' + pol.condition_field;
+        var vals = pol.condition_value;
+        if (Object.prototype.toString.call(vals) === '[object Array]') {
+            var parts = [];
+            for (var i = 0; i < vals.length; i++) {
+                parts.push(field + '=' + vals[i]);
+            }
+            return parts.join('^OR');
+        }
+        return field + '=' + vals;
+    },
+
+    _rollback: function (rollbackIds) {
+        for (var i = rollbackIds.length - 1; i >= 0; i--) {
+            var rec = rollbackIds[i];
+            try {
+                var gr = new GlideRecord(rec.table);
+                if (gr.get(rec.sys_id)) {
+                    gr.deleteRecord();
+                }
+            } catch (e) {
+                gs.error('CatalogForge rollback failed for ' + rec.table + ' ' + rec.sys_id + ': ' + e);
+            }
+        }
+    },
+
+    _mapType: function (type) {
+        // CatalogForge type → item_option_new type.
+        var map = {
+            'string': 'string',
+            'integer': 'integer',
+            'boolean': 'boolean',
+            'choice': 'select_box',
+            'reference': 'reference',
+            'glide_date': 'date',
+            'decimal': 'decimal'
+        };
+        return map[type] || 'string';
+    },
+
+    _loadChoiceOverrides: function () {
+        var map = {};
+        var gr = new GlideRecord('x_sncf_choice_override');
+        gr.addQuery('active', 'true');
+        gr.query();
+        while (gr.next()) {
+            var field = gr.getValue('field_name');
+            var val = gr.getValue('choice_value');
+            if (!map[field]) { map[field] = []; }
+            if (map[field].indexOf(val) === -1) { map[field].push(val); }
+        }
+        return map;
+    },
+
+    _safeParse: function (text) {
+        try { return JSON.parse(text); } catch (e) { return null; }
+    },
+
+    _safeStringify: function (obj) {
+        try { return JSON.stringify(obj); } catch (e) { return '{}'; }
+    }
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>si_cf_writer</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>CatalogForgeWriter</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogForge">x_sncf</sys_scope>
+    <sys_update_name>sys_script_include_si_cf_writer</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_script_include>
+
+  <!-- REST API definition + operations -->
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>api/x_sncf/v1</base_uri>
+    <consumes>application/json,application/xml</consumes>
+    <name>CatalogForge API</name>
+    <namespace>x_sncf</namespace>
+    <produces>application/json</produces>
+    <short_description>CatalogForge scripted REST API</short_description>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>ws_cf_def</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>CatalogForge API</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogForge">x_sncf</sys_scope>
+    <sys_update_name>sys_ws_definition_ws_cf_def</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <enforce_acl>true</enforce_acl>
+    <name>execute</name>
+    <operation_uri>execute</operation_uri>
+    <relative_path>/execute</relative_path>
+    <request_method>POST</request_method>
+    <operation_script><![CDATA[// CatalogForge — POST /execute (propose | approve | export)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Action-dispatch REST endpoint. All write surfaces collapse into a single
+// POST with an `action` body parameter, plus GET /status for all reads.
+//
+//   action=propose  → run the engine, persist a review draft, return preview
+//   action=approve  → commit the draft's item graph to the OOTB catalog tables
+//   action=export   → emit the portable JSON bundle for the draft
+//
+// ES5-compatible. Uses the request.body.data JSON body contract.
+(function process(request, response) {
+
+    var writer = new CatalogForgeWriter();
+
+    var action = '';
+    var rawIntake = '';
+    var draftSysId = '';
+
+    // Parse the JSON body.
+    if (request && request.body && request.body.data) {
+        var data = request.body.data;
+        action = (data.action || '').toString();
+        rawIntake = data.intake || '';
+        draftSysId = (data.draft_sys_id || '').toString();
+    }
+
+    // Fallback to query params when no body was provided.
+    if (!action && request && request.queryParams) {
+        action = (request.queryParams.action || '').toString();
+        draftSysId = (request.queryParams.draft_sys_id || '').toString();
+    }
+
+    var result;
+
+    switch (action) {
+        case 'propose':
+            if (!rawIntake) {
+                result = { ok: false, error: 'NO_INTAKE', message: 'Provide `intake` (JSON string or plain-language description)' };
+            } else {
+                result = writer.propose(rawIntake, gs.getUserID());
+            }
+            break;
+
+        case 'approve':
+            if (!gs.hasRole('x_sncf.admin')) {
+                result = { ok: false, error: 'FORBIDDEN', message: 'Only x_sncf.admin can approve/commit a draft' };
+                response.setStatus(403);
+            } else if (!draftSysId) {
+                result = { ok: false, error: 'NO_DRAFT', message: 'Provide `draft_sys_id` to approve' };
+            } else {
+                result = writer.commit(draftSysId);
+            }
+            break;
+
+        case 'export':
+            if (!draftSysId) {
+                result = { ok: false, error: 'NO_DRAFT', message: 'Provide `draft_sys_id` to export' };
+            } else {
+                result = writer.exportBundle(draftSysId);
+            }
+            break;
+
+        default:
+            result = { ok: false, error: 'UNKNOWN_ACTION', message: 'Unknown action: ' + action, valid_actions: ['propose', 'approve', 'export'] };
+            response.setStatus(400);
+            break;
+    }
+
+    response.setContentType('application/json');
+    response.setBody(JSON.stringify(result));
+})(request, response);
+]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>ws_cf_op_execute</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>execute</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogForge">x_sncf</sys_scope>
+    <sys_update_name>sys_ws_operation_ws_cf_op_execute</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+    <web_service_definition display_value="CatalogForge API" name="CatalogForge API">ws_cf_def</web_service_definition>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <enforce_acl>true</enforce_acl>
+    <name>status</name>
+    <operation_uri>status</operation_uri>
+    <relative_path>/status</relative_path>
+    <request_method>GET</request_method>
+    <operation_script><![CDATA[// CatalogForge — GET /status (preview | list)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Read-only REST endpoint. Query-parameter dispatch:
+//   ?draft_sys_id=<id>   → return the stored preview graph for that draft
+//   ?limit=<n>           → return the most recent drafts (bounded ≤100)
+//   (no params)          → return the engine version and endpoint summary
+//
+// ES5-compatible. No side effects.
+(function process(request, response) {
+
+    var writer = new CatalogForgeWriter();
+    var queryParams = (request && request.queryParams) ? request.queryParams : {};
+
+    var draftSysId = (queryParams.draft_sys_id || '').toString();
+    var limit = queryParams.limit;
+
+    var result;
+
+    if (draftSysId) {
+        result = writer.preview(draftSysId, null);
+    } else if (limit) {
+        result = writer.listDrafts(limit);
+    } else {
+        result = {
+            ok: true,
+            engine_version: new CatalogForgeEngine().ENGINE_VERSION,
+            endpoints: {
+                'POST /execute': ['propose', 'approve', 'export'],
+                'GET /status': ['preview (draft_sys_id)', 'list (limit)']
+            }
+        };
+    }
+
+    if (!result.ok) {
+        if (result.error === 'NOT_FOUND') { response.setStatus(404); }
+    }
+
+    response.setContentType('application/json');
+    response.setBody(JSON.stringify(result));
+})(request, response);
+]]></operation_script>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>ws_cf_op_status</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>status</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="CatalogForge">x_sncf</sys_scope>
+    <sys_update_name>sys_ws_operation_ws_cf_op_status</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+    <web_service_definition display_value="CatalogForge API" name="CatalogForge API">ws_cf_def</web_service_definition>
+  </sys_ws_operation>
+</unload>

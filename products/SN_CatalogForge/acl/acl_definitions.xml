@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-22 05:10:00">
+  <!-- CatalogForge — ACL definitions
+       Copyright (C) 2026 Vladimir Kapustin
+       SPDX-License-Identifier: AGPL-3.0 -->
+
+  <!-- ============ x_sncf_catalog_forge_draft ============ -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sncf_catalog_forge_draft</name>
+    <operation>read</operation>
+    <script><![CDATA[(function evaluate() {
+    // admin / mapper / viewer can read drafts; the requestor can read their own.
+    if (gs.hasRole('x_sncf.admin') || gs.hasRole('x_sncf.mapper') || gs.hasRole('x_sncf.viewer')) { return true; }
+    if (current.requestor == gs.getUserID()) { return true; }
+    return false;
+})();]]></script>
+    <type>record</type>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_acl_draft_read</sys_id>
+    <sys_name>x_sncf_catalog_forge_draft.read</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_security_acl_cf_acl_draft_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sncf_catalog_forge_draft</name>
+    <operation>write</operation>
+    <requires_role>false</requires_role>
+    <script><![CDATA[(function evaluate() {
+    if (gs.hasRole('x_sncf.admin') || gs.hasRole('x_sncf.mapper')) { return true; }
+    return false;
+})();]]></script>
+    <type>record</type>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_acl_draft_write</sys_id>
+    <sys_name>x_sncf_catalog_forge_draft.write</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_security_acl_cf_acl_draft_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sncf_catalog_forge_draft</name>
+    <operation>create</operation>
+    <requires_role>true</requires_role>
+    <role>x_sncf.admin</role>
+    <type>record</type>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_acl_draft_create</sys_id>
+    <sys_name>x_sncf_catalog_forge_draft.create</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_security_acl_cf_acl_draft_create</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sncf_catalog_forge_draft</name>
+    <operation>delete</operation>
+    <requires_role>true</requires_role>
+    <role>x_sncf.admin</role>
+    <type>record</type>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_acl_draft_delete</sys_id>
+    <sys_name>x_sncf_catalog_forge_draft.delete</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_security_acl_cf_acl_draft_delete</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_security_acl>
+
+  <!-- ============ x_sncf_choice_override ============ -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sncf_choice_override</name>
+    <operation>read</operation>
+    <requires_role>true</requires_role>
+    <role>x_sncf.admin</role>
+    <type>record</type>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_acl_override_read</sys_id>
+    <sys_name>x_sncf_choice_override.read</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_security_acl_cf_acl_override_read</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sncf_choice_override</name>
+    <operation>write</operation>
+    <requires_role>true</requires_role>
+    <role>x_sncf.admin</role>
+    <type>record</type>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_acl_override_write</sys_id>
+    <sys_name>x_sncf_choice_override.write</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_security_acl_cf_acl_override_write</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sncf_choice_override</name>
+    <operation>create</operation>
+    <requires_role>true</requires_role>
+    <role>x_sncf.admin</role>
+    <type>record</type>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_acl_override_create</sys_id>
+    <sys_name>x_sncf_choice_override.create</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_security_acl_cf_acl_override_create</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_security_acl>
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sncf_choice_override</name>
+    <operation>delete</operation>
+    <requires_role>true</requires_role>
+    <role>x_sncf.admin</role>
+    <type>record</type>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_acl_override_delete</sys_id>
+    <sys_name>x_sncf_choice_override.delete</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_security_acl_cf_acl_override_delete</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_security_acl>
+
+  <!-- ============ REST endpoint execute ACLs ============ -->
+  <sys_security_acl action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <name>x_sncf_catalog_forge_api</name>
+    <operation>execute</operation>
+    <script><![CDATA[(function evaluate() {
+    if (gs.hasRole('x_sncf.admin') || gs.hasRole('x_sncf.mapper') || gs.hasRole('x_sncf.viewer')) { return true; }
+    return false;
+})();]]></script>
+    <type>rest_endpoint</type>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-22 05:10:00</sys_created_on>
+    <sys_id>cf_acl_rest_execute</sys_id>
+    <sys_name>x_sncf_catalog_forge_api.execute</sys_name>
+    <sys_package display_value="CatalogForge" source="x_sncf">CatalogForge</sys_package>
+    <sys_update_name>sys_security_acl_cf_acl_rest_execute</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-22 05:10:00</sys_updated_on>
+  </sys_security_acl>
+</unload>
