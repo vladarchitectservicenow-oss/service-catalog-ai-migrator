@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-23 05:10:00">
+  <!-- FlowForge — Business Rules
+       Copyright (C) 2026 Vladimir Kapustin
+       SPDX-License-Identifier: AGPL-3.0 -->
+
+  <!-- ===================== Before Insert: set defaults ===================== -->
+  <sys_script action="INSERT_OR_UPDATE">
+    <abort_action>false</abort_action>
+    <active>true</active>
+    <add_roles>false</add_roles>
+    <condition/>
+    <description>Populates engine_version, requestor, and default status on draft creation.</description>
+    <name>Flow Forge Draft — Set Defaults</name>
+    <order>100</order>
+    <script><![CDATA[
+(function executeRule(current, previous /*null when async*/) {
+    if (!current.engine_version) {
+        current.engine_version = '1.0.0';
+    }
+    if (!current.status) {
+        current.status = 'proposed';
+    }
+    if (!current.requestor) {
+        current.requestor = gs.getUserID();
+    }
+})(current, previous);
+]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_br_draft_before_insert</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Flow Forge Draft — Set Defaults</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="FlowForge">x_snff</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+    <when>before</when>
+    <collection>x_snff_flow_forge_draft</collection>
+  </sys_script>
+
+  <!-- ===================== Before Insert: validate fingerprint uniqueness ===================== -->
+  <sys_script action="INSERT_OR_UPDATE">
+    <abort_action>false</abort_action>
+    <active>true</active>
+    <add_roles>false</add_roles>
+    <condition/>
+    <description>Warns when a draft with the same spec fingerprint already exists (dedup signal).</description>
+    <name>Flow Forge Draft — Duplicate Fingerprint Guard</name>
+    <order>200</order>
+    <script><![CDATA[
+(function executeRule(current, previous /*null when async*/) {
+    if (!current.fingerprint) { return; }
+    var gr = new GlideRecord('x_snff_flow_forge_draft');
+    gr.addQuery('fingerprint', current.fingerprint);
+    gr.addQuery('sys_id', '!=', current.getUniqueValue());
+    gr.setLimit(1);
+    gr.query();
+    if (gr.hasNext()) {
+        gr.next();
+        gs.log('A draft with the same spec fingerprint already exists (sys_id: ' + gr.getUniqueValue() + ').', 'FlowForge');
+    }
+})(current, previous);
+]]></script>
+    <sys_class_name>sys_script</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_br_draft_dedupe</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Flow Forge Draft — Duplicate Fingerprint Guard</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="FlowForge">x_snff</sys_scope>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+    <when>before</when>
+    <collection>x_snff_flow_forge_draft</collection>
+  </sys_script>
+</unload>

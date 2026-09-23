@@ -1,0 +1,1798 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-09-23 05:10:00">
+  <!-- FlowForge — scoped application manifest (x_snff)
+       Copyright (C) 2026 Vladimir Kapustin
+       SPDX-License-Identifier: AGPL-3.0 -->
+
+  <sys_scope action="INSERT_OR_UPDATE">
+    <description>Describe it. Forge it. Deploy it. FlowForge turns a plain-English description or structured FlowSpec into complete, importable Flow Designer records (sys_hub_flow / _version / _logic) with correct-by-construction spoke references.</description>
+    <js_level>rhino</js_level>
+    <name>FlowForge</name>
+    <scope>x_snff</scope>
+    <short_description>Deterministic Flow Designer flow generator from a FlowSpec</short_description>
+    <sys_class_name>sys_scope</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>scope_ff</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>FlowForge</sys_name>
+    <sys_package/>
+    <sys_policy/>
+    <sys_scope/>
+    <sys_update_name>sys_scope_scope_ff</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_scope>
+
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <description>FlowForge administrator — full access, can commit drafts and manage config.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_snff.admin</name>
+    <requires_subscription/>
+    <scoped_admin>false</scoped_admin>
+    <suffix>admin</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>role_ff_admin</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snff.admin</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="FlowForge">x_snff</sys_scope>
+    <sys_update_name>sys_user_role_role_ff_admin</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <description>FlowForge mapper — can propose/preview drafts, cannot commit.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_snff.mapper</name>
+    <requires_subscription/>
+    <scoped_admin>false</scoped_admin>
+    <suffix>mapper</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>role_ff_mapper</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snff.mapper</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="FlowForge">x_snff</sys_scope>
+    <sys_update_name>sys_user_role_role_ff_mapper</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_user_role>
+  <sys_user_role action="INSERT_OR_UPDATE">
+    <assignable_by/>
+    <description>FlowForge viewer — read-only access to drafts and previews.</description>
+    <elevated_privilege>false</elevated_privilege>
+    <grantable>true</grantable>
+    <includes_roles/>
+    <name>x_snff.viewer</name>
+    <requires_subscription/>
+    <scoped_admin>false</scoped_admin>
+    <suffix>viewer</suffix>
+    <sys_class_name>sys_user_role</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>role_ff_viewer</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>x_snff.viewer</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="FlowForge">x_snff</sys_scope>
+    <sys_update_name>sys_user_role_role_ff_viewer</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_user_role>
+
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_snff</source_scope>
+    <status>allowed</status>
+    <target_name>sys_hub_flow</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>priv_ff_flow</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_hub_flow</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_ff_flow</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_snff</source_scope>
+    <status>allowed</status>
+    <target_name>sys_hub_flow_version</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>priv_ff_flow_version</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_hub_flow_version</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_ff_flow_version</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_snff</source_scope>
+    <status>allowed</status>
+    <target_name>sys_hub_flow_logic</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>priv_ff_flow_logic</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_hub_flow_logic</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_ff_flow_logic</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_scope_privilege>
+  <sys_scope_privilege action="INSERT_OR_UPDATE">
+    <operation>execute</operation>
+    <source_scope>x_snff</source_scope>
+    <status>allowed</status>
+    <target_name>sys_hub_action_type_snapshot</target_name>
+    <target_scope>global</target_scope>
+    <target_type>table</target_type>
+    <sys_class_name>sys_scope_privilege</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>priv_ff_action_snap</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>sys_hub_action_type_snapshot</sys_name>
+    <sys_update_name>sys_scope_privilege_priv_ff_action_snap</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_scope_privilege>
+
+  <!-- Script Include: FlowForgeEngine -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snff.FlowForgeEngine</api_name>
+    <client_callable>false</client_callable>
+    <description>Deterministic Flow Designer generator core: FlowSpec parser, spoke/action catalog resolver, sys_hub_flow / _version / _logic emitter, structural validation, dry-run preview.</description>
+    <name>FlowForgeEngine</name>
+    <script><![CDATA[// FlowForge — FlowForgeEngine
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Deterministic generator core of the FlowForge scoped application.
+// Turns a canonical FlowSpec (JSON) into a complete, consistent Flow Designer
+// record graph: sys_hub_flow + sys_hub_flow_version + sys_hub_flow_logic, with
+// resolved spoke/action references and data-pill bindings correct by construction.
+//
+// This Script Include is PURE computation — it never writes to scoped tables,
+// never writes to OOTB flow tables, and never mutates platform records. All
+// persistence and commit work is the responsibility of FlowForgeWriter.
+//
+// The LLM (GenAI Controller / Now Assist, BYOK) is confined to producing the
+// FlowSpec; it NEVER emits records. This class is the deterministic, testable
+// guardrail that turns that spec into records.
+//
+// All logic is ES5-compatible (Rhino): no arrow functions, no let/const, no
+// template literals, no Object.values, no Object.entries, no for...of.
+//
+// @class FlowForgeEngine @namespace x_snff
+var FlowForgeEngine = Class.create();
+FlowForgeEngine.prototype = {
+
+    ENGINE_VERSION: '1.0.0',
+
+    // ----------------------------------------------------------------------
+    // FlowSpec contract — the single source of truth. A FlowSpec is a JSON
+    // object; every generated flow is a pure function of it.
+    // ----------------------------------------------------------------------
+    FLOWSPEC_REQUIRED_KEYS: ['name'],
+
+    // ----------------------------------------------------------------------
+    // TRIGGER CATALOG — maps an intent token to the platform trigger type.
+    // Values are the canonical Flow Designer trigger `trigger_type` strings.
+    // ----------------------------------------------------------------------
+    TRIGGER_CATALOG: {
+        'record created':    { trigger_type: 'record', operation: 'created' },
+        'record updated':    { trigger_type: 'record', operation: 'updated' },
+        'record deleted':    { trigger_type: 'record', operation: 'deleted' },
+        'scheduled':         { trigger_type: 'scheduled' },
+        'schedule':          { trigger_type: 'scheduled' },
+        'inbound email':     { trigger_type: 'email' },
+        'rest api':          { trigger_type: 'rest' },
+        'application':      { trigger_type: 'app' },
+        'metricbase':        { trigger_type: 'metric' }
+    },
+
+    // ----------------------------------------------------------------------
+    // ACTION CATALOG — maps an intent token ("create incident", "send email",
+    // "ask for approval", ...) to a canonical IntegrationHub action. The
+    // resolver binds these to real sys_hub_action_type_snapshot records at
+    // generation time (see resolveAction). Unmatched tokens surface as
+    // validation errors — never as a silently hallucinated reference.
+    // ----------------------------------------------------------------------
+    ACTION_CATALOG: {
+        'create incident':      { action: 'Create Record', table: 'incident' },
+        'create record':        { action: 'Create Record', table: '' },
+        'update incident':      { action: 'Update Record', table: 'incident' },
+        'update record':        { action: 'Update Record', table: '' },
+        'create task':          { action: 'Create Task', table: '' },
+        'create change':        { action: 'Create Record', table: 'change_request' },
+        'create problem':       { action: 'Create Record', table: 'problem' },
+        'send email':           { action: 'Send Email', table: '' },
+        'send notification':    { action: 'Send Notification', table: '' },
+        'send sms':             { action: 'Send SMS', table: '' },
+        'send text':            { action: 'Send SMS', table: '' },
+        'ask for approval':     { action: 'Ask for Approval', table: '' },
+        'approval':             { action: 'Ask for Approval', table: '' },
+        'lookup user':          { action: 'Look Up User', table: '' },
+        'look up user':         { action: 'Look Up User', table: '' },
+        'lookup record':        { action: 'Look Up Record', table: '' },
+        'look up record':       { action: 'Look Up Record', table: '' },
+        'lookup incident':      { action: 'Look Up Record', table: 'incident' },
+        'wait for condition':   { action: 'Wait For Condition', table: '' },
+        'sleep':                { action: 'Wait For Condition', table: '' },
+        'log message':          { action: 'Log Message', table: '' },
+        'create jira issue':    { action: 'Create Issue', table: '' },
+        'page on-call':         { action: 'Send SMS', table: '' },
+        'page on call':         { action: 'Send SMS', table: '' },
+        'rest call':            { action: 'REST Message', table: '' },
+        'webhook':              { action: 'REST Message', table: '' }
+    },
+
+    // Curated input-pill mappings per action — the fields each action expects.
+    ACTION_INPUTS: {
+        'Create Record':   ['table', 'field_values'],
+        'Update Record':   ['table', 'record_sys_id', 'field_values'],
+        'Create Task':     ['assignment_group', 'assigned_to', 'short_description', 'description'],
+        'Send Email':      ['to', 'subject', 'body'],
+        'Send Notification': ['recipients', 'message'],
+        'Send SMS':        ['phone_number', 'message'],
+        'Ask for Approval': ['approval_rule', 'approvers', 'instructions'],
+        'Look Up User':    ['user_name', 'user_sys_id'],
+        'Look Up Record':  ['table', 'query'],
+        'Wait For Condition': ['condition', 'timeout'],
+        'Log Message':     ['message', 'level'],
+        'Create Issue':    ['project', 'summary', 'description'],
+        'REST Message':    ['endpoint', 'method', 'body']
+    },
+
+    // Output-pill mappings — the field each action returns into the flow.
+    ACTION_OUTPUTS: {
+        'Create Record':   'record_sys_id',
+        'Update Record':   'record_sys_id',
+        'Create Task':     'task_sys_id',
+        'Look Up User':    'user_sys_id',
+        'Look Up Record':  'record_sys_id',
+        'Create Issue':    'issue_key',
+        'Ask for Approval': 'approval_result'
+    },
+
+    initialize: function () {
+    },
+
+    // ----------------------------------------------------------------------
+    // SPEC PARSER
+    // Accepts a JSON string or object. Returns { ok, spec } with normalized
+    // fields, or { ok: false, error, message }.
+    // ----------------------------------------------------------------------
+    parseSpec: function (raw) {
+        var obj = null;
+
+        if (raw === undefined || raw === null || raw === '') {
+            return { ok: false, error: 'EMPTY_SPEC', message: 'No FlowSpec provided' };
+        }
+
+        if (typeof raw === 'string') {
+            var text = raw.trim();
+            if (!text) {
+                return { ok: false, error: 'EMPTY_SPEC', message: 'No FlowSpec provided' };
+            }
+            obj = this._safeParse(text);
+            if (obj === null) {
+                return { ok: false, error: 'BAD_JSON', message: 'FlowSpec JSON could not be parsed' };
+            }
+        } else if (typeof raw === 'object') {
+            obj = raw;
+        } else {
+            return { ok: false, error: 'BAD_SPEC', message: 'FlowSpec must be a JSON string or object' };
+        }
+
+        return this.normalizeSpec(obj);
+    },
+
+    normalizeSpec: function (obj) {
+        var missing = [];
+        for (var i = 0; i < this.FLOWSPEC_REQUIRED_KEYS.length; i++) {
+            var key = this.FLOWSPEC_REQUIRED_KEYS[i];
+            if (!obj[key]) { missing.push(key); }
+        }
+        if (missing.length > 0) {
+            return { ok: false, error: 'MISSING_KEYS', message: 'FlowSpec missing required key(s): ' + missing.join(', ') };
+        }
+
+        var spec = {
+            name: (obj.name || '').toString().trim(),
+            description: (obj.description || '').toString().trim(),
+            table: (obj.table || '').toString().trim(),
+            trigger: this._normalizeTrigger(obj.trigger),
+            inputs: this._normalizeInputs(obj.inputs),
+            steps: this._normalizeSteps(obj.steps),
+            approvals: this._normalizeApprovals(obj.approvals),
+            outputs: this._normalizeOutputs(obj.outputs)
+        };
+
+        return { ok: true, spec: spec };
+    },
+
+    _normalizeTrigger: function (trigger) {
+        if (!trigger) { return { trigger_type: 'scheduled' }; }
+        if (typeof trigger === 'string') {
+            var key = this._normalizeToken(trigger);
+            return this.TRIGGER_CATALOG[key] || { trigger_type: trigger.toLowerCase() };
+        }
+        var tt = (trigger.trigger_type || trigger.type || '').toString();
+        var normalized = this.TRIGGER_CATALOG[this._normalizeToken(tt)];
+        if (normalized) {
+            normalized.condition = trigger.condition || '';
+            normalized.table = trigger.table || '';
+            return normalized;
+        }
+        return {
+            trigger_type: tt.toLowerCase(),
+            operation: trigger.operation || '',
+            condition: trigger.condition || '',
+            table: trigger.table || ''
+        };
+    },
+
+    _normalizeInputs: function (inputs) {
+        var out = [];
+        if (!inputs || !this._isArray(inputs)) { return out; }
+        for (var i = 0; i < inputs.length; i++) {
+            var v = inputs[i];
+            if (!v || typeof v !== 'object') { continue; }
+            out.push({
+                name: this._normalizeFieldName(v.name || v.label || ('input_' + (i + 1))),
+                label: (v.label || v.name || ('Input ' + (i + 1))).toString(),
+                type: (v.type || 'string').toString(),
+                mandatory: v.mandatory === true,
+                default_value: v.default_value || ''
+            });
+        }
+        return out;
+    },
+
+    _normalizeSteps: function (steps) {
+        var out = [];
+        if (!steps || !this._isArray(steps)) { return out; }
+        for (var i = 0; i < steps.length; i++) {
+            var s = steps[i];
+            if (!s || typeof s !== 'object') { continue; }
+            out.push({
+                order: i + 1,
+                action_token: (s.action || s.action_token || s.intent || '').toString(),
+                name: (s.name || s.label || '').toString(),
+                inputs: s.inputs || {},
+                condition: s.condition || '',
+                on_error: (s.on_error || 'continue').toString()
+            });
+        }
+        return out;
+    },
+
+    _normalizeApprovals: function (approvals) {
+        var out = [];
+        if (!approvals || !this._isArray(approvals)) { return out; }
+        for (var i = 0; i < approvals.length; i++) {
+            var a = approvals[i];
+            if (!a) { continue; }
+            if (typeof a === 'string') {
+                out.push({ approver: a, group: '', wait_for: 'any' });
+            } else {
+                out.push({
+                    approver: (a.approver || a.user || '').toString(),
+                    group: (a.group || '').toString(),
+                    wait_for: (a.wait_for || 'any').toString()
+                });
+            }
+        }
+        return out;
+    },
+
+    _normalizeOutputs: function (outputs) {
+        var out = [];
+        if (!outputs || !this._isArray(outputs)) { return out; }
+        for (var i = 0; i < outputs.length; i++) {
+            var o = outputs[i];
+            if (!o) { continue; }
+            if (typeof o === 'string') {
+                out.push({ name: o, type: 'string' });
+            } else {
+                out.push({ name: (o.name || '').toString(), type: (o.type || 'string').toString() });
+            }
+        }
+        return out;
+    },
+
+    // ----------------------------------------------------------------------
+    // CATALOG RESOLVER — binds an intent token to a real action type.
+    // Returns { ok, resolved } where resolved = { action, table, inputs[],
+    // output } or { ok: false, error, message } for an unknown token.
+    // The binding to a live sys_hub_action_type_snapshot sys_id is performed
+    // by the writer at commit time (see FlowForgeWriter.resolveActionRecord).
+    // ----------------------------------------------------------------------
+    resolveAction: function (token) {
+        var key = this._normalizeToken(token);
+        var entry = this.ACTION_CATALOG[key];
+
+        if (!entry) {
+            return {
+                ok: false,
+                error: 'UNKNOWN_ACTION',
+                message: 'No catalog mapping for action token "' + token + '". ' +
+                         'Use a known intent (e.g. "create incident", "send email", "ask for approval") ' +
+                         'or register a custom action in the FlowForge catalog.'
+            };
+        }
+
+        return {
+            ok: true,
+            resolved: {
+                action_token: key,
+                action: entry.action,
+                table: entry.table,
+                inputs: this.ACTION_INPUTS[entry.action] || [],
+                output: this.ACTION_OUTPUTS[entry.action] || ''
+            }
+        };
+    },
+
+    // ----------------------------------------------------------------------
+    // GENERATOR CORE — builds the sys_hub_flow / _version / _logic record
+    // graph from a normalized spec. Pure data construction; no DB access.
+    // Returns { ok, flow, version, logic, steps }.
+    // ----------------------------------------------------------------------
+    generateFlow: function (spec, category) {
+        var flow = {
+            name: spec.name,
+            description: spec.description || spec.name,
+            active: true,
+            category: category || 'Process Automation',
+            run_as: 'user_initiator'
+        };
+
+        var version = {
+            name: spec.name,
+            description: spec.description || spec.name,
+            status: 'draft',
+            version: 1,
+            flow_trigger_type: spec.trigger.trigger_type || 'scheduled',
+            trigger_table: spec.trigger.table || spec.table || '',
+            trigger_condition: spec.trigger.condition || '',
+            trigger_operation: spec.trigger.operation || ''
+        };
+
+        // Resolve and validate every step against the catalog BEFORE emitting
+        // logic records. This is the "correct by construction" guardrail.
+        var resolvedSteps = [];
+        var validation = { errors: [], warnings: [] };
+
+        for (var i = 0; i < spec.steps.length; i++) {
+            var step = spec.steps[i];
+            var resolution = this.resolveAction(step.action_token);
+            if (!resolution.ok) {
+                validation.errors.push('Step ' + step.order + ': ' + resolution.message);
+                continue;
+            }
+            resolvedSteps.push({
+                order: step.order,
+                name: step.name || resolution.resolved.action,
+                action: resolution.resolved.action,
+                table: resolution.resolved.table,
+                action_token: resolution.resolved.action_token,
+                inputs: step.inputs || {},
+                input_fields: resolution.resolved.inputs,
+                output: resolution.resolved.output,
+                condition: step.condition || '',
+                on_error: step.on_error || 'continue'
+            });
+        }
+
+        // Approvals: append as steps (Ask for Approval) when present.
+        for (var a = 0; a < spec.approvals.length; a++) {
+            var appr = spec.approvals[a];
+            resolvedSteps.push({
+                order: resolvedSteps.length + 1,
+                name: 'Approval: ' + (appr.approver || appr.group || 'pending'),
+                action: 'Ask for Approval',
+                table: '',
+                action_token: 'ask for approval',
+                inputs: {
+                    approvers: appr.approver || '',
+                    approval_group: appr.group || '',
+                    instructions: 'Please approve this request'
+                },
+                input_fields: this.ACTION_INPUTS['Ask for Approval'] || [],
+                output: 'approval_result',
+                condition: '',
+                on_error: 'continue'
+            });
+        }
+
+        // Build logic records (one per step).
+        var logic = [];
+        for (var l = 0; l < resolvedSteps.length; l++) {
+            var rs = resolvedSteps[l];
+            logic.push({
+                order: rs.order,
+                name: rs.name,
+                action_type: rs.action,
+                action_table: rs.table,
+                inputs: this._bindInputPills(rs),
+                outputs: this._bindOutputPill(rs),
+                condition: rs.condition,
+                on_error: rs.on_error
+            });
+        }
+
+        // Structural validation on the final graph.
+        var struct = this.validateGraph(resolvedSteps, spec.outputs);
+        validation.errors = validation.errors.concat(struct.errors);
+        validation.warnings = validation.warnings.concat(struct.warnings);
+
+        return {
+            ok: validation.errors.length === 0,
+            flow: flow,
+            version: version,
+            logic: logic,
+            steps: resolvedSteps,
+            validation: validation
+        };
+    },
+
+    _bindInputPills: function (step) {
+        var pills = {};
+        var provided = step.inputs || {};
+        for (var i = 0; i < step.input_fields.length; i++) {
+            var field = step.input_fields[i];
+            if (provided[field] !== undefined) {
+                pills[field] = provided[field];
+            } else if (field === 'table' && step.table) {
+                pills[field] = step.table;
+            }
+            // Unfilled fields are left for the author — the validator flags
+            // mandatory unfilled pills.
+        }
+        return pills;
+    },
+
+    _bindOutputPill: function (step) {
+        if (!step.output) { return {}; }
+        var out = {};
+        out[step.output] = step.name;
+        return out;
+    },
+
+    // ----------------------------------------------------------------------
+    // STRUCTURAL VALIDATION — catches unbound mandatory pills and unresolved
+    // references before any record is emitted. Read-only.
+    // ----------------------------------------------------------------------
+    validateGraph: function (steps, outputs) {
+        var errors = [];
+        var warnings = [];
+
+        if (!steps || steps.length === 0) {
+            errors.push('Flow has no steps. A FlowSpec must define at least one action step.');
+            return { errors: errors, warnings: warnings };
+        }
+
+        // Flag steps whose mandatory input pills are unbound.
+        for (var i = 0; i < steps.length; i++) {
+            var step = steps[i];
+            var filled = step.inputs || {};
+            for (var f = 0; f < step.input_fields.length; f++) {
+                var field = step.input_fields[f];
+                var isFilled = filled[field] !== undefined && filled[field] !== '';
+                var isTableField = (field === 'table');
+                if (!isFilled && !isTableField) {
+                    warnings.push('Step ' + step.order + ' ("' + step.name + '"): input pill "' + field + '" is unbound');
+                }
+            }
+        }
+
+        // Warn on empty outputs (flow produces nothing).
+        if (!outputs || outputs.length === 0) {
+            warnings.push('Flow defines no explicit outputs. The final step result will be the only return value.');
+        }
+
+        return { errors: errors, warnings: warnings };
+    },
+
+    // ----------------------------------------------------------------------
+    // DRY-RUN PREVIEW — renders the generated flow structure as a readable
+    // summary (steps, branches, action wiring, data-pill bindings). No writes.
+    // ----------------------------------------------------------------------
+    renderPreview: function (result) {
+        var lines = [];
+        lines.push('Flow: ' + result.flow.name);
+        lines.push('Description: ' + (result.flow.description || ''));
+        lines.push('Trigger: ' + result.version.flow_trigger_type +
+                   (result.version.trigger_table ? ' on ' + result.version.trigger_table : '') +
+                   (result.version.trigger_operation ? ' [' + result.version.trigger_operation + ']' : ''));
+        lines.push('');
+        lines.push('Steps (' + result.steps.length + '):');
+
+        for (var i = 0; i < result.steps.length; i++) {
+            var s = result.steps[i];
+            lines.push('  ' + s.order + '. ' + s.name + '  ->  ' + s.action +
+                       (s.table ? ' (' + s.table + ')' : ''));
+            var keys = [];
+            var inputs = s.inputs || {};
+            for (var k in inputs) {
+                if (inputs.hasOwnProperty(k) && inputs[k] !== '') { keys.push(k + '=' + inputs[k]); }
+            }
+            if (keys.length > 0) { lines.push('       pills: ' + keys.join(', ')); }
+        }
+
+        if (result.validation.errors.length > 0) {
+            lines.push('');
+            lines.push('Validation errors:');
+            for (var e = 0; e < result.validation.errors.length; e++) {
+                lines.push('  - ' + result.validation.errors[e]);
+            }
+        }
+        if (result.validation.warnings.length > 0) {
+            lines.push('');
+            lines.push('Validation warnings:');
+            for (var w = 0; w < result.validation.warnings.length; w++) {
+                lines.push('  - ' + result.validation.warnings[w]);
+            }
+        }
+
+        return lines.join('\n');
+    },
+
+    // ----------------------------------------------------------------------
+    // FINGERPRINT — deterministic content hash of the spec, used for draft
+    // dedup and drift detection. Portable JS (no GlideDigest dependency), so
+    // it works identically in Rhino and Node.
+    // ----------------------------------------------------------------------
+    fingerprint: function (spec) {
+        var canonical = JSON.stringify(spec);
+        var hash = 0;
+        for (var i = 0; i < canonical.length; i++) {
+            var ch = canonical.charCodeAt(i);
+            hash = ((hash << 5) - hash) + ch;
+            hash |= 0;
+        }
+        return 'ff_' + (hash >>> 0).toString(16) + '_' + canonical.length.toString(16);
+    },
+
+    // ----------------------------------------------------------------------
+    // HELPERS
+    // ----------------------------------------------------------------------
+    _safeParse: function (text) {
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            return null;
+        }
+    },
+
+    _isArray: function (v) {
+        return Object.prototype.toString.call(v) === '[object Array]';
+    },
+
+    _normalizeToken: function (s) {
+        return (s || '').toString().toLowerCase().replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '');
+    },
+
+    _normalizeFieldName: function (s) {
+        return this._normalizeToken(s).replace(/[^a-z0-9_]+/g, '_').replace(/^_+|_+$/g, '');
+    },
+
+    _escapeXml: function (s) {
+        return (s === undefined || s === null) ? '' :
+            String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                     .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+                     .replace(/'/g, '&apos;');
+    },
+
+    type: 'FlowForgeEngine'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_si_engine</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>FlowForgeEngine</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="FlowForge">x_snff</sys_scope>
+    <sys_update_name>sys_script_include_ff_si_engine</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_script_include>
+
+  <!-- Script Include: FlowForgeWriter -->
+  <sys_script_include action="INSERT_OR_UPDATE">
+    <access>package_private</access>
+    <active>true</active>
+    <api_name>x_snff.FlowForgeWriter</api_name>
+    <client_callable>false</client_callable>
+    <description>Persistence and commit layer: draft persistence, direct Table API commit to flow tables, update-set XML export, config access.</description>
+    <name>FlowForgeWriter</name>
+    <script><![CDATA[// FlowForge — FlowForgeWriter
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Persistence and commit layer of the FlowForge scoped application.
+// Owns the two scoped tables (draft + config), the update-set XML export,
+// and the direct Table API commit into the OOTB flow tables
+// (sys_hub_flow, sys_hub_flow_version, sys_hub_flow_logic). It is the ONLY
+// component that writes records — the engine (FlowForgeEngine) is pure.
+//
+// Dual import path:
+//   exportUpdateSetXml(draftSysId)  → portable update-set XML (GUI/partner)
+//   commit(draftSysId)              → direct Table API write (CI/CD pipeline)
+// Both emit identical record content from the same draft graph.
+//
+// ES5-compatible (Rhino).
+//
+// @class FlowForgeWriter @namespace x_snff
+var FlowForgeWriter = Class.create();
+FlowForgeWriter.prototype = {
+
+    DRAFT_TABLE: 'x_snff_flow_forge_draft',
+    CONFIG_TABLE: 'x_snff_flow_forge_config',
+    FLOW_TABLE: 'sys_hub_flow',
+    FLOW_VERSION_TABLE: 'sys_hub_flow_version',
+    FLOW_LOGIC_TABLE: 'sys_hub_flow_logic',
+    ACTION_SNAPSHOT_TABLE: 'sys_hub_action_type_snapshot',
+    SNAPSHOT_TABLE: 'sys_hub_flow_snapshot',
+
+    initialize: function () {
+        this.engine = new FlowForgeEngine();
+    },
+
+    // ----------------------------------------------------------------------
+    // PROPOSE — run the engine, persist a draft, return the preview.
+    // ----------------------------------------------------------------------
+    propose: function (rawSpec, userId) {
+        var parsed = this.engine.parseSpec(rawSpec);
+        if (!parsed.ok) {
+            return { ok: false, error: parsed.error, message: parsed.message };
+        }
+
+        var spec = parsed.spec;
+        var category = this._defaultCategory();
+        var generated = this.engine.generateFlow(spec, category);
+
+        if (!generated.ok) {
+            return {
+                ok: false,
+                error: 'VALIDATION_FAILED',
+                message: 'Generated flow failed structural validation',
+                validation: generated.validation
+            };
+        }
+
+        var fingerprint = this.engine.fingerprint(spec);
+        var draftSysId = this._saveDraft(spec, generated, fingerprint, userId);
+
+        return {
+            ok: true,
+            draft_sys_id: draftSysId,
+            fingerprint: fingerprint,
+            preview: this.engine.renderPreview(generated),
+            validation: generated.validation,
+            step_count: generated.steps.length
+        };
+    },
+
+    // ----------------------------------------------------------------------
+    // COMMIT — write the draft's graph directly to the OOTB flow tables.
+    // Returns the new flow + version sys_ids.
+    // ----------------------------------------------------------------------
+    commit: function (draftSysId) {
+        var draft = this._loadDraft(draftSysId);
+        if (!draft) {
+            return { ok: false, error: 'NOT_FOUND', message: 'Draft ' + draftSysId + ' not found' };
+        }
+
+        var generated = this._rehydrate(draft);
+        if (!generated.ok) {
+            return { ok: false, error: 'REHYDRATE_FAILED', message: generated.message };
+        }
+
+        try {
+            var flowSysId = this._insertFlow(generated.flow);
+            var status = this._commitMode() === 'published' ? 'published' : 'draft';
+            var versionSysId = this._insertFlowVersion(generated.version, flowSysId, status);
+            var logicIds = this._insertFlowLogic(generated.logic, flowSysId, versionSysId);
+            var snapshotSysId = this._insertFlowSnapshot(generated.version, flowSysId);
+
+            // Record the commit on the draft for audit.
+            var gr = new GlideRecord(this.DRAFT_TABLE);
+            if (gr.get(draftSysId)) {
+                gr.setValue('status', 'committed');
+                gr.setValue('committed_flow_sys_id', flowSysId);
+                gr.setValue('committed_version_sys_id', versionSysId);
+                gr.setWorkflow(false);
+                gr.update();
+            }
+
+            return {
+                ok: true,
+                flow_sys_id: flowSysId,
+                version_sys_id: versionSysId,
+                snapshot_sys_id: snapshotSysId,
+                logic_record_count: logicIds.length
+            };
+        } catch (e) {
+            return { ok: false, error: 'COMMIT_FAILED', message: String(e) };
+        }
+    },
+
+    // ----------------------------------------------------------------------
+    // EXPORT — emit a portable update-set XML bundle for the draft.
+    // ----------------------------------------------------------------------
+    exportUpdateSetXml: function (draftSysId) {
+        var draft = this._loadDraft(draftSysId);
+        if (!draft) {
+            return { ok: false, error: 'NOT_FOUND', message: 'Draft ' + draftSysId + ' not found' };
+        }
+
+        var generated = this._rehydrate(draft);
+        if (!generated.ok) {
+            return { ok: false, error: 'REHYDRATE_FAILED', message: generated.message };
+        }
+
+        var xml = this._buildUpdateSetXml(generated);
+
+        return {
+            ok: true,
+            file_name: 'flow_forge_' + this._slugify(generated.flow.name) + '.xml',
+            xml: xml,
+            byte_count: xml.length
+        };
+    },
+
+    // ----------------------------------------------------------------------
+    // RESOLVE ACTION RECORD — bind a catalog action to a live
+    // sys_hub_action_type_snapshot sys_id (integration hub action snapshot).
+    // Returns '' if not resolvable (author must supply a custom action).
+    // ----------------------------------------------------------------------
+    resolveActionRecord: function (actionName) {
+        var gr = new GlideRecord(this.ACTION_SNAPSHOT_TABLE);
+        gr.addQuery('name', actionName);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return gr.getUniqueValue();
+        }
+        return '';
+    },
+
+    // ----------------------------------------------------------------------
+    // Internal: draft persistence
+    // ----------------------------------------------------------------------
+    _saveDraft: function (spec, generated, fingerprint, userId) {
+        var gr = new GlideRecord(this.DRAFT_TABLE);
+        gr.initialize();
+        gr.setValue('name', spec.name);
+        gr.setValue('description', spec.description || spec.name);
+        gr.setValue('status', 'proposed');
+        gr.setValue('fingerprint', fingerprint);
+        gr.setValue('engine_version', this.engine.ENGINE_VERSION);
+        gr.setValue('trigger_type', generated.version.flow_trigger_type);
+        gr.setValue('step_count', generated.steps.length);
+        gr.setValue('spec_json', JSON.stringify(spec));
+        gr.setValue('graph_json', JSON.stringify(generated));
+        gr.setValue('preview', this.engine.renderPreview(generated));
+        gr.setValue('requestor', userId || gs.getUserID());
+        var sysId = gr.insert();
+        return sysId;
+    },
+
+    _loadDraft: function (draftSysId) {
+        if (!draftSysId) { return null; }
+        var gr = new GlideRecord(this.DRAFT_TABLE);
+        if (!gr.get(draftSysId)) { return null; }
+        return {
+            sys_id: gr.getUniqueValue(),
+            name: gr.getValue('name'),
+            spec_json: gr.getValue('spec_json'),
+            graph_json: gr.getValue('graph_json'),
+            status: gr.getValue('status')
+        };
+    },
+
+    // Rebuild the generated graph from the stored draft (or regenerate from
+    // the stored spec if the graph blob is missing/empty).
+    _rehydrate: function (draft) {
+        var generated = this._safeParse(draft.graph_json);
+        if (generated && generated.flow && generated.logic) {
+            return {
+                ok: true,
+                flow: generated.flow,
+                version: generated.version,
+                logic: generated.logic,
+                steps: generated.steps || [],
+                validation: generated.validation || { errors: [], warnings: [] }
+            };
+        }
+        // Fallback: regenerate deterministically from the stored spec.
+        var parsed = this.engine.parseSpec(draft.spec_json);
+        if (!parsed.ok) {
+            return { ok: false, message: 'Stored spec could not be parsed: ' + parsed.message };
+        }
+        var g = this.engine.generateFlow(parsed.spec);
+        if (!g.ok) {
+            return { ok: false, message: 'Regenerated flow failed validation' };
+        }
+        return {
+            ok: true,
+            flow: g.flow,
+            version: g.version,
+            logic: g.logic,
+            steps: g.steps,
+            validation: g.validation
+        };
+    },
+
+    // ----------------------------------------------------------------------
+    // Internal: direct Table API inserts (guarded)
+    // ----------------------------------------------------------------------
+    _insertFlow: function (flow) {
+        var gr = new GlideRecord(this.FLOW_TABLE);
+        gr.initialize();
+        gr.setValue('name', flow.name);
+        gr.setValue('description', flow.description);
+        gr.setValue('active', flow.active);
+        gr.setValue('category', flow.category);
+        gr.setValue('run_as', flow.run_as);
+        gr.setValue('type', 'flow');
+        var sysId = gr.insert();
+        return sysId;
+    },
+
+    _insertFlowVersion: function (version, flowSysId, status) {
+        var gr = new GlideRecord(this.FLOW_VERSION_TABLE);
+        gr.initialize();
+        gr.setValue('name', version.name);
+        gr.setValue('description', version.description);
+        gr.setValue('flow', flowSysId);
+        gr.setValue('status', status || version.status || 'draft');
+        gr.setValue('version', version.version);
+        if (version.trigger_table) { gr.setValue('table', version.trigger_table); }
+        if (version.trigger_condition) { gr.setValue('condition', version.trigger_condition); }
+        if (version.trigger_operation) { gr.setValue('operation', version.trigger_operation); }
+        var sysId = gr.insert();
+        return sysId;
+    },
+
+    _insertFlowLogic: function (logic, flowSysId, versionSysId) {
+        var ids = [];
+        for (var i = 0; i < logic.length; i++) {
+            var l = logic[i];
+            var actionSysId = this.resolveActionRecord(l.action_type);
+            var gr = new GlideRecord(this.FLOW_LOGIC_TABLE);
+            gr.initialize();
+            gr.setValue('name', l.name);
+            gr.setValue('flow', flowSysId);
+            gr.setValue('flow_version', versionSysId);
+            // action_type is a reference to sys_hub_action_type_snapshot —
+            // bind the resolved sys_id, not the display string.
+            gr.setValue('action_type', actionSysId);
+            if (l.action_table) { gr.setValue('table', l.action_table); }
+            gr.setValue('order', l.order);
+            if (l.condition) { gr.setValue('condition', l.condition); }
+            gr.setValue('on_error', l.on_error || 'continue');
+            var logicSysId = gr.insert();
+            if (logicSysId) {
+                this._insertLogicPills(l, logicSysId);
+            }
+            ids.push(logicSysId);
+        }
+        return ids;
+    },
+
+    _insertFlowSnapshot: function (version, flowSysId) {
+        var gr = new GlideRecord(this.SNAPSHOT_TABLE);
+        gr.initialize();
+        gr.setValue('name', version.name);
+        gr.setValue('flow', flowSysId);
+        gr.setValue('status', 'draft');
+        return gr.insert();
+    },
+
+    // Flow Designer data-pill bindings live on child tables, not string columns
+    // on the parent. Emit input/output pill records for each bound value.
+    _insertLogicPills: function (logic, logicSysId) {
+        var field;
+        var inputs = logic.inputs || {};
+        for (field in inputs) {
+            if (!inputs.hasOwnProperty(field)) { continue; }
+            var value = inputs[field];
+            if (value === undefined || value === '') { continue; }
+            var igr = new GlideRecord('sys_hub_flow_logic_input');
+            igr.initialize();
+            igr.setValue('flow_logic', logicSysId);
+            igr.setValue('name', field);
+            igr.setValue('value', JSON.stringify(value));
+            igr.insert();
+        }
+        var outputs = logic.outputs || {};
+        for (field in outputs) {
+            if (!outputs.hasOwnProperty(field)) { continue; }
+            var oval = outputs[field];
+            if (oval === undefined || oval === '') { continue; }
+            var ogr = new GlideRecord('sys_hub_flow_logic_output');
+            ogr.initialize();
+            ogr.setValue('flow_logic', logicSysId);
+            ogr.setValue('name', field);
+            ogr.setValue('value', JSON.stringify(oval));
+            ogr.insert();
+        }
+    },
+
+    // ----------------------------------------------------------------------
+    // Internal: update-set XML construction
+    // ----------------------------------------------------------------------
+    _buildUpdateSetXml: function (generated) {
+        var e = this.engine;
+        var flow = generated.flow;
+        var version = generated.version;
+        var logic = generated.logic;
+
+        var xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+        xml += '<unload unload_date="' + this._now() + '">\n';
+        xml += '  <sys_remote_update_set action="INSERT_OR_UPDATE">\n';
+        xml += '    <name>FlowForge - ' + e._escapeXml(flow.name) + '</name>\n';
+        xml += '    <application display_value="FlowForge">x_snff</application>\n';
+        xml += '    <application_name>FlowForge</application_name>\n';
+        xml += '  </sys_remote_update_set>\n';
+
+        // Flow record
+        xml += '  <sys_hub_flow action="INSERT_OR_UPDATE">\n';
+        xml += '    <name>' + e._escapeXml(flow.name) + '</name>\n';
+        xml += '    <description>' + e._escapeXml(flow.description) + '</description>\n';
+        xml += '    <active>true</active>\n';
+        xml += '    <category>' + e._escapeXml(flow.category) + '</category>\n';
+        xml += '    <run_as>user_initiator</run_as>\n';
+        xml += '  </sys_hub_flow>\n';
+
+        // Version record
+        xml += '  <sys_hub_flow_version action="INSERT_OR_UPDATE">\n';
+        xml += '    <name>' + e._escapeXml(version.name) + '</name>\n';
+        xml += '    <description>' + e._escapeXml(version.description) + '</description>\n';
+        xml += '    <status>draft</status>\n';
+        xml += '    <type>' + e._escapeXml(version.flow_trigger_type) + '</type>\n';
+        if (version.trigger_table) { xml += '    <table>' + e._escapeXml(version.trigger_table) + '</table>\n'; }
+        if (version.trigger_condition) { xml += '    <condition>' + e._escapeXml(version.trigger_condition) + '</condition>\n'; }
+        if (version.trigger_operation) { xml += '    <operation>' + e._escapeXml(version.trigger_operation) + '</operation>\n'; }
+        xml += '  </sys_hub_flow_version>\n';
+
+        // Logic records
+        for (var i = 0; i < logic.length; i++) {
+            var l = logic[i];
+            xml += '  <sys_hub_flow_logic action="INSERT_OR_UPDATE">\n';
+            xml += '    <name>' + e._escapeXml(l.name) + '</name>\n';
+            xml += '    <action_type>' + e._escapeXml(l.action_type) + '</action_type>\n';
+            if (l.action_table) { xml += '    <table>' + e._escapeXml(l.action_table) + '</table>\n'; }
+            xml += '    <order>' + l.order + '</order>\n';
+            xml += '    <inputs>' + e._escapeXml(JSON.stringify(l.inputs)) + '</inputs>\n';
+            xml += '    <outputs>' + e._escapeXml(JSON.stringify(l.outputs)) + '</outputs>\n';
+            xml += '    <on_error>' + e._escapeXml(l.on_error || 'continue') + '</on_error>\n';
+            xml += '  </sys_hub_flow_logic>\n';
+        }
+
+        xml += '</unload>\n';
+        return xml;
+    },
+
+    // ----------------------------------------------------------------------
+    // Config accessors — read/write the scoped config table (single row).
+    // ----------------------------------------------------------------------
+    _defaultCategory: function () {
+        var cfg = this.getConfig();
+        return (cfg && cfg.default_category) || 'Process Automation';
+    },
+
+    _commitMode: function () {
+        var cfg = this.getConfig();
+        return (cfg && cfg.commit_mode) || 'draft';
+    },
+
+    getConfig: function () {
+        var gr = new GlideRecord(this.CONFIG_TABLE);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return {
+                sys_id: gr.getUniqueValue(),
+                default_category: gr.getValue('default_category'),
+                commit_mode: gr.getValue('commit_mode'),
+                llm_enabled: gr.getValue('llm_enabled'),
+                llm_provider: gr.getValue('llm_provider')
+            };
+        }
+        return null;
+    },
+
+    setConfig: function (values) {
+        var gr = new GlideRecord(this.CONFIG_TABLE);
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            if (values.default_category !== undefined) { gr.setValue('default_category', values.default_category); }
+            if (values.commit_mode !== undefined) { gr.setValue('commit_mode', values.commit_mode); }
+            if (values.llm_enabled !== undefined) { gr.setValue('llm_enabled', values.llm_enabled); }
+            if (values.llm_provider !== undefined) { gr.setValue('llm_provider', values.llm_provider); }
+            gr.setWorkflow(false);
+            return gr.update();
+        }
+        // Insert a fresh singleton row.
+        gr.initialize();
+        gr.setValue('default_category', values.default_category || 'Process Automation');
+        gr.setValue('commit_mode', values.commit_mode || 'draft');
+        gr.setValue('llm_enabled', values.llm_enabled !== undefined ? values.llm_enabled : false);
+        gr.setValue('llm_provider', values.llm_provider || '');
+        return gr.insert();
+    },
+
+    // ----------------------------------------------------------------------
+    // Helpers
+    // ----------------------------------------------------------------------
+    _safeParse: function (text) {
+        if (!text) { return null; }
+        try { return JSON.parse(text); } catch (e) { return null; }
+    },
+
+    _slugify: function (s) {
+        return (s || '').toString().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'flow';
+    },
+
+    _now: function () {
+        var gdt = new GlideDateTime();
+        return gdt.getValue();
+    },
+
+    type: 'FlowForgeWriter'
+};
+]]></script>
+    <sys_class_name>sys_script_include</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_si_writer</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>FlowForgeWriter</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="FlowForge">x_snff</sys_scope>
+    <sys_update_name>sys_script_include_ff_si_writer</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_script_include>
+
+  <!-- Scripted REST API: FlowForge -->
+  <sys_ws_definition action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <base_uri>/api/x_snff/flow_forge</base_uri>
+    <name>FlowForge</name>
+    <namespace>x_snff</namespace>
+    <sys_class_name>sys_ws_definition</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_ws_def</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>FlowForge</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="FlowForge">x_snff</sys_scope>
+    <sys_update_name>sys_ws_definition_ff_ws_def</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_ws_definition>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <http_method>POST</http_method>
+    <name>execute</name>
+    <operation_uri>/execute</operation_uri>
+    <relative_path>/execute</relative_path>
+    <requires_acl>true</requires_acl>
+    <rest_message>false</rest_message>
+    <web_service_definition display_value="FlowForge">ff_ws_def</web_service_definition>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_ws_op_execute</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>execute</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="FlowForge">x_snff</sys_scope>
+    <sys_update_name>sys_ws_operation_ff_ws_op_execute</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+    <operation_script><![CDATA[// FlowForge — POST /execute (propose | commit | export)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Action-dispatch REST endpoint. All write surfaces collapse into a single
+// POST with an `action` body parameter (or query param). GET /status covers
+// all reads.
+//
+//   action=propose  → run the engine, persist a draft, return the preview
+//   action=commit   → write the draft graph to the OOTB flow tables
+//   action=export   → emit the portable update-set XML bundle
+//
+// Authorization:
+//   propose/export  → any authenticated user with the x_snff.mapper role
+//   commit          → requires the x_snff.admin role
+//
+// ES5-compatible. Uses the request.body.data JSON body contract.
+(function process(request, response) {
+
+    var writer = new FlowForgeWriter();
+
+    var action = '';
+    var rawSpec = '';
+    var draftSysId = '';
+
+    // Parse the JSON body.
+    if (request && request.body && request.body.data) {
+        var data = request.body.data;
+        action = (data.action || '').toString();
+        rawSpec = data.spec || '';
+        draftSysId = (data.draft_sys_id || '').toString();
+    }
+
+    // Fallback to query params when no body was provided.
+    if (!action && request && request.queryParams) {
+        action = (request.queryParams.action || '').toString();
+        rawSpec = request.queryParams.spec || '';
+        draftSysId = (request.queryParams.draft_sys_id || '').toString();
+    }
+
+    var result;
+
+    switch (action) {
+        case 'propose':
+            if (!gs.hasRole('x_snff.mapper') && !gs.hasRole('x_snff.admin')) {
+                result = { ok: false, error: 'FORBIDDEN', message: 'propose requires the x_snff.mapper role' };
+                response.setStatus(403);
+            } else if (!rawSpec) {
+                result = { ok: false, error: 'NO_SPEC', message: 'Provide `spec` (FlowSpec JSON string or object)' };
+                response.setStatus(400);
+            } else {
+                result = writer.propose(rawSpec, gs.getUserID());
+            }
+            break;
+
+        case 'commit':
+            if (!gs.hasRole('x_snff.admin')) {
+                result = { ok: false, error: 'FORBIDDEN', message: 'Only x_snff.admin can commit a draft to the flow tables' };
+                response.setStatus(403);
+            } else if (!draftSysId) {
+                result = { ok: false, error: 'NO_DRAFT', message: 'Provide `draft_sys_id` to commit' };
+                response.setStatus(400);
+            } else {
+                result = writer.commit(draftSysId);
+            }
+            break;
+
+        case 'export':
+            if (!gs.hasRole('x_snff.mapper') && !gs.hasRole('x_snff.admin')) {
+                result = { ok: false, error: 'FORBIDDEN', message: 'export requires the x_snff.mapper role' };
+                response.setStatus(403);
+            } else if (!draftSysId) {
+                result = { ok: false, error: 'NO_DRAFT', message: 'Provide `draft_sys_id` to export' };
+                response.setStatus(400);
+            } else {
+                result = writer.exportUpdateSetXml(draftSysId);
+            }
+            break;
+
+        default:
+            result = {
+                ok: false,
+                error: 'UNKNOWN_ACTION',
+                message: 'Unknown action: ' + action,
+                valid_actions: ['propose', 'commit', 'export']
+            };
+            response.setStatus(400);
+            break;
+    }
+
+    response.setContentType('application/json');
+    response.setBody(JSON.stringify(result));
+})(request, response);
+]]></operation_script>
+  </sys_ws_operation>
+
+  <sys_ws_operation action="INSERT_OR_UPDATE">
+    <active>true</active>
+    <http_method>GET</http_method>
+    <name>status</name>
+    <operation_uri>/status</operation_uri>
+    <relative_path>/status</relative_path>
+    <requires_acl>true</requires_acl>
+    <rest_message>false</rest_message>
+    <web_service_definition display_value="FlowForge">ff_ws_def</web_service_definition>
+    <sys_class_name>sys_ws_operation</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_ws_op_status</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>status</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_policy/>
+    <sys_scope display_value="FlowForge">x_snff</sys_scope>
+    <sys_update_name>sys_ws_operation_ff_ws_op_status</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+    <operation_script><![CDATA[// FlowForge — GET /status (draft | preview | catalog)
+// Copyright (C) 2026 Vladimir Kapustin
+// SPDX-License-Identifier: AGPL-3.0
+//
+// Read-only reporting endpoint. No write side effects. A `mode` query
+// parameter (or body) selects the report:
+//
+//   mode=draft    → metadata for a single draft (draft_sys_id)
+//   mode=preview  → re-render the dry-run preview for a draft
+//   mode=catalog  → list the resolved action-catalog entries available
+//
+// Missing/unrecognized mode returns 400.
+(function process(request, response) {
+
+    var mode = '';
+    var draftSysId = '';
+
+    if (request && request.queryParams) {
+        mode = (request.queryParams.mode || '').toString();
+        draftSysId = (request.queryParams.draft_sys_id || '').toString();
+    }
+    if (!mode && request && request.body && request.body.data) {
+        var data = request.body.data;
+        mode = (data.mode || '').toString();
+        draftSysId = (data.draft_sys_id || '').toString();
+    }
+
+    var writer = new FlowForgeWriter();
+    var result;
+
+    switch (mode) {
+        case 'draft':
+            if (!draftSysId) {
+                result = { ok: false, error: 'NO_DRAFT', message: 'Provide `draft_sys_id`' };
+                response.setStatus(400);
+            } else {
+                var draft = writer._loadDraft(draftSysId);
+                if (!draft) {
+                    result = { ok: false, error: 'NOT_FOUND', message: 'Draft ' + draftSysId + ' not found' };
+                    response.setStatus(404);
+                } else {
+                    result = {
+                        ok: true,
+                        draft_sys_id: draft.sys_id,
+                        name: draft.name,
+                        status: draft.status
+                    };
+                }
+            }
+            break;
+
+        case 'preview':
+            if (!draftSysId) {
+                result = { ok: false, error: 'NO_DRAFT', message: 'Provide `draft_sys_id`' };
+                response.setStatus(400);
+            } else {
+                var d = writer._loadDraft(draftSysId);
+                if (!d) {
+                    result = { ok: false, error: 'NOT_FOUND', message: 'Draft ' + draftSysId + ' not found' };
+                    response.setStatus(404);
+                } else {
+                    var rehydrated = writer._rehydrate(d);
+                    if (!rehydrated.ok) {
+                        result = { ok: false, error: 'REHYDRATE_FAILED', message: rehydrated.message };
+                    } else {
+                        var generated = {
+                            flow: rehydrated.flow,
+                            version: rehydrated.version,
+                            steps: rehydrated.steps,
+                            logic: rehydrated.logic,
+                            validation: rehydrated.validation || { errors: [], warnings: [] }
+                        };
+                        result = {
+                            ok: true,
+                            draft_sys_id: d.sys_id,
+                            preview: writer.engine.renderPreview(generated),
+                            step_count: generated.steps.length
+                        };
+                    }
+                }
+            }
+            break;
+
+        case 'catalog':
+            var engine = new FlowForgeEngine();
+            var actions = [];
+            for (var key in engine.ACTION_CATALOG) {
+                if (engine.ACTION_CATALOG.hasOwnProperty(key)) {
+                    actions.push({ token: key, action: engine.ACTION_CATALOG[key].action, table: engine.ACTION_CATALOG[key].table });
+                }
+            }
+            result = { ok: true, action_count: actions.length, actions: actions };
+            break;
+
+        default:
+            result = {
+                ok: false,
+                error: 'UNKNOWN_MODE',
+                message: 'Unknown mode: ' + mode,
+                valid_modes: ['draft', 'preview', 'catalog']
+            };
+            response.setStatus(400);
+            break;
+    }
+
+    response.setContentType('application/json');
+    response.setBody(JSON.stringify(result));
+})(request, response);
+]]></operation_script>
+  </sys_ws_operation>
+
+  <!-- Custom table: x_snff_flow_forge_draft -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <create_access>true</create_access>
+    <create_access_controls>true</create_access_controls>
+    <delete_access>false</delete_access>
+    <is_extendable>false</is_extendable>
+    <label>Flow Forge Draft</label>
+    <name>x_snff_flow_forge_draft</name>
+    <read_access>true</read_access>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_table</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Flow Forge Draft</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_scope display_value="FlowForge">x_snff</sys_scope>
+    <sys_update_name>sys_db_object_ff_draft_table</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+    <update_access>true</update_access>
+    <user_role display_value="x_snff.admin" name="x_snff.admin">x_snff.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>name</element>
+    <internal_type>string</internal_type>
+    <label>Name</label>
+    <mandatory>true</mandatory>
+    <max_length>160</max_length>
+    <name>x_snff_flow_forge_draft</name>
+    <default_value></default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_0</sys_id>
+    <sys_name>x_snff_flow_forge_draft.name</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_0</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>description</element>
+    <internal_type>string</internal_type>
+    <label>Description</label>
+    <max_length>4000</max_length>
+    <name>x_snff_flow_forge_draft</name>
+    <default_value></default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_1</sys_id>
+    <sys_name>x_snff_flow_forge_draft.description</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_1</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>status</element>
+    <internal_type>choice</internal_type>
+    <label>Status</label>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_snff_flow_forge_draft</name>
+    <reference>proposed</reference>
+    <choice>1</choice>
+    <default_value>proposed</default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_2</sys_id>
+    <sys_name>x_snff_flow_forge_draft.status</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_2</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>fingerprint</element>
+    <internal_type>string</internal_type>
+    <label>Fingerprint</label>
+    <max_length>64</max_length>
+    <name>x_snff_flow_forge_draft</name>
+    <default_value></default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_3</sys_id>
+    <sys_name>x_snff_flow_forge_draft.fingerprint</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_3</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>engine_version</element>
+    <internal_type>string</internal_type>
+    <label>Engine Version</label>
+    <max_length>40</max_length>
+    <name>x_snff_flow_forge_draft</name>
+    <default_value></default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_4</sys_id>
+    <sys_name>x_snff_flow_forge_draft.engine_version</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_4</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>trigger_type</element>
+    <internal_type>string</internal_type>
+    <label>Trigger Type</label>
+    <max_length>40</max_length>
+    <name>x_snff_flow_forge_draft</name>
+    <default_value></default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_5</sys_id>
+    <sys_name>x_snff_flow_forge_draft.trigger_type</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_5</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>step_count</element>
+    <internal_type>integer</internal_type>
+    <label>Step Count</label>
+    <max_length>40</max_length>
+    <name>x_snff_flow_forge_draft</name>
+    <default_value></default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_6</sys_id>
+    <sys_name>x_snff_flow_forge_draft.step_count</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_6</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>requestor</element>
+    <internal_type>reference</internal_type>
+    <label>Requestor</label>
+    <name>x_snff_flow_forge_draft</name>
+    <reference>sys_user</reference>
+    <default_value></default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_7</sys_id>
+    <sys_name>x_snff_flow_forge_draft.requestor</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_7</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>committed_flow_sys_id</element>
+    <internal_type>string</internal_type>
+    <label>Committed Flow Sys ID</label>
+    <max_length>32</max_length>
+    <name>x_snff_flow_forge_draft</name>
+    <default_value></default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_8</sys_id>
+    <sys_name>x_snff_flow_forge_draft.committed_flow_sys_id</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_8</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>committed_version_sys_id</element>
+    <internal_type>string</internal_type>
+    <label>Committed Version Sys ID</label>
+    <max_length>32</max_length>
+    <name>x_snff_flow_forge_draft</name>
+    <default_value></default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_9</sys_id>
+    <sys_name>x_snff_flow_forge_draft.committed_version_sys_id</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_9</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>spec_json</element>
+    <internal_type>string</internal_type>
+    <label>Spec JSON</label>
+    <max_length>4000000</max_length>
+    <name>x_snff_flow_forge_draft</name>
+    <default_value></default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_10</sys_id>
+    <sys_name>x_snff_flow_forge_draft.spec_json</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_10</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>graph_json</element>
+    <internal_type>string</internal_type>
+    <label>Graph JSON</label>
+    <max_length>4000000</max_length>
+    <name>x_snff_flow_forge_draft</name>
+    <default_value></default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_11</sys_id>
+    <sys_name>x_snff_flow_forge_draft.graph_json</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_11</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>preview</element>
+    <internal_type>string</internal_type>
+    <label>Preview</label>
+    <max_length>4000000</max_length>
+    <name>x_snff_flow_forge_draft</name>
+    <default_value></default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_draft_f_12</sys_id>
+    <sys_name>x_snff_flow_forge_draft.preview</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_draft_f_12</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+
+  <!-- Custom table: x_snff_flow_forge_config -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <access>public</access>
+    <create_access>false</create_access>
+    <create_access_controls>true</create_access_controls>
+    <delete_access>false</delete_access>
+    <is_extendable>false</is_extendable>
+    <label>Flow Forge Config</label>
+    <name>x_snff_flow_forge_config</name>
+    <read_access>true</read_access>
+    <super_class/>
+    <sys_class_name>sys_db_object</sys_class_name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_config_table</sys_id>
+    <sys_mod_count>0</sys_mod_count>
+    <sys_name>Flow Forge Config</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_scope display_value="FlowForge">x_snff</sys_scope>
+    <sys_update_name>sys_db_object_ff_config_table</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+    <update_access>false</update_access>
+    <user_role display_value="x_snff.admin" name="x_snff.admin">x_snff.admin</user_role>
+    <ws_access>true</ws_access>
+  </sys_db_object>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>default_category</element>
+    <internal_type>string</internal_type>
+    <label>Default Category</label>
+    <max_length>100</max_length>
+    <name>x_snff_flow_forge_config</name>
+    <default_value>Process Automation</default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_config_f_0</sys_id>
+    <sys_name>x_snff_flow_forge_config.default_category</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_config_f_0</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>commit_mode</element>
+    <internal_type>choice</internal_type>
+    <label>Commit Mode</label>
+    <mandatory>true</mandatory>
+    <max_length>40</max_length>
+    <name>x_snff_flow_forge_config</name>
+    <choice>1</choice>
+    <default_value>draft</default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_config_f_1</sys_id>
+    <sys_name>x_snff_flow_forge_config.commit_mode</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_config_f_1</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>llm_enabled</element>
+    <internal_type>boolean</internal_type>
+    <label>LLM Enabled</label>
+    <max_length>40</max_length>
+    <name>x_snff_flow_forge_config</name>
+    <default_value>false</default_value>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_config_f_2</sys_id>
+    <sys_name>x_snff_flow_forge_config.llm_enabled</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_config_f_2</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <element>llm_provider</element>
+    <internal_type>string</internal_type>
+    <label>LLM Provider</label>
+    <max_length>100</max_length>
+    <name>x_snff_flow_forge_config</name>
+    <sys_created_by>admin</sys_created_by>
+    <sys_created_on>2026-09-23 05:10:00</sys_created_on>
+    <sys_id>ff_config_f_3</sys_id>
+    <sys_name>x_snff_flow_forge_config.llm_provider</sys_name>
+    <sys_package display_value="FlowForge" source="x_snff">FlowForge</sys_package>
+    <sys_update_name>sys_dictionary_ff_config_f_3</sys_update_name>
+    <sys_updated_by>admin</sys_updated_by>
+    <sys_updated_on>2026-09-23 05:10:00</sys_updated_on>
+  </sys_dictionary>
+
+</unload>
